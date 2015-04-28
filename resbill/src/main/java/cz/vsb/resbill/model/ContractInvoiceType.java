@@ -1,11 +1,27 @@
 package cz.vsb.resbill.model;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-public class ContractInvoiceType {
+@Entity
+@Table(name = "CONTRACT_INVOICE_TYPE")
+public class ContractInvoiceType extends BaseVersionedEntity {
 
+	private static final long serialVersionUID = 2028293909241144177L;
+
+	@Embedded
 	private Period period;
+
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "contract_id", nullable = false)
 	private Contract contract;
+
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "invoice_type_id", nullable = false)
 	private InvoiceType invoiceType;
 
 	public Period getPeriod() {
@@ -34,10 +50,16 @@ public class ContractInvoiceType {
 
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("period", period);
-		builder.append("contract", contract);
-		builder.append("invoiceType", invoiceType);
+		StringBuilder builder = new StringBuilder();
+		builder.append("ContractInvoiceType [");
+		builder.append(super.toString());
+		builder.append(", period=");
+		builder.append(period);
+		builder.append(", contract.id=");
+		builder.append(contract != null ? contract.getId() : null);
+		builder.append(", invoiceType.id=");
+		builder.append(invoiceType != null ? invoiceType.getId() : null);
+		builder.append("]");
 		return builder.toString();
 	}
 

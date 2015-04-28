@@ -1,6 +1,5 @@
 package cz.vsb.resbill.model;
 
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -8,29 +7,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "CONTRACT_SERVER")
-public class ContractServer extends BaseVersionedEntity {
+@Table(name = "CONTRACT_PERSON")
+public class ContractPerson extends BaseGeneratedIdEntity {
 
-	private static final long serialVersionUID = -5513761411228439161L;
-
-	@Embedded
-	private Period period;
+	private static final long serialVersionUID = 6372466046222089422L;
 
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "contract_id", nullable = false)
 	private Contract contract;
 
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "server_id", nullable = false)
-	private Server server;
-
-	public Period getPeriod() {
-		return period;
-	}
-
-	public void setPeriod(Period period) {
-		this.period = period;
-	}
+	@JoinColumn(name = "person_id", nullable = false)
+	private Person person;
 
 	public Contract getContract() {
 		return contract;
@@ -40,26 +28,25 @@ public class ContractServer extends BaseVersionedEntity {
 		this.contract = contract;
 	}
 
-	public Server getServer() {
-		return server;
+	public Person getPerson() {
+		return person;
 	}
 
-	public void setServer(Server server) {
-		this.server = server;
+	public void setPerson(Person person) {
+		this.person = person;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ContractServer [");
+		builder.append("ContractPerson [");
 		builder.append(super.toString());
-		builder.append(", period=");
-		builder.append(period);
 		builder.append(", contract.id=");
 		builder.append(contract != null ? contract.getId() : null);
-		builder.append(", server.id=");
-		builder.append(server != null ? server.getId() : null);
+		builder.append(", person.id=");
+		builder.append(person != null ? person.getId() : null);
 		builder.append("]");
 		return builder.toString();
 	}
+
 }

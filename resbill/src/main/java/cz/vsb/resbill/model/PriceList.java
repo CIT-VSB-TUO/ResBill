@@ -2,15 +2,37 @@ package cz.vsb.resbill.model;
 
 import java.math.BigDecimal;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-public class PriceList {
+@Entity
+@Table(name = "PRICE_LIST")
+public class PriceList extends BaseVersionedEntity {
 
+	private static final long serialVersionUID = 4369861089171899807L;
+
+	@Column(name = "cpu_price", nullable = false, precision = 10, scale = 2)
 	private BigDecimal cpuPrice;
+
+	@Column(name = "memory_mb_price", nullable = false, precision = 10, scale = 2)
 	private BigDecimal memoryMBPrice;
+
+	@Column(name = "space_gb_price", nullable = false, precision = 10, scale = 2)
 	private BigDecimal spaceGBPrice;
+
+	@Column(name = "backup_gb_price", nullable = false, precision = 10, scale = 2)
 	private BigDecimal backupGBPrice;
+
+	@Embedded
 	private Period period;
+
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "tariff_id", nullable = false)
 	private Tariff tariff;
 
 	public BigDecimal getCpuPrice() {
@@ -63,13 +85,22 @@ public class PriceList {
 
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("cpuPrice", cpuPrice);
-		builder.append("memoryMBPrice", memoryMBPrice);
-		builder.append("spaceGBPrice", spaceGBPrice);
-		builder.append("backupGBPrice", backupGBPrice);
-		builder.append("period", period);
-		builder.append("tariff", tariff);
+		StringBuilder builder = new StringBuilder();
+		builder.append("PriceList [");
+		builder.append(super.toString());
+		builder.append(", cpuPrice=");
+		builder.append(cpuPrice);
+		builder.append(", memoryMBPrice=");
+		builder.append(memoryMBPrice);
+		builder.append(", spaceGBPrice=");
+		builder.append(spaceGBPrice);
+		builder.append(", backupGBPrice=");
+		builder.append(backupGBPrice);
+		builder.append(", period=");
+		builder.append(period);
+		builder.append(", tariff.id=");
+		builder.append(tariff != null ? tariff.getId() : null);
+		builder.append("]");
 		return builder.toString();
 	}
 

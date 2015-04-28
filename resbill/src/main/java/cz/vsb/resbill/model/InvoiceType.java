@@ -1,9 +1,29 @@
 package cz.vsb.resbill.model;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-public class InvoiceType {
+@Entity
+@Table(name = "INVOICE_TYPE")
+public class InvoiceType extends BaseEnumeratedIdEntity {
 
+	private static final long serialVersionUID = -5801051324020018291L;
+
+	/** Monthly produced invoices */
+	public static final Integer MONTHLY = 1;
+
+	/** Quarterly produced invoices */
+	public static final Integer QUARTERLY = 2;
+
+	/** Half-yearly produced invoices */
+	public static final Integer HALF_YEARLY = 3;
+
+	/** Annually produced invoices */
+	public static final Integer ANNUALLY = 4;
+
+	/** The title of the type */
+	@Column(name = "title", length = 100, nullable = false)
 	private String title;
 
 	public String getTitle() {
@@ -16,8 +36,12 @@ public class InvoiceType {
 
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("title", title);
+		StringBuilder builder = new StringBuilder();
+		builder.append("InvoiceType [");
+		builder.append(super.toString());
+		builder.append(", title=");
+		builder.append(title);
+		builder.append("]");
 		return builder.toString();
 	}
 

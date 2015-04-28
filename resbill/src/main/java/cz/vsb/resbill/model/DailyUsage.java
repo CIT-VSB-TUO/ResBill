@@ -1,20 +1,54 @@
 package cz.vsb.resbill.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-public class DailyUsage {
+@Entity
+@Table(name = "DAILY_USAGE")
+public class DailyUsage extends BaseGeneratedIdEntity {
 
+	private static final long serialVersionUID = 144836678591268182L;
+
+	@Column(name = "date", nullable = false)
+	@Temporal(TemporalType.DATE)
 	private Date date;
+
+	@Column(name = "server_name", nullable = false, length = 100)
 	private String serverName;
+
+	@Column(name = "cpu")
 	private Integer cpu;
+
+	@Column(name = "memory_mb")
 	private Integer memoryMB;
-	private Float provisionedSpaceGB;
-	private Float usedSpaceGB;
-	private Float backupGB;
+
+	@Column(name = "prov_space_gb", precision = 10, scale = 2)
+	private BigDecimal provisionedSpaceGB;
+
+	@Column(name = "used_space_gb", precision = 10, scale = 2)
+	private BigDecimal usedSpaceGB;
+
+	@Column(name = "backup_gb", precision = 10, scale = 2)
+	private BigDecimal backupGB;
+
+	@Column(name = "power_state")
 	private Boolean powerState;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "prod_level_id")
 	private ProductionLevel productionLevel;
+
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "server_id", nullable = false)
 	private Server server;
 
 	public Date getDate() {
@@ -49,27 +83,27 @@ public class DailyUsage {
 		this.memoryMB = memoryMB;
 	}
 
-	public Float getProvisionedSpaceGB() {
+	public BigDecimal getProvisionedSpaceGB() {
 		return provisionedSpaceGB;
 	}
 
-	public void setProvisionedSpaceGB(Float provisionedSpaceGB) {
+	public void setProvisionedSpaceGB(BigDecimal provisionedSpaceGB) {
 		this.provisionedSpaceGB = provisionedSpaceGB;
 	}
 
-	public Float getUsedSpaceGB() {
+	public BigDecimal getUsedSpaceGB() {
 		return usedSpaceGB;
 	}
 
-	public void setUsedSpaceGB(Float usedSpaceGB) {
+	public void setUsedSpaceGB(BigDecimal usedSpaceGB) {
 		this.usedSpaceGB = usedSpaceGB;
 	}
 
-	public Float getBackupGB() {
+	public BigDecimal getBackupGB() {
 		return backupGB;
 	}
 
-	public void setBackupGB(Float backupGB) {
+	public void setBackupGB(BigDecimal backupGB) {
 		this.backupGB = backupGB;
 	}
 
@@ -99,17 +133,30 @@ public class DailyUsage {
 
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("date", date);
-		builder.append("serverName", serverName);
-		builder.append("cpu", cpu);
-		builder.append("memoryMB", memoryMB);
-		builder.append("provisionedSpaceGB", provisionedSpaceGB);
-		builder.append("usedSpaceGB", usedSpaceGB);
-		builder.append("backupGB", backupGB);
-		builder.append("powerState", powerState);
-		builder.append("productionLevel", productionLevel);
-		builder.append("server", server);
+		StringBuilder builder = new StringBuilder();
+		builder.append("DailyUsage [");
+		builder.append(super.toString());
+		builder.append(", date=");
+		builder.append(date);
+		builder.append(", serverName=");
+		builder.append(serverName);
+		builder.append(", cpu=");
+		builder.append(cpu);
+		builder.append(", memoryMB=");
+		builder.append(memoryMB);
+		builder.append(", provisionedSpaceGB=");
+		builder.append(provisionedSpaceGB);
+		builder.append(", usedSpaceGB=");
+		builder.append(usedSpaceGB);
+		builder.append(", backupGB=");
+		builder.append(backupGB);
+		builder.append(", powerState=");
+		builder.append(powerState);
+		builder.append(", productionLevel.id=");
+		builder.append(productionLevel != null ? productionLevel.getId() : null);
+		builder.append(", server.id=");
+		builder.append(server != null ? server : null);
+		builder.append("]");
 		return builder.toString();
 	}
 

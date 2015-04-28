@@ -1,26 +1,58 @@
 package cz.vsb.resbill.model;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
-public class Contract {
+@Entity
+@Table(name = "CONTRACT")
+public class Contract extends BaseVersionedEntity {
 
+	private static final long serialVersionUID = 346744894255948553L;
+
+	@Column(name = "evidence_number", length = 30, nullable = false)
 	private Integer evidenceNumber;
+
+	@Column(name = "name", length = 250, nullable = false)
 	private String name;
+
+	@Column(name = "note", length = 1000)
 	private String note;
+
+	@Column(name = "balance", nullable = false, precision = 16, scale = 2)
 	private BigDecimal balance;
+
+	@Embedded
 	private Period period;
-	private Set<Transaction> transactions;
-	private Set<Person> responsiblePersons;
+
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;
-	private Set<ContractInvoiceType> contractInvoiceTypes;
-	private InvoiceType currentInvoiceType;
-	private Set<ContractServer> contractServers;
-	private Set<Server> currentServers;
-	private Set<ContractTariff> contractTariffs;
-	private Tariff currentTariff;
+
+	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Transaction> transactions = new HashSet<>();
+
+	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<ContractPerson> responsiblePersons = new HashSet<>();
+
+	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<ContractInvoiceType> contractInvoiceTypes = new HashSet<>();
+
+	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<ContractServer> contractServers = new HashSet<>();
+
+	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<ContractTariff> contractTariffs = new HashSet<>();
 
 	public Integer getEvidenceNumber() {
 		return evidenceNumber;
@@ -70,11 +102,11 @@ public class Contract {
 		this.transactions = transactions;
 	}
 
-	public Set<Person> getResponsiblePersons() {
+	public Set<ContractPerson> getResponsiblePersons() {
 		return responsiblePersons;
 	}
 
-	public void setResponsiblePersons(Set<Person> responsiblePersons) {
+	public void setResponsiblePersons(Set<ContractPerson> responsiblePersons) {
 		this.responsiblePersons = responsiblePersons;
 	}
 
@@ -95,28 +127,12 @@ public class Contract {
 		this.contractInvoiceTypes = contractInvoiceTypes;
 	}
 
-	public InvoiceType getCurrentInvoiceType() {
-		return currentInvoiceType;
-	}
-
-	public void setCurrentInvoiceType(InvoiceType currentInvoiceType) {
-		this.currentInvoiceType = currentInvoiceType;
-	}
-
 	public Set<ContractServer> getContractServers() {
 		return contractServers;
 	}
 
 	public void setContractServers(Set<ContractServer> contractServers) {
 		this.contractServers = contractServers;
-	}
-
-	public Set<Server> getCurrentServers() {
-		return currentServers;
-	}
-
-	public void setCurrentServers(Set<Server> currentServers) {
-		this.currentServers = currentServers;
 	}
 
 	public Set<ContractTariff> getContractTariffs() {
@@ -127,31 +143,24 @@ public class Contract {
 		this.contractTariffs = contractTariffs;
 	}
 
-	public Tariff getCurrentTariff() {
-		return currentTariff;
-	}
-
-	public void setCurrentTariff(Tariff currentTariff) {
-		this.currentTariff = currentTariff;
-	}
-
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("evidenceNumber", evidenceNumber);
-		builder.append("name", name);
-		builder.append("note", note);
-		builder.append("balance", balance);
-		builder.append("period", period);
-		builder.append("transactions", transactions);
-		builder.append("responsiblePersons", responsiblePersons);
-		builder.append("customer", customer);
-		builder.append("contractInvoiceTypes", contractInvoiceTypes);
-		builder.append("currentInvoiceType", currentInvoiceType);
-		builder.append("contractServers", contractServers);
-		builder.append("currentServers", currentServers);
-		builder.append("contractTariffs", contractTariffs);
-		builder.append("currentTariff", currentTariff);
+		StringBuilder builder = new StringBuilder();
+		builder.append("Contract [");
+		builder.append(super.toString());
+		builder.append(", evidenceNumber=");
+		builder.append(evidenceNumber);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", note=");
+		builder.append(note);
+		builder.append(", balance=");
+		builder.append(balance);
+		builder.append(", period=");
+		builder.append(period);
+		builder.append(", customer.id=");
+		builder.append(customer != null ? customer.getId() : null);
+		builder.append("]");
 		return builder.toString();
 	}
 }

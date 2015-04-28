@@ -1,16 +1,32 @@
 package cz.vsb.resbill.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
-public class Server {
+@Entity
+@Table(name = "SERVER")
+public class Server extends BaseVersionedEntity {
 
+	private static final long serialVersionUID = -4103528635705673991L;
+
+	@Column(name = "server_id", nullable = false, unique = true, length = 50)
 	private String serverId;
+
+	@Column(name = "name", nullable = false, length = 100)
 	private String name;
-	private Set<DailyUsage> dailyUsages;
-	private Set<ContractServer> contractServers;
-	private Set<Contract> currentContracts;
+
+	@OneToMany(mappedBy = "server", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<DailyUsage> dailyUsages = new HashSet<>();
+
+	@OneToMany(mappedBy = "server", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<ContractServer> contractServers = new HashSet<>();
 
 	public String getServerId() {
 		return serverId;
@@ -44,22 +60,16 @@ public class Server {
 		this.contractServers = contractServers;
 	}
 
-	public Set<Contract> getCurrentContracts() {
-		return currentContracts;
-	}
-
-	public void setCurrentContracts(Set<Contract> currentContracts) {
-		this.currentContracts = currentContracts;
-	}
-
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("serverId", serverId);
-		builder.append("name", name);
-		builder.append("dailyUsages", dailyUsages);
-		builder.append("contractServers", contractServers);
-		builder.append("currentContracts", currentContracts);
+		StringBuilder builder = new StringBuilder();
+		builder.append("Server [");
+		builder.append(super.toString());
+		builder.append(", serverId=");
+		builder.append(serverId);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append("]");
 		return builder.toString();
 	}
 }

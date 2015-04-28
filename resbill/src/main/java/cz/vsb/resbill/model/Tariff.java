@@ -1,17 +1,32 @@
 package cz.vsb.resbill.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
-public class Tariff {
+@Entity
+@Table(name = "TARIFF")
+public class Tariff extends BaseVersionedEntity {
 
+	private static final long serialVersionUID = -8694449318602384617L;
+
+	@Column(name = "name", nullable = false, length = 250)
 	private String name;
-	private Boolean valid;
-	private PriceList currentPriceList;
-	private Set<PriceList> prices;
-	private Set<ContractTariff> contractTariffs;
-	private Set<Contract> currentContracts;
+
+	@Column(name = "valid", nullable = false)
+	private boolean valid;
+
+	@OneToMany(mappedBy = "tariff", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<PriceList> prices = new HashSet<>();
+
+	@OneToMany(mappedBy = "tariff", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<ContractTariff> contractTariffs = new HashSet<>();
 
 	public String getName() {
 		return name;
@@ -21,11 +36,11 @@ public class Tariff {
 		this.name = name;
 	}
 
-	public Boolean getValid() {
+	public boolean getValid() {
 		return valid;
 	}
 
-	public void setValid(Boolean valid) {
+	public void setValid(boolean valid) {
 		this.valid = valid;
 	}
 
@@ -37,14 +52,6 @@ public class Tariff {
 		this.prices = prices;
 	}
 
-	public PriceList getCurrentPriceList() {
-		return currentPriceList;
-	}
-
-	public void setCurrentPriceList(PriceList currentPriceList) {
-		this.currentPriceList = currentPriceList;
-	}
-
 	public Set<ContractTariff> getContractTariffs() {
 		return contractTariffs;
 	}
@@ -53,23 +60,16 @@ public class Tariff {
 		this.contractTariffs = contractTariffs;
 	}
 
-	public Set<Contract> getCurrentContracts() {
-		return currentContracts;
-	}
-
-	public void setCurrentContracts(Set<Contract> currentContracts) {
-		this.currentContracts = currentContracts;
-	}
-
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("name", name);
-		builder.append("valid", valid);
-		builder.append("currentPriceList", currentPriceList);
-		builder.append("prices", prices);
-		builder.append("contractTariffs", contractTariffs);
-		builder.append("currentContracts", currentContracts);
+		StringBuilder builder = new StringBuilder();
+		builder.append("Tariff [");
+		builder.append(super.toString());
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", valid=");
+		builder.append(valid);
+		builder.append("]");
 		return builder.toString();
 	}
 

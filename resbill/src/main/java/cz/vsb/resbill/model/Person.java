@@ -1,16 +1,38 @@
 package cz.vsb.resbill.model;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-public class Person {
+@Entity
+@Table(name = "PERSON")
+public class Person extends BaseVersionedEntity {
 
+	private static final long serialVersionUID = -7882942149701501035L;
+
+	@Column(name = "email", length = 250, nullable = false)
 	private String email;
+
+	@Column(name = "first_name", length = 250, nullable = false)
 	private String firstName;
+
+	@Column(name = "second_name", length = 500, nullable = false)
 	private String secondName;
+
+	@Column(name = "title_before", length = 30)
 	private String titleBefore;
+
+	@Column(name = "title_after", length = 30)
 	private String titleAfter;
+
+	@Column(name = "phone", length = 40)
 	private String phone;
+
+	@Column(name = "note", length = 1000)
 	private String note;
+
+	@Embedded
 	private Address address;
 
 	public String getEmail() {
@@ -79,15 +101,26 @@ public class Person {
 
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("email", email);
-		builder.append("firstName", firstName);
-		builder.append("secondName", secondName);
-		builder.append("titleBefore", titleBefore);
-		builder.append("titleAfter", titleAfter);
-		builder.append("phone", phone);
-		builder.append("note", note);
-		builder.append("address", address);
+		StringBuilder builder = new StringBuilder();
+		builder.append("Person [");
+		builder.append(super.toString());
+		builder.append(", email=");
+		builder.append(email);
+		builder.append(", firstName=");
+		builder.append(firstName);
+		builder.append(", secondName=");
+		builder.append(secondName);
+		builder.append(", titleBefore=");
+		builder.append(titleBefore);
+		builder.append(", titleAfter=");
+		builder.append(titleAfter);
+		builder.append(", phone=");
+		builder.append(phone);
+		builder.append(", note=");
+		builder.append(note);
+		builder.append(", address=");
+		builder.append(address);
+		builder.append("]");
 		return builder.toString();
 	}
 

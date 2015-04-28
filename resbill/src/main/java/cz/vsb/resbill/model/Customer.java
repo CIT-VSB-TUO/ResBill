@@ -1,16 +1,38 @@
 package cz.vsb.resbill.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
-public class Customer {
+@Entity
+@Table(name = "CUSTOMER")
+public class Customer extends BaseVersionedEntity {
 
+	private static final long serialVersionUID = 4230333908768136588L;
+
+	@Column(name = "name", length = 250, nullable = false)
 	private String name;
+
+	@Column(name = "note", length = 1000)
 	private String note;
+
+	@Column(name = "billing_note", length = 1000)
 	private String billingNote;
+
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "contact_person_id", nullable = false)
 	private Person contactPerson;
-	private Set<Contract> contracts;
+
+	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Contract> contracts = new HashSet<>();
 
 	public String getName() {
 		return name;
@@ -54,12 +76,18 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("name", name);
-		builder.append("note", note);
-		builder.append("billingNote", billingNote);
-		builder.append("contactPerson", contactPerson);
-		builder.append("contracts", contracts);
+		StringBuilder builder = new StringBuilder();
+		builder.append("Customer [");
+		builder.append(super.toString());
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", note=");
+		builder.append(note);
+		builder.append(", billingNote=");
+		builder.append(billingNote);
+		builder.append(", contactPerson.id=");
+		builder.append(contactPerson != null ? contactPerson.getId() : null);
+		builder.append("]");
 		return builder.toString();
 	}
 

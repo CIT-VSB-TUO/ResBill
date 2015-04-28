@@ -1,13 +1,27 @@
 package cz.vsb.resbill.model;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 
+@Entity
+@DiscriminatorValue(value = "inv")
 public class Invoice extends Transaction {
 
+	private static final long serialVersionUID = -3016705349881450838L;
+
+	@Embedded
 	private Period period;
+
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@Column(name = "invoice_type_id", nullable = false)
+	private InvoiceType invoiceType;
+
 	// TODO file attachment
 	// private File attachment;
-	private InvoiceType invoiceType;
 
 	public Period getPeriod() {
 		return period;
@@ -27,9 +41,14 @@ public class Invoice extends Transaction {
 
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("period", period);
-		builder.append("invoiceType", invoiceType);
+		StringBuilder builder = new StringBuilder();
+		builder.append("Invoice [");
+		builder.append(super.toString());
+		builder.append(", period=");
+		builder.append(period);
+		builder.append(", invoiceType.id=");
+		builder.append(invoiceType != null ? invoiceType.getId() : null);
+		builder.append("]");
 		return builder.toString();
 	}
 }

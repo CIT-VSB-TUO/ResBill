@@ -1,11 +1,27 @@
 package cz.vsb.resbill.model;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-public class ContractTariff {
+@Entity
+@Table(name = "CONTRACT_TARIFF")
+public class ContractTariff extends BaseVersionedEntity {
 
+	private static final long serialVersionUID = 1481292473824718485L;
+
+	@Embedded
 	private Period period;
+
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "contract_id", nullable = false)
 	private Contract contract;
+
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "tariff_id", nullable = false)
 	private Tariff tariff;
 
 	public Period getPeriod() {
@@ -34,10 +50,16 @@ public class ContractTariff {
 
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("period", period);
-		builder.append("contract", contract);
-		builder.append("tariff", tariff);
+		StringBuilder builder = new StringBuilder();
+		builder.append("ContractTariff [");
+		builder.append(super.toString());
+		builder.append(", period=");
+		builder.append(period);
+		builder.append(", contract.id=");
+		builder.append(contract != null ? contract.getId() : null);
+		builder.append(", tariff.id=");
+		builder.append(tariff != null ? tariff.getId() : null);
+		builder.append("]");
 		return builder.toString();
 	}
 }

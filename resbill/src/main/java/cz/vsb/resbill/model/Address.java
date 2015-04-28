@@ -1,15 +1,34 @@
 package cz.vsb.resbill.model;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import java.io.Serializable;
 
-public class Address {
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
+@Embeddable
+public class Address implements Serializable {
+
+	private static final long serialVersionUID = -2979179809235914411L;
+
+	@Column(name = "desc_number", length = 15)
 	private String descriptiveNumber;
+
+	@Column(name = "orient_number", length = 8)
 	private String orientationNumber;
+
+	@Column(name = "street", length = 100)
 	private String street;
+
+	@Column(name = "city_part", length = 100)
 	private String cityPart;
+
+	@Column(name = "city", length = 100)
 	private String city;
+
+	@Column(name = "country", length = 100)
 	private String country;
+
+	@Column(name = "zip", length = 15)
 	private String zip;
 
 	public String getDescriptiveNumber() {
@@ -70,14 +89,24 @@ public class Address {
 
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("descriptiveNumber", descriptiveNumber);
-		builder.append("orientationNumber", orientationNumber);
-		builder.append("street", street);
-		builder.append("cityPart", cityPart);
-		builder.append("city", city);
-		builder.append("country", country);
-		builder.append("zip", zip);
+		StringBuilder builder = new StringBuilder();
+		builder.append("Address [");
+		builder.append(super.toString());
+		builder.append(", descriptiveNumber=");
+		builder.append(descriptiveNumber);
+		builder.append(", orientationNumber=");
+		builder.append(orientationNumber);
+		builder.append(", street=");
+		builder.append(street);
+		builder.append(", cityPart=");
+		builder.append(cityPart);
+		builder.append(", city=");
+		builder.append(city);
+		builder.append(", country=");
+		builder.append(country);
+		builder.append(", zip=");
+		builder.append(zip);
+		builder.append("]");
 		return builder.toString();
 	}
 
