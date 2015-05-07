@@ -1,6 +1,5 @@
 package cz.vsb.resbill.model;
 
-
 /**
  * An interface marking all domain objects. Each domain object has its unique
  * identifier.
@@ -21,7 +20,7 @@ public interface IdentifiableEntity {
 	 * Sets the unique identifier.
 	 * 
 	 * @param id
-	 *            unique identifier to set
+	 *          unique identifier to set
 	 */
 	void setId(Integer id);
 }

@@ -14,8 +14,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  *
  */
 @MappedSuperclass
-public abstract class BaseVersionedEntity extends BaseGeneratedIdEntity
-		implements VersionedEntity {
+public abstract class BaseVersionedEntity extends BaseGeneratedIdEntity implements VersionedEntity {
 
 	private static final long serialVersionUID = 4891678972378019341L;
 

@@ -1,11 +1,14 @@
 package cz.vsb.resbill.model;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 @DiscriminatorValue(value = "inv")
@@ -16,12 +19,13 @@ public class Invoice extends Transaction {
 	@Embedded
 	private Period period;
 
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@Column(name = "invoice_type_id", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "invoice_type_id", foreignKey = @ForeignKey(name = "FK_invoice__invoice_type"))
 	private InvoiceType invoiceType;
 
-	// TODO file attachment
-	// private File attachment;
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "attachment_id", foreignKey = @ForeignKey(name = "FK_invoice__attachment"))
+	private File attachment;
 
 	public Period getPeriod() {
 		return period;
@@ -29,6 +33,14 @@ public class Invoice extends Transaction {
 
 	public void setPeriod(Period period) {
 		this.period = period;
+	}
+
+	public File getAttachment() {
+		return attachment;
+	}
+
+	public void setAttachment(File attachment) {
+		this.attachment = attachment;
 	}
 
 	public InvoiceType getInvoiceType() {
@@ -46,6 +58,8 @@ public class Invoice extends Transaction {
 		builder.append(super.toString());
 		builder.append(", period=");
 		builder.append(period);
+		builder.append(", attachment.id=");
+		builder.append(attachment != null ? attachment.getId() : null);
 		builder.append(", invoiceType.id=");
 		builder.append(invoiceType != null ? invoiceType.getId() : null);
 		builder.append("]");

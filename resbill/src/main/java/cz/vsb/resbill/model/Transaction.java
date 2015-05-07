@@ -9,6 +9,7 @@ import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
@@ -16,17 +17,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "disc", discriminatorType = DiscriminatorType.STRING, length = 3)
 @DiscriminatorValue(value = "tra")
-@Table(name = "TRANSACTION")
+@Table(name = "TRANSACTION", uniqueConstraints = @UniqueConstraint(name = "UK_transaction__tx_order__contract_id", columnNames = { "tx_order", "contract_id" }))
 public class Transaction extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = 8668454272440856542L;
 
-	@Column(name = "order", nullable = false)
+	@Column(name = "tx_order", nullable = false)
 	private Integer order;
 
 	@Column(name = "evidence_number", length = 30)
@@ -46,11 +48,11 @@ public class Transaction extends BaseVersionedEntity {
 	private String note;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "transaction_type_id", nullable = false)
+	@JoinColumn(name = "transaction_type_id", nullable = false, foreignKey = @ForeignKey(name = "FK_transaction__transaction_type"))
 	private TransactionType transactionType;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "contract_id", nullable = false)
+	@JoinColumn(name = "contract_id", nullable = false, foreignKey = @ForeignKey(name = "FK_transaction__contract"))
 	private Contract contract;
 
 	public Integer getOrder() {

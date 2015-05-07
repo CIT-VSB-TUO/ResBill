@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "TRANASCTION_TYPE")
+@Table(name = "TRANSACTION_TYPE")
 public class TransactionType extends BaseEnumeratedIdEntity {
 
 	private static final long serialVersionUID = -502862889044300245L;

@@ -4,9 +4,10 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "PERSON")
+@Table(name = "PERSON", uniqueConstraints = @UniqueConstraint(name = "UK_person__email", columnNames = "email"))
 public class Person extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = -7882942149701501035L;
@@ -14,10 +15,10 @@ public class Person extends BaseVersionedEntity {
 	@Column(name = "email", length = 250, nullable = false)
 	private String email;
 
-	@Column(name = "first_name", length = 250, nullable = false)
+	@Column(name = "first_name", length = 250)
 	private String firstName;
 
-	@Column(name = "second_name", length = 500, nullable = false)
+	@Column(name = "second_name", length = 500)
 	private String secondName;
 
 	@Column(name = "title_before", length = 30)

@@ -12,8 +12,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * @author HAL191
  *
  */
-public abstract class BaseDomainEntity implements IdentifiableEntity,
-		Serializable {
+public abstract class BaseDomainEntity implements IdentifiableEntity, Serializable {
 
 	private static final long serialVersionUID = 9045791835477269437L;
 
@@ -37,8 +36,7 @@ public abstract class BaseDomainEntity implements IdentifiableEntity,
 		if (!(obj instanceof BaseDomainEntity))
 			return false;
 		BaseDomainEntity other = (BaseDomainEntity) obj;
-		return new EqualsBuilder().append(this.getId(), other.getId())
-				.isEquals();
+		return new EqualsBuilder().append(this.getId(), other.getId()).isEquals();
 	}
 
 }

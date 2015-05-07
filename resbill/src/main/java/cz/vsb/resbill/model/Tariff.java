@@ -20,7 +20,7 @@ public class Tariff extends BaseVersionedEntity {
 	private String name;
 
 	@Column(name = "valid", nullable = false)
-	private boolean valid;
+	private Boolean valid;
 
 	@OneToMany(mappedBy = "tariff", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<PriceList> prices = new HashSet<>();
@@ -36,11 +36,11 @@ public class Tariff extends BaseVersionedEntity {
 		this.name = name;
 	}
 
-	public boolean getValid() {
+	public Boolean getValid() {
 		return valid;
 	}
 
-	public void setValid(boolean valid) {
+	public void setValid(Boolean valid) {
 		this.valid = valid;
 	}
 

@@ -41,11 +41,11 @@ public class Period {
 	 * bounds, inclusively).
 	 * 
 	 * @param date
-	 *            a date to check
+	 *          a date to check
 	 * @return <code>true</code> if the date is between this bounds,
 	 *         <code>false</code> otherwise
 	 * @throws IllegalArgumentException
-	 *             if the date parameter is <code>null</code>
+	 *           if the date parameter is <code>null</code>
 	 */
 	public boolean covers(Date date) {
 		return isDateInPeriod(date, this);
@@ -56,21 +56,17 @@ public class Period {
 	 * (bounds included).
 	 * 
 	 * @param period
-	 *            a period to check
+	 *          a period to check
 	 * @return <code>true</code> if there is an intersection of the periods,
 	 *         <code>false</code> otherwise
 	 * @throws IllegalArgumentException
-	 *             if the period parameter is <code>null</code>
+	 *           if the period parameter is <code>null</code>
 	 */
 	public boolean overlaps(Period period) {
 		if (period == null) {
-			throw new IllegalArgumentException(
-					"Given parameters cannot be null.");
+			throw new IllegalArgumentException("Given parameters cannot be null.");
 		}
-		return (period.getEndDate() == null || this.getBeginDate().compareTo(
-				period.getEndDate()) <= 0)
-				&& (this.getEndDate() == null || period.getBeginDate()
-						.compareTo(this.getEndDate()) <= 0);
+		return (period.getEndDate() == null || this.getBeginDate().compareTo(period.getEndDate()) <= 0) && (this.getEndDate() == null || period.getBeginDate().compareTo(this.getEndDate()) <= 0);
 	}
 
 	/**
@@ -78,22 +74,19 @@ public class Period {
 	 * (inclusively).
 	 * 
 	 * @param date
-	 *            a date to check
+	 *          a date to check
 	 * @param period
-	 *            inclusive bounds
+	 *          inclusive bounds
 	 * @return <code>true</code> if the date is between the bounds,
 	 *         <code>false</code> otherwise
 	 * @throws IllegalArgumentException
-	 *             if any parameter is <code>null</code>
+	 *           if any parameter is <code>null</code>
 	 */
 	public static boolean isDateInPeriod(Date date, Period period) {
 		if (date == null || period == null) {
-			throw new IllegalArgumentException(
-					"Given parameters cannot be null.");
+			throw new IllegalArgumentException("Given parameters cannot be null.");
 		}
-		return (period.getBeginDate().compareTo(date) <= 0)
-				&& (period.getEndDate() == null || period.getEndDate()
-						.compareTo(date) >= 0);
+		return (period.getBeginDate().compareTo(date) <= 0) && (period.getEndDate() == null || period.getEndDate().compareTo(date) >= 0);
 	}
 
 	/**
@@ -101,23 +94,20 @@ public class Period {
 	 * included).
 	 * 
 	 * @param period1
-	 *            first period
+	 *          first period
 	 * @param period2
-	 *            second period
+	 *          second period
 	 * @return <code>true</code> if there is an intersection of the periods,
 	 *         <code>false</code> otherwise
 	 * @throws IllegalArgumentException
-	 *             if any parameter is <code>null</code>
+	 *           if any parameter is <code>null</code>
 	 */
 	public static boolean isPeriodsOverlapped(Period period1, Period period2) {
 		if (period1 == null || period2 == null) {
-			throw new IllegalArgumentException(
-					"Given parameters cannot be null.");
+			throw new IllegalArgumentException("Given parameters cannot be null.");
 		}
-		return (period2.getEndDate() == null || period1.getBeginDate()
-				.compareTo(period2.getEndDate()) <= 0)
-				&& (period1.getEndDate() == null || period2.getBeginDate()
-						.compareTo(period1.getEndDate()) <= 0);
+		return (period2.getEndDate() == null || period1.getBeginDate().compareTo(period2.getEndDate()) <= 0)
+				&& (period1.getEndDate() == null || period2.getBeginDate().compareTo(period1.getEndDate()) <= 0);
 	}
 
 	@Override

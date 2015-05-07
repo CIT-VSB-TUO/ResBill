@@ -9,14 +9,15 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "SERVER")
+@Table(name = "SERVER", uniqueConstraints = @UniqueConstraint(name = "UK_server__server_id", columnNames = "server_id"))
 public class Server extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = -4103528635705673991L;
 
-	@Column(name = "server_id", nullable = false, unique = true, length = 50)
+	@Column(name = "server_id", nullable = false, length = 50)
 	private String serverId;
 
 	@Column(name = "name", nullable = false, length = 100)

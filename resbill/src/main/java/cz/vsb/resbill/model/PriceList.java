@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -32,7 +33,7 @@ public class PriceList extends BaseVersionedEntity {
 	private Period period;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "tariff_id", nullable = false)
+	@JoinColumn(name = "tariff_id", nullable = false, foreignKey = @ForeignKey(name = "FK_price_list__tariff"))
 	private Tariff tariff;
 
 	public BigDecimal getCpuPrice() {

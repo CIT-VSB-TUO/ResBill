@@ -3,6 +3,7 @@ package cz.vsb.resbill.model;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -17,11 +18,11 @@ public class ContractTariff extends BaseVersionedEntity {
 	private Period period;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "contract_id", nullable = false)
+	@JoinColumn(name = "contract_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_tariff__contract"))
 	private Contract contract;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "tariff_id", nullable = false)
+	@JoinColumn(name = "tariff_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_tariff__tariff"))
 	private Tariff tariff;
 
 	public Period getPeriod() {

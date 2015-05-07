@@ -7,13 +7,15 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "CUSTOMER")
+@Table(name = "CUSTOMER", uniqueConstraints = @UniqueConstraint(name = "UK_customer__name", columnNames = "name"))
 public class Customer extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = 4230333908768136588L;
@@ -28,7 +30,7 @@ public class Customer extends BaseVersionedEntity {
 	private String billingNote;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "contact_person_id", nullable = false)
+	@JoinColumn(name = "contact_person_id", nullable = false, foreignKey = @ForeignKey(name = "FK_customer__contact_person"))
 	private Person contactPerson;
 
 	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

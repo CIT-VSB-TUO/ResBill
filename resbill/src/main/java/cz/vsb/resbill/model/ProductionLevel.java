@@ -3,9 +3,10 @@ package cz.vsb.resbill.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "PRODUCTION_LEVEL")
+@Table(name = "PRODUCTION_LEVEL", uniqueConstraints = @UniqueConstraint(name = "UK_production_level__code", columnNames = "code"))
 public class ProductionLevel extends BaseEnumeratedIdEntity {
 
 	private static final long serialVersionUID = 42165378614212986L;
@@ -26,10 +27,10 @@ public class ProductionLevel extends BaseEnumeratedIdEntity {
 
 	public static final Integer OFF_TESTING = 8;
 
-	@Column(name = "code", length = 10, nullable = false, unique = true)
+	@Column(name = "code", length = 20, nullable = false)
 	private String code;
 
-	@Column(name = "title", length = 250, nullable = false)
+	@Column(name = "title", length = 250)
 	private String title;
 
 	public String getCode() {

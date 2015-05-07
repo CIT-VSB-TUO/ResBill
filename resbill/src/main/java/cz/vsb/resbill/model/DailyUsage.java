@@ -6,19 +6,21 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "DAILY_USAGE")
+@Table(name = "DAILY_USAGE", uniqueConstraints = @UniqueConstraint(name = "UK_daily_usage__date__server_id", columnNames = { "usage_date", "server_id" }))
 public class DailyUsage extends BaseGeneratedIdEntity {
 
 	private static final long serialVersionUID = 144836678591268182L;
 
-	@Column(name = "date", nullable = false)
+	@Column(name = "usage_date", nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date date;
 
@@ -44,11 +46,11 @@ public class DailyUsage extends BaseGeneratedIdEntity {
 	private Boolean powerState;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "prod_level_id")
+	@JoinColumn(name = "prod_level_id", foreignKey = @ForeignKey(name = "FK_daily_usage__production_level"))
 	private ProductionLevel productionLevel;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "server_id", nullable = false)
+	@JoinColumn(name = "server_id", nullable = false, foreignKey = @ForeignKey(name = "FK_daily_usage__server"))
 	private Server server;
 
 	public Date getDate() {

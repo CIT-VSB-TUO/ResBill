@@ -3,6 +3,7 @@ package cz.vsb.resbill.model;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -17,11 +18,11 @@ public class ContractServer extends BaseVersionedEntity {
 	private Period period;
 
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "contract_id", nullable = false)
+	@JoinColumn(name = "contract_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_server__contract"))
 	private Contract contract;
 
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "server_id", nullable = false)
+	@JoinColumn(name = "server_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_server__server"))
 	private Server server;
 
 	public Period getPeriod() {

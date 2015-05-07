@@ -9,18 +9,20 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "CONTRACT")
+@Table(name = "CONTRACT", uniqueConstraints = @UniqueConstraint(name = "UK_contract__evidence_number", columnNames = "evidence_number"))
 public class Contract extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = 346744894255948553L;
 
-	@Column(name = "evidence_number", length = 30, nullable = false)
+	@Column(name = "evidence_number", nullable = false)
 	private Integer evidenceNumber;
 
 	@Column(name = "name", length = 250, nullable = false)
@@ -36,7 +38,7 @@ public class Contract extends BaseVersionedEntity {
 	private Period period;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "customer_id", nullable = false)
+	@JoinColumn(name = "customer_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract__customer"))
 	private Customer customer;
 
 	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -122,8 +124,7 @@ public class Contract extends BaseVersionedEntity {
 		return contractInvoiceTypes;
 	}
 
-	public void setContractInvoiceTypes(
-			Set<ContractInvoiceType> contractInvoiceTypes) {
+	public void setContractInvoiceTypes(Set<ContractInvoiceType> contractInvoiceTypes) {
 		this.contractInvoiceTypes = contractInvoiceTypes;
 	}
 
