@@ -24,7 +24,7 @@
 	</bean>
     
 	<!-- Persistence layer -->
-	<jee:jndi-lookup id="resbillDS" jndi-name="java:comp/env/jdbc/jdbc/ResBillDS"/>
+	<jee:jndi-lookup id="resbillDS" jndi-name="java:comp/env/jdbc/ResBillDS"/>
 	
 	<bean id="resbillEMF" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="resbillDS"/>
