@@ -5,6 +5,11 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "PERSON", uniqueConstraints = @UniqueConstraint(name = "UK_person__email", columnNames = "email"))
@@ -12,28 +17,38 @@ public class Person extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = -7882942149701501035L;
 
-	@Column(name = "email", length = 250, nullable = false)
+	@Column(name = "email")
+	@NotEmpty
+	@Size(max = 250)
+	@Email
 	private String email;
 
-	@Column(name = "first_name", length = 250)
+	@Column(name = "first_name")
+	@Size(max = 250)
 	private String firstName;
 
-	@Column(name = "second_name", length = 500)
+	@Column(name = "second_name")
+	@Size(max = 500)
 	private String secondName;
 
-	@Column(name = "title_before", length = 30)
+	@Column(name = "title_before")
+	@Size(max = 30)
 	private String titleBefore;
 
-	@Column(name = "title_after", length = 30)
+	@Column(name = "title_after")
+	@Size(max = 30)
 	private String titleAfter;
 
-	@Column(name = "phone", length = 40)
+	@Column(name = "phone")
+	@Size(max = 40)
 	private String phone;
 
-	@Column(name = "note", length = 1000)
+	@Column(name = "note")
+	@Size(max = 1000)
 	private String note;
 
 	@Embedded
+	@Valid
 	private Address address;
 
 	public String getEmail() {

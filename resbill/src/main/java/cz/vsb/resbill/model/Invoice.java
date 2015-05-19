@@ -1,6 +1,8 @@
 package cz.vsb.resbill.model;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -9,6 +11,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @DiscriminatorValue(value = "inv")
@@ -16,15 +19,21 @@ public class Invoice extends Transaction {
 
 	private static final long serialVersionUID = -3016705349881450838L;
 
+	// kvuli dedicnosti povoluje mapovani hodnotu null
 	@Embedded
+	@AttributeOverride(name = "beginDate", column = @Column(name = "begin_date", nullable = true))
+	@NotNull
 	private Period period;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "invoice_type_id", foreignKey = @ForeignKey(name = "FK_invoice__invoice_type"))
+	@NotNull
 	private InvoiceType invoiceType;
 
+	// kvuli dedicnosti povoluje mapovani hodnotu null
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "attachment_id", foreignKey = @ForeignKey(name = "FK_invoice__attachment"))
+	@NotNull
 	private File attachment;
 
 	public Period getPeriod() {

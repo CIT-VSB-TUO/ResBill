@@ -10,6 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "SERVER", uniqueConstraints = @UniqueConstraint(name = "UK_server__server_id", columnNames = "server_id"))
@@ -17,10 +20,14 @@ public class Server extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = -4103528635705673991L;
 
-	@Column(name = "server_id", nullable = false, length = 50)
+	@Column(name = "server_id")
+	@NotEmpty
+	@Size(max = 50)
 	private String serverId;
 
-	@Column(name = "name", nullable = false, length = 100)
+	@Column(name = "name")
+	@NotEmpty
+	@Size(max = 100)
 	private String name;
 
 	@OneToMany(mappedBy = "server", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

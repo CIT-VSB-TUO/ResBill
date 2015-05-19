@@ -18,6 +18,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -28,31 +31,40 @@ public class Transaction extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = 8668454272440856542L;
 
-	@Column(name = "tx_order", nullable = false)
+	@Column(name = "tx_order")
+	@NotNull
 	private Integer order;
 
-	@Column(name = "evidence_number", length = 30)
+	@Column(name = "evidence_number")
+	@Digits(integer = 10, fraction = 0)
 	private Integer evidenceNumber;
 
-	@Column(name = "decisive_date", nullable = false)
+	@Column(name = "decisive_date")
 	@Temporal(TemporalType.DATE)
+	@NotNull
 	private Date decisiveDate;
 
-	@Column(name = "amount", nullable = false, precision = 16, scale = 2)
+	@Column(name = "amount")
+	@NotNull
+	@Digits(integer = 14, fraction = 2)
 	private BigDecimal amount;
 
-	@Column(name = "title", length = 250)
+	@Column(name = "title")
+	@Size(max = 250)
 	private String title;
 
-	@Column(name = "note", length = 1000)
+	@Column(name = "note")
+	@Size(max = 1000)
 	private String note;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "transaction_type_id", nullable = false, foreignKey = @ForeignKey(name = "FK_transaction__transaction_type"))
+	@JoinColumn(name = "transaction_type_id", foreignKey = @ForeignKey(name = "FK_transaction__transaction_type"))
+	@NotNull
 	private TransactionType transactionType;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "contract_id", nullable = false, foreignKey = @ForeignKey(name = "FK_transaction__contract"))
+	@JoinColumn(name = "contract_id", foreignKey = @ForeignKey(name = "FK_transaction__contract"))
+	@NotNull
 	private Contract contract;
 
 	public Integer getOrder() {

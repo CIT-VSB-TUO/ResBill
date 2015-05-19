@@ -10,6 +10,9 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "PRICE_LIST")
@@ -17,23 +20,34 @@ public class PriceList extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = 4369861089171899807L;
 
-	@Column(name = "cpu_price", nullable = false, precision = 10, scale = 2)
+	@Column(name = "cpu_price")
+	@NotNull
+	@Digits(integer = 8, fraction = 2)
 	private BigDecimal cpuPrice;
 
-	@Column(name = "memory_mb_price", nullable = false, precision = 10, scale = 2)
+	@Column(name = "memory_mb_price")
+	@NotNull
+	@Digits(integer = 8, fraction = 2)
 	private BigDecimal memoryMBPrice;
 
-	@Column(name = "space_gb_price", nullable = false, precision = 10, scale = 2)
+	@Column(name = "space_gb_price")
+	@NotNull
+	@Digits(integer = 8, fraction = 2)
 	private BigDecimal spaceGBPrice;
 
-	@Column(name = "backup_gb_price", nullable = false, precision = 10, scale = 2)
+	@Column(name = "backup_gb_price")
+	@NotNull
+	@Digits(integer = 8, fraction = 2)
 	private BigDecimal backupGBPrice;
 
 	@Embedded
+	@NotNull
+	@Valid
 	private Period period;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "tariff_id", nullable = false, foreignKey = @ForeignKey(name = "FK_price_list__tariff"))
+	@JoinColumn(name = "tariff_id", foreignKey = @ForeignKey(name = "FK_price_list__tariff"))
+	@NotNull
 	private Tariff tariff;
 
 	public BigDecimal getCpuPrice() {

@@ -13,6 +13,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "DAILY_USAGE", uniqueConstraints = @UniqueConstraint(name = "UK_daily_usage__date__server_id", columnNames = { "usage_date", "server_id" }))
@@ -20,11 +25,14 @@ public class DailyUsage extends BaseGeneratedIdEntity {
 
 	private static final long serialVersionUID = 144836678591268182L;
 
-	@Column(name = "usage_date", nullable = false)
+	@Column(name = "usage_date")
 	@Temporal(TemporalType.DATE)
+	@NotNull
 	private Date date;
 
-	@Column(name = "server_name", nullable = false, length = 100)
+	@Column(name = "server_name")
+	@NotEmpty
+	@Size(max = 100)
 	private String serverName;
 
 	@Column(name = "cpu")
@@ -33,13 +41,16 @@ public class DailyUsage extends BaseGeneratedIdEntity {
 	@Column(name = "memory_mb")
 	private Integer memoryMB;
 
-	@Column(name = "prov_space_gb", precision = 10, scale = 2)
+	@Column(name = "prov_space_gb")
+	@Digits(integer = 8, fraction = 2)
 	private BigDecimal provisionedSpaceGB;
 
-	@Column(name = "used_space_gb", precision = 10, scale = 2)
+	@Column(name = "used_space_gb")
+	@Digits(integer = 8, fraction = 2)
 	private BigDecimal usedSpaceGB;
 
-	@Column(name = "backup_gb", precision = 10, scale = 2)
+	@Column(name = "backup_gb")
+	@Digits(integer = 8, fraction = 2)
 	private BigDecimal backupGB;
 
 	@Column(name = "power_state")
@@ -50,7 +61,8 @@ public class DailyUsage extends BaseGeneratedIdEntity {
 	private ProductionLevel productionLevel;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "server_id", nullable = false, foreignKey = @ForeignKey(name = "FK_daily_usage__server"))
+	@JoinColumn(name = "server_id", foreignKey = @ForeignKey(name = "FK_daily_usage__server"))
+	@NotNull
 	private Server server;
 
 	public Date getDate() {

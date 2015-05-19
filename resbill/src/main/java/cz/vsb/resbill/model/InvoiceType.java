@@ -3,6 +3,9 @@ package cz.vsb.resbill.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "INVOICE_TYPE")
@@ -23,7 +26,9 @@ public class InvoiceType extends BaseEnumeratedIdEntity {
 	public static final Integer ANNUALLY = 4;
 
 	/** The title of the type */
-	@Column(name = "title", length = 100, nullable = false)
+	@Column(name = "title")
+	@NotEmpty
+	@Size(max = 100)
 	private String title;
 
 	public String getTitle() {

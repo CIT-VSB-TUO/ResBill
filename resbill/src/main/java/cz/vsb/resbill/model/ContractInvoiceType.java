@@ -7,22 +7,30 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "CONTRACT_INVOICE_TYPE")
+@Table(name = "CONTRACT_INVOICE_TYPE", uniqueConstraints = @UniqueConstraint(name = "UK_contract_invoice_type__contract_id__invoice_type_id__begin_date", columnNames = { "contract_id",
+		"invoice_type_id", "begin_date" }))
 public class ContractInvoiceType extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = 2028293909241144177L;
 
 	@Embedded
+	@NotNull
+	@Valid
 	private Period period;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "contract_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_invoice_type__contract"))
+	@JoinColumn(name = "contract_id", foreignKey = @ForeignKey(name = "FK_contract_invoice_type__contract"))
+	@NotNull
 	private Contract contract;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "invoice_type_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_invoice_type__invoice_type"))
+	@JoinColumn(name = "invoice_type_id", foreignKey = @ForeignKey(name = "FK_contract_invoice_type__invoice_type"))
+	@NotNull
 	private InvoiceType invoiceType;
 
 	public Period getPeriod() {

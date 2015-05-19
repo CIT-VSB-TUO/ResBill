@@ -3,6 +3,9 @@ package cz.vsb.resbill.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "TRANSACTION_TYPE")
@@ -19,7 +22,9 @@ public class TransactionType extends BaseEnumeratedIdEntity {
 	/** Additional payment */
 	public static final Integer ADDITIONAL_PAYMENT = 3;
 
-	@Column(name = "title", length = 100, nullable = false)
+	@Column(name = "title")
+	@NotEmpty
+	@Size(max = 100)
 	private String title;
 
 	public String getTitle() {

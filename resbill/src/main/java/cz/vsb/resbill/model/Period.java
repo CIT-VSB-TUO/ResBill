@@ -6,18 +6,20 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 @Embeddable
 public class Period {
 
 	/** Beginning of the period */
 	@Temporal(TemporalType.DATE)
-	@Column(name = "begin_date", nullable = false)
+	@Column(name = "begin_date")
+	@NotNull
 	private Date beginDate;
 
 	/** End of the period */
 	@Temporal(TemporalType.DATE)
-	@Column(name = "end_date", nullable = true)
+	@Column(name = "end_date")
 	private Date endDate;
 
 	public Date getBeginDate() {

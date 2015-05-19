@@ -7,22 +7,29 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "CONTRACT_TARIFF")
+@Table(name = "CONTRACT_TARIFF", uniqueConstraints = @UniqueConstraint(name = "UK_contract_tariff__contract_id__tariff_id__begin_date", columnNames = { "contract_id", "tariff_id", "begin_date" }))
 public class ContractTariff extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = 1481292473824718485L;
 
 	@Embedded
+	@NotNull
+	@Valid
 	private Period period;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "contract_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_tariff__contract"))
+	@JoinColumn(name = "contract_id", foreignKey = @ForeignKey(name = "FK_contract_tariff__contract"))
+	@NotNull
 	private Contract contract;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "tariff_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_tariff__tariff"))
+	@JoinColumn(name = "tariff_id", foreignKey = @ForeignKey(name = "FK_contract_tariff__tariff"))
+	@NotNull
 	private Tariff tariff;
 
 	public Period getPeriod() {

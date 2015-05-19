@@ -4,6 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "PRODUCTION_LEVEL", uniqueConstraints = @UniqueConstraint(name = "UK_production_level__code", columnNames = "code"))
@@ -27,10 +30,13 @@ public class ProductionLevel extends BaseEnumeratedIdEntity {
 
 	public static final Integer OFF_TESTING = 8;
 
-	@Column(name = "code", length = 20, nullable = false)
+	@Column(name = "code")
+	@NotEmpty
+	@Size(max = 20)
 	private String code;
 
-	@Column(name = "title", length = 250)
+	@Column(name = "title")
+	@Size(max = 250)
 	private String title;
 
 	public String getCode() {

@@ -9,6 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "TARIFF")
@@ -16,10 +20,13 @@ public class Tariff extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = -8694449318602384617L;
 
-	@Column(name = "name", nullable = false, length = 250)
+	@Column(name = "name")
+	@NotEmpty
+	@Size(max = 250)
 	private String name;
 
-	@Column(name = "valid", nullable = false)
+	@Column(name = "valid")
+	@NotNull
 	private Boolean valid;
 
 	@OneToMany(mappedBy = "tariff", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

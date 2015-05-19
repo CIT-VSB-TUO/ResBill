@@ -6,6 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "FILE")
@@ -13,13 +17,17 @@ public class File extends BaseGeneratedIdEntity {
 
 	private static final long serialVersionUID = 857967863538385522L;
 
-	@Column(name = "name", length = 250, nullable = false)
+	@Column(name = "name")
+	@NotEmpty
+	@Size(max = 250)
 	private String name;
 
-	@Column(name = "size", nullable = false)
+	@Column(name = "size")
+	@NotNull
 	private Long size;
 
-	@Column(name = "content_type", length = 250)
+	@Column(name = "content_type")
+	@Size(max = 250)
 	private String contentType;
 
 	@Lob

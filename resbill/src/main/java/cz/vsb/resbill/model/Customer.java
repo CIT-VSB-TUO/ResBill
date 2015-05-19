@@ -13,6 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "CUSTOMER", uniqueConstraints = @UniqueConstraint(name = "UK_customer__name", columnNames = "name"))
@@ -20,17 +24,22 @@ public class Customer extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = 4230333908768136588L;
 
-	@Column(name = "name", length = 250, nullable = false)
+	@Column(name = "name")
+	@NotEmpty
+	@Size(max = 250)
 	private String name;
 
-	@Column(name = "note", length = 1000)
+	@Column(name = "note")
+	@Size(max = 1000)
 	private String note;
 
-	@Column(name = "billing_note", length = 1000)
+	@Column(name = "billing_note")
+	@Size(max = 1000)
 	private String billingNote;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "contact_person_id", nullable = false, foreignKey = @ForeignKey(name = "FK_customer__contact_person"))
+	@JoinColumn(name = "contact_person_id", foreignKey = @ForeignKey(name = "FK_customer__contact_person"))
+	@NotNull
 	private Person contactPerson;
 
 	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

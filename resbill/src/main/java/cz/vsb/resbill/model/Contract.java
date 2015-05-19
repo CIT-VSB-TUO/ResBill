@@ -15,6 +15,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "CONTRACT", uniqueConstraints = @UniqueConstraint(name = "UK_contract__evidence_number", columnNames = "evidence_number"))
@@ -22,23 +28,33 @@ public class Contract extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = 346744894255948553L;
 
-	@Column(name = "evidence_number", nullable = false)
+	@Column(name = "evidence_number")
+	@NotNull
+	@Digits(integer = 10, fraction = 0)
 	private Integer evidenceNumber;
 
-	@Column(name = "name", length = 250, nullable = false)
+	@Column(name = "name")
+	@Size(max = 250)
+	@NotEmpty
 	private String name;
 
-	@Column(name = "note", length = 1000)
+	@Column(name = "note")
+	@Size(max = 1000)
 	private String note;
 
-	@Column(name = "balance", nullable = false, precision = 16, scale = 2)
+	@Column(name = "balance")
+	@NotNull
+	@Digits(integer = 14, fraction = 2)
 	private BigDecimal balance;
 
 	@Embedded
+	@NotNull
+	@Valid
 	private Period period;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "customer_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract__customer"))
+	@JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_contract__customer"))
+	@NotNull
 	private Customer customer;
 
 	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
