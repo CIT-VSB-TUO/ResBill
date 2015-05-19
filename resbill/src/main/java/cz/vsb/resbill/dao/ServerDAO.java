@@ -9,5 +9,9 @@ public interface ServerDAO {
 
 	Server findServer(Integer id);
 
+	Server findServer(String serverServerId);
+
 	List<Server> findServers(ServerCriteria criteria);
+
+	Server saveServer(Server server);
 }

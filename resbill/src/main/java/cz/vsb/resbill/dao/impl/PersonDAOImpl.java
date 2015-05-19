@@ -89,6 +89,9 @@ public class PersonDAOImpl implements PersonDAO {
 		} else {
 			person = em.merge(person);
 		}
+		
+		em.flush();
+		
 		return person;
 	}
 }

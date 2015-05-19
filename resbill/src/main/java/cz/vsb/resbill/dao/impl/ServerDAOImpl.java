@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 
 import cz.vsb.resbill.criteria.ServerCriteria;
@@ -21,11 +22,34 @@ public class ServerDAOImpl implements ServerDAO {
 	@PersistenceContext
 	private EntityManager em;
 
+	/**
+	 * 
+	 */
 	@Override
 	public Server findServer(Integer id) {
 		return em.find(Server.class, id);
 	}
 
+	/**
+	 * 
+	 */
+	@Override
+	public Server findServer(String serverServerId) {
+		StringBuilder jpql = new StringBuilder();
+		jpql.append(" SELECT server ");
+		jpql.append(" FROM Server AS server ");
+		jpql.append(" WHERE server.serverId = :serverId ");
+
+		TypedQuery<Server> query = em.createQuery(jpql.toString(), Server.class);
+
+		query.setParameter("serverId", serverServerId);
+
+		return DataAccessUtils.uniqueResult(query.getResultList());
+	}
+
+	/**
+	 * 
+	 */
 	@Override
 	public List<Server> findServers(ServerCriteria criteria) {
 		StringBuilder jpql = new StringBuilder("SELECT s FROM Server AS s");
@@ -84,4 +108,21 @@ public class ServerDAOImpl implements ServerDAO {
 		return query.getResultList();
 	}
 
+	/**
+	 * 
+	 * @param person
+	 * @return
+	 */
+	@Override
+	public Server saveServer(Server server) {
+		if (server.getId() == null) {
+			em.persist(server);
+		} else {
+			server = em.merge(server);
+		}
+
+		em.flush();
+
+		return server;
+	}
 }
