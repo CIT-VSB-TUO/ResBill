@@ -54,6 +54,7 @@
 	<mvc:resources location="/font-awesome/" mapping="/font-awesome/**"/>
 	<mvc:resources location="/fonts/" mapping="/fonts/**"/>
 	<mvc:resources location="/js/" mapping="/js/**"/>
+	<mvc:resources location="/bower_components/" mapping="/bower_components/**"/>
 	
 	<mvc:annotation-driven/>
 	
