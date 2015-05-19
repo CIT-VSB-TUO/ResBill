@@ -241,7 +241,7 @@
         note varchar(1000),
         tx_order int4 not null,
         title varchar(250),
-        begin_date date not null,
+        begin_date date,
         end_date date,
         contract_id int4 not null,
         transaction_type_id int4 not null,
@@ -259,8 +259,17 @@
     alter table if exists CONTRACT 
         add constraint UK_contract__evidence_number  unique (evidence_number);
 
+    alter table if exists CONTRACT_INVOICE_TYPE 
+        add constraint UK_contract_invoice_type__contract_id__invoice_type_id__begin_date  unique (contract_id, invoice_type_id, begin_date);
+
     alter table if exists CONTRACT_PERSON 
-        add constraint UK_contract_person__contract__person  unique (contract_id, person_id);
+        add constraint UK_contract_person__contract_id__person_id  unique (contract_id, person_id);
+
+    alter table if exists CONTRACT_SERVER 
+        add constraint UK_contract_server__contract_id__server_id__begin_date  unique (contract_id, server_id, begin_date);
+
+    alter table if exists CONTRACT_TARIFF 
+        add constraint UK_contract_tariff__contract_id__tariff_id__begin_date  unique (contract_id, tariff_id, begin_date);
 
     alter table if exists CUSTOMER 
         add constraint UK_customer__name  unique (name);
