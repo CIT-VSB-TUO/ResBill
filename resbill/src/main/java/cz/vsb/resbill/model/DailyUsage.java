@@ -36,28 +36,35 @@ public class DailyUsage extends BaseGeneratedIdEntity {
 	private String serverName;
 
 	@Column(name = "cpu")
-	private Integer cpu;
+	@NotNull
+	private Integer cpu = Integer.valueOf(0);
 
 	@Column(name = "memory_mb")
-	private Integer memoryMB;
+	@NotNull
+	private Integer memoryMB = Integer.valueOf(0);
 
 	@Column(name = "prov_space_gb")
+	@NotNull
 	@Digits(integer = 8, fraction = 2)
-	private BigDecimal provisionedSpaceGB;
+	private BigDecimal provisionedSpaceGB = BigDecimal.ZERO.setScale(2);
 
 	@Column(name = "used_space_gb")
+	@NotNull
 	@Digits(integer = 8, fraction = 2)
-	private BigDecimal usedSpaceGB;
+	private BigDecimal usedSpaceGB = BigDecimal.ZERO.setScale(2);
 
 	@Column(name = "backup_gb")
+	@NotNull
 	@Digits(integer = 8, fraction = 2)
-	private BigDecimal backupGB;
+	private BigDecimal backupGB = BigDecimal.ZERO.setScale(2);
 
 	@Column(name = "power_state")
-	private Boolean powerState;
+	@NotNull
+	private Boolean powerState = Boolean.FALSE;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "prod_level_id", foreignKey = @ForeignKey(name = "FK_daily_usage__production_level"))
+	@NotNull
 	private ProductionLevel productionLevel;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)

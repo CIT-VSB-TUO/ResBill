@@ -14,21 +14,23 @@ public class ProductionLevel extends BaseEnumeratedIdEntity {
 
 	private static final long serialVersionUID = 42165378614212986L;
 
-	public static final Integer P1 = 1;
+	public static final Integer INIT = 1;
 
-	public static final Integer P2 = 2;
+	public static final Integer P1 = 2;
 
-	public static final Integer P3 = 3;
+	public static final Integer P2 = 3;
 
-	public static final Integer TESTING = 4;
+	public static final Integer P3 = 4;
 
-	public static final Integer OFF1 = 5;
+	public static final Integer TESTING = 5;
 
-	public static final Integer OFF2 = 6;
+	public static final Integer OFF1 = 6;
 
-	public static final Integer OFF3 = 7;
+	public static final Integer OFF2 = 7;
 
-	public static final Integer OFF_TESTING = 8;
+	public static final Integer OFF3 = 8;
+
+	public static final Integer OFF_TESTING = 9;
 
 	@Column(name = "code")
 	@NotEmpty

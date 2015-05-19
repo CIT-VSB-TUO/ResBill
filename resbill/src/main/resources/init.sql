@@ -147,15 +147,15 @@
 
     create table if not exists DAILY_USAGE (
         id int4 not null,
-        backup_gb numeric(10, 2),
-        cpu int4,
+        backup_gb numeric(10, 2) not null,
+        cpu int4 not null,
         usage_date date not null,
-        memory_mb int4,
-        power_state boolean,
-        prov_space_gb numeric(10, 2),
+        memory_mb int4 not null,
+        power_state boolean not null,
+        prov_space_gb numeric(10, 2) not null,
         server_name varchar(100) not null,
-        used_space_gb numeric(10, 2),
-        prod_level_id int4,
+        used_space_gb numeric(10, 2) not null,
+        prod_level_id int4 not null,
         server_id int4 not null,
         primary key (id)
     );
@@ -390,12 +390,13 @@
     insert into transaction_type (id, title) values(3, 'extra položka');
     
     -- PRODUCTION_LEVEL --
-    insert into production_level (id, code, title) values(1, 'p1', null);
-    insert into production_level (id, code, title) values(2, 'p2', null);
-    insert into production_level (id, code, title) values(3, 'p3', null);
-    insert into production_level (id, code, title) values(4, 'testing', null);
-    insert into production_level (id, code, title) values(5, 'off1', null);
-    insert into production_level (id, code, title) values(6, 'off2', null);
-    insert into production_level (id, code, title) values(7, 'off3', null);
-    insert into production_level (id, code, title) values(8, 'off-testing', null);
+    insert into production_level (id, code, title) values(1, 'init', null);
+    insert into production_level (id, code, title) values(2, 'p1', null);
+    insert into production_level (id, code, title) values(3, 'p2', null);
+    insert into production_level (id, code, title) values(4, 'p3', null);
+    insert into production_level (id, code, title) values(5, 'testing', null);
+    insert into production_level (id, code, title) values(6, 'off1', null);
+    insert into production_level (id, code, title) values(7, 'off2', null);
+    insert into production_level (id, code, title) values(8, 'off3', null);
+    insert into production_level (id, code, title) values(9, 'off-testing', null);
 
