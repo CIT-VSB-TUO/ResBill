@@ -37,6 +37,7 @@
 		<!-- Apache Commons -->
 		<commons-lang.version>3.3.2</commons-lang.version>
 		<commons-collections.version>4.0</commons-collections.version>
+		<commons-io.version>2.4</commons-io.version>
 		
 		<!-- JDBC driver -->
 		<postgresql-driver.version>9.4-1201-jdbc41</postgresql-driver.version>
@@ -183,6 +184,11 @@
 			<artifactId>commons-collections4</artifactId>
 			<version>${commons-collections.version}</version>
 		</dependency>
+		<dependency>
+		  <groupId>commons-io</groupId>
+		  <artifactId>commons-io</artifactId>
+		  <version>${commons-io.version}</version>
+		</dependency>		
 		
 		<!-- JDBC -->
 		<dependency>
