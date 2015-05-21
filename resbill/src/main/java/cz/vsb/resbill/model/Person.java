@@ -8,6 +8,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -113,6 +114,72 @@ public class Person extends BaseVersionedEntity {
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	/**
+	 * Returns the full name in the form: 'first_name second_name'
+	 * 
+	 * @return
+	 */
+	public String getFullName() {
+		StringBuilder sb = new StringBuilder();
+
+		if (StringUtils.isNotEmpty(getFirstName())) {
+			sb.append(getFirstName());
+		}
+		if (StringUtils.isNotEmpty(getSecondName())) {
+			if (sb.length() > 0) sb.append(" ");
+			sb.append(getSecondName());
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * Returns the full name with titles in the form: 'title_before first_name
+	 * second_name, title_after'
+	 * 
+	 * @return
+	 */
+	public String getFullNameWithTitles() {
+		StringBuilder sb = new StringBuilder();
+
+		if (StringUtils.isNotEmpty(getTitleBefore())) {
+			sb.append(getTitleBefore());
+		}
+		if (StringUtils.isNotEmpty(getFirstName())) {
+			if (sb.length() > 0) sb.append(" ");
+			sb.append(getFirstName());
+		}
+		if (StringUtils.isNotEmpty(getSecondName())) {
+			if (sb.length() > 0) sb.append(" ");
+			sb.append(getSecondName());
+		}
+		if (StringUtils.isNotEmpty(getTitleAfter())) {
+			if (sb.length() > 0) sb.append(", ");
+			sb.append(getTitleAfter());
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * Returns titles in the form: 'title_before, title_after'
+	 * 
+	 * @return
+	 */
+	public String getTitles() {
+		StringBuilder sb = new StringBuilder();
+
+		if (StringUtils.isNotEmpty(getTitleBefore())) {
+			sb.append(getTitleBefore());
+		}
+		if (StringUtils.isNotEmpty(getTitleAfter())) {
+			if (sb.length() > 0) sb.append(", ");
+			sb.append(getTitleAfter());
+		}
+
+		return sb.toString();
 	}
 
 	@Override

@@ -28,6 +28,11 @@ public abstract class BaseVersionedEntity extends BaseGeneratedIdEntity implemen
 	}
 
 	@Override
+	public void setLockVersion(int lockVersion) {
+		this.lockVersion = lockVersion;
+	}
+
+	@Override
 	public String toString() {
 		ToStringBuilder builder = new ToStringBuilder(this);
 		builder.append("lockVersion", lockVersion);

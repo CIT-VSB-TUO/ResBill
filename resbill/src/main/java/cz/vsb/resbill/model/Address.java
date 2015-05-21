@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
+
 @Embeddable
 public class Address implements Serializable {
 
@@ -93,6 +95,50 @@ public class Address implements Serializable {
 
 	public void setZip(String zip) {
 		this.zip = zip;
+	}
+
+	public String getHouseNumbers() {
+		StringBuilder sb = new StringBuilder();
+
+		if (StringUtils.isNotEmpty(getDescriptiveNumber())) {
+			sb.append(getDescriptiveNumber());
+		}
+		if (StringUtils.isNotEmpty(getOrientationNumber())) {
+			if (sb.length() > 0) sb.append("/");
+			sb.append(getOrientationNumber());
+		}
+
+		return sb.toString();
+	}
+
+	public String getInlineFormat() {
+		StringBuilder sb = new StringBuilder();
+
+		if (StringUtils.isNotEmpty(getStreet())) {
+			sb.append(getStreet());
+		}
+		if (StringUtils.isNotEmpty(getHouseNumbers())) {
+			if (sb.length() > 0) sb.append(" ");
+			sb.append(getHouseNumbers());
+		}
+		if (StringUtils.isNotEmpty(getCity())) {
+			if (sb.length() > 0) sb.append(", ");
+			sb.append(getCity());
+		}
+		if (StringUtils.isNotEmpty(getCityPart())) {
+			if (sb.length() > 0) sb.append("-");
+			sb.append(getCityPart());
+		}
+		if (StringUtils.isNotEmpty(getZip())) {
+			if (sb.length() > 0) sb.append(", ");
+			sb.append(getZip());
+		}
+		if (StringUtils.isNotEmpty(getCountry())) {
+			if (sb.length() > 0) sb.append(", ");
+			sb.append(getCountry());
+		}
+
+		return sb.toString();
 	}
 
 	@Override

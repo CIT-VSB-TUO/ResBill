@@ -15,4 +15,12 @@ public interface VersionedEntity {
 	 */
 	int getLockVersion();
 
+	/**
+	 * /** Sets the lock version number of this entity.
+	 * 
+	 * @param lockVersion
+	 *          optimistic lock version number to set
+	 */
+	void setLockVersion(int lockVersion);
+
 }
