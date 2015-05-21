@@ -19,7 +19,7 @@ public interface PersonDAO {
 	 *          primary key
 	 * @return
 	 */
-	Person findPerson(Integer id);
+	Person findPerson(Integer perosnId);
 
 	/**
 	 * Finds persons by specified criteria
@@ -37,4 +37,13 @@ public interface PersonDAO {
 	 * @return saved entity
 	 */
 	Person savePerson(Person person);
+
+	/**
+	 * Deletes given {@link Person} entity.
+	 * 
+	 * @param person
+	 *          entity to delete
+	 * @return deleted entity
+	 */
+	Person deletePerson(Person person);
 }

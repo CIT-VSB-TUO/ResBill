@@ -22,7 +22,7 @@ public class PersonCriteria implements Serializable {
 
 	private String secondName;
 
-	private OrderBy orderBy = OrderBy.NAME;
+	private OrderBy orderBy = OrderBy.EMAIL;
 
 	public String getEmail() {
 		return email;

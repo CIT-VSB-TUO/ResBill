@@ -20,8 +20,26 @@ public class PersonServiceImpl implements PersonService {
 	private PersonDAO personDAO;
 
 	@Override
+	public Person fidPerson(Integer personId) {
+		return personDAO.findPerson(personId);
+	}
+
+	@Override
 	public List<Person> findPersons(PersonCriteria criteria) {
 		return personDAO.findPersons(criteria);
 	}
 
+	@Override
+	public Person savePerson(Person person) {
+		return personDAO.savePerson(person);
+	}
+
+	@Override
+	public Person deletePerson(Integer personId) {
+		Person person = personDAO.findPerson(personId);
+		if (person != null) {
+			personDAO.deletePerson(person);
+		}
+		return person;
+	}
 }

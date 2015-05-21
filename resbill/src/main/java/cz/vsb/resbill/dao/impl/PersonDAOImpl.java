@@ -28,8 +28,8 @@ public class PersonDAOImpl implements PersonDAO {
 	private EntityManager em;
 
 	@Override
-	public Person findPerson(Integer id) {
-		return em.find(Person.class, id);
+	public Person findPerson(Integer personId) {
+		return em.find(Person.class, personId);
 	}
 
 	@Override
@@ -89,9 +89,15 @@ public class PersonDAOImpl implements PersonDAO {
 		} else {
 			person = em.merge(person);
 		}
-		
 		em.flush();
-		
+
+		return person;
+	}
+
+	@Override
+	public Person deletePerson(Person person) {
+		em.remove(person);
+		em.flush();
 		return person;
 	}
 }

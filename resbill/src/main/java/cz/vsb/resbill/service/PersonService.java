@@ -7,5 +7,11 @@ import cz.vsb.resbill.model.Person;
 
 public interface PersonService {
 
+	Person fidPerson(Integer personId);
+
 	List<Person> findPersons(PersonCriteria criteria);
+
+	Person savePerson(Person person);
+
+	Person deletePerson(Integer personId);
 }
