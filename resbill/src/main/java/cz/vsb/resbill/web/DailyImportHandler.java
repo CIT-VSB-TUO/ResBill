@@ -15,17 +15,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.HttpRequestHandler;
 
-import cz.vsb.resbill.service.DailyUsageImportService;
+import cz.vsb.resbill.service.DailyImportService;
 
 /**
  * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
  *
  */
-@Component(value = "DailyUsageImportServlet")
-public class DailyUsageImportHandler implements HttpRequestHandler {
+@Component(value = "DailyImportServlet")
+public class DailyImportHandler implements HttpRequestHandler {
 
 	@Inject
-	private DailyUsageImportService dailyUsageImportService;
+	private DailyImportService dailyImportService;
 
 	/**
 	 * 
@@ -34,9 +34,16 @@ public class DailyUsageImportHandler implements HttpRequestHandler {
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 
-		System.out.println("DOVOLAL JSEM SE");
-		dailyUsageImportService.importDailyUsage();
-		System.out.println("HOTOVO");
+//		Date date = new java.sql.Date(2014, 02, 01);
+
+//		out.println("Importuji pro den: " + date);
+		out.println("Zacinam import...");
+		out.flush();
+
+//		dailyImportService.importDailyReport(date);
+		dailyImportService.importAllReports();
+		
+		
 
 		out.println("DOKONCENO");
 	}

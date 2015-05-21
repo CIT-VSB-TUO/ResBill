@@ -1,7 +1,6 @@
 package cz.vsb.resbill.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +9,6 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
@@ -20,15 +17,15 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name = "DAILY_USAGE", uniqueConstraints = @UniqueConstraint(name = "UK_daily_usage__date__server_id", columnNames = { "usage_date", "server_id" }))
+@Table(name = "DAILY_USAGE", uniqueConstraints = @UniqueConstraint(name = "UK_daily_usage__daily_import_id__server_id", columnNames = { "daily_import_id", "server_id" }))
 public class DailyUsage extends BaseGeneratedIdEntity {
 
 	private static final long serialVersionUID = 144836678591268182L;
 
-	@Column(name = "usage_date")
-	@Temporal(TemporalType.DATE)
-	@NotNull
-	private Date date;
+	// @Column(name = "usage_date")
+	// @Temporal(TemporalType.DATE)
+	// @NotNull
+	// private Date date;
 
 	@Column(name = "server_name")
 	@NotEmpty
@@ -72,12 +69,32 @@ public class DailyUsage extends BaseGeneratedIdEntity {
 	@NotNull
 	private Server server;
 
-	public Date getDate() {
-		return date;
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "daily_import_id", foreignKey = @ForeignKey(name = "FK_daily_usage__daily_import"))
+	@NotNull
+	private DailyImport dailyImport;
+
+	// public Date getDate() {
+	// return date;
+	// }
+	//
+	// public void setDate(Date date) {
+	// this.date = date;
+	// }
+
+	/**
+	 * @return the dailyImport
+	 */
+	public DailyImport getDailyImport() {
+		return dailyImport;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	/**
+	 * @param dailyImport
+	 *          the dailyImport to set
+	 */
+	public void setDailyImport(DailyImport dailyImport) {
+		this.dailyImport = dailyImport;
 	}
 
 	public String getServerName() {
@@ -157,8 +174,8 @@ public class DailyUsage extends BaseGeneratedIdEntity {
 		StringBuilder builder = new StringBuilder();
 		builder.append("DailyUsage [");
 		builder.append(super.toString());
-		builder.append(", date=");
-		builder.append(date);
+		builder.append(", dailyImport.id=");
+		builder.append(dailyImport != null ? dailyImport.getId() : null);
 		builder.append(", serverName=");
 		builder.append(serverName);
 		builder.append(", cpu=");
@@ -176,7 +193,7 @@ public class DailyUsage extends BaseGeneratedIdEntity {
 		builder.append(", productionLevel.id=");
 		builder.append(productionLevel != null ? productionLevel.getId() : null);
 		builder.append(", server.id=");
-		builder.append(server != null ? server : null);
+		builder.append(server != null ? server.getId() : null);
 		builder.append("]");
 		return builder.toString();
 	}

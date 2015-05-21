@@ -23,7 +23,7 @@
 		<property name="basename" value="messages" />
 	</bean>
 	
-	 <bean id="dailyUsageImportService" class="cz.vsb.resbill.service.impl.DailyUsageImportServiceImpl"/>
+	<bean id="dailyImportService" class="cz.vsb.resbill.service.impl.DailyImportServiceImpl"/>
 	
 	<!-- Persistence layer -->
 	<jee:jndi-lookup id="resbillDS" jndi-name="java:comp/env/jdbc/ResBillDS"/>

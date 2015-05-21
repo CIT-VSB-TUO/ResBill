@@ -31,6 +31,9 @@
         drop constraint if exists FK_customer__contact_person;
 
     alter table if exists DAILY_USAGE 
+        drop constraint FK_daily_usage__daily_import;        
+        
+    alter table if exists DAILY_USAGE 
         drop constraint if exists FK_daily_usage__production_level;
 
     alter table if exists DAILY_USAGE 
@@ -62,6 +65,8 @@
     drop table if exists CONTRACT_TARIFF cascade;
 
     drop table if exists CUSTOMER cascade;
+    
+    drop table if exists DAILY_IMPORT cascade;
 
     drop table if exists DAILY_USAGE cascade;
 
@@ -145,16 +150,33 @@
         primary key (id)
     );
 
-    create table if not exists DAILY_USAGE (
+    create table if not exists DAILY_IMPORT (
+        id int4 not null,
+        lock_version int4 not null,
+        all_lines int4,
+        import_date date not null,
+        error_lines int4,
+        import_begin_timestamp timestamp not null,
+        import_end_timestamp timestamp,
+        ok_lines int4,
+        protocol text,
+        report text,
+        report_name varchar(100) not null,
+        success boolean,
+        warn_lines int4,
+        primary key (id)
+    );    
+    
+    create table DAILY_USAGE (
         id int4 not null,
         backup_gb numeric(10, 2) not null,
         cpu int4 not null,
-        usage_date date not null,
         memory_mb int4 not null,
         power_state boolean not null,
         prov_space_gb numeric(10, 2) not null,
         server_name varchar(100) not null,
         used_space_gb numeric(10, 2) not null,
+        daily_import_id int4 not null,
         prod_level_id int4 not null,
         server_id int4 not null,
         primary key (id)
@@ -274,8 +296,11 @@
     alter table if exists CUSTOMER 
         add constraint UK_customer__name  unique (name);
 
-    alter table if exists DAILY_USAGE 
-        add constraint UK_daily_usage__date__server_id  unique (usage_date, server_id);
+    alter table if exists DAILY_IMPORT 
+        add constraint UK_daily_import__date  unique (import_date);        
+        
+    alter table DAILY_USAGE 
+        add constraint UK_daily_usage__daily_import_id__server_id  unique (daily_import_id, server_id);
 
     alter table if exists PERSON 
         add constraint UK_person__email  unique (email);
@@ -339,6 +364,11 @@
         foreign key (contact_person_id) 
         references PERSON;
 
+    alter table DAILY_USAGE 
+        add constraint FK_daily_usage__daily_import 
+        foreign key (daily_import_id) 
+        references DAILY_IMPORT;        
+        
     alter table if exists DAILY_USAGE 
         add constraint FK_daily_usage__production_level 
         foreign key (prod_level_id) 
