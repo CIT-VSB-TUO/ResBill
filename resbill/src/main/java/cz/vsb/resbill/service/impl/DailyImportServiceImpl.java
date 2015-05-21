@@ -45,6 +45,7 @@ import cz.vsb.resbill.model.DailyUsage;
 import cz.vsb.resbill.model.ProductionLevel;
 import cz.vsb.resbill.model.Server;
 import cz.vsb.resbill.service.DailyImportService;
+import cz.vsb.resbill.service.MailSenderService;
 import cz.vsb.resbill.util.NumberUtils;
 import cz.vsb.resbill.util.ResourceBundleUtils;
 
@@ -67,6 +68,9 @@ public class DailyImportServiceImpl implements DailyImportService {
 
 	@Inject
 	private DailyImportService dailyImportService;
+
+	@Inject
+	private MailSenderService mailSenderService;
 
 	@Inject
 	private ServerDAO serverDAO;
@@ -92,7 +96,6 @@ public class DailyImportServiceImpl implements DailyImportService {
 
 			ResourceBundle rb = ResourceBundle.getBundle(ResourceBundleUtils.CONFIG_BUNDLE);
 			String dirName = rb.getString("dir.import.reports");
-
 			log.info("Jmeno adresare: " + dirName);
 
 			// Ziskani adresare
@@ -180,14 +183,14 @@ public class DailyImportServiceImpl implements DailyImportService {
 			if (line != null && !line.startsWith("serverId")) {
 				LineImportData lineImportData = new LineImportData();
 				lineImportData.line = line;
-				lineImportData.lineNumber = lineNumber;
+				lineImportData.lineNumber = lineNumber + 1; // v poli se pocita od 0, ale radky v souboru jsou od 1
 
 				dailyImportService.importLine(dailyImport, lineImportData);
 
 				lineImportDatas.add(lineImportData);
 			}
 		}
-		
+
 		// Zaznamenani ukonceni denniho importu
 		dailyImportService.endDailyImport(dailyImport, lineImportDatas);
 
@@ -249,10 +252,36 @@ public class DailyImportServiceImpl implements DailyImportService {
 
 		dailyImport.setSuccess(errorLines == 0);
 
+		// TODO: nacpat do prekladoveho souboru
+		// Souhrnne informace:
+		StringBuilder protocolSummary = new StringBuilder();
+		protocolSummary.append("Zpracovávaný soubor: ").append(dailyImport.getReportName());
+		protocolSummary.append("\n----------------------------------------------------------");
+		protocolSummary.append("\nVýsledek importu: ");
+		if (errorLines == 0 && warnLines == 0) {
+			protocolSummary.append("Vše v pořádku. Není potřeba kontrola.");
+		} else if (errorLines == 0) {
+			protocolSummary.append("Import v pořádku, ale existují varování. Doporučena kontrola.");
+		} else {
+			protocolSummary.append("Import s chybama. Nutná kontrola.");
+		}
+		protocolSummary.append("\n----------------------------------------------------------");
+		protocolSummary.append("\nCelkem řádků: ").append(dailyImport.getAllLines());
+		protocolSummary.append("\nBezvadných řádků: ").append(dailyImport.getOkLines());
+		protocolSummary.append("\nŘádků s varováním: ").append(dailyImport.getWarnLines());
+		protocolSummary.append("\nChybných řádků: ").append(dailyImport.getErrorLines());
+		protocolSummary.append("\n----------------------------------------------------------");
+		protocolSummary.append("\n\n");
+		
+		protocol.insert(0, protocolSummary);
+
 		dailyImport.setProtocol(protocol.toString());
 		dailyImport.setImportEndTimestamp(new Date());
 
 		dailyImportDAO.saveDailyImport(dailyImport);
+
+		ResourceBundle rb = ResourceBundle.getBundle(ResourceBundleUtils.CONFIG_BUNDLE);
+		mailSenderService.send(rb.getString("email.group.admins"), rb.getString("email.subject.dailyImport") + " - " + dailyImport.getReportName(), dailyImport.getProtocol());
 	}
 
 	/**
