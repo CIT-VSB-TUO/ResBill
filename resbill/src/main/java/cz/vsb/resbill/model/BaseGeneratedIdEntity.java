@@ -6,8 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 /**
  * A common ancestor of entities with an automatically generated primary key.
  * 
@@ -36,8 +34,12 @@ public abstract class BaseGeneratedIdEntity extends BaseDomainEntity {
 
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("id", id);
+		StringBuilder builder = new StringBuilder();
+		builder.append("BaseGeneratedIdEntity [");
+		builder.append(super.toString());
+		builder.append(", id=");
+		builder.append(id);
+		builder.append("]");
 		return builder.toString();
 	}
 
