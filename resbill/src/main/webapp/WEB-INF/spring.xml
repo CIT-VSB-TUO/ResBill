@@ -24,7 +24,7 @@
 	</bean>
 	
 	 <bean id="dailyUsageImportService" class="cz.vsb.resbill.service.impl.DailyUsageImportServiceImpl"/>
-    
+	
 	<!-- Persistence layer -->
 	<jee:jndi-lookup id="resbillDS" jndi-name="java:comp/env/jdbc/ResBillDS"/>
 	
@@ -37,7 +37,6 @@
 		<property name="jpaProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL82Dialect</prop>
-				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.format_sql">true</prop>
 				<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
 			</props>
