@@ -26,4 +26,13 @@ public class ResBillException extends Exception {
 		super(cause);
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ResBillException [");
+		builder.append(super.toString());
+		builder.append(", ]");
+		return builder.toString();
+	}
+
 }

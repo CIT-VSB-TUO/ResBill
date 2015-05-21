@@ -17,7 +17,7 @@ public interface PersonDAO {
 	 * 
 	 * @param id
 	 *          primary key
-	 * @return
+	 * @return found {@link Person} entity
 	 */
 	Person findPerson(Integer perosnId);
 
