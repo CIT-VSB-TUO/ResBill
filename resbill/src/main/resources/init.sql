@@ -31,7 +31,7 @@
         drop constraint if exists FK_customer__contact_person;
 
     alter table if exists DAILY_USAGE 
-        drop constraint FK_daily_usage__daily_import;        
+        drop constraint if exists FK_daily_usage__daily_import;
         
     alter table if exists DAILY_USAGE 
         drop constraint if exists FK_daily_usage__production_level;
@@ -165,9 +165,9 @@
         success boolean,
         warn_lines int4,
         primary key (id)
-    );    
+    );
     
-    create table DAILY_USAGE (
+    create table if not exists DAILY_USAGE (
         id int4 not null,
         backup_gb numeric(10, 2) not null,
         cpu int4 not null,
@@ -299,7 +299,7 @@
     alter table if exists DAILY_IMPORT 
         add constraint UK_daily_import__date  unique (import_date);        
         
-    alter table DAILY_USAGE 
+    alter table if exists DAILY_USAGE 
         add constraint UK_daily_usage__daily_import_id__server_id  unique (daily_import_id, server_id);
 
     alter table if exists PERSON 
@@ -364,7 +364,7 @@
         foreign key (contact_person_id) 
         references PERSON;
 
-    alter table DAILY_USAGE 
+    alter table if exists DAILY_USAGE 
         add constraint FK_daily_usage__daily_import 
         foreign key (daily_import_id) 
         references DAILY_IMPORT;        

@@ -23,8 +23,8 @@
 		<property name="basename" value="messages" />
 	</bean>
 	
-  <bean id="dailyImportService" class="cz.vsb.resbill.service.impl.DailyImportServiceImpl"/>
-    
+	<bean id="dailyImportService" class="cz.vsb.resbill.service.impl.DailyImportServiceImpl"/>
+	
 	<!-- Persistence layer -->
 	<jee:jndi-lookup id="resbillDS" jndi-name="java:comp/env/jdbc/ResBillDS"/>
 	
@@ -37,7 +37,6 @@
 		<property name="jpaProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL82Dialect</prop>
-				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.format_sql">true</prop>
 				<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
 			</props>
@@ -49,6 +48,12 @@
 	</bean>
 
 	<tx:annotation-driven transaction-manager="txManager"/>
+	
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="*" rollback-for="cz.vsb.resbill.exception.ResBillException"/>
+		</tx:attributes>
+	</tx:advice>
 	
 	<!-- Web layer -->
 	<mvc:resources location="/img/" mapping="/img/**"/>
