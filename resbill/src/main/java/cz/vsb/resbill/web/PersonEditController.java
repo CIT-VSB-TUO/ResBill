@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import cz.vsb.resbill.exception.ConstraintViolationException;
 import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.service.PersonService;
 
@@ -65,6 +66,17 @@ public class PersonEditController {
 		if (!bindingResult.hasErrors()) {
 			try {
 				personService.savePerson(person);
+			} catch (ConstraintViolationException e) {
+				switch (e.getReason()) {
+				case UNIQUE_KEY:
+					bindingResult.reject("error.save.person.constraint.unique.email");
+					break;
+				default:
+					log.warn("Unknown reason: " + e);
+					bindingResult.reject("error.save.person");
+					break;
+				}
+				return "personEdit";
 			} catch (Exception e) {
 				log.error("Cannot save person: " + person, e);
 				bindingResult.reject("error.save.person");
@@ -85,7 +97,7 @@ public class PersonEditController {
 		try {
 			person = personService.deletePerson(person.getId());
 		} catch (PersistenceException e) {
-			bindingResult.reject("error.delete.person.constraints");
+			bindingResult.reject("error.delete.person.constraint.relations");
 			return "personEdit";
 		} catch (Exception e) {
 			log.error("Cannot delete person: " + person, e);

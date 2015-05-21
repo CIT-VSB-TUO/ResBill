@@ -4,8 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 /**
  * A common ancestor of entities with an enumerated primary key.
  * 
@@ -33,8 +31,12 @@ public abstract class BaseEnumeratedIdEntity extends BaseDomainEntity {
 
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("id", id);
+		StringBuilder builder = new StringBuilder();
+		builder.append("BaseEnumeratedIdEntity [");
+		builder.append(super.toString());
+		builder.append(", id=");
+		builder.append(id);
+		builder.append("]");
 		return builder.toString();
 	}
 
