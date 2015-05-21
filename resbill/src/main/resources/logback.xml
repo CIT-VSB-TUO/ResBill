@@ -2,12 +2,14 @@
 <!DOCTYPE configuration>
 <configuration>
 
+	<!-- Nastavení logování do standardního výstupu -->
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
 		</layout>
 	</appender>
 	
+	<!-- Nastavení logování do souboru resbill.log -->
 	<appender name="resbill" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${catalina.base}/logs/resbill.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -20,6 +22,7 @@
 		</encoder>
 	</appender>	
 	
+	<!-- Nastavení logování do souboru persistence-sql.log  -->
 	<appender name="persistence-sql" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${catalina.base}/logs/persistence-sql.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -32,14 +35,15 @@
 		</encoder>
 	</appender>	
 	
-	<logger name="cz.vsb.resbill" level="DEBUG">
-		<appender-ref ref="resbill" />
-	</logger>
+	<!-- Specifické nastavení logování pro ResBill  -->
+	<logger name="cz.vsb.resbill" level="DEBUG"/>
 	
+	<!-- Logování generovaných SQL příkazů -->
 	<logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
 		<appender-ref ref="persistence-sql" />
 	</logger>
 
+	<!-- Implicitní logování -->
 	<root level="INFO">
 		<appender-ref ref="stdout" />
 		<appender-ref ref="resbill" />
