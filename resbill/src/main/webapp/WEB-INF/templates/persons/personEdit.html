@@ -52,163 +52,163 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
-			<form role="form" method="post" action="#" th:action="@{edit}" th:object="${person}">
-				
-				<div class="row">
-					<div class="col-xs-8 col-xs-offset-2 alert alert-danger" th:if="${#fields.hasErrors('global')}" th:errors="*{global}">Global error</div>
-				</div>
-				
-				<div class="row">
-				
-					<div class="col-md-6">
-						<div class="panel panel-default">
-							<div class="panel-heading" th:text="#{panel.person.data}">Osobní údaje</div>
-							
-							<div class="panel-body">
-
-								<div class="form-group required" th:classappend="${#fields.hasErrors('email')} ? 'has-error'">
-									<label class="control-label" th:text="#{label.person.email}" th:for="email">E-mail</label>
-									<input type="email" class="form-control" th:field="*{email}"/>
-									<p class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" />
-								</div>
-							
-								<div class="form-group" th:classappend="${#fields.hasErrors('titleBefore')} ? 'has-error'">
-									<label class="control-label" th:text="#{label.person.titleBefore}" th:for="titleBefore">Titul před</label>
-									<input type="text" class="form-control" th:field="*{titleBefore}"/>
-									<p class="help-block" th:if="${#fields.hasErrors('titleBefore')}" th:errors="*{titleBefore}" />
-								</div>
-							
-								<div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'has-error'">
-									<label class="control-label" th:text="#{label.person.firstName}" th:for="firstName">Jméno</label>
-									<input type="text" class="form-control" th:field="*{firstName}"/>
-									<p class="help-block" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" />
-								</div>
-							
-								<div class="form-group" th:classappend="${#fields.hasErrors('secondName')} ? 'has-error'">
-									<label class="control-label" th:text="#{label.person.secondName}" th:for="secondName">Příjmení</label>
-									<input type="text" class="form-control" th:field="*{secondName}"/>
-									<p class="help-block" th:if="${#fields.hasErrors('secondName')}" th:errors="*{secondName}" />
-								</div>
-							
-								<div class="form-group" th:classappend="${#fields.hasErrors('titleAfter')} ? 'has-error'">
-									<label class="control-label" th:text="#{label.person.titleAfter}" th:for="titleAfter">Titul po</label>
-									<input type="text" class="form-control" th:field="*{titleAfter}"/>
-									<p class="help-block" th:if="${#fields.hasErrors('titleAfter')}" th:errors="*{titleAfter}" />
-								</div>
-							
-								<div class="form-group" th:classappend="${#fields.hasErrors('phone')} ? 'has-error'">
-									<label class="control-label" th:text="#{label.person.phone}" th:for="phone">Telefon</label>
-									<input type="tel" class="form-control" th:field="*{phone}"/>
-									<p class="help-block" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" />
-								</div>
+				<form role="form" method="post" action="#" th:action="@{edit}" th:object="${person}">
 					
-							</div>
-						</div>
+					<div class="row">
+						<div class="col-xs-8 col-xs-offset-2 alert alert-danger" th:if="${#fields.hasErrors('global')}" th:errors="*{global}">Global error</div>
 					</div>
 					
-					<div class="col-md-6">
-						<div class="panel panel-default">
-							<div class="panel-heading" th:text="#{panel.person.address}">Adresa</div>
-							
-							<div class="panel-body">
-							
-								<div class="form-group" th:classappend="${#fields.hasErrors('address.street')} ? 'has-error'">
-									<label class="control-label" th:text="#{label.address.street}" th:for="address.street">Ulice</label>
-									<input type="text" class="form-control" th:field="*{address.street}"/>
-									<p class="help-block" th:if="${#fields.hasErrors('address.street')}" th:errors="*{address.street}" />
+					<div class="row">
+					
+						<div class="col-md-6">
+							<div class="panel panel-default">
+								<div class="panel-heading" th:text="#{panel.person.data}">Osobní údaje</div>
+								
+								<div class="panel-body">
+	
+									<div class="form-group required" th:classappend="${#fields.hasErrors('email')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.person.email}" th:for="email">E-mail</label>
+										<input type="email" class="form-control" th:field="*{email}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" />
+									</div>
+								
+									<div class="form-group" th:classappend="${#fields.hasErrors('titleBefore')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.person.titleBefore}" th:for="titleBefore">Titul před</label>
+										<input type="text" class="form-control" th:field="*{titleBefore}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('titleBefore')}" th:errors="*{titleBefore}" />
+									</div>
+								
+									<div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.person.firstName}" th:for="firstName">Jméno</label>
+										<input type="text" class="form-control" th:field="*{firstName}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" />
+									</div>
+								
+									<div class="form-group" th:classappend="${#fields.hasErrors('secondName')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.person.secondName}" th:for="secondName">Příjmení</label>
+										<input type="text" class="form-control" th:field="*{secondName}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('secondName')}" th:errors="*{secondName}" />
+									</div>
+								
+									<div class="form-group" th:classappend="${#fields.hasErrors('titleAfter')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.person.titleAfter}" th:for="titleAfter">Titul po</label>
+										<input type="text" class="form-control" th:field="*{titleAfter}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('titleAfter')}" th:errors="*{titleAfter}" />
+									</div>
+								
+									<div class="form-group" th:classappend="${#fields.hasErrors('phone')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.person.phone}" th:for="phone">Telefon</label>
+										<input type="tel" class="form-control" th:field="*{phone}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" />
+									</div>
+						
 								</div>
-
-								<div class="row">
-									<div class="col-md-6">
-									
-										<div class="form-group" th:classappend="${#fields.hasErrors('address.descriptiveNumber')} ? 'has-error'">
-											<label class="control-label" th:text="#{label.address.descriptiveNumber}" th:for="address.descriptiveNumber">Číslo popisné</label>
-											<input type="text" class="form-control" th:field="*{address.descriptiveNumber}"/>
-											<p class="help-block" th:if="${#fields.hasErrors('address.descriptiveNumber')}" th:errors="*{address.descriptiveNumber}" />
-										</div>
+							</div>
+						</div>
+						
+						<div class="col-md-6">
+							<div class="panel panel-default">
+								<div class="panel-heading" th:text="#{panel.person.address}">Adresa</div>
+								
+								<div class="panel-body">
+								
+									<div class="form-group" th:classappend="${#fields.hasErrors('address.street')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.address.street}" th:for="address.street">Ulice</label>
+										<input type="text" class="form-control" th:field="*{address.street}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('address.street')}" th:errors="*{address.street}" />
+									</div>
+	
+									<div class="row">
+										<div class="col-md-6">
 										
-									</div>
-									<div class="col-md-6">
-									
-										<div class="form-group" th:classappend="${#fields.hasErrors('address.orientationNumber')} ? 'has-error'">
-											<label class="control-label" th:text="#{label.address.orientationNumber}" th:for="address.orientationNumber">Číslo orientační</label>
-											<input type="text" class="form-control" th:field="*{address.orientationNumber}"/>
-											<p class="help-block" th:if="${#fields.hasErrors('address.orientationNumber')}" th:errors="*{address.orientationNumber}" />
+											<div class="form-group" th:classappend="${#fields.hasErrors('address.descriptiveNumber')} ? 'has-error'">
+												<label class="control-label" th:text="#{label.address.descriptiveNumber}" th:for="address.descriptiveNumber">Číslo popisné</label>
+												<input type="text" class="form-control" th:field="*{address.descriptiveNumber}"/>
+												<p class="help-block" th:if="${#fields.hasErrors('address.descriptiveNumber')}" th:errors="*{address.descriptiveNumber}" />
+											</div>
+											
 										</div>
-									
+										<div class="col-md-6">
+										
+											<div class="form-group" th:classappend="${#fields.hasErrors('address.orientationNumber')} ? 'has-error'">
+												<label class="control-label" th:text="#{label.address.orientationNumber}" th:for="address.orientationNumber">Číslo orientační</label>
+												<input type="text" class="form-control" th:field="*{address.orientationNumber}"/>
+												<p class="help-block" th:if="${#fields.hasErrors('address.orientationNumber')}" th:errors="*{address.orientationNumber}" />
+											</div>
+										
+										</div>
 									</div>
+									
+									<div class="form-group" th:classappend="${#fields.hasErrors('address.city')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.address.city}" th:for="address.city">Obec</label>
+										<input type="text" class="form-control" th:field="*{address.city}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('address.city')}" th:errors="*{address.city}" />
+									</div>
+									
+									<div class="form-group" th:classappend="${#fields.hasErrors('address.cityPart')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.address.cityPart}" th:for="address.cityPart">Část obce</label>
+										<input type="text" class="form-control" th:field="*{address.cityPart}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('address.cityPart')}" th:errors="*{address.cityPart}" />
+									</div>
+									
+									<div class="form-group" th:classappend="${#fields.hasErrors('address.zip')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.address.zip}" th:for="address.zip">PSČ</label>
+										<input type="text" class="form-control" th:field="*{address.zip}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('address.zip')}" th:errors="*{address.zip}" />
+									</div>
+									
+									<div class="form-group" th:classappend="${#fields.hasErrors('address.country')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.address.country}" th:for="address.cityPart">Stát</label>
+										<input type="text" class="form-control" th:field="*{address.country}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('address.country')}" th:errors="*{address.country}" />
+									</div>
+									
 								</div>
-								
-								<div class="form-group" th:classappend="${#fields.hasErrors('address.city')} ? 'has-error'">
-									<label class="control-label" th:text="#{label.address.city}" th:for="address.city">Obec</label>
-									<input type="text" class="form-control" th:field="*{address.city}"/>
-									<p class="help-block" th:if="${#fields.hasErrors('address.city')}" th:errors="*{address.city}" />
-								</div>
-								
-								<div class="form-group" th:classappend="${#fields.hasErrors('address.cityPart')} ? 'has-error'">
-									<label class="control-label" th:text="#{label.address.cityPart}" th:for="address.cityPart">Část obce</label>
-									<input type="text" class="form-control" th:field="*{address.cityPart}"/>
-									<p class="help-block" th:if="${#fields.hasErrors('address.cityPart')}" th:errors="*{address.cityPart}" />
-								</div>
-								
-								<div class="form-group" th:classappend="${#fields.hasErrors('address.zip')} ? 'has-error'">
-									<label class="control-label" th:text="#{label.address.zip}" th:for="address.zip">PSČ</label>
-									<input type="text" class="form-control" th:field="*{address.zip}"/>
-									<p class="help-block" th:if="${#fields.hasErrors('address.zip')}" th:errors="*{address.zip}" />
-								</div>
-								
-								<div class="form-group" th:classappend="${#fields.hasErrors('address.country')} ? 'has-error'">
-									<label class="control-label" th:text="#{label.address.country}" th:for="address.cityPart">Stát</label>
-									<input type="text" class="form-control" th:field="*{address.country}"/>
-									<p class="help-block" th:if="${#fields.hasErrors('address.country')}" th:errors="*{address.country}" />
-								</div>
-								
 							</div>
 						</div>
 					</div>
-				</div>
-				
-				<div class="row">
-					<div class="col-lg-12">
-
-						<div class="form-group" th:classappend="${#fields.hasErrors('note')} ? 'has-error'">
-							<label class="control-label" th:text="#{label.person.note}" th:for="phone">Poznámka</label>
-							<textarea class="form-control" th:field="*{note}"></textarea>
-							<p class="help-block" th:if="${#fields.hasErrors('note')}" th:errors="*{note}" />
-						</div>
 					
+					<div class="row">
+						<div class="col-lg-12">
+	
+							<div class="form-group" th:classappend="${#fields.hasErrors('note')} ? 'has-error'">
+								<label class="control-label" th:text="#{label.person.note}" th:for="phone">Poznámka</label>
+								<textarea class="form-control" th:field="*{note}"></textarea>
+								<p class="help-block" th:if="${#fields.hasErrors('note')}" th:errors="*{note}" />
+							</div>
+						
+						</div>
 					</div>
-				</div>
-				
-				<div class="row">
-					<div class="col-lg-12">
-						<p>
-							<button class="btn btn-primary" type="submit" name="save" >
-								<i class="fa fa-save"></i>
-								<span th:text="#{button.save}">Save</span>
-							</button>
-							<a href="personList.html" class="btn btn-default" th:href="@{/persons}" >
-								<i class="fa fa-reply"></i>
-								<span th:text="#{button.back}">Back</span>
-							</a>
-							<input type="hidden" name="personId" th:value="*{id}"/>
-							<input type="hidden" th:field="*{lockVersion}"/>
-						</p>				
+					
+					<div class="row">
+						<div class="col-lg-12">
+							<p>
+								<button class="btn btn-primary" type="submit" name="save" >
+									<i class="fa fa-save"></i>
+									<span th:text="#{button.save}">Save</span>
+								</button>
+								<a href="personList.html" class="btn btn-default" th:href="@{/persons}" >
+									<i class="fa fa-reply"></i>
+									<span th:text="#{button.back}">Back</span>
+								</a>
+								<input type="hidden" th:field="*{id}"/>
+								<input type="hidden" th:field="*{lockVersion}"/>
+							</p>				
+						</div>
 					</div>
-				</div>
-				
-				<div class="row" th:if="*{id != null}">
-					<div class="col-lg-12">
-						<p>
-							<button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete" >
-								<i class="fa fa-trash-o"></i>
-								<span th:text="#{button.delete}">Delete</span>
-							</button>
-						</p>
+					
+					<div class="row" th:if="*{id != null}">
+						<div class="col-lg-12">
+							<p>
+								<button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete" >
+									<i class="fa fa-trash-o"></i>
+									<span th:text="#{button.delete}">Delete</span>
+								</button>
+							</p>
+						</div>
 					</div>
-				</div>
-				
-			</form>
+					
+				</form>
 			
 			</div>
 			<!-- /.col-lg-12 -->

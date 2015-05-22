@@ -1,31 +1,31 @@
 package cz.vsb.resbill.exception;
 
-public class ConstraintViolationException extends ResBillException {
+public class PersonServiceException extends ResBillException {
 
 	private static final long serialVersionUID = 1L;
 
 	public static enum Reason {
-		UNIQUE_KEY
+		NONUNIQUE_EMAIL
 	}
 
 	private Reason reason;
 
-	public ConstraintViolationException(Reason reason) {
+	public PersonServiceException(Reason reason) {
 		super();
 		setReason(reason);
 	}
 
-	public ConstraintViolationException(Reason reason, String message, Throwable cause) {
+	public PersonServiceException(Reason reason, String message, Throwable cause) {
 		super(message, cause);
 		setReason(reason);
 	}
 
-	public ConstraintViolationException(Reason reason, String message) {
+	public PersonServiceException(Reason reason, String message) {
 		super(message);
 		setReason(reason);
 	}
 
-	public ConstraintViolationException(Reason reason, Throwable cause) {
+	public PersonServiceException(Reason reason, Throwable cause) {
 		super(cause);
 		setReason(reason);
 	}
@@ -41,7 +41,7 @@ public class ConstraintViolationException extends ResBillException {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ConstraintViolationException [");
+		builder.append("PersonServiceException [");
 		builder.append(super.toString());
 		builder.append(", reason=");
 		builder.append(reason);
