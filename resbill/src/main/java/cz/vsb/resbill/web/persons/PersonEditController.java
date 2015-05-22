@@ -1,4 +1,4 @@
-package cz.vsb.resbill.web;
+package cz.vsb.resbill.web.persons;
 
 import java.util.Locale;
 

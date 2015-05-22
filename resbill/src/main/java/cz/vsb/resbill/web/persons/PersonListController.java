@@ -1,4 +1,4 @@
-package cz.vsb.resbill.web;
+package cz.vsb.resbill.web.persons;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import cz.vsb.resbill.service.PersonService;
 
 @Controller
 @RequestMapping("/persons")
-public class PersonsController {
+public class PersonListController {
 
 	@Inject
 	private PersonService personService;
