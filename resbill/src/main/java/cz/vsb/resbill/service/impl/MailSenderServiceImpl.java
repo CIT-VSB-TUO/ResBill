@@ -38,6 +38,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		mailSender.setHost(smtpServer);
+		mailSender.setDefaultEncoding("UTF-8");
 
 		SimpleMailMessage msg = new SimpleMailMessage();
 		msg.setFrom(from);

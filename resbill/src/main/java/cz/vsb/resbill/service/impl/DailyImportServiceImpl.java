@@ -40,6 +40,7 @@ import cz.vsb.resbill.dao.DailyImportDAO;
 import cz.vsb.resbill.dao.DailyUsageDAO;
 import cz.vsb.resbill.dao.ProductionLevelDAO;
 import cz.vsb.resbill.dao.ServerDAO;
+import cz.vsb.resbill.model.ContractServer;
 import cz.vsb.resbill.model.DailyImport;
 import cz.vsb.resbill.model.DailyUsage;
 import cz.vsb.resbill.model.ProductionLevel;
@@ -116,7 +117,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 			for (File file : files) {
 				dailyImportService.importDailyReport(file);
 
-				break;
+				//break; // pro ucely ladeni
 			}
 
 		} catch (Exception exc) {
@@ -252,6 +253,9 @@ public class DailyImportServiceImpl implements DailyImportService {
 
 		dailyImport.setSuccess(errorLines == 0);
 
+		log.info("Vysledek importu: AllLines: " + dailyImport.getAllLines() + ", OkLines: " + dailyImport.getOkLines() + ", WarnLines: " + dailyImport.getWarnLines() + ", ErrorLines: "
+		    + dailyImport.getErrorLines());
+
 		// TODO: nacpat do prekladoveho souboru
 		// Souhrnne informace:
 		StringBuilder protocolSummary = new StringBuilder();
@@ -272,7 +276,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 		protocolSummary.append("\nChybných řádků: ").append(dailyImport.getErrorLines());
 		protocolSummary.append("\n----------------------------------------------------------");
 		protocolSummary.append("\n\n");
-		
+
 		protocol.insert(0, protocolSummary);
 
 		dailyImport.setProtocol(protocol.toString());
@@ -327,7 +331,21 @@ public class DailyImportServiceImpl implements DailyImportService {
 				server.setName(name);
 				serverDAO.saveServer(server);
 
-				// TODO: proverit, zda je server prirazen ke kontraktu (k danemu dni). Pokud neni, nastavit warning.
+				// proverit, zda je server prirazen ke kontraktu (k danemu dni). Pokud neni, nastavit warning.
+				StringBuilder contractExistsJpql = new StringBuilder();
+				contractExistsJpql.append(" SELECT contractServer ");
+				contractExistsJpql.append(" FROM ContractServer AS contractServer ");
+				contractExistsJpql.append(" JOIN contractServer.server AS server ");
+				contractExistsJpql.append(" WHERE server.id = :serverId ");
+				contractExistsJpql.append(" AND contractServer.period.beginDate <= :date ");
+				contractExistsJpql.append(" AND (contractServer.period.endDate IS NULL OR contractServer.period.endDate >= :date) ");
+				TypedQuery<ContractServer> existsQuery = em.createQuery(contractExistsJpql.toString(), ContractServer.class);
+				existsQuery.setParameter("serverId", server.getId());
+				existsQuery.setParameter("date", dailyImport.getDate());
+				ContractServer existingContractServer = DataAccessUtils.uniqueResult(existsQuery.getResultList());
+				if (existingContractServer == null) {
+					lineImportData.resultCode = DailyImportService.LineImportResultCode.OK_NO_CONTRACT;
+				}
 			}
 
 			// Najit Uroven produkce

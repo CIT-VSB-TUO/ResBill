@@ -40,11 +40,11 @@ public class ProductionLevelDAOImpl implements ProductionLevelDAO {
 		StringBuilder jpql = new StringBuilder();
 		jpql.append(" SELECT prodLev ");
 		jpql.append(" FROM ProductionLevel AS prodLev ");
-		jpql.append(" WHERE prodLev.code = :code ");
+		jpql.append(" WHERE LOWER(prodLev.code) = :code ");
 
 		TypedQuery<ProductionLevel> query = em.createQuery(jpql.toString(), ProductionLevel.class);
 
-		query.setParameter("code", productionLevelCode);
+		query.setParameter("code", productionLevelCode.toLowerCase());
 
 		return DataAccessUtils.uniqueResult(query.getResultList());
 	}
