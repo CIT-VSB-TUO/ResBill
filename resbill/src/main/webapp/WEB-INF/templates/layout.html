@@ -101,6 +101,12 @@
 								<span th:text="#{menu.persons}">Osoby</span>
 							</a>
 						</li>
+            <li>
+              <a th:class="${#strings.startsWith(#httpServletRequest.getPathInfo(),'/dailyImport')} ? 'active'" href="dailyImport/dailyImportList.html" th:href="@{/dailyImport}">
+                <i class="fa fa-arrow-circle-down fa-fw"></i>
+                <span th:text="#{menu.dailyImport}">Denní importy</span>
+              </a>
+            </li>						
 					</ul>
 				</div>
 				<!-- /.sidebar-collapse -->
