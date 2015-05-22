@@ -55,7 +55,7 @@ public class PersonEditController {
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String view() {
-		return "personEdit";
+		return "persons/personEdit";
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
@@ -76,15 +76,15 @@ public class PersonEditController {
 					bindingResult.reject("error.save.person");
 					break;
 				}
-				return "personEdit";
+				return "persons/personEdit";
 			} catch (Exception e) {
 				log.error("Cannot save person: " + person, e);
 				bindingResult.reject("error.save.person");
-				return "personEdit";
+				return "persons/personEdit";
 			}
 		} else {
 			bindingResult.reject("error.save.person.validation");
-			return "personEdit";
+			return "persons/personEdit";
 		}
 		return "redirect:/persons";
 	}
@@ -98,11 +98,11 @@ public class PersonEditController {
 			person = personService.deletePerson(person.getId());
 		} catch (PersistenceException e) {
 			bindingResult.reject("error.delete.person.constraint.relations");
-			return "personEdit";
+			return "persons/personEdit";
 		} catch (Exception e) {
 			log.error("Cannot delete person: " + person, e);
 			bindingResult.reject("error.delete.person");
-			return "personEdit";
+			return "persons/personEdit";
 		}
 		return "redirect:/persons";
 	}

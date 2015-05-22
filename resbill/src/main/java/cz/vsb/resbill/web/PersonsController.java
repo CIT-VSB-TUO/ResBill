@@ -27,6 +27,6 @@ public class PersonsController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String view() {
-		return "persons";
+		return "persons/personList";
 	}
 }
