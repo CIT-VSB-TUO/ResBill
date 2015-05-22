@@ -84,29 +84,29 @@
 				<div class="sidebar-nav navbar-collapse">
 					<ul class="nav" id="side-menu">
 						<li>
-							<a th:class="${#strings.equals(#httpServletRequest.getPathInfo(),'/') or #strings.startsWith(#httpServletRequest.getPathInfo(),'/index')} ? 'active'" href="index.html" th:href="@{/}">
+							<a th:class="${#strings.equals(#httpServletRequest.pathInfo,'/')} ? 'active'" href="index.html" th:href="@{/index}">
 								<i class="fa fa-th fa-fw"></i>
 								<span th:text="#{menu.index}">Úvod</span>
 							</a>
 						</li>
 						<li>
-							<a th:class="${#strings.startsWith(#httpServletRequest.getPathInfo(),'/tariffs')} ? 'active'" href="tariffs/tariffList.html" th:href="@{/tariffs}">
+							<a href="tariffs/tariffList.html" th:href="@{/tariffs}">
 								<i class="fa fa-money fa-fw"></i>
 								<span th:text="#{menu.tariffs}">Tarify</span>
 							</a>
 						</li>
 						<li>
-							<a th:class="${#strings.startsWith(#httpServletRequest.getPathInfo(),'/persons')} ? 'active'" href="persons/personList.html" th:href="@{/persons}">
+							<a href="persons/personList.html" th:href="@{/persons}">
 								<i class="fa fa-users fa-fw"></i>
 								<span th:text="#{menu.persons}">Osoby</span>
 							</a>
 						</li>
-            <li>
-              <a th:class="${#strings.startsWith(#httpServletRequest.getPathInfo(),'/dailyImport')} ? 'active'" href="dailyImport/dailyImportList.html" th:href="@{/dailyImport}">
-                <i class="fa fa-arrow-circle-down fa-fw"></i>
-                <span th:text="#{menu.dailyImport}">Denní importy</span>
-              </a>
-            </li>						
+						<li>
+							<a href="dailyImport/dailyImportList.html" th:href="@{/dailyImport}">
+								<i class="fa fa-arrow-circle-down fa-fw"></i>
+								<span th:text="#{menu.dailyImport}">Denní importy</span>
+							</a>
+						</li>
 					</ul>
 				</div>
 				<!-- /.sidebar-collapse -->
