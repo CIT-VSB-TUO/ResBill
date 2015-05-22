@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
 
 <head>
 <th:block th:remove="all">
@@ -20,13 +21,16 @@
 	<link href="../../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
 
 	<!-- Bootstrap Core CSS -->
-	<link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+	<link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"
+		th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
 
 	<!-- Custom Fonts -->
-	<link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+	<link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"
+		th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
 
 	<!-- SB Admin 2 CSS -->
-	<link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
+	<link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css"
+		th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -75,7 +79,9 @@
 							<td th:text="${dailyImport.okLines}">300</td>
 							<td th:text="${dailyImport.warnLines}">21</td>
 							<td th:text="${dailyImport.errorLines}">0</td>
-							<td><a class="btn btn-primary btn-circle" href="dailyImportDetail.html"> <i class="fa fa-edit"></i></a></td>
+							<td><a class="btn btn-primary btn-circle" href="dailyImportDetail.html" th:href="@{/dailyImport/detail(dailyImportId=${dailyImport.id})}"
+								th:title="#{button.title.dailyImport.detail}"> <i class="fa fa-edit"></i>
+							</a></td>
 						</tr>
 
 						<tr>
@@ -101,7 +107,8 @@
 	<script src="../../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
 
 	<!-- Custom Theme JavaScript -->
-	<script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+	<script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"
+		th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
 
 </body>
 </html>

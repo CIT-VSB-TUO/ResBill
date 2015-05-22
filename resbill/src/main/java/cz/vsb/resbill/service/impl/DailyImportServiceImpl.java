@@ -89,6 +89,45 @@ public class DailyImportServiceImpl implements DailyImportService {
 
 	/**
 	 * 
+	 * @param dailyImportId
+	 * @return
+	 * @throws ResBillException
+	 */
+	public DailyImport findDailyImport(Integer dailyImportId) throws ResBillException {
+		return findDailyImport(dailyImportId, false, false);
+	}
+
+	/**
+	 * 
+	 * @param dailyImportId
+	 * @param initializeReport
+	 * @param initializeProtocol
+	 * @return
+	 * @throws ResBillException
+	 */
+	public DailyImport findDailyImport(Integer dailyImportId, boolean initializeReport, boolean initializeProtocol) throws ResBillException {
+		try {
+			DailyImport dailyImport = dailyImportDAO.findDailyImport(dailyImportId);
+
+			if (dailyImport != null) {
+				if (initializeReport) {
+					dailyImport.getReport();
+				}
+
+				if (initializeProtocol) {
+					dailyImport.getProtocol();
+				}
+			}
+
+			return dailyImport;
+		} catch (Exception exc) {
+			log.error(exc.getMessage(), exc);
+			throw new ResBillException(exc);
+		}
+	}
+
+	/**
+	 * 
 	 * @param criteria
 	 * @return
 	 */

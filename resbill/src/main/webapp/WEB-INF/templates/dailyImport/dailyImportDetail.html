@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
 
 <head>
 <th:block th:remove="all">
@@ -20,10 +21,12 @@
 	<link href="../../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
 
 	<!-- Bootstrap Core CSS -->
-	<link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+	<link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"
+		th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
 
 	<!-- Custom Fonts -->
-	<link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+	<link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"
+		th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
 
 	<!-- SB Admin 2 CSS -->
 	<link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css"
@@ -46,6 +49,21 @@
 				<h1 class="page-header" th:text="#{page.header.dailyImportDetail}">Denní import - 1.6.2015</h1>
 			</div>
 		</div>
+
+		<div class="row">
+			<div class="col-lg-12">
+				<span th:text="${dailyImport.reportName}">POKUS</span>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-12">
+				<p>
+					<a href="dailyImportList.html" class="btn btn-default" th:href="@{/dailyImport}"> <i class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
+					</a>
+				</p>
+			</div>
+		</div>
 	</div>
 
 	<!-- jQuery -->
@@ -55,7 +73,8 @@
 	<script src="../../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
 
 	<!-- Custom Theme JavaScript -->
-	<script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+	<script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"
+		th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
 
 </body>
 </html>
