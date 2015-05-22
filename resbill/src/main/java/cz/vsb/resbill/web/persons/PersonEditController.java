@@ -65,7 +65,10 @@ public class PersonEditController {
 		}
 		if (!bindingResult.hasErrors()) {
 			try {
-				personService.savePerson(person);
+				person = personService.savePerson(person);
+				if (log.isDebugEnabled()) {
+					log.debug("Saved person: " + person);
+				}
 			} catch (ConstraintViolationException e) {
 				switch (e.getReason()) {
 				case UNIQUE_KEY:
@@ -96,6 +99,9 @@ public class PersonEditController {
 		}
 		try {
 			person = personService.deletePerson(person.getId());
+			if (log.isDebugEnabled()) {
+				log.debug("Deleted person: " + person);
+			}
 		} catch (PersistenceException e) {
 			bindingResult.reject("error.delete.person.constraint.relations");
 			return "persons/personEdit";
