@@ -13,7 +13,7 @@
 	<appender name="resbill" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${catalina.base}/logs/resbill.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${catalina.base}/logs/resbill%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>${catalina.base}/logs/resbill.%d{yyyy-MM-dd}.log</fileNamePattern>
 			<maxHistory>10</maxHistory>
 		</rollingPolicy>
 		
@@ -26,7 +26,7 @@
 	<appender name="persistence-sql" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${catalina.base}/logs/persistence-sql.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${catalina.base}/logs/persistence-sql%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>${catalina.base}/logs/persistence-sql.%d{yyyy-MM-dd}.log</fileNamePattern>
 			<maxHistory>5</maxHistory>
 		</rollingPolicy>
 		
