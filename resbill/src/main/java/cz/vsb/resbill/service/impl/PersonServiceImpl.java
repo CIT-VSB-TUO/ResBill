@@ -49,7 +49,7 @@ public class PersonServiceImpl implements PersonService {
 	public Person deletePerson(Integer personId) {
 		Person person = personDAO.findPerson(personId);
 		if (person != null) {
-			personDAO.deletePerson(person);
+			person = personDAO.deletePerson(person);
 		}
 		return person;
 	}

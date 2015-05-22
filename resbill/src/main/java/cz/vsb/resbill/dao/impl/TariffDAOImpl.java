@@ -71,4 +71,22 @@ public class TariffDAOImpl implements TariffDAO {
 		return query.getResultList();
 	}
 
+	@Override
+	public Tariff saveTariff(Tariff tariff) {
+		if (tariff.getId() == null) {
+			em.persist(tariff);
+		} else {
+			tariff = em.merge(tariff);
+		}
+		em.flush();
+
+		return tariff;
+	}
+
+	@Override
+	public Tariff deleteTariff(Tariff tariff) {
+		em.remove(tariff);
+		em.flush();
+		return tariff;
+	}
 }

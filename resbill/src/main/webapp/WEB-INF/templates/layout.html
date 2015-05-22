@@ -90,6 +90,12 @@
 							</a>
 						</li>
 						<li>
+							<a th:class="${#strings.startsWith(#httpServletRequest.getPathInfo(),'/tariffs')} ? 'active'" href="tariffs/tariffList.html" th:href="@{/tariffs}">
+								<i class="fa fa-money fa-fw"></i>
+								<span th:text="#{menu.tariffs}">Tarify</span>
+							</a>
+						</li>
+						<li>
 							<a th:class="${#strings.startsWith(#httpServletRequest.getPathInfo(),'/persons')} ? 'active'" href="persons/personList.html" th:href="@{/persons}">
 								<i class="fa fa-users fa-fw"></i>
 								<span th:text="#{menu.persons}">Osoby</span>
