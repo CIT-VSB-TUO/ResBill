@@ -11,7 +11,7 @@
 	<meta name="author" content="" />
 </th:block>
 
-<title th:text="#{head.title.dailyImportList}">Denní importy</title>
+<title th:text="#{head.title.dailyImportDetail}">Denní import - 1.6.2015</title>
 
 <th:block th:remove="all">
 	<!-- remove all duplicated template css due to auto-merge -->
@@ -26,7 +26,8 @@
 	<link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
 
 	<!-- SB Admin 2 CSS -->
-	<link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
+	<link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css"
+		th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -42,54 +43,7 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header" th:text="#{page.header.dailyImportList}">Denní importy</h1>
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-lg-12">
-
-				<table class="table" id="persons">
-					<thead>
-						<tr>
-							<th rowspan="2" th:text="#{column.dailyImport.date}">Datum</th>
-							<th rowspan="2" th:text="#{column.dailyImport.srcFileName}">Soubor</th>
-							<th rowspan="2" th:text="#{column.dailyImport.result}">Výsledek</th>
-							<th colspan="4" th:text="#{column.dailyImport.linesNumber}">Počet řádků</th>
-						</tr>
-						<tr>
-							<th th:text="#{column.dailyImport.linesNumberAll}">Celkem</th>
-							<th th:text="#{column.dailyImport.linesNumberOk}">Bezvadných</th>
-							<th th:text="#{column.dailyImport.linesNumberWarn}">S varováním</th>
-							<th th:text="#{column.dailyImport.linesNumberError}">Chybných</th>
-							<th></th>
-						</tr>
-					</thead>
-
-					<tbody th:remove="all-but-first">
-						<tr th:each="dailyImport : ${dailyImports}">
-							<td th:text="${#calendars.format(dailyImport.date,'dd.MM.yyyy')}">2.6.2015</td>
-							<td th:text="${dailyImport.reportName}">report_2015_06_02</td>
-							<td th:text="${dailyImport.success}?#{text.dailyImport.ok}:#{text.dailyImport.error}">OK</td>
-							<td th:text="${dailyImport.allLines}">321</td>
-							<td th:text="${dailyImport.okLines}">300</td>
-							<td th:text="${dailyImport.warnLines}">21</td>
-							<td th:text="${dailyImport.errorLines}">0</td>
-							<td><a class="btn btn-primary btn-circle" href="dailyImportDetail.html"> <i class="fa fa-edit"></i></a></td>
-						</tr>
-
-						<tr>
-							<td>1.6.2015</td>
-							<td>report_2015_06_01</td>
-							<td>Chyba</td>
-							<td>123</td>
-							<td>100</td>
-							<td>22</td>
-							<td>1</td>
-							<td><a class="btn btn-primary btn-circle" href="dailyImportDetail.html"> <i class="fa fa-edit"></i></a></td>
-						</tr>
-					</tbody>
-				</table>
+				<h1 class="page-header" th:text="#{page.header.dailyImportDetail}">Denní import - 1.6.2015</h1>
 			</div>
 		</div>
 	</div>

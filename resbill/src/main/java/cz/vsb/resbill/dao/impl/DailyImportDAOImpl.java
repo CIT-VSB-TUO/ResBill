@@ -5,6 +5,7 @@
 package cz.vsb.resbill.dao.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,6 +14,7 @@ import javax.persistence.TypedQuery;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 
+import cz.vsb.resbill.criteria.DailyImportCriteria;
 import cz.vsb.resbill.dao.DailyImportDAO;
 import cz.vsb.resbill.model.DailyImport;
 
@@ -68,4 +70,32 @@ public class DailyImportDAOImpl implements DailyImportDAO {
 		return dailyImport;
 	}
 
+	/**
+	 * 
+	 */
+	@Override
+	public List<DailyImport> findDailyImports(DailyImportCriteria criteria, Integer offset, Integer limit) {
+		StringBuilder jpql = new StringBuilder();
+		jpql.append(" SELECT dailyImport ");
+		jpql.append(" FROM DailyImport AS dailyImport ");
+		if (criteria.getOrderBy() != null) {
+			jpql.append(" ORDER BY ");
+			if (criteria.getOrderBy() == DailyImportCriteria.OrderBy.DATE) {
+				jpql.append(" dailyImport.date ");
+			}
+			if (criteria.isOrderDesc()) {
+				jpql.append(" DESC ");
+			}
+		}
+
+		TypedQuery<DailyImport> query = em.createQuery(jpql.toString(), DailyImport.class);
+		if (offset != null) {
+			query.setFirstResult(offset);
+		}
+		if (limit != null) {
+			query.setMaxResults(limit);
+		}
+
+		return query.getResultList();
+	}
 }

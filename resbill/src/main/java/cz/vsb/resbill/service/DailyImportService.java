@@ -8,6 +8,8 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+import cz.vsb.resbill.criteria.DailyImportCriteria;
+import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.DailyImport;
 
 /**
@@ -19,6 +21,8 @@ public interface DailyImportService {
 	public static final String REPORT_FILE_NAME_PREFIX = "report_";
 
 	public static final String REPORT_FILE_NAME_DATE_PATERN = "yyyy-MM-dd";
+
+	List<DailyImport> findDailyImports(DailyImportCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
 	public void importAllReports();
 

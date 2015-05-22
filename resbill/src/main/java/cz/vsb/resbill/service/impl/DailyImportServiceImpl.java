@@ -36,10 +36,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import cz.vsb.resbill.criteria.DailyImportCriteria;
 import cz.vsb.resbill.dao.DailyImportDAO;
 import cz.vsb.resbill.dao.DailyUsageDAO;
 import cz.vsb.resbill.dao.ProductionLevelDAO;
 import cz.vsb.resbill.dao.ServerDAO;
+import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.ContractServer;
 import cz.vsb.resbill.model.DailyImport;
 import cz.vsb.resbill.model.DailyUsage;
@@ -86,6 +88,20 @@ public class DailyImportServiceImpl implements DailyImportService {
 	private DailyUsageDAO dailyUsageDAO;
 
 	/**
+	 * 
+	 * @param criteria
+	 * @return
+	 */
+	public List<DailyImport> findDailyImports(DailyImportCriteria criteria, Integer offset, Integer limit) throws ResBillException {
+		try {
+			return dailyImportDAO.findDailyImports(criteria, offset, limit);
+		} catch (Exception exc) {
+			log.error(exc.getMessage(), exc);
+			throw new ResBillException(exc);
+		}
+	}
+
+	/**
 	 * Hlavni importni metoda
 	 * 
 	 */
@@ -117,7 +133,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 			for (File file : files) {
 				dailyImportService.importDailyReport(file);
 
-				//break; // pro ucely ladeni
+				// break; // pro ucely ladeni
 			}
 
 		} catch (Exception exc) {
