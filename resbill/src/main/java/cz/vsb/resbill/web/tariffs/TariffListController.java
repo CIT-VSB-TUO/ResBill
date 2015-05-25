@@ -33,7 +33,7 @@ public class TariffListController {
 	public String view(ModelMap model) {
 		try {
 			model.addAttribute("tariffs", getTariffs());
-		} catch (ResBillException e) {
+		} catch (Exception e) {
 			log.error("Cannot load list of tariffs.", e);
 			// TODO error handle
 		}

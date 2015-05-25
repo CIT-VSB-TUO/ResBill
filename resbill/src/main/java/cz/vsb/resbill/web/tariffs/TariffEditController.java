@@ -56,7 +56,7 @@ public class TariffEditController {
 			if (log.isDebugEnabled()) {
 				log.debug("Edited tariff: " + model.get("tariff"));
 			}
-		} catch (ResBillException e) {
+		} catch (Exception e) {
 			log.error("Cannot load tariff with id: " + tariffId, e);
 			// TODO error notification
 		}
@@ -75,7 +75,7 @@ public class TariffEditController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved tariff: " + tariff);
 				}
-			} catch (ResBillException e) {
+			} catch (Exception e) {
 				log.error("Cannot save tariff: " + tariff, e);
 				bindingResult.reject("error.save.tariff");
 				return "tariffs/tariffEdit";
@@ -101,7 +101,7 @@ public class TariffEditController {
 			// TODO implement
 			bindingResult.reject("error.delete.tariff.constraint.relations");
 			return "tariffs/tariffEdit";
-		} catch (ResBillException e) {
+		} catch (Exception e) {
 			log.error("Cannot delete tariff: " + tariff, e);
 			bindingResult.reject("error.delete.tariff");
 			return "tariffs/tariffEdit";

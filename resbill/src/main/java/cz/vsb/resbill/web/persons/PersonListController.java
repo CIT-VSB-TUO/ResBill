@@ -47,7 +47,7 @@ public class PersonListController {
 	public String view(ModelMap model) {
 		try {
 			model.addAttribute("persons", getPersons());
-		} catch (ResBillException e) {
+		} catch (Exception e) {
 			log.error("Cannot load list of persons.", e);
 			// TODO error handle
 		}

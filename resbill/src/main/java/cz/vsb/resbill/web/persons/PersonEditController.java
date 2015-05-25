@@ -71,7 +71,7 @@ public class PersonEditController {
 			if (log.isDebugEnabled()) {
 				log.debug("Edited person: " + model.get("person"));
 			}
-		} catch (ResBillException e) {
+		} catch (Exception e) {
 			log.error("Cannot load person with id: " + personId, e);
 			// TODO error notification
 		}
@@ -107,7 +107,7 @@ public class PersonEditController {
 					break;
 				}
 				return "persons/personEdit";
-			} catch (ResBillException e) {
+			} catch (Exception e) {
 				log.error("Cannot save person: " + person, e);
 				bindingResult.reject("error.save.person");
 				return "persons/personEdit";
@@ -140,7 +140,7 @@ public class PersonEditController {
 			// TODO implement
 			bindingResult.reject("error.delete.person.constraint.relations");
 			return "persons/personEdit";
-		} catch (ResBillException e) {
+		} catch (Exception e) {
 			log.error("Cannot delete person: " + person, e);
 			bindingResult.reject("error.delete.person");
 			return "persons/personEdit";
