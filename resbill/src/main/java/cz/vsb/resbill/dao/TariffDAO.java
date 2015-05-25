@@ -5,6 +5,13 @@ import java.util.List;
 import cz.vsb.resbill.criteria.TariffCriteria;
 import cz.vsb.resbill.model.Tariff;
 
+/**
+ * 
+ * Data acces interface for {@link Tariff} model entity.
+ * 
+ * @author HAL191
+ *
+ */
 public interface TariffDAO {
 
 	/**
@@ -17,12 +24,14 @@ public interface TariffDAO {
 	Tariff findTariff(Integer id);
 
 	/**
-	 * Finds persons by specified criteria
+	 * Finds {@link Tariff} entities by specified criteria
 	 * 
 	 * @param criteria
+	 * @param offset
+	 * @param limit
 	 * @return list of {@link Tariff} entities
 	 */
-	List<Tariff> findTariffs(TariffCriteria criteria);
+	List<Tariff> findTariffs(TariffCriteria criteria, Integer offset, Integer limit);
 
 	/**
 	 * Saves current state of given {@link Tariff} entity.
