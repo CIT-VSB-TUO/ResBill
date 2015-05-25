@@ -45,6 +45,7 @@ import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.ContractServer;
 import cz.vsb.resbill.model.DailyImport;
 import cz.vsb.resbill.model.DailyUsage;
+import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.model.ProductionLevel;
 import cz.vsb.resbill.model.Server;
 import cz.vsb.resbill.service.DailyImportService;
@@ -138,6 +139,18 @@ public class DailyImportServiceImpl implements DailyImportService {
 			log.error(exc.getMessage(), exc);
 			throw new ResBillException(exc);
 		}
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public DailyImport deleteDailyImport(Integer dailyImportId) {
+		DailyImport dailyImport = dailyImportDAO.findDailyImport(dailyImportId);
+		if (dailyImport != null) {
+			dailyImport = dailyImportDAO.deleteDailyImport(dailyImport);
+		}
+		return dailyImport;
 	}
 
 	/**

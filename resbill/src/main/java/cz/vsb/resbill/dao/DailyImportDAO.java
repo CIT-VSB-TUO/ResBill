@@ -23,4 +23,6 @@ public interface DailyImportDAO {
 	List<DailyImport> findDailyImports(DailyImportCriteria criteria, Integer offset, Integer limit);
 
 	DailyImport saveDailyImport(DailyImport dailyImport);
+	
+	DailyImport deleteDailyImport(DailyImport dailyImport);
 }

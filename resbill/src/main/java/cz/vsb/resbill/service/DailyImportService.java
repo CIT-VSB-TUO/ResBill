@@ -28,15 +28,17 @@ public interface DailyImportService {
 
 	List<DailyImport> findDailyImports(DailyImportCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
-	public void importAllReports();
+	DailyImport deleteDailyImport(Integer dailyImportId);
 
-	public void importDailyReport(File file);
+	void importAllReports();
 
-	public DailyImport beginDailyImport(DailyImport dailyImport);
+	void importDailyReport(File file);
 
-	public void endDailyImport(DailyImport dailyImport, List<LineImportData> lineImportDatas);
+	DailyImport beginDailyImport(DailyImport dailyImport);
 
-	public void importLine(DailyImport dailyImport, LineImportData lineImportData);
+	void endDailyImport(DailyImport dailyImport, List<LineImportData> lineImportDatas);
+
+	void importLine(DailyImport dailyImport, LineImportData lineImportData);
 
 	/**
 	 * 

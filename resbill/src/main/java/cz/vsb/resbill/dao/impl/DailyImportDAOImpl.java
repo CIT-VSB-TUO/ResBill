@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import cz.vsb.resbill.criteria.DailyImportCriteria;
 import cz.vsb.resbill.dao.DailyImportDAO;
 import cz.vsb.resbill.model.DailyImport;
+import cz.vsb.resbill.model.Person;
 
 /**
  * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
@@ -58,22 +59,6 @@ public class DailyImportDAOImpl implements DailyImportDAO {
 	 * 
 	 */
 	@Override
-	public DailyImport saveDailyImport(DailyImport dailyImport) {
-		if (dailyImport.getId() == null) {
-			em.persist(dailyImport);
-		} else {
-			dailyImport = em.merge(dailyImport);
-		}
-
-		em.flush();
-
-		return dailyImport;
-	}
-
-	/**
-	 * 
-	 */
-	@Override
 	public List<DailyImport> findDailyImports(DailyImportCriteria criteria, Integer offset, Integer limit) {
 		StringBuilder jpql = new StringBuilder();
 		jpql.append(" SELECT dailyImport ");
@@ -98,4 +83,31 @@ public class DailyImportDAOImpl implements DailyImportDAO {
 
 		return query.getResultList();
 	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public DailyImport saveDailyImport(DailyImport dailyImport) {
+		if (dailyImport.getId() == null) {
+			em.persist(dailyImport);
+		} else {
+			dailyImport = em.merge(dailyImport);
+		}
+
+		em.flush();
+
+		return dailyImport;
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public DailyImport deleteDailyImport(DailyImport dailyImport) {
+		em.remove(dailyImport);
+		em.flush();
+		return dailyImport;
+	}
+
 }
