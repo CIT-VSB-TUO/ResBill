@@ -21,16 +21,16 @@
 	<!-- remove all duplicated template css due to auto-merge -->
 	
 		<!-- ResBill Custom CSS -->
-		<link href="../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
+		<link href="../../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
 	
 		<!-- Bootstrap Core CSS -->
-		<link href="../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+		<link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
 	
 		<!-- Custom Fonts -->
-		<link href="../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+		<link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
 	
 		<!-- SB Admin 2 CSS -->
-		<link href="../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
+		<link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
 	
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -54,12 +54,11 @@
 		<div class="row">
 			<div class="col-lg-12">
 
-				<table class="table" id="persons">
+				<table class="table" id="tariffs">
 					<thead>
 						<tr>
 							<th th:text="#{column.tariff.name}">Nazev</th>
 							<th th:text="#{column.tariff.validity}">Platnost</th>
-<!-- 							<th th:text="#{column.tariff.prices}">Ceniky</th> -->
 							<th>
 								<a class="btn btn-primary btn-circle" href="tariffEdit.html" th:href="@{/tariffs/edit}" th:title="#{button.title.tariff.add}">
 									<i class="fa fa-plus-square"></i>
@@ -111,13 +110,13 @@
 	</div>
 
 	<!-- jQuery -->
-	<script src="../../bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+	<script src="../../../bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
 
 	<!-- Bootstrap Core JavaScript -->
-	<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+	<script src="../../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
 
 	<!-- Custom Theme JavaScript -->
-	<script src="../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+	<script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
 
 </body>
 
