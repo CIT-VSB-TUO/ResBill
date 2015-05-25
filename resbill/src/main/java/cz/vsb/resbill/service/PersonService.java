@@ -7,6 +7,12 @@ import cz.vsb.resbill.exception.PersonServiceException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Person;
 
+/**
+ * A service for processing {@link Person} entities.
+ * 
+ * @author HAL191
+ *
+ */
 public interface PersonService {
 
 	/**

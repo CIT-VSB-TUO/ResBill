@@ -15,6 +15,12 @@ import cz.vsb.resbill.criteria.TariffCriteria;
 import cz.vsb.resbill.dao.TariffDAO;
 import cz.vsb.resbill.model.Tariff;
 
+/**
+ * Implementation class of {@link TariffDAO} interface.
+ * 
+ * @author HAL191
+ *
+ */
 @Repository
 public class TariffDAOImpl implements TariffDAO {
 
@@ -27,7 +33,7 @@ public class TariffDAOImpl implements TariffDAO {
 	}
 
 	@Override
-	public List<Tariff> findTariffs(TariffCriteria criteria) {
+	public List<Tariff> findTariffs(TariffCriteria criteria, Integer offset, Integer limit) {
 		StringBuilder jpql = new StringBuilder("SELECT t FROM Tariff AS t");
 		// building query
 		if (criteria != null) {
@@ -68,6 +74,14 @@ public class TariffDAOImpl implements TariffDAO {
 				query.setParameter("valid", criteria.getValid());
 			}
 		}
+
+		if (offset != null) {
+			query.setFirstResult(offset.intValue());
+		}
+		if (limit != null) {
+			query.setMaxResults(limit.intValue());
+		}
+
 		return query.getResultList();
 	}
 

@@ -16,7 +16,7 @@ import cz.vsb.resbill.dao.PersonDAO;
 import cz.vsb.resbill.model.Person;
 
 /**
- * Implementation class of PersonDAO interface.
+ * Implementation class of {@link PersonDAO} interface.
  * 
  * @author HAL191
  *

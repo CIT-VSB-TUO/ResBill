@@ -16,6 +16,13 @@ import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.service.PersonService;
 
+/**
+ * A controller for handling requests for/from persons/personList.html page
+ * template.
+ * 
+ * @author HAL191
+ *
+ */
 @Controller
 @RequestMapping("/persons")
 public class PersonListController {
@@ -25,15 +32,22 @@ public class PersonListController {
 	@Inject
 	private PersonService personService;
 
-	public List<Person> getPersons() throws ResBillException {
+	private List<Person> getPersons() throws ResBillException {
 		return personService.findPersons(new PersonCriteria(), null, null);
 	}
 
+	/**
+	 * Handles all GET requests. Loads a list of all persons and binds it with the
+	 * key "persons" into a model.
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String view(ModelMap model) {
 		try {
 			model.addAttribute("persons", getPersons());
-		} catch (ResBillException e) {
+		} catch (Exception e) {
 			log.error("Cannot load list of persons.", e);
 			// TODO error handle
 		}

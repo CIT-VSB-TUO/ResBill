@@ -52,15 +52,17 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
-				<form role="form" method="post" action="#" th:action="@{edit}" th:object="${person}">
+				<form role="form" method="post" action="#" th:object="${person}">
+					<input type="hidden" th:field="*{id}"/>
+					<input type="hidden" th:field="*{lockVersion}"/>
 					
 					<div class="row">
-						<div class="col-xs-8 col-xs-offset-2 alert alert-danger" th:if="${#fields.hasErrors('global')}" th:errors="*{global}">Global error</div>
+						<div class="col-lg-8 col-lg-offset-2 alert alert-danger" th:if="${#fields.hasErrors('global')}" th:errors="*{global}">Global error</div>
 					</div>
 					
 					<div class="row">
 					
-						<div class="col-md-6">
+						<div class="col-lg-6">
 							<div class="panel panel-default">
 								<div class="panel-heading" th:text="#{panel.person.data}">Osobní údaje</div>
 								
@@ -106,7 +108,7 @@
 							</div>
 						</div>
 						
-						<div class="col-md-6">
+						<div class="col-lg-6">
 							<div class="panel panel-default">
 								<div class="panel-heading" th:text="#{panel.person.address}">Adresa</div>
 								
@@ -119,7 +121,7 @@
 									</div>
 	
 									<div class="row">
-										<div class="col-md-6">
+										<div class="col-lg-6">
 										
 											<div class="form-group" th:classappend="${#fields.hasErrors('address.descriptiveNumber')} ? 'has-error'">
 												<label class="control-label" th:text="#{label.address.descriptiveNumber}" th:for="address.descriptiveNumber">Číslo popisné</label>
@@ -128,7 +130,7 @@
 											</div>
 											
 										</div>
-										<div class="col-md-6">
+										<div class="col-lg-6">
 										
 											<div class="form-group" th:classappend="${#fields.hasErrors('address.orientationNumber')} ? 'has-error'">
 												<label class="control-label" th:text="#{label.address.orientationNumber}" th:for="address.orientationNumber">Číslo orientační</label>
@@ -191,8 +193,6 @@
 									<i class="fa fa-reply"></i>
 									<span th:text="#{button.back}">Back</span>
 								</a>
-								<input type="hidden" th:field="*{id}"/>
-								<input type="hidden" th:field="*{lockVersion}"/>
 							</p>				
 						</div>
 					</div>

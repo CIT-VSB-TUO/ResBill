@@ -23,6 +23,13 @@ import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.service.PersonService;
 
+/**
+ * A controller for handling requests for/from persons/personEdit.html page
+ * template.
+ * 
+ * @author HAL191
+ *
+ */
 @Controller
 @RequestMapping("/persons/edit")
 public class PersonEditController {
@@ -37,7 +44,7 @@ public class PersonEditController {
 		binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
 	}
 
-	public Person getPerson(Integer personId) throws ResBillException {
+	private Person getPerson(Integer personId) throws ResBillException {
 		if (personId != null) {
 			return personService.findPerson(personId);
 		} else {
@@ -45,6 +52,15 @@ public class PersonEditController {
 		}
 	}
 
+	/**
+	 * Handles all GET requests. Binds loaded {@link Person} entity with the key
+	 * "person" into a model.
+	 * 
+	 * @param personId
+	 *          key of a {@link Person} to view/edit
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String view(@RequestParam(value = "personId", required = false) Integer personId, ModelMap model) {
 		if (log.isDebugEnabled()) {
@@ -55,13 +71,20 @@ public class PersonEditController {
 			if (log.isDebugEnabled()) {
 				log.debug("Edited person: " + model.get("person"));
 			}
-		} catch (ResBillException e) {
+		} catch (Exception e) {
 			log.error("Cannot load person with id: " + personId, e);
 			// TODO error notification
 		}
 		return "persons/personEdit";
 	}
 
+	/**
+	 * Handles POST requests for saving edited {@link Person} entity.
+	 * 
+	 * @param person
+	 * @param bindingResult
+	 * @return
+	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
 	public String save(@Valid @ModelAttribute("person") Person person, BindingResult bindingResult) {
 		if (log.isDebugEnabled()) {
@@ -84,7 +107,7 @@ public class PersonEditController {
 					break;
 				}
 				return "persons/personEdit";
-			} catch (ResBillException e) {
+			} catch (Exception e) {
 				log.error("Cannot save person: " + person, e);
 				bindingResult.reject("error.save.person");
 				return "persons/personEdit";
@@ -96,6 +119,13 @@ public class PersonEditController {
 		return "redirect:/persons";
 	}
 
+	/**
+	 * Handle POST requests for deleting {@link Person} entity.
+	 * 
+	 * @param person
+	 * @param bindingResult
+	 * @return
+	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
 	public String delete(@ModelAttribute("person") Person person, BindingResult bindingResult) {
 		if (log.isDebugEnabled()) {
@@ -110,7 +140,7 @@ public class PersonEditController {
 			// TODO implement
 			bindingResult.reject("error.delete.person.constraint.relations");
 			return "persons/personEdit";
-		} catch (ResBillException e) {
+		} catch (Exception e) {
 			log.error("Cannot delete person: " + person, e);
 			bindingResult.reject("error.delete.person");
 			return "persons/personEdit";

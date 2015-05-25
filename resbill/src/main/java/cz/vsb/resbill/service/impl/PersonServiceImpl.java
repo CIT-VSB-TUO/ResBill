@@ -18,6 +18,12 @@ import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.service.PersonService;
 
+/**
+ * An implementation of {@link PersonService} interface.
+ * 
+ * @author HAL191
+ *
+ */
 @Service
 @Transactional
 public class PersonServiceImpl implements PersonService {
