@@ -52,18 +52,89 @@
 
 		<div class="row">
 			<div class="col-lg-12">
-				<span th:text="${dailyImport.reportName}">POKUS</span>
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-lg-12">
 				<p>
 					<a href="dailyImportList.html" class="btn btn-default" th:href="@{/dailyImport}"> <i class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
 					</a>
 				</p>
 			</div>
 		</div>
+
+		<div class="row">
+			<div class="col-lg-12">
+
+				<div class="row">
+
+					<div class="col-lg-6">
+
+						<div class="form-group">
+							<label class="control-label" th:text="#{label.dailyImport.date}">Datum importovaného reportu</label>
+							<p class="form-control-static" th:text="${#calendars.format(dailyImport.date,'dd.MM.yyyy')}">28.02.2014</p>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label" th:text="#{label.dailyImport.srcFileName}">Importovaný soubor</label>
+							<p class="form-control-static" th:text="${dailyImport.reportName}">report_2014-02-28</p>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label" th:text="#{label.dailyImport.result}">Výsledek</label>
+							<p class="form-control-static" th:text="${dailyImport.success}?#{text.dailyImport.ok}:#{text.dailyImport.error}">OK</p>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label" th:text="#{label.dailyImport.importBegin}">Začátek importu</label>
+							<p class="form-control-static" th:text="${#calendars.format(dailyImport.importBeginTimestamp,'dd.MM.yyyy HH:mm:ss.SSS')}">1.5.2015 08:05:30.123</p>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label" th:text="#{label.dailyImport.importEnd}">Konec importu</label>
+							<p class="form-control-static" th:text="${#calendars.format(dailyImport.importEndTimestamp,'dd.MM.yyyy HH:mm:ss.SSS')}">1.5.2015 08:05:31.456</p>
+						</div>
+					</div>
+
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label class="control-label" th:text="#{label.dailyImport.linesNumberAll}">Celkový počet řádků</label>
+							<p class="form-control-static" th:text="${dailyImport.allLines}">321</p>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label" th:text="#{label.dailyImport.linesNumberOk}">Počet bezvadných řádků</label>
+							<p class="form-control-static" th:text="${dailyImport.okLines}">300</p>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label" th:text="#{label.dailyImport.linesNumberWarn}">Počet řádků s varováním</label>
+							<p class="form-control-static" th:text="${dailyImport.warnLines}">21</p>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label" th:text="#{label.dailyImport.linesNumberError}">Počet chybných řádků</label>
+							<p class="form-control-static" th:text="${dailyImport.errorLines}">0</p>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="form-group">
+					<label class="control-label" th:text="#{label.dailyImport.protocol}">Protokol o importu</label>
+					<textarea class="form-control" rows="10" readonly="readonly" th:text="${dailyImport.protocol}">Kompletní výpis protokolu o importu</textarea>
+				</div>
+			</div>
+		</div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="form-group">
+          <label class="control-label" th:text="#{label.dailyImport.srcFileContent}">Obsah importovaného souboru</label>
+          <textarea class="form-control" rows="10" readonly="readonly" th:text="${dailyImport.report}">Kompletní výpis vstupního souboru</textarea>
+        </div>
+      </div>
+    </div>
 	</div>
 
 	<!-- jQuery -->
