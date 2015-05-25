@@ -25,9 +25,14 @@ public interface PersonDAO {
 	 * Finds persons by specified criteria
 	 * 
 	 * @param criteria
+	 *          filtering criteria
+	 * @param offset
+	 *          order number of first result to return
+	 * @param limit
+	 *          maximum number of results to return
 	 * @return list of {@link Person} entities
 	 */
-	List<Person> findPersons(PersonCriteria criteria);
+	List<Person> findPersons(PersonCriteria criteria, Integer offset, Integer limit);
 
 	/**
 	 * Saves current state of given {@link Person} entity.

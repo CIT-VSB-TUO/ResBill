@@ -33,7 +33,7 @@ public class PersonDAOImpl implements PersonDAO {
 	}
 
 	@Override
-	public List<Person> findPersons(PersonCriteria criteria) {
+	public List<Person> findPersons(PersonCriteria criteria, Integer offset, Integer limit) {
 		StringBuilder jpql = new StringBuilder("SELECT p FROM Person AS p");
 		// building query
 		if (criteria != null) {
@@ -78,6 +78,12 @@ public class PersonDAOImpl implements PersonDAO {
 			if (StringUtils.isNoneEmpty(criteria.getSecondName())) {
 				query.setParameter("secondName", criteria.getSecondName());
 			}
+		}
+		if (offset != null) {
+			query.setFirstResult(offset.intValue());
+		}
+		if (limit != null) {
+			query.setMaxResults(limit.intValue());
 		}
 		return query.getResultList();
 	}
