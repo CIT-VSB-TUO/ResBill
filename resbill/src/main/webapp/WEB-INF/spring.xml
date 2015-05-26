@@ -61,7 +61,16 @@
 	<mvc:resources location="/js/" mapping="/js/**"/>
 	<mvc:resources location="/bower_components/" mapping="/bower_components/**"/>
 	
-	<mvc:annotation-driven/>
+	<mvc:annotation-driven conversion-service="conversionService"/>
+	
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="formatters">
+			<set>
+				<bean class="cz.vsb.resbill.util.DateFormatter"/>
+				<bean class="cz.vsb.resbill.util.BigDecimalFormatter"/>
+			</set>
+		</property>
+	</bean>
 	
 	<!-- Thymeleaf -->
 	<bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
