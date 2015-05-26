@@ -18,7 +18,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "DAILY_USAGE", uniqueConstraints = @UniqueConstraint(name = "UK_daily_usage__daily_import_id__server_id", columnNames = { "daily_import_id", "server_id" }))
-public class DailyUsage extends BaseGeneratedIdEntity {
+public class DailyUsage extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = 144836678591268182L;
 
@@ -73,6 +73,10 @@ public class DailyUsage extends BaseGeneratedIdEntity {
 	@JoinColumn(name = "daily_import_id", foreignKey = @ForeignKey(name = "FK_daily_usage__daily_import"))
 	@NotNull
 	private DailyImport dailyImport;
+	
+	@ManyToOne(optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "invoice_id", foreignKey = @ForeignKey(name = "FK_daily_usage__invoice"))
+	private Invoice invoice;
 
 	// public Date getDate() {
 	// return date;
@@ -194,6 +198,8 @@ public class DailyUsage extends BaseGeneratedIdEntity {
 		builder.append(productionLevel != null ? productionLevel.getId() : null);
 		builder.append(", server.id=");
 		builder.append(server != null ? server.getId() : null);
+		builder.append(", invoice.id=");
+		builder.append(invoice != null ? invoice.getId() : null);
 		builder.append("]");
 		return builder.toString();
 	}

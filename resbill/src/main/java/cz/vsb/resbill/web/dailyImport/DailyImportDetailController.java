@@ -37,10 +37,19 @@ public class DailyImportDetailController {
 
 	private static final Logger log = LoggerFactory.getLogger(DailyImportListController.class);
 
-	public static final String DAILY_IMPORT_KEY = "dailyImport";
+	public static final String MODEL_OBJECT_KEY_DAILY_IMPORT = "dailyImport";
 
 	@Inject
 	private DailyImportService dailyImportService;
+
+	/**
+	 * 
+	 * @param model
+	 * @param msgKey
+	 */
+	protected static void addGlobalError(ModelMap model, String msgKey) {
+		WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_DAILY_IMPORT, msgKey);
+	}
 
 	/**
 	 * 
@@ -66,34 +75,18 @@ public class DailyImportDetailController {
 
 		try {
 			dailyImport = dailyImportService.findDailyImport(dailyImportId);
-			model.addAttribute(DAILY_IMPORT_KEY, dailyImport);
-
-			throw new Exception("TEST EXC");
+			model.addAttribute(MODEL_OBJECT_KEY_DAILY_IMPORT, dailyImport);
 		} catch (Exception exc) {
 			log.error(exc.getMessage(), exc);
-			// TODO: vypsat chybovou zpravu uzivateli
 
-//			dailyImport = new DailyImport();
 			dailyImport = null;
-			model.addAttribute(DAILY_IMPORT_KEY, dailyImport);
 
+			model.addAttribute(MODEL_OBJECT_KEY_DAILY_IMPORT, dailyImport);
 			addGlobalError(model, "error.load.dailyImport");
-			addGlobalError(model, "text.dailyImport.error");
 		}
 
 		return dailyImport;
 	}
-
-	/**
-	 * 
-	 * @param model
-	 * @param msgKey
-	 */
-	protected void addGlobalError(ModelMap model, String msgKey) {
-		WebUtils.addGlobalError(model, DAILY_IMPORT_KEY, msgKey);
-	}
-
-
 
 	/**
 	 * 
@@ -107,11 +100,6 @@ public class DailyImportDetailController {
 		DailyImport dailyImport = loadDailyImport(dailyImportId, model);
 
 		try {
-			System.out.println("Budu mazat");
-
-			if (1 == 1)
-				throw new Exception("POKUSNA VYJIMKA");
-
 			dailyImport = dailyImportService.deleteDailyImport(dailyImport.getId());
 		} catch (PersistenceException e) {
 			addGlobalError(model, "error.delete.dailyImport.relations");
@@ -121,6 +109,7 @@ public class DailyImportDetailController {
 			addGlobalError(model, "error.delete.dailyImport");
 			return "dailyImport/dailyImportDetail";
 		}
+
 		return "redirect:/dailyImport";
 	}
 }

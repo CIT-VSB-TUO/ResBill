@@ -1,5 +1,8 @@
 package cz.vsb.resbill.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
@@ -59,6 +63,12 @@ public class Invoice extends Transaction {
 	public void setInvoiceType(InvoiceType invoiceType) {
 		this.invoiceType = invoiceType;
 	}
+
+	/**
+	 * 
+	 */
+	@OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE }, orphanRemoval = false)
+	private Set<DailyUsage> dailyUsages = new HashSet<>();
 
 	@Override
 	public String toString() {
