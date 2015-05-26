@@ -5,10 +5,10 @@
 package cz.vsb.resbill.service;
 
 import java.io.File;
-import java.util.Date;
 import java.util.List;
 
 import cz.vsb.resbill.criteria.DailyImportCriteria;
+import cz.vsb.resbill.exception.DailyImportException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.DailyImport;
 
@@ -28,11 +28,11 @@ public interface DailyImportService {
 
 	List<DailyImport> findDailyImports(DailyImportCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
-	DailyImport deleteDailyImport(Integer dailyImportId);
+	DailyImport deleteDailyImport(Integer dailyImportId) throws ResBillException;
 
-	void importAllReports();
+	void importAllReports() throws ResBillException;
 
-	void importDailyReport(File file);
+	void importDailyReport(File file) throws DailyImportException;
 
 	DailyImport beginDailyImport(DailyImport dailyImport);
 

@@ -41,6 +41,7 @@ import cz.vsb.resbill.dao.DailyImportDAO;
 import cz.vsb.resbill.dao.DailyUsageDAO;
 import cz.vsb.resbill.dao.ProductionLevelDAO;
 import cz.vsb.resbill.dao.ServerDAO;
+import cz.vsb.resbill.exception.DailyImportException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.ContractServer;
 import cz.vsb.resbill.model.DailyImport;
@@ -122,7 +123,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 
 			return dailyImport;
 		} catch (Exception exc) {
-			log.error(exc.getMessage(), exc);
+			log.error("An unexpected error occured while finding DailyImport by id=" + dailyImportId, exc);
 			throw new ResBillException(exc);
 		}
 	}
@@ -136,7 +137,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 		try {
 			return dailyImportDAO.findDailyImports(criteria, offset, limit);
 		} catch (Exception exc) {
-			log.error(exc.getMessage(), exc);
+			log.error("An unexpected error occured while finding DailyImports.", exc);
 			throw new ResBillException(exc);
 		}
 	}
@@ -145,12 +146,17 @@ public class DailyImportServiceImpl implements DailyImportService {
 	 * 
 	 */
 	@Override
-	public DailyImport deleteDailyImport(Integer dailyImportId) {
-		DailyImport dailyImport = dailyImportDAO.findDailyImport(dailyImportId);
-		if (dailyImport != null) {
-			dailyImport = dailyImportDAO.deleteDailyImport(dailyImport);
+	public DailyImport deleteDailyImport(Integer dailyImportId) throws ResBillException {
+		try {
+			DailyImport dailyImport = dailyImportDAO.findDailyImport(dailyImportId);
+			if (dailyImport != null) {
+				dailyImport = dailyImportDAO.deleteDailyImport(dailyImport);
+			}
+			return dailyImport;
+		} catch (Exception exc) {
+			log.error("An unexpected error occured while deleting DailyImport with id=" + dailyImportId, exc);
+			throw new ResBillException(exc);
 		}
-		return dailyImport;
 	}
 
 	/**
@@ -158,7 +164,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 	 * 
 	 */
 	@Override
-	public void importAllReports() {
+	public void importAllReports() throws ResBillException {
 		log.info("Zacinam import celeho adresare.");
 
 		try {
@@ -184,12 +190,13 @@ public class DailyImportServiceImpl implements DailyImportService {
 			File[] files = dir.listFiles(filter);
 			for (File file : files) {
 				dailyImportService.importDailyReport(file);
-
+				// TODO: co delat, kdyz dojde k chybe pri nacitani jednoho souboru? Asi bychom se z toho meli zotavit a na konci vypsat statistiku.
 				// break; // pro ucely ladeni
 			}
 
 		} catch (Exception exc) {
-			log.error(exc.getMessage(), exc);
+			log.error("An unexpected error occured while importAllReports().", exc);
+			throw new ResBillException(exc);
 		}
 
 		log.info("Import celeho adresare dokoncen.");
@@ -201,69 +208,72 @@ public class DailyImportServiceImpl implements DailyImportService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void importDailyReport(File file) {
+	public void importDailyReport(File file) throws DailyImportException {
 		String fileName = file.getName();
 		log.info("Zacinam importovat soubor: " + fileName);
 
-		// Ziskani datumu
-		Date date = null;
 		try {
-			String dateString = StringUtils.remove(fileName, REPORT_FILE_NAME_PREFIX);
-			date = DateUtils.parseDateStrictly(dateString, REPORT_FILE_NAME_DATE_PATERN);
-		} catch (ParseException exc) {
-			log.error(exc.getMessage(), exc);
-			log.info("Neproveden import souboru: " + fileName + " - nepodarilo se zjistit datum.");
-			return;
-		}
-
-		// Overeni, ze pro dane datum jeste nebyl import proveden
-		DailyImport existingDailyImport = dailyImportDAO.findDailyImport(date);
-		if (existingDailyImport != null) {
-			log.info("Neproveden import souboru: " + fileName + " - pro tento den byl jiz import proveden.");
-			return;
-		}
-
-		// Precteni dat ze souboru do Stringu
-		String report = null;
-		try (BufferedReader buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));) {
-			report = IOUtils.toString(buffReader);
-		} catch (IOException exc) {
-			log.error(exc.getMessage(), exc);
-			log.info("Neproveden import souboru: " + fileName + " - ze souboru se nepodarilo precist zaznamy.");
-			return;
-		}
-
-		// Zaznamenani zapoceti denniho importu.
-		// Ulozeni znamych udaju.
-		DailyImport dailyImport = new DailyImport();
-		dailyImport.setDate(date);
-		dailyImport.setReportName(fileName);
-		dailyImport.setReport(report);
-		dailyImport = dailyImportService.beginDailyImport(dailyImport);
-
-		// Prochazeni jednotlivych radku
-		List<LineImportData> lineImportDatas = new ArrayList<LineImportData>();
-		String[] lines = report.split("\n");
-		for (int lineNumber = 0; lineNumber < lines.length; lineNumber++) {
-			String line = lines[lineNumber];
-
-			line = StringUtils.stripToNull(line);
-
-			if (line != null && !line.startsWith("serverId")) {
-				LineImportData lineImportData = new LineImportData();
-				lineImportData.line = line;
-				lineImportData.lineNumber = lineNumber + 1; // v poli se pocita od 0, ale radky v souboru jsou od 1
-
-				dailyImportService.importLine(dailyImport, lineImportData);
-
-				lineImportDatas.add(lineImportData);
+			// Ziskani datumu
+			Date date = null;
+			try {
+				String dateString = StringUtils.remove(fileName, REPORT_FILE_NAME_PREFIX);
+				date = DateUtils.parseDateStrictly(dateString, REPORT_FILE_NAME_DATE_PATERN);
+			} catch (ParseException exc) {
+				throw new DailyImportException(DailyImportException.Reason.IMPORT_REPORT_DATE_PARSE_ERROR, "An unexpected error occured while importDailyReport() for file: " + fileName
+				    + " - file date parse error.", exc);
 			}
-		}
 
-		// Zaznamenani ukonceni denniho importu
-		dailyImportService.endDailyImport(dailyImport, lineImportDatas);
+			// Overeni, ze pro dane datum jeste nebyl import proveden
+			DailyImport existingDailyImport = dailyImportDAO.findDailyImport(date);
+			if (existingDailyImport != null) {
+				throw new DailyImportException(DailyImportException.Reason.IMPORT_REPORT_DATE_EXISTS, "An unexpected error occured while importDailyReport() for file: " + fileName + " - import date exists.");
+			}
 
-		log.info("Dokoncen import souboru: " + fileName);
+			// Precteni dat ze souboru do Stringu
+			String report = null;
+			try (BufferedReader buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));) {
+				report = IOUtils.toString(buffReader);
+			} catch (IOException exc) {
+				throw new DailyImportException(DailyImportException.Reason.IMPORT_REPORT_DATA_UNREADABLE,
+				    "An unexpected error occured while importDailyReport() for file: " + fileName + " - data read error.", exc);
+			}
+
+			// Zaznamenani zapoceti denniho importu.
+			// Ulozeni znamych udaju.
+			DailyImport dailyImport = new DailyImport();
+			dailyImport.setDate(date);
+			dailyImport.setReportName(fileName);
+			dailyImport.setReport(report);
+			dailyImport = dailyImportService.beginDailyImport(dailyImport);
+
+			// Prochazeni jednotlivych radku
+			List<LineImportData> lineImportDatas = new ArrayList<LineImportData>();
+			String[] lines = report.split("\n");
+			for (int lineNumber = 0; lineNumber < lines.length; lineNumber++) {
+				String line = lines[lineNumber];
+
+				line = StringUtils.stripToNull(line);
+
+				if (line != null && !line.startsWith("serverId")) {
+					LineImportData lineImportData = new LineImportData();
+					lineImportData.line = line;
+					lineImportData.lineNumber = lineNumber + 1; // v poli se pocita od 0, ale radky v souboru jsou od 1
+
+					dailyImportService.importLine(dailyImport, lineImportData);
+
+					lineImportDatas.add(lineImportData);
+				}
+			}
+
+			// Zaznamenani ukonceni denniho importu
+			dailyImportService.endDailyImport(dailyImport, lineImportDatas);
+		} catch (DailyImportException exc) {
+			log.error(exc.getMessage(), exc);
+			log.info("NEdokoncen import souboru: " + fileName);	
+			throw exc;
+		} 
+
+		log.info("Dokoncen import souboru: " + fileName);	
 	}
 
 	/**

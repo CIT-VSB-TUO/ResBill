@@ -4,8 +4,6 @@
  */
 package cz.vsb.resbill.web.dailyImport;
 
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
@@ -13,16 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import cz.vsb.resbill.criteria.DailyImportCriteria;
 import cz.vsb.resbill.model.DailyImport;
-import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.service.DailyImportService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -59,7 +52,6 @@ public class DailyImportDetailController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String view(@RequestParam(value = "dailyImportId", required = true) Integer dailyImportId, ModelMap model) {
-
 		loadDailyImport(dailyImportId, model);
 
 		return "dailyImport/dailyImportDetail";
@@ -77,7 +69,7 @@ public class DailyImportDetailController {
 			dailyImport = dailyImportService.findDailyImport(dailyImportId);
 			model.addAttribute(MODEL_OBJECT_KEY_DAILY_IMPORT, dailyImport);
 		} catch (Exception exc) {
-			log.error(exc.getMessage(), exc);
+			log.error("Cannot load DailyImport with id: " + dailyImportId, exc);
 
 			dailyImport = null;
 
@@ -99,17 +91,20 @@ public class DailyImportDetailController {
 
 		DailyImport dailyImport = loadDailyImport(dailyImportId, model);
 
-		try {
-			dailyImport = dailyImportService.deleteDailyImport(dailyImport.getId());
-		} catch (PersistenceException e) {
-			addGlobalError(model, "error.delete.dailyImport.relations");
-			return "dailyImport/dailyImportDetail";
-		} catch (Exception e) {
-			log.error("Cannot delete dailyImport: " + dailyImport, e);
-			addGlobalError(model, "error.delete.dailyImport");
-			return "dailyImport/dailyImportDetail";
+		if (dailyImport != null) {
+			try {
+
+				dailyImport = dailyImportService.deleteDailyImport(dailyImport.getId());
+				return "redirect:/dailyImport";
+
+			} catch (PersistenceException e) {
+				addGlobalError(model, "error.delete.dailyImport.relations");
+			} catch (Exception e) {
+				log.error("Cannot delete dailyImport: " + dailyImport, e);
+				addGlobalError(model, "error.delete.dailyImport");
+			}
 		}
 
-		return "redirect:/dailyImport";
+		return "dailyImport/dailyImportDetail";
 	}
 }

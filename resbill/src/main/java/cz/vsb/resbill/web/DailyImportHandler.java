@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.HttpRequestHandler;
 
+import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.service.DailyImportService;
 
 /**
@@ -34,16 +35,19 @@ public class DailyImportHandler implements HttpRequestHandler {
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 
-//		Date date = new java.sql.Date(2014, 02, 01);
+		// Date date = new java.sql.Date(2014, 02, 01);
 
-//		out.println("Importuji pro den: " + date);
+		// out.println("Importuji pro den: " + date);
 		out.println("Zacinam import...");
 		out.flush();
 
-//		dailyImportService.importDailyReport(date);
-		dailyImportService.importAllReports();
-		
-		
+		// dailyImportService.importDailyReport(date);
+		try {
+			dailyImportService.importAllReports();
+		} catch (ResBillException exc) {
+			// TODO: vyjimku slusne zalogovat
+			exc.printStackTrace();
+		}
 
 		out.println("DOKONCENO");
 	}
