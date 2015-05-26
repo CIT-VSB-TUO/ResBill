@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "startbootstrap-sb-admin-2": "~1.0.7"
+    "startbootstrap-sb-admin-2": "~1.0.7",
+    "bootstrap-datepicker": "~1.4.0"
   }
 }
