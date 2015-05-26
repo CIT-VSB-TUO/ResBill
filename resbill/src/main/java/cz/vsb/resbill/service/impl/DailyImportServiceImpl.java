@@ -62,7 +62,7 @@ import cz.vsb.resbill.util.ResourceBundleUtils;
 @Transactional
 public class DailyImportServiceImpl implements DailyImportService {
 
-	private Logger log = LoggerFactory.getLogger(DailyImportServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(DailyImportServiceImpl.class);
 
 	@Inject
 	private ApplicationContext appContext;

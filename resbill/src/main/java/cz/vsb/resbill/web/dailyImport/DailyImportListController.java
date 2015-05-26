@@ -28,7 +28,7 @@ import cz.vsb.resbill.service.DailyImportService;
 @RequestMapping("/dailyImport")
 public class DailyImportListController {
 
-	private Logger log = LoggerFactory.getLogger(DailyImportListController.class);
+	private static final Logger log = LoggerFactory.getLogger(DailyImportListController.class);
 
 	@Inject
 	private DailyImportService dailyImportService;

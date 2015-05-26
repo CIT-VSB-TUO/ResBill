@@ -24,6 +24,7 @@ import cz.vsb.resbill.criteria.DailyImportCriteria;
 import cz.vsb.resbill.model.DailyImport;
 import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.service.DailyImportService;
+import cz.vsb.resbill.util.WebUtils;
 
 /**
  * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
@@ -34,7 +35,7 @@ import cz.vsb.resbill.service.DailyImportService;
 @RequestMapping("/dailyImport/detail")
 public class DailyImportDetailController {
 
-	private Logger log = LoggerFactory.getLogger(DailyImportListController.class);
+	private static final Logger log = LoggerFactory.getLogger(DailyImportListController.class);
 
 	public static final String DAILY_IMPORT_KEY = "dailyImport";
 
@@ -65,13 +66,15 @@ public class DailyImportDetailController {
 
 		try {
 			dailyImport = dailyImportService.findDailyImport(dailyImportId);
+			model.addAttribute(DAILY_IMPORT_KEY, dailyImport);
 
 			throw new Exception("TEST EXC");
 		} catch (Exception exc) {
 			log.error(exc.getMessage(), exc);
 			// TODO: vypsat chybovou zpravu uzivateli
 
-			dailyImport = new DailyImport();
+//			dailyImport = new DailyImport();
+			dailyImport = null;
 			model.addAttribute(DAILY_IMPORT_KEY, dailyImport);
 
 			addGlobalError(model, "error.load.dailyImport");
@@ -87,23 +90,10 @@ public class DailyImportDetailController {
 	 * @param msgKey
 	 */
 	protected void addGlobalError(ModelMap model, String msgKey) {
-		addGlobalError(model, DAILY_IMPORT_KEY, msgKey);
+		WebUtils.addGlobalError(model, DAILY_IMPORT_KEY, msgKey);
 	}
 
-	/**
-	 * 
-	 * @param model
-	 * @param objectName
-	 * @param msgKey
-	 */
-	protected void addGlobalError(ModelMap model, String objectName, String msgKey) {
-		BindingResult bindingResult = (BindingResult) model.get(BindingResult.MODEL_KEY_PREFIX + "dailyImport");
-		if (bindingResult == null) {
-			bindingResult = new BeanPropertyBindingResult(model.get(objectName), "dailyImport");
-			model.put(BindingResult.MODEL_KEY_PREFIX + "dailyImport", bindingResult);
-		}
-		bindingResult.reject(msgKey);
-	}
+
 
 	/**
 	 * 
