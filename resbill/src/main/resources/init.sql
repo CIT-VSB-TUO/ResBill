@@ -34,6 +34,9 @@
         drop constraint if exists FK_daily_usage__daily_import;
         
     alter table if exists DAILY_USAGE 
+        drop constraint if exists FK_daily_usage__invoice;        
+        
+    alter table if exists DAILY_USAGE 
         drop constraint if exists FK_daily_usage__production_level;
 
     alter table if exists DAILY_USAGE 
@@ -169,6 +172,7 @@
     
     create table if not exists DAILY_USAGE (
         id int4 not null,
+        lock_version int4 not null,
         backup_gb numeric(10, 2) not null,
         cpu int4 not null,
         memory_mb int4 not null,
@@ -177,6 +181,7 @@
         server_name varchar(100) not null,
         used_space_gb numeric(10, 2) not null,
         daily_import_id int4 not null,
+        invoice_id int4,
         prod_level_id int4 not null,
         server_id int4 not null,
         primary key (id)
@@ -368,6 +373,11 @@
         add constraint FK_daily_usage__daily_import 
         foreign key (daily_import_id) 
         references DAILY_IMPORT;        
+        
+    alter table DAILY_USAGE 
+        add constraint FK_daily_usage__invoice 
+        foreign key (invoice_id) 
+        references TRANSACTION;
         
     alter table if exists DAILY_USAGE 
         add constraint FK_daily_usage__production_level 
