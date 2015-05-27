@@ -15,6 +15,12 @@ import cz.vsb.resbill.criteria.PriceListCriteria;
 import cz.vsb.resbill.dao.PriceListDAO;
 import cz.vsb.resbill.model.PriceList;
 
+/**
+ * Implementation class of {@link PriceListDAO} interface.
+ * 
+ * @author HAL191
+ *
+ */
 @Repository
 public class PriceListDAOImpl implements PriceListDAO {
 
@@ -27,20 +33,20 @@ public class PriceListDAOImpl implements PriceListDAO {
 	}
 
 	@Override
-	public List<PriceList> findPriceLists(PriceListCriteria criteria) {
+	public List<PriceList> findPriceLists(PriceListCriteria criteria, Integer offset, Integer limit) {
 		StringBuilder jpql = new StringBuilder("SELECT pl FROM PriceList AS pl");
 		if (criteria != null) {
 			// building query
 			Set<String> where = new LinkedHashSet<String>();
 			if (criteria.getTariffId() != null) {
-				jpql.append("pl.tariff.id = :tariffId");
+				where.add("pl.tariff.id = :tariffId");
 			}
 			if (criteria.getCurrentlyValid() != null) {
 				String condition = "(pl.period.beginDate <= CURRENT_DATE AND (pl.period.endDate IS NULL OR pl.period.endDate >= CURRENT_DATE))";
 				if (criteria.getCurrentlyValid()) {
-					jpql.append(condition);
+					where.add(condition);
 				} else {
-					jpql.append("NOT ").append(condition);
+					where.add("NOT " + condition);
 				}
 			}
 			if (!where.isEmpty()) {
@@ -59,8 +65,25 @@ public class PriceListDAOImpl implements PriceListDAO {
 				query.setParameter("tariffId", criteria.getTariffId());
 			}
 		}
+		if (offset != null) {
+			query.setFirstResult(offset.intValue());
+		}
+		if (limit != null) {
+			query.setMaxResults(limit.intValue());
+		}
 
 		return query.getResultList();
 	}
 
+	@Override
+	public PriceList savePriceList(PriceList priceList) {
+		if (priceList.getId() == null) {
+			em.persist(priceList);
+		} else {
+			priceList = em.merge(priceList);
+		}
+		em.flush();
+
+		return priceList;
+	}
 }

@@ -7,7 +7,7 @@ import cz.vsb.resbill.model.Tariff;
 
 /**
  * 
- * Data acces interface for {@link Tariff} model entity.
+ * Data access interface for {@link Tariff} model entity.
  * 
  * @author HAL191
  *

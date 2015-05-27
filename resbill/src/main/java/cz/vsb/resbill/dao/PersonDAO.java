@@ -6,7 +6,7 @@ import cz.vsb.resbill.criteria.PersonCriteria;
 import cz.vsb.resbill.model.Person;
 
 /**
- * Data acces interface for {@link Person} model entity.
+ * Data access interface for {@link Person} model entity.
  * 
  * @author HAL191
  */
