@@ -12,31 +12,53 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import cz.vsb.resbill.criteria.TariffCriteria;
-import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Tariff;
 import cz.vsb.resbill.service.TariffService;
+import cz.vsb.resbill.util.WebUtils;
 
+/**
+ * A controller for handling requests for/from tariffs/tariffList.html page template.
+ * 
+ * @author HAL191
+ *
+ */
 @Controller
 @RequestMapping("/tariffs")
 public class TariffListController {
 
 	private static final Logger log = LoggerFactory.getLogger(TariffListController.class);
 
+	private static final String TARIFFS_MODEL_KEY = "tariffs";
+
 	@Inject
 	private TariffService tariffService;
 
-	private List<Tariff> getTariffs() throws ResBillException {
-		return tariffService.findTariffs(new TariffCriteria(), null, null);
-	}
-
-	@RequestMapping(method = RequestMethod.GET)
-	public String view(ModelMap model) {
+	private void loadTariffs(ModelMap model) {
+		List<Tariff> tariffs = null;
 		try {
-			model.addAttribute("tariffs", getTariffs());
+			tariffs = tariffService.findTariffs(new TariffCriteria(), null, null);
+			model.addAttribute(TARIFFS_MODEL_KEY, tariffs);
 		} catch (Exception e) {
 			log.error("Cannot load list of tariffs.", e);
-			// TODO error handle
+
+			model.addAttribute(TARIFFS_MODEL_KEY, tariffs);
+			WebUtils.addGlobalError(model, TARIFFS_MODEL_KEY, "error.load.tariffs");
 		}
+		if (log.isDebugEnabled()) {
+			log.debug("Loaded list of tariffs size: " + (tariffs != null ? tariffs.size() : null));
+		}
+	}
+
+	/**
+	 * Handles all GET requests. Loads a list of all tariffs and binds it with the key "tariffs" into a model.
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET)
+	public String view(ModelMap model) {
+		loadTariffs(model);
+
 		return "tariffs/tariffList";
 	}
 }
