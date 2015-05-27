@@ -67,8 +67,8 @@ public class Invoice extends Transaction {
 	/**
 	 * 
 	 */
-	@OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE }, orphanRemoval = false)
-	private Set<DailyUsage> dailyUsages = new HashSet<>();
+	@OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<InvoiceDailyUsage> invoiceDailyUsages = new HashSet<>();
 
 	@Override
 	public String toString() {

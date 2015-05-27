@@ -73,10 +73,10 @@ public class DailyUsage extends BaseVersionedEntity {
 	@JoinColumn(name = "daily_import_id", foreignKey = @ForeignKey(name = "FK_daily_usage__daily_import"))
 	@NotNull
 	private DailyImport dailyImport;
-	
-	@ManyToOne(optional = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "invoice_id", foreignKey = @ForeignKey(name = "FK_daily_usage__invoice"))
-	private Invoice invoice;
+
+	// @ManyToOne(optional = true, fetch = FetchType.LAZY)
+	// @JoinColumn(name = "invoice_id", foreignKey = @ForeignKey(name = "FK_daily_usage__invoice"))
+	// private Invoice invoice;
 
 	// public Date getDate() {
 	// return date;
@@ -198,8 +198,6 @@ public class DailyUsage extends BaseVersionedEntity {
 		builder.append(productionLevel != null ? productionLevel.getId() : null);
 		builder.append(", server.id=");
 		builder.append(server != null ? server.getId() : null);
-		builder.append(", invoice.id=");
-		builder.append(invoice != null ? invoice.getId() : null);
 		builder.append("]");
 		return builder.toString();
 	}
