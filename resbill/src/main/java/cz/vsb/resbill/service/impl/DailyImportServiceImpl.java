@@ -41,6 +41,7 @@ import cz.vsb.resbill.dao.DailyImportDAO;
 import cz.vsb.resbill.dao.DailyUsageDAO;
 import cz.vsb.resbill.dao.ProductionLevelDAO;
 import cz.vsb.resbill.dao.ServerDAO;
+import cz.vsb.resbill.dto.DailyImportAllReportsResultDTO;
 import cz.vsb.resbill.exception.DailyImportException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.ContractServer;
@@ -186,8 +187,10 @@ public class DailyImportServiceImpl implements DailyImportService {
 	 * 
 	 */
 	@Override
-	public void importAllReports() throws ResBillException {
+	public DailyImportAllReportsResultDTO importAllReports() throws ResBillException {
 		log.info("Zacinam import celeho adresare.");
+
+		DailyImportAllReportsResultDTO resultDTO = new DailyImportAllReportsResultDTO();
 
 		try {
 
@@ -210,9 +213,33 @@ public class DailyImportServiceImpl implements DailyImportService {
 
 			// Postupne budu zpracovavat vsechny nalezene soubory
 			File[] files = dir.listFiles(filter);
+			resultDTO.setAllReports(files.length);
 			for (File file : files) {
-				dailyImportService.importDailyReport(file);
-				// TODO: co delat, kdyz dojde k chybe pri nacitani jednoho souboru? Asi bychom se z toho meli zotavit a na konci vypsat statistiku.
+				try {
+					DailyImport dailyImport = dailyImportService.importDailyReport(file);
+
+					if (dailyImport.getWarnLines() > 0) {
+						resultDTO.setErrorReports(resultDTO.getErrorReports() + 1);
+					} else if (dailyImport.getWarnLines() > 0) {
+						resultDTO.setWarnReports(resultDTO.getWarnReports() + 1);
+					} else {
+						resultDTO.setOkReports(resultDTO.getOkReports() + 1);
+					}
+				} catch (DailyImportException exc) {
+					switch (exc.getReason()) {
+					case IMPORT_REPORT_DATE_EXISTS:
+						resultDTO.setExistsReports(resultDTO.getExistsReports() + 1);
+						break;
+
+					case IMPORT_REPORT_DATE_PARSE_ERROR:
+					case IMPORT_REPORT_DATA_UNREADABLE:
+					default:
+						resultDTO.setCriticalErrorReports(resultDTO.getCriticalErrorReports() + 1);
+						log.error(exc.getMessage(), exc);
+						break;
+					}
+				}
+
 				// break; // pro ucely ladeni
 			}
 
@@ -221,7 +248,9 @@ public class DailyImportServiceImpl implements DailyImportService {
 			throw new ResBillException(exc);
 		}
 
-		log.info("Import celeho adresare dokoncen.");
+		log.info("Import celeho adresare dokoncen: " + resultDTO);
+
+		return resultDTO;
 	}
 
 	/**
@@ -230,9 +259,10 @@ public class DailyImportServiceImpl implements DailyImportService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void importDailyReport(File file) throws DailyImportException {
+	public DailyImport importDailyReport(File file) throws DailyImportException {
 		String fileName = file.getName();
 		log.info("Zacinam importovat soubor: " + fileName);
+		DailyImport dailyImport = null;
 
 		try {
 			// Ziskani datumu
@@ -262,7 +292,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 
 			// Zaznamenani zapoceti denniho importu.
 			// Ulozeni znamych udaju.
-			DailyImport dailyImport = new DailyImport();
+			dailyImport = new DailyImport();
 			dailyImport.setDate(date);
 			dailyImport.setReportName(fileName);
 			dailyImport.setReport(report);
@@ -290,12 +320,14 @@ public class DailyImportServiceImpl implements DailyImportService {
 			// Zaznamenani ukonceni denniho importu
 			dailyImportService.endDailyImport(dailyImport, lineImportDatas);
 		} catch (DailyImportException exc) {
-			log.error(exc.getMessage(), exc);
-			log.info("NEdokoncen import souboru: " + fileName);
+			// log.error(exc.getMessage(), exc);
+			log.info("NEdokoncen import souboru: " + fileName + " - " + exc.getReason());
 			throw exc;
 		}
 
 		log.info("Dokoncen import souboru: " + fileName);
+
+		return dailyImport;
 	}
 
 	/**
