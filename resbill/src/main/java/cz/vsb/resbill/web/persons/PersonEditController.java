@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import cz.vsb.resbill.exception.PersonServiceException;
-import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.service.PersonService;
+import cz.vsb.resbill.util.WebUtils;
 
 /**
  * A controller for handling requests for/from persons/personEdit.html page
@@ -36,6 +36,8 @@ public class PersonEditController {
 
 	private static final Logger log = LoggerFactory.getLogger(PersonEditController.class);
 
+	private static final String PERSON_MODEL_KEY = "person";
+
 	@Inject
 	private PersonService personService;
 
@@ -44,11 +46,26 @@ public class PersonEditController {
 		binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
 	}
 
-	private Person getPerson(Integer personId) throws ResBillException {
-		if (personId != null) {
-			return personService.findPerson(personId);
-		} else {
-			return new Person();
+	private void loadPerson(Integer personId, ModelMap model) {
+		if (log.isDebugEnabled()) {
+			log.debug("Requested personId=" + personId);
+		}
+		Person person = null;
+		try {
+			if (personId != null) {
+				person = personService.findPerson(personId);
+			} else {
+				person = new Person();
+			}
+			model.addAttribute(PERSON_MODEL_KEY, person);
+		} catch (Exception e) {
+			log.error("Cannot load person with id: " + personId, e);
+
+			model.addAttribute(PERSON_MODEL_KEY, person);
+			WebUtils.addGlobalError(model, PERSON_MODEL_KEY, "error.load.person");
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("Loaded person: " + person);
 		}
 	}
 
@@ -63,18 +80,8 @@ public class PersonEditController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String view(@RequestParam(value = "personId", required = false) Integer personId, ModelMap model) {
-		if (log.isDebugEnabled()) {
-			log.debug("Requested personId=" + personId);
-		}
-		try {
-			model.addAttribute("person", getPerson(personId));
-			if (log.isDebugEnabled()) {
-				log.debug("Edited person: " + model.get("person"));
-			}
-		} catch (Exception e) {
-			log.error("Cannot load person with id: " + personId, e);
-			// TODO error notification
-		}
+		loadPerson(personId, model);
+
 		return "persons/personEdit";
 	}
 
@@ -86,7 +93,7 @@ public class PersonEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
-	public String save(@Valid @ModelAttribute("person") Person person, BindingResult bindingResult) {
+	public String save(@Valid @ModelAttribute(PERSON_MODEL_KEY) Person person, BindingResult bindingResult) {
 		if (log.isDebugEnabled()) {
 			log.debug("Person to save: " + person);
 		}
@@ -127,7 +134,7 @@ public class PersonEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-	public String delete(@ModelAttribute("person") Person person, BindingResult bindingResult) {
+	public String delete(@ModelAttribute(PERSON_MODEL_KEY) Person person, BindingResult bindingResult) {
 		if (log.isDebugEnabled()) {
 			log.debug("Person to delete: " + person);
 		}

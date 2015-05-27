@@ -51,7 +51,12 @@
 				<h1 class="page-header" th:text="#{page.header.persons}">Správa osob</h1>
 			</div>
 		</div>
+		
 		<div class="row">
+			<div class="col-lg-8 col-lg-offset-2 alert alert-danger" th:if="${#fields.hasErrors('${persons}')}" th:errors="${persons}">Global error</div>
+		</div>
+		
+		<div class="row" th:if="${persons != null}">
 			<div class="col-lg-12">
 
 				<table class="table" id="persons">
