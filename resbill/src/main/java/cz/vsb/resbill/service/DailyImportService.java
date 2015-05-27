@@ -28,7 +28,7 @@ public interface DailyImportService {
 
 	List<DailyImport> findDailyImports(DailyImportCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
-	DailyImport deleteDailyImport(Integer dailyImportId) throws ResBillException;
+	DailyImport deleteDailyImport(Integer dailyImportId) throws DailyImportException, ResBillException;
 
 	void importAllReports() throws ResBillException;
 

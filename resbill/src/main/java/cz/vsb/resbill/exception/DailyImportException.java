@@ -79,5 +79,10 @@ public class DailyImportException extends ResBillException {
 		 * Nepodarilo se precist data z reportu (vstupniho souboru).
 		 */
 		IMPORT_REPORT_DATA_UNREADABLE,
+		
+		/**
+		 * Denni import (resp. nektere z jeho dennich vyuziti zdroju) je pouzito na fakture
+		 */
+		USED_ON_INVOICE,
 	}
 }
