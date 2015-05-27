@@ -50,11 +50,92 @@
 			</div>
 		</div>
 
-		<form role="form" method="post" action="#" th:object="${dailyImports}">
-			<div class="row">
-				<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('global')}" th:errors="*{global}">Global error</div>
+		<!-- Zobrazeni chyb -->
+		<div class="row">
+			<div class="col-lg-12 alert alert-danger"
+				th:if="${importAllResultsDTO != null and importAllResultsDTO.endTimestamp == null and #fields.hasErrors('${importAllResultsDTO}')}"
+				th:errors="${importAllResultsDTO}">Global error</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${dailyImports}')}" th:errors="${dailyImports}">Global error</div>
+		</div>
+
+
+		<div class="row">
+			<div class="col-lg-12">
+				<form role="form" method="post" action="#">
+					<p>
+						<button class="btn btn-primary" type="submit" name="importAllReports">
+							<i class="fa fa-arrow-circle-down"></i> <span th:text="#{button.title.dailyImport.importAll}">Importovat vše</span>
+						</button>
+					</p>
+				</form>
 			</div>
-		</form>
+		</div>
+
+
+
+		<div class="row" th:if="${importAllResultsDTO != null and importAllResultsDTO.endTimestamp != null}">
+			<div class="col-lg-12">
+
+				<div class="panel panel-default">
+					<div class="panel-heading" th:text="#{panel.dailyImport.importAllResults}">Výsledek importu</div>
+
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.dailyImport.importBegin}">Začátek importu</label>
+									<p class="form-control-static" th:text="${#dates.format(importAllResultsDTO.beginTimestamp,'__#{timestamp.format.detail}__')}">1.5.2015
+										08:05:30.123</p>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.dailyImport.importEnd}">Konec importu</label>
+									<p class="form-control-static" th:text="${#dates.format(importAllResultsDTO.endTimestamp,'__#{timestamp.format.detail}__')}">1.5.2015 08:05:30.123</p>
+								</div>
+							</div>
+
+							<div class="col-lg-5">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.dailyImport.reportsNumberAll}">Počet všech zpracovávaných souborů</label>
+									<p class="form-control-static" th:text="${importAllResultsDTO.allReports}">20</p>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.dailyImport.reportsNumberOk}">Počet importovaných souborů se všemi řádky bezvadnými</label>
+									<p class="form-control-static" th:text="${importAllResultsDTO.okReports}">5</p>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.dailyImport.reportsNumberWarn}">Počet importovaných souborů s řádky s varováním</label>
+									<p class="form-control-static" th:text="${importAllResultsDTO.warnReports}">6</p>
+								</div>
+							</div>
+
+							<div class="col-lg-5">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.dailyImport.reportsNumberError}">Počet importovaných souborů s řádky s chybou</label>
+									<p class="form-control-static" th:text="${importAllResultsDTO.errorReports}">3</p>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.dailyImport.reportsNumberExists}">Počet nezpracovaných souborů - soubory byly již dříve
+										naimportovány</label>
+									<p class="form-control-static" th:text="${importAllResultsDTO.existsReports}">5</p>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.dailyImport.reportsNumberCritError}">Počet nezpracovaných souborů - závažná chyba při zpracování</label>
+									<p class="form-control-static" th:text="${importAllResultsDTO.criticalErrorReports}">1</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
 
 		<div class="row" th:if="${dailyImports != null}">
 			<div class="col-lg-12">
@@ -115,6 +196,5 @@
 	<!-- Custom Theme JavaScript -->
 	<script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"
 		th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
-
 </body>
 </html>

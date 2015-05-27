@@ -13,7 +13,7 @@
 	<meta name="author" content="" />
 </th:block>
 
-<title th:text="#{head.title.dailyImportDetail}">Denní import - 1.6.2015</title>
+<title th:text="#{head.title.dailyImportDetail}">Denní import</title>
 
 <th:block th:remove="all">
 	<!-- remove all duplicated template css due to auto-merge -->
@@ -49,37 +49,50 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header" th:text="#{page.header.dailyImportDetail}">Denní import - 1.6.2015</h1>
+				<h1 class="page-header" th:text="#{page.header.dailyImportDetail}">Denní import</h1>
 			</div>
 		</div>
 
+    <!-- Zobrazeni chyb -->
 		<div class="row">
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${dailyImport}')}" th:errors="${dailyImport}">Global error</div>
+		</div>
+
+    <!-- Pokud nemam data, tak zobrazuji pouze talcitko "Zpet" -->
+		<div class="row" th:if="${dailyImport == null}">
 			<div class="col-lg-12">
-				<form role="form" method="post" action="#" th:object="${dailyImport}">
-					<input type="hidden" name="dailyImportId" th:value="${dailyImport?.id}" />
-
-					<div class="row">
-						<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('global')}" th:errors="*{global}">Global error</div>
-					</div>
-
-					<div class="row">
-						<div class="col-lg-12">
-							<p>
-								<button th:if="${dailyImport != null}" class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete">
-									<i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
-								</button>
-
-								<a href="dailyImportList.html" class="btn btn-default" th:href="@{/dailyImport}"> <i class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
-								</a>
-							</p>
-						</div>
-					</div>
-				</form>
+				<p>
+					<a href="dailyImportList.html" class="btn btn-default" th:href="@{/dailyImport}"> <i class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
+					</a>
+				</p>
 			</div>
 		</div>
 
+    <!-- Pokud mam data, tak zobrazuji kompletni obsah -->
 		<div class="row" th:if="${dailyImport != null}">
 			<div class="col-lg-12">
+
+				<div class="row">
+					<div class="col-lg-12">
+						<form role="form" method="post" action="#" th:object="${dailyImport}">
+							<input type="hidden" name="dailyImportId" th:value="*{id}" />
+
+							<div class="row">
+								<div class="col-lg-12">
+									<p>
+										<button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete">
+											<i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
+										</button>
+
+										<a href="dailyImportList.html" class="btn btn-default" th:href="@{/dailyImport}"> <i class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
+										</a>
+									</p>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
 				<div class="row">
 					<div class="col-lg-12">
 

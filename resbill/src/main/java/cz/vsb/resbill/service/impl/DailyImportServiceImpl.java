@@ -191,9 +191,9 @@ public class DailyImportServiceImpl implements DailyImportService {
 		log.info("Zacinam import celeho adresare.");
 
 		DailyImportAllReportsResultDTO resultDTO = new DailyImportAllReportsResultDTO();
+		resultDTO.setBeginTimestamp(new Date());
 
 		try {
-
 			ResourceBundle rb = ResourceBundle.getBundle(ResourceBundleUtils.CONFIG_BUNDLE);
 			String dirName = rb.getString("dir.import.reports");
 			log.info("Jmeno adresare: " + dirName);
@@ -218,7 +218,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 				try {
 					DailyImport dailyImport = dailyImportService.importDailyReport(file);
 
-					if (dailyImport.getWarnLines() > 0) {
+					if (dailyImport.getErrorLines() > 0) {
 						resultDTO.setErrorReports(resultDTO.getErrorReports() + 1);
 					} else if (dailyImport.getWarnLines() > 0) {
 						resultDTO.setWarnReports(resultDTO.getWarnReports() + 1);
@@ -248,6 +248,8 @@ public class DailyImportServiceImpl implements DailyImportService {
 			throw new ResBillException(exc);
 		}
 
+		resultDTO.setEndTimestamp(new Date());
+		
 		log.info("Import celeho adresare dokoncen: " + resultDTO);
 
 		return resultDTO;

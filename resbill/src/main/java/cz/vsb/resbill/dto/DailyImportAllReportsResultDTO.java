@@ -5,6 +5,7 @@
 package cz.vsb.resbill.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import cz.vsb.resbill.util.ToStringBuilder;
 
@@ -22,6 +23,10 @@ public class DailyImportAllReportsResultDTO implements Serializable {
    * 
    */
 	private static final long serialVersionUID = 1L;
+
+	private Date beginTimestamp = null;
+
+	private Date endTimestamp = null;
 
 	/**
 	 * Pocet vsech zpracovavanych souboru.
@@ -52,6 +57,36 @@ public class DailyImportAllReportsResultDTO implements Serializable {
 	 * Pocet souboru, ktere nebyly zpracovany vubec v dusledku nejake chyby
 	 */
 	private int criticalErrorReports = 0;
+
+	/**
+	 * @return the beginTimestamp
+	 */
+	public Date getBeginTimestamp() {
+		return beginTimestamp;
+	}
+
+	/**
+	 * @param beginTimestamp
+	 *          the beginTimestamp to set
+	 */
+	public void setBeginTimestamp(Date beginTimestamp) {
+		this.beginTimestamp = beginTimestamp;
+	}
+
+	/**
+	 * @return the endTimestamp
+	 */
+	public Date getEndTimestamp() {
+		return endTimestamp;
+	}
+
+	/**
+	 * @param endTimestamp
+	 *          the endTimestamp to set
+	 */
+	public void setEndTimestamp(Date endTimestamp) {
+		this.endTimestamp = endTimestamp;
+	}
 
 	/**
 	 * @return the allReports
@@ -151,6 +186,8 @@ public class DailyImportAllReportsResultDTO implements Serializable {
 	@Override
 	public String toString() {
 		ToStringBuilder builder = new ToStringBuilder(this);
+		builder.append("beginTimestamp", beginTimestamp);
+		builder.append("endTimestamp", endTimestamp);
 		builder.append("allReports", allReports);
 		builder.append("okReports", okReports);
 		builder.append("existsReports", existsReports);
