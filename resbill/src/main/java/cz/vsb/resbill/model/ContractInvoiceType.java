@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "CONTRACT_INVOICE_TYPE", uniqueConstraints = @UniqueConstraint(name = "UK_contract_invoice_type__contract_id__invoice_type_id__begin_date", columnNames = { "contract_id",
 		"invoice_type_id", "begin_date" }))
-public class ContractInvoiceType extends BaseVersionedEntity {
+public class ContractInvoiceType extends BaseVersionedEntity implements PeriodLimitedEntity {
 
 	private static final long serialVersionUID = 2028293909241144177L;
 
@@ -33,10 +33,12 @@ public class ContractInvoiceType extends BaseVersionedEntity {
 	@NotNull
 	private InvoiceType invoiceType;
 
+	@Override
 	public Period getPeriod() {
 		return period;
 	}
 
+	@Override
 	public void setPeriod(Period period) {
 		this.period = period;
 	}

@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "CONTRACT_SERVER", uniqueConstraints = @UniqueConstraint(name = "UK_contract_server__contract_id__server_id__begin_date", columnNames = { "contract_id", "server_id", "begin_date" }))
-public class ContractServer extends BaseVersionedEntity {
+public class ContractServer extends BaseVersionedEntity implements PeriodLimitedEntity {
 
 	private static final long serialVersionUID = -5513761411228439161L;
 
@@ -32,10 +32,12 @@ public class ContractServer extends BaseVersionedEntity {
 	@NotNull
 	private Server server;
 
+	@Override
 	public Period getPeriod() {
 		return period;
 	}
 
+	@Override
 	public void setPeriod(Period period) {
 		this.period = period;
 	}

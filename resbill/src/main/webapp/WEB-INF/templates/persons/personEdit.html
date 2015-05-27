@@ -50,15 +50,27 @@
 				<h1 class="page-header" th:text="#{page.header.person.edit}">Úprava osoby</h1>
 			</div>
 		</div>
+
 		<div class="row">
+			<div class="col-lg-8 col-lg-offset-2 alert alert-danger" th:if="${#fields.hasErrors('${person}')}" th:errors="${person}">Global error</div>
+		</div>
+		
+		<div class="row" th:if="${person == null}">
+			<div class="col-lg-12">
+				<p>
+					<a href="personList.html" class="btn btn-default" th:href="@{/persons}" >
+						<i class="fa fa-reply"></i>
+						<span th:text="#{button.back}">Back</span>
+					</a>
+				</p>				
+			</div>
+		</div>
+		
+		<div class="row" th:if="${person != null}">
 			<div class="col-lg-12">
 				<form role="form" method="post" action="#" th:object="${person}">
 					<input type="hidden" th:field="*{id}"/>
 					<input type="hidden" th:field="*{lockVersion}"/>
-					
-					<div class="row">
-						<div class="col-lg-8 col-lg-offset-2 alert alert-danger" th:if="${#fields.hasErrors('global')}" th:errors="*{global}">Global error</div>
-					</div>
 					
 					<div class="row">
 					

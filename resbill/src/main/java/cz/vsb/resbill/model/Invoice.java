@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @DiscriminatorValue(value = "inv")
-public class Invoice extends Transaction {
+public class Invoice extends Transaction implements PeriodLimitedEntity {
 
 	private static final long serialVersionUID = -3016705349881450838L;
 
@@ -40,10 +40,12 @@ public class Invoice extends Transaction {
 	@NotNull
 	private File attachment;
 
+	@Override
 	public Period getPeriod() {
 		return period;
 	}
 
+	@Override
 	public void setPeriod(Period period) {
 		this.period = period;
 	}

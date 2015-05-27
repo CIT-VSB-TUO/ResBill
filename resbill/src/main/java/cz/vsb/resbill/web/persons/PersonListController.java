@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import cz.vsb.resbill.criteria.PersonCriteria;
-import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.service.PersonService;
+import cz.vsb.resbill.util.WebUtils;
 
 /**
  * A controller for handling requests for/from persons/personList.html page
@@ -29,11 +29,25 @@ public class PersonListController {
 
 	private static final Logger log = LoggerFactory.getLogger(PersonListController.class);
 
+	private static final String PERSONS_MODEL_KEY = "persons";
+
 	@Inject
 	private PersonService personService;
 
-	private List<Person> getPersons() throws ResBillException {
-		return personService.findPersons(new PersonCriteria(), null, null);
+	private void loadPersons(ModelMap model) {
+		List<Person> persons = null;
+		try {
+			persons = personService.findPersons(new PersonCriteria(), null, null);
+			model.addAttribute(PERSONS_MODEL_KEY, persons);
+		} catch (Exception e) {
+			log.error("Cannot load list of persons.", e);
+
+			model.addAttribute(PERSONS_MODEL_KEY, persons);
+			WebUtils.addGlobalError(model, PERSONS_MODEL_KEY, "error.load.persons");
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("Loaded list of persons size: " + (persons != null ? persons.size() : null));
+		}
 	}
 
 	/**
@@ -45,12 +59,8 @@ public class PersonListController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String view(ModelMap model) {
-		try {
-			model.addAttribute("persons", getPersons());
-		} catch (Exception e) {
-			log.error("Cannot load list of persons.", e);
-			// TODO error handle
-		}
+		loadPersons(model);
+
 		return "persons/personList";
 	}
 }
