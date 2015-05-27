@@ -320,7 +320,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 			// Zaznamenani ukonceni denniho importu
 			dailyImportService.endDailyImport(dailyImport, lineImportDatas);
 		} catch (DailyImportException exc) {
-			// log.error(exc.getMessage(), exc);
+			// log.error(exc.getMessage(), exc); // Chyba je dle druhu zalogovana ve volajici metode
 			log.info("NEdokoncen import souboru: " + fileName + " - " + exc.getReason());
 			throw exc;
 		}

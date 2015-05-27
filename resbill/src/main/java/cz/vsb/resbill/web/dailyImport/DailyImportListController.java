@@ -14,8 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import cz.vsb.resbill.criteria.DailyImportCriteria;
+import cz.vsb.resbill.dto.DailyImportAllReportsResultDTO;
+import cz.vsb.resbill.exception.DailyImportException;
 import cz.vsb.resbill.model.DailyImport;
 import cz.vsb.resbill.service.DailyImportService;
 import cz.vsb.resbill.util.WebUtils;
@@ -31,6 +34,8 @@ public class DailyImportListController {
 	private static final Logger log = LoggerFactory.getLogger(DailyImportListController.class);
 
 	public static final String MODEL_OBJECT_KEY_DAILY_IMPORTS = "dailyImports";
+
+	public static final String MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_DTO = "importAllResultsDTO";
 
 	@Inject
 	private DailyImportService dailyImportService;
@@ -83,4 +88,27 @@ public class DailyImportListController {
 		return dailyImports;
 	}
 
+	/**
+	 * 
+	 * @param dailyImportId
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "", method = RequestMethod.POST, params = "importAllReports")
+	public String importAllReports(ModelMap model) {
+
+		try {
+
+			DailyImportAllReportsResultDTO resultDTO = dailyImportService.importAllReports();
+			model.addAttribute(MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_DTO, resultDTO);
+
+		} catch (Exception exc) {
+			log.error("CannotimportAllReports.", exc);
+			addGlobalError(model, "error.save.dailyImport.importAll");
+		}
+		
+		loadDailyImports(model);
+
+		return "dailyImport/dailyImportDetail";
+	}
 }
