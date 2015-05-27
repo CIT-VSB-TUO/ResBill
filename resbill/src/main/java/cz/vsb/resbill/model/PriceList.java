@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "PRICE_LIST")
-public class PriceList extends BaseVersionedEntity {
+public class PriceList extends BaseVersionedEntity implements PeriodLimitedEntity {
 
 	private static final long serialVersionUID = 4369861089171899807L;
 
@@ -82,10 +82,12 @@ public class PriceList extends BaseVersionedEntity {
 		this.backupGBPrice = backupGBPrice;
 	}
 
+	@Override
 	public Period getPeriod() {
 		return period;
 	}
 
+	@Override
 	public void setPeriod(Period period) {
 		this.period = period;
 	}

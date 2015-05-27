@@ -24,7 +24,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "CONTRACT", uniqueConstraints = @UniqueConstraint(name = "UK_contract__evidence_number", columnNames = "evidence_number"))
-public class Contract extends BaseVersionedEntity {
+public class Contract extends BaseVersionedEntity implements PeriodLimitedEntity {
 
 	private static final long serialVersionUID = 346744894255948553L;
 
@@ -104,10 +104,12 @@ public class Contract extends BaseVersionedEntity {
 		this.balance = balance;
 	}
 
+	@Override
 	public Period getPeriod() {
 		return period;
 	}
 
+	@Override
 	public void setPeriod(Period period) {
 		this.period = period;
 	}
