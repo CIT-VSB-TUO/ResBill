@@ -46,6 +46,7 @@ import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.ContractServer;
 import cz.vsb.resbill.model.DailyImport;
 import cz.vsb.resbill.model.DailyUsage;
+import cz.vsb.resbill.model.InvoiceDailyUsage;
 import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.model.ProductionLevel;
 import cz.vsb.resbill.model.Server;
@@ -146,13 +147,34 @@ public class DailyImportServiceImpl implements DailyImportService {
 	 * 
 	 */
 	@Override
-	public DailyImport deleteDailyImport(Integer dailyImportId) throws ResBillException {
+	public DailyImport deleteDailyImport(Integer dailyImportId) throws DailyImportException, ResBillException {
 		try {
+			// test, ze DailyImport (resp. nektera z jeho DailyUsage) neni nikde pouzit:
+			// - neni pouzit na fakture
+			StringBuilder existsJpql = new StringBuilder();
+			existsJpql.append(" SELECT invoiceDailyUsage ");
+			existsJpql.append(" FROM InvoiceDailyUsage AS invoiceDailyUsage ");
+			existsJpql.append(" JOIN invoiceDailyUsage.dailyUsage AS dailyUsage ");
+			existsJpql.append(" JOIN dailyUsage.dailyImport AS dailyImport ");
+			existsJpql.append(" WHERE dailyImport.id = :dailyImportId ");
+
+			TypedQuery<InvoiceDailyUsage> existsQuery = em.createQuery(existsJpql.toString(), InvoiceDailyUsage.class);
+			existsQuery.setMaxResults(1);
+			existsQuery.setParameter("dailyImportId", dailyImportId);
+			InvoiceDailyUsage existingInvoiceDailyUsage = DataAccessUtils.uniqueResult(existsQuery.getResultList());
+			if (existingInvoiceDailyUsage != null) {
+				throw new DailyImportException(DailyImportException.Reason.USED_ON_INVOICE, "An unexpected error occured while deleteDailyImport() for dailyImportId: " + dailyImportId + " - used on invoice.");
+			}
+
 			DailyImport dailyImport = dailyImportDAO.findDailyImport(dailyImportId);
 			if (dailyImport != null) {
 				dailyImport = dailyImportDAO.deleteDailyImport(dailyImport);
 			}
 			return dailyImport;
+
+		} catch (DailyImportException exc) {
+			log.error(exc.getMessage(), exc);
+			throw exc;
 		} catch (Exception exc) {
 			log.error("An unexpected error occured while deleting DailyImport with id=" + dailyImportId, exc);
 			throw new ResBillException(exc);
@@ -269,11 +291,11 @@ public class DailyImportServiceImpl implements DailyImportService {
 			dailyImportService.endDailyImport(dailyImport, lineImportDatas);
 		} catch (DailyImportException exc) {
 			log.error(exc.getMessage(), exc);
-			log.info("NEdokoncen import souboru: " + fileName);	
+			log.info("NEdokoncen import souboru: " + fileName);
 			throw exc;
-		} 
+		}
 
-		log.info("Dokoncen import souboru: " + fileName);	
+		log.info("Dokoncen import souboru: " + fileName);
 	}
 
 	/**
@@ -418,6 +440,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 				contractExistsJpql.append(" AND contractServer.period.beginDate <= :date ");
 				contractExistsJpql.append(" AND (contractServer.period.endDate IS NULL OR contractServer.period.endDate >= :date) ");
 				TypedQuery<ContractServer> existsQuery = em.createQuery(contractExistsJpql.toString(), ContractServer.class);
+				existsQuery.setMaxResults(1);
 				existsQuery.setParameter("serverId", server.getId());
 				existsQuery.setParameter("date", dailyImport.getDate());
 				ContractServer existingContractServer = DataAccessUtils.uniqueResult(existsQuery.getResultList());
@@ -447,6 +470,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 			existsJpql.append(" WHERE dailyImport.id = :dailyImportId ");
 			existsJpql.append(" AND server.id = :serverId ");
 			TypedQuery<DailyUsage> existsQuery = em.createQuery(existsJpql.toString(), DailyUsage.class);
+			existsQuery.setMaxResults(1);
 			existsQuery.setParameter("dailyImportId", dailyImport.getId());
 			existsQuery.setParameter("serverId", server.getId());
 			DailyUsage existingDailyUsage = DataAccessUtils.uniqueResult(existsQuery.getResultList());

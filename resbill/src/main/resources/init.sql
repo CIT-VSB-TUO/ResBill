@@ -34,14 +34,17 @@
         drop constraint if exists FK_daily_usage__daily_import;
         
     alter table if exists DAILY_USAGE 
-        drop constraint if exists FK_daily_usage__invoice;        
-        
-    alter table if exists DAILY_USAGE 
         drop constraint if exists FK_daily_usage__production_level;
 
     alter table if exists DAILY_USAGE 
         drop constraint if exists FK_daily_usage__server;
 
+    alter table if exists INVOICE_DAILY_USAGE 
+        drop constraint if exists FK_invoice_daily_usage__daily_usage;
+
+    alter table if exists INVOICE_DAILY_USAGE 
+        drop constraint if exists FK_invoice_daily_usage__invoice;        
+        
     alter table if exists PRICE_LIST 
         drop constraint if exists FK_price_list__tariff;
 
@@ -74,6 +77,8 @@
     drop table if exists DAILY_USAGE cascade;
 
     drop table if exists FILE cascade;
+    
+    drop table if exists INVOICE_DAILY_USAGE cascade;
 
     drop table if exists INVOICE_TYPE cascade;
 
@@ -181,7 +186,6 @@
         server_name varchar(100) not null,
         used_space_gb numeric(10, 2) not null,
         daily_import_id int4 not null,
-        invoice_id int4,
         prod_level_id int4 not null,
         server_id int4 not null,
         primary key (id)
@@ -196,6 +200,14 @@
         primary key (id)
     );
 
+    create table if not exists INVOICE_DAILY_USAGE (
+        id int4 not null,
+        lock_version int4 not null,
+        daily_usage_id int4 not null,
+        invoice_id int4 not null,
+        primary key (id)
+    );    
+    
     create table if not exists INVOICE_TYPE (
         id int4 not null,
         title varchar(100) not null,
@@ -307,6 +319,9 @@
     alter table if exists DAILY_USAGE 
         add constraint UK_daily_usage__daily_import_id__server_id  unique (daily_import_id, server_id);
 
+    alter table if exists INVOICE_DAILY_USAGE 
+        add constraint UK_invoice_daily_usage__invoice_id__daily_usage_id  unique (invoice_id, daily_usage_id);        
+        
     alter table if exists PERSON 
         add constraint UK_person__email  unique (email);
 
@@ -374,11 +389,6 @@
         foreign key (daily_import_id) 
         references DAILY_IMPORT;        
         
-    alter table DAILY_USAGE 
-        add constraint FK_daily_usage__invoice 
-        foreign key (invoice_id) 
-        references TRANSACTION;
-        
     alter table if exists DAILY_USAGE 
         add constraint FK_daily_usage__production_level 
         foreign key (prod_level_id) 
@@ -389,6 +399,16 @@
         foreign key (server_id) 
         references SERVER;
 
+    alter table if exists INVOICE_DAILY_USAGE 
+        add constraint FK_invoice_daily_usage__daily_usage 
+        foreign key (daily_usage_id) 
+        references DAILY_USAGE;
+
+    alter table if exists INVOICE_DAILY_USAGE 
+        add constraint FK_invoice_daily_usage__invoice 
+        foreign key (invoice_id) 
+        references TRANSACTION;        
+        
     alter table if exists PRICE_LIST 
         add constraint FK_price_list__tariff 
         foreign key (tariff_id) 
