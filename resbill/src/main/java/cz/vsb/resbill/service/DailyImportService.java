@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.List;
 
 import cz.vsb.resbill.criteria.DailyImportCriteria;
+import cz.vsb.resbill.dto.DailyImportAllReportsResultDTO;
 import cz.vsb.resbill.exception.DailyImportException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.DailyImport;
@@ -30,9 +31,9 @@ public interface DailyImportService {
 
 	DailyImport deleteDailyImport(Integer dailyImportId) throws DailyImportException, ResBillException;
 
-	void importAllReports() throws ResBillException;
+	DailyImportAllReportsResultDTO importAllReports() throws ResBillException;
 
-	void importDailyReport(File file) throws DailyImportException;
+	DailyImport importDailyReport(File file) throws DailyImportException;
 
 	DailyImport beginDailyImport(DailyImport dailyImport);
 
