@@ -78,7 +78,7 @@
 
 					<tbody th:remove="all-but-first">
 						<tr th:each="dailyImport : ${dailyImports}">
-							<td th:text="${#calendars.format(dailyImport.date,'dd.MM.yyyy')}">2.6.2015</td>
+							<td th:text="${#dates.format(dailyImport.date,'__#{date.format.list}__')}">2.6.2015</td>
 							<td th:text="${dailyImport.reportName}">report_2015_06_02</td>
 							<td th:text="${dailyImport.success}?#{text.dailyImport.ok}:#{text.dailyImport.error}">OK</td>
 							<td th:text="${dailyImport.allLines}">321</td>
