@@ -1,5 +1,7 @@
 package cz.vsb.resbill.model;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +22,7 @@ public abstract class BaseGeneratedIdEntity extends BaseDomainEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id", nullable = false)
+	@Access(AccessType.PROPERTY)
 	private Integer id;
 
 	@Override
