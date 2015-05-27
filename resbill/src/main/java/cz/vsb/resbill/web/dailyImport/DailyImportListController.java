@@ -53,9 +53,6 @@ public class DailyImportListController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String view(ModelMap model) {
-//		String pokus = null;
-//		model.addAttribute(MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_DTO, pokus);
-		
 		loadDailyImports(model);
 
 		return "dailyImport/dailyImportList";
@@ -99,15 +96,12 @@ public class DailyImportListController {
 	public String importAllReports(ModelMap model) {
 
 		try {
-//			model.addAttribute(MODEL_OBJECT_KEY_DAILY_IMPORTS, null);
 
 			DailyImportAllReportsResultDTO resultDTO = dailyImportService.importAllReports();
 			model.addAttribute(MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_DTO, resultDTO);
 
 		} catch (Exception exc) {
-//			loadDailyImports(model);
 			log.error("Cannot importAllReports.", exc);
-//			addGlobalError(model, "error.save.dailyImport.importAll");
 			model.addAttribute(MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_DTO, new DailyImportAllReportsResultDTO());
 			WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_DTO, "error.save.dailyImport.importAll");
 		}
