@@ -5,7 +5,6 @@
 package cz.vsb.resbill.web.dailyImport;
 
 import javax.inject.Inject;
-import javax.persistence.PersistenceException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import cz.vsb.resbill.exception.DailyImportException;
-import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.DailyImport;
 import cz.vsb.resbill.service.DailyImportService;
 import cz.vsb.resbill.util.WebUtils;
@@ -68,7 +66,7 @@ public class DailyImportDetailController {
 		DailyImport dailyImport = null;
 
 		try {
-			dailyImport = dailyImportService.findDailyImport(dailyImportId);
+			dailyImport = dailyImportService.findDailyImport(dailyImportId, true, true);
 			model.addAttribute(MODEL_OBJECT_KEY_DAILY_IMPORT, dailyImport);
 		} catch (Exception exc) {
 			log.error("Cannot load DailyImport with id: " + dailyImportId, exc);

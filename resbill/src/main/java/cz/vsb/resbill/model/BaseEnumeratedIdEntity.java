@@ -1,5 +1,7 @@
 package cz.vsb.resbill.model;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -17,6 +19,7 @@ public abstract class BaseEnumeratedIdEntity extends BaseDomainEntity {
 
 	@Id
 	@Column(name = "id", nullable = false)
+	@Access(AccessType.PROPERTY)
 	private Integer id;
 
 	@Override

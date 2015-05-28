@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
 import cz.vsb.resbill.criteria.DailyImportCriteria;
 import cz.vsb.resbill.dao.DailyImportDAO;
 import cz.vsb.resbill.model.DailyImport;
-import cz.vsb.resbill.model.Person;
 
 /**
  * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
@@ -106,7 +105,9 @@ public class DailyImportDAOImpl implements DailyImportDAO {
 	@Override
 	public DailyImport deleteDailyImport(DailyImport dailyImport) {
 		em.remove(dailyImport);
+		
 		em.flush();
+		
 		return dailyImport;
 	}
 

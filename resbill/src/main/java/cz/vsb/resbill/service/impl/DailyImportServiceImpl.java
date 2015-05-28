@@ -48,7 +48,6 @@ import cz.vsb.resbill.model.ContractServer;
 import cz.vsb.resbill.model.DailyImport;
 import cz.vsb.resbill.model.DailyUsage;
 import cz.vsb.resbill.model.InvoiceDailyUsage;
-import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.model.ProductionLevel;
 import cz.vsb.resbill.model.Server;
 import cz.vsb.resbill.service.DailyImportService;
