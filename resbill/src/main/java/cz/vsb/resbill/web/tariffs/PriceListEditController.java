@@ -116,18 +116,17 @@ public class PriceListEditController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved priceList: " + priceList);
 				}
+				sessionStatus.setComplete();
+				redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
+				return "redirect:/tariffs/edit";
 			} catch (Exception e) {
 				log.error("Cannot save priceList: " + priceList, e);
 				bindingResult.reject("error.save.priceList");
-				return "tariffs/priceListEdit";
 			}
 		} else {
 			bindingResult.reject("error.save.priceList.validation");
-			return "tariffs/priceListEdit";
 		}
-		sessionStatus.setComplete();
-		redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
-		return "redirect:/tariffs/edit";
+		return "tariffs/priceListEdit";
 	}
 
 	/**
@@ -149,17 +148,16 @@ public class PriceListEditController {
 			if (log.isDebugEnabled()) {
 				log.debug("Deleted priceList: " + priceList);
 			}
+			sessionStatus.setComplete();
+			redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
+			return "redirect:/tariffs/edit";
 		} catch (PriceListServiceException e) {
 			// TODO implement
 			bindingResult.reject("error.delete.priceList.constraint.relations");
-			return "tariffs/priceListEdit";
 		} catch (Exception e) {
 			log.error("Cannot delete priceList: " + priceList, e);
 			bindingResult.reject("error.delete.priceList");
-			return "tariffs/priceListEdit";
 		}
-		sessionStatus.setComplete();
-		redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
-		return "redirect:/tariffs/edit";
+		return "tariffs/priceListEdit";
 	}
 }

@@ -145,6 +145,8 @@ public class PersonEditController {
 			if (log.isDebugEnabled()) {
 				log.debug("Deleted person: " + person);
 			}
+			sessionStatus.setComplete();
+			return "redirect:/persons";
 		} catch (PersonServiceException e) {
 			switch (e.getReason()) {
 			case CUSTOMERS_CONTACT_PERSON:
@@ -158,13 +160,10 @@ public class PersonEditController {
 				bindingResult.reject("error.delete.person");
 				break;
 			}
-			return "persons/personEdit";
 		} catch (Exception e) {
 			log.error("Cannot delete person: " + person, e);
 			bindingResult.reject("error.delete.person");
-			return "persons/personEdit";
 		}
-		sessionStatus.setComplete();
-		return "redirect:/persons";
+		return "persons/personEdit";
 	}
 }

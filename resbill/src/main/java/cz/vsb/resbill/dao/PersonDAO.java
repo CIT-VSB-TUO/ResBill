@@ -22,7 +22,7 @@ public interface PersonDAO {
 	Person findPerson(Integer perosnId);
 
 	/**
-	 * Finds persons by specified criteria
+	 * Finds {@link Person} entities by specified criteria
 	 * 
 	 * @param criteria
 	 *          filtering criteria

@@ -132,7 +132,7 @@ public class TariffEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
-	public String save(@Valid @ModelAttribute(TARIFF_MODEL_KEY) Tariff tariff, BindingResult bindingResult, SessionStatus sessionStatus) {
+	public String save(@Valid @ModelAttribute(TARIFF_MODEL_KEY) Tariff tariff, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus) {
 		if (log.isDebugEnabled()) {
 			log.debug("Tariff to save: " + tariff);
 		}
@@ -142,17 +142,17 @@ public class TariffEditController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved tariff: " + tariff);
 				}
+				sessionStatus.setComplete();
+				return "redirect:/tariffs";
 			} catch (Exception e) {
 				log.error("Cannot save tariff: " + tariff, e);
 				bindingResult.reject("error.save.tariff");
-				return "tariffs/tariffEdit";
 			}
 		} else {
 			bindingResult.reject("error.save.tariff.validation");
-			return "tariffs/tariffEdit";
 		}
-		sessionStatus.setComplete();
-		return "redirect:/tariffs";
+		loadPriceLists(tariff.getId(), model);
+		return "tariffs/tariffEdit";
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class TariffEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-	public String delete(@ModelAttribute(TARIFF_MODEL_KEY) Tariff tariff, BindingResult bindingResult, SessionStatus sessionStatus) {
+	public String delete(@ModelAttribute(TARIFF_MODEL_KEY) Tariff tariff, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus) {
 		if (log.isDebugEnabled()) {
 			log.debug("Tariff to delete: " + tariff);
 		}
@@ -172,16 +172,23 @@ public class TariffEditController {
 			if (log.isDebugEnabled()) {
 				log.debug("Deleted tariff: " + tariff);
 			}
+			sessionStatus.setComplete();
+			return "redirect:/tariffs";
 		} catch (TariffServiceException e) {
-			// TODO implement
-			bindingResult.reject("error.delete.tariff.constraint.relations");
-			return "tariffs/tariffEdit";
+			switch (e.getReason()) {
+			case CONTRACT_TARIFF:
+				bindingResult.reject("error.delete.tariff.contract");
+				break;
+			default:
+				log.warn("Unsupported reason: " + e);
+				bindingResult.reject("error.delete.tariff");
+				break;
+			}
 		} catch (Exception e) {
 			log.error("Cannot delete tariff: " + tariff, e);
 			bindingResult.reject("error.delete.tariff");
-			return "tariffs/tariffEdit";
 		}
-		sessionStatus.setComplete();
-		return "redirect:/tariffs";
+		loadPriceLists(tariff.getId(), model);
+		return "tariffs/tariffEdit";
 	}
 }
