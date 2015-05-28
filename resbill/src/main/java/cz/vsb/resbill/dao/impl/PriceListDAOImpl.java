@@ -86,4 +86,12 @@ public class PriceListDAOImpl implements PriceListDAO {
 
 		return priceList;
 	}
+
+	@Override
+	public PriceList deletePriceList(PriceList priceList) {
+		em.remove(priceList);
+		em.flush();
+
+		return priceList;
+	}
 }

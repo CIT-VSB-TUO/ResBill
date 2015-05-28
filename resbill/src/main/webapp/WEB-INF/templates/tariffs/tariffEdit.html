@@ -50,15 +50,25 @@
 				<h1 class="page-header" th:text="#{page.header.tariff.edit}">Úprava tarifu</h1>
 			</div>
 		</div>
+		
 		<div class="row">
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${tariff}')}" th:errors="${tariff}">Global error</div>
+		</div>
+		
+		<div class="row" th:if="${tariff == null}">
 			<div class="col-lg-12">
-				<form role="form" method="post" action="#" th:action="@{edit}" th:object="${tariff}">
-					<input type="hidden" th:field="*{id}"/>
-					<input type="hidden" th:field="*{lockVersion}"/>
-					
-					<div class="row">
-						<div class="col-lg-8 col-lg-offset-2 alert alert-danger" th:if="${#fields.hasErrors('global')}" th:errors="*{global}">Global error</div>
-					</div>
+				<p>
+					<a href="personList.html" class="btn btn-default" th:href="@{/tariffs}" >
+						<i class="fa fa-reply"></i>
+						<span th:text="#{button.back}">Back</span>
+					</a>
+				</p>				
+			</div>
+		</div>
+		
+		<div class="row" th:if="${tariff != null}">
+			<div class="col-lg-12">
+				<form role="form" method="post" action="#" th:object="${tariff}">
 					
 					<div class="row">
 						<div class="col-lg-6">
@@ -108,6 +118,86 @@
 			<!-- /.col-lg-12 -->
 		</div>
 		<!-- /.row -->
+		
+		<!-- Ceniky -->
+		<div th:if="${showPrices}">
+			<div class="row">
+				<div class="col-lg-12">
+					<h2 class="page-header" th:text="#{section.header.tariff.priceLists}">Ceniky tarifu</h2>
+				</div>
+			</div>
+			
+			<div class="row" >
+				<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${priceLists}')}" th:errors="${priceLists}">Global error</div>
+			</div>
+		
+			<div class="row" th:if="${priceLists != null}">
+				<div class="col-lg-12">
+	
+					<table class="table" id="priceLists">
+						<thead>
+							<tr>
+								<th th:text="#{column.priceList.period.beginDate}">Platnost od</th>
+								<th th:text="#{column.priceList.period.endDate}">Platnost do</th>
+								<th th:text="#{column.priceList.price.cpu}">Cena CPU</th>
+								<th th:text="#{column.priceList.price.memory}">Cena pamet</th>
+								<th th:text="#{column.priceList.price.space}">Cena data</th>
+								<th th:text="#{column.priceList.price.backup}">Cena zaloha</th>
+								<th>
+									<a class="btn btn-primary btn-circle" href="priceListEdit.html" th:href="@{/tariffs/prices/edit(tariffId=${tariff.id})}" th:title="#{button.title.priceList.add}">
+										<i class="fa fa-plus-square"></i>
+									</a>
+								</th>
+							</tr>
+						</thead>
+						<tbody th:remove="all-but-first">
+							<tr th:each="priceList : ${priceLists}">
+								<td th:text="${#dates.format(priceList.period.beginDate, '__#{date.format.list}__')}">1.1.0001</td>
+								<td th:text="${#dates.format(priceList.period.endDate, '__#{date.format.list}__')}">31.12.9999</td>
+								<td th:text="${#numbers.formatDecimal(priceList.cpuPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
+								<td th:text="${#numbers.formatDecimal(priceList.memoryMBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
+								<td th:text="${#numbers.formatDecimal(priceList.spaceGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
+								<td th:text="${#numbers.formatDecimal(priceList.backupGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
+								<td>
+									<a class="btn btn-primary btn-circle" href="priceListEdit.html" th:href="@{/tariffs/prices/edit(priceListId=${priceList.id}, tariffId=${tariff.id})}" th:title="#{button.title.priceList.edit}">
+										<i class="fa fa-edit"></i>
+									</a>
+								</td>
+							</tr>
+							<tr>
+								<td>1.1.0001</td>
+								<td>31.12.9999</td>
+								<td>10,25</td>
+								<td>10,25</td>
+								<td>10,25</td>
+								<td>10,25</td>
+								<td>
+									<a class="btn btn-primary btn-circle" href="priceListEdit.html">
+										<i class="fa fa-edit"></i>
+									</a>
+								</td>
+							</tr>
+							<tr>
+								<td>1.1.0001</td>
+								<td>31.12.9999</td>
+								<td>10,25</td>
+								<td>10,25</td>
+								<td>10,25</td>
+								<td>10,25</td>
+								<td>
+									<a class="btn btn-primary btn-circle" href="priceListEdit.html">
+										<i class="fa fa-edit"></i>
+									</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+	
+				</div>
+				<!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+		</div>
 	</div>
 
 	<!-- jQuery -->

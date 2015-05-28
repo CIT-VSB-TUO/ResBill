@@ -33,6 +33,9 @@
 	<!-- Custom Fonts -->
 	<link href="../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
 	
+	<!-- Datepicker -->
+    <link href="../../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}" />
+       
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -107,12 +110,12 @@
 								<span th:text="#{menu.dailyImports}">Denní importy</span>
 							</a>
 						</li>
-            <li>
-              <a href="invoice/invoiceList.html" th:href="@{/invoice}">
-                <i class="fa fa-calculator fa-fw"></i>
-                <span th:text="#{menu.invoices}">Faktury</span>
-              </a>
-            </li>						
+						<li>
+							<a href="invoice/invoiceList.html" th:href="@{/invoice}">
+								<i class="fa fa-calculator fa-fw"></i>
+								<span th:text="#{menu.invoices}">Faktury</span>
+							</a>
+						</li>						
 					</ul>
 				</div>
 				<!-- /.sidebar-collapse -->
@@ -145,6 +148,10 @@
 
 	<!-- Custom Theme JavaScript -->
 	<script src="../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+
+	<!-- Datepicker -->
+	<script src="../../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js" th:src="@{/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+    <script src="../../bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.cs.min.js" th:src="@{/bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.cs.min.js}"></script>
 
 	<th:block layout:fragment="footer">
 	</th:block>

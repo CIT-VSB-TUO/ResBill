@@ -40,4 +40,13 @@ public interface PriceListDAO {
 	 * @return saved entity
 	 */
 	PriceList savePriceList(PriceList priceList);
+
+	/**
+	 * Deletes given {@link PriceList} entity.
+	 * 
+	 * @param person
+	 *          entity to delete
+	 * @return deleted entity
+	 */
+	PriceList deletePriceList(PriceList priceList);
 }
