@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import cz.vsb.resbill.exception.PersonServiceException;
 import cz.vsb.resbill.model.Person;
@@ -24,14 +26,14 @@ import cz.vsb.resbill.service.PersonService;
 import cz.vsb.resbill.util.WebUtils;
 
 /**
- * A controller for handling requests for/from persons/personEdit.html page
- * template.
+ * A controller for handling requests for/from persons/personEdit.html page template.
  * 
  * @author HAL191
  *
  */
 @Controller
 @RequestMapping("/persons/edit")
+@SessionAttributes("person")
 public class PersonEditController {
 
 	private static final Logger log = LoggerFactory.getLogger(PersonEditController.class);
@@ -70,8 +72,7 @@ public class PersonEditController {
 	}
 
 	/**
-	 * Handles all GET requests. Binds loaded {@link Person} entity with the key
-	 * "person" into a model.
+	 * Handles all GET requests. Binds loaded {@link Person} entity with the key "person" into a model.
 	 * 
 	 * @param personId
 	 *          key of a {@link Person} to view/edit
@@ -93,7 +94,7 @@ public class PersonEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
-	public String save(@Valid @ModelAttribute(PERSON_MODEL_KEY) Person person, BindingResult bindingResult) {
+	public String save(@Valid @ModelAttribute(PERSON_MODEL_KEY) Person person, BindingResult bindingResult, SessionStatus sessionStatus) {
 		if (log.isDebugEnabled()) {
 			log.debug("Person to save: " + person);
 		}
@@ -123,6 +124,7 @@ public class PersonEditController {
 			bindingResult.reject("error.save.person.validation");
 			return "persons/personEdit";
 		}
+		sessionStatus.setComplete();
 		return "redirect:/persons";
 	}
 
@@ -134,7 +136,7 @@ public class PersonEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-	public String delete(@ModelAttribute(PERSON_MODEL_KEY) Person person, BindingResult bindingResult) {
+	public String delete(@ModelAttribute(PERSON_MODEL_KEY) Person person, BindingResult bindingResult, SessionStatus sessionStatus) {
 		if (log.isDebugEnabled()) {
 			log.debug("Person to delete: " + person);
 		}
@@ -152,6 +154,7 @@ public class PersonEditController {
 			bindingResult.reject("error.delete.person");
 			return "persons/personEdit";
 		}
+		sessionStatus.setComplete();
 		return "redirect:/persons";
 	}
 }
