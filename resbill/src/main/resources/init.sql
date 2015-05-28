@@ -123,6 +123,7 @@
 
     create table if not exists CONTRACT_PERSON (
         id int4 not null,
+        lock_version int4 not null,
         contract_id int4 not null,
         person_id int4 not null,
         primary key (id)

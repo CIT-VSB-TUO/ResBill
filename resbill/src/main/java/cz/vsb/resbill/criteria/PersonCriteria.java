@@ -2,8 +2,10 @@ package cz.vsb.resbill.criteria;
 
 import java.io.Serializable;
 
+import cz.vsb.resbill.model.Person;
+
 /**
- * A criteria class for searching Person entities.
+ * A criteria class for searching {@link Person} entities.
  * 
  * @author HAL191
  *

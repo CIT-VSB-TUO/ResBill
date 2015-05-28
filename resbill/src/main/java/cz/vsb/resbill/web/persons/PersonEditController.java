@@ -110,7 +110,7 @@ public class PersonEditController {
 					bindingResult.reject("error.save.person.constraint.unique.email");
 					break;
 				default:
-					log.warn("Unknown reason: " + e);
+					log.warn("Unsupported reason: " + e);
 					bindingResult.reject("error.save.person");
 					break;
 				}
@@ -146,8 +146,18 @@ public class PersonEditController {
 				log.debug("Deleted person: " + person);
 			}
 		} catch (PersonServiceException e) {
-			// TODO implement
-			bindingResult.reject("error.delete.person.constraint.relations");
+			switch (e.getReason()) {
+			case CUSTOMERS_CONTACT_PERSON:
+				bindingResult.reject("error.delete.person.customers.contact");
+				break;
+			case CONTRACT_RESPONSIBILITY:
+				bindingResult.reject("error.delete.person.contract.responsibility");
+				break;
+			default:
+				log.warn("Unsupported reason: " + e);
+				bindingResult.reject("error.delete.person");
+				break;
+			}
 			return "persons/personEdit";
 		} catch (Exception e) {
 			log.error("Cannot delete person: " + person, e);

@@ -8,12 +8,22 @@ public class CustomerCriteria implements Serializable {
 
 	private String namePrefix;
 
+	private Integer contactPersonId;
+
 	public String getNamePrefix() {
 		return namePrefix;
 	}
 
 	public void setNamePrefix(String namePrefix) {
 		this.namePrefix = namePrefix;
+	}
+
+	public Integer getContactPersonId() {
+		return contactPersonId;
+	}
+
+	public void setContactPersonId(Integer contactPersonId) {
+		this.contactPersonId = contactPersonId;
 	}
 
 	@Override
@@ -23,6 +33,8 @@ public class CustomerCriteria implements Serializable {
 		builder.append(super.toString());
 		builder.append(", namePrefix=");
 		builder.append(namePrefix);
+		builder.append(", contactPersonId=");
+		builder.append(contactPersonId);
 		builder.append("]");
 		return builder.toString();
 	}

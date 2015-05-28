@@ -10,11 +10,17 @@ import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cz.vsb.resbill.criteria.ContractPersonCriteria;
+import cz.vsb.resbill.criteria.CustomerCriteria;
 import cz.vsb.resbill.criteria.PersonCriteria;
+import cz.vsb.resbill.dao.ContractPersonDAO;
+import cz.vsb.resbill.dao.CustomerDAO;
 import cz.vsb.resbill.dao.PersonDAO;
 import cz.vsb.resbill.exception.PersonServiceException;
 import cz.vsb.resbill.exception.PersonServiceException.Reason;
 import cz.vsb.resbill.exception.ResBillException;
+import cz.vsb.resbill.model.ContractPerson;
+import cz.vsb.resbill.model.Customer;
 import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.service.PersonService;
 
@@ -32,6 +38,12 @@ public class PersonServiceImpl implements PersonService {
 
 	@Inject
 	private PersonDAO personDAO;
+
+	@Inject
+	private CustomerDAO customerDAO;
+
+	@Inject
+	private ContractPersonDAO contractPersonDAO;
 
 	@Override
 	public Person findPerson(Integer personId) throws ResBillException {
@@ -77,9 +89,27 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public Person deletePerson(Integer personId) throws PersonServiceException, ResBillException {
 		try {
-			// TODO chybi kontrola zavislosti
 			Person person = personDAO.findPerson(personId);
+
+			// kontrola zavislosti
+			// zakaznici
+			CustomerCriteria customerCriteria = new CustomerCriteria();
+			customerCriteria.setContactPersonId(personId);
+			List<Customer> customers = customerDAO.findCustomers(customerCriteria, null, null);
+			if (!customers.isEmpty()) {
+				throw new PersonServiceException(Reason.CUSTOMERS_CONTACT_PERSON);
+			}
+			// zodpovednost za kontrakt
+			ContractPersonCriteria cpCriteria = new ContractPersonCriteria();
+			cpCriteria.setPersonId(personId);
+			List<ContractPerson> contractPersons = contractPersonDAO.findContractPersons(cpCriteria, null, null);
+			if (!contractPersons.isEmpty()) {
+				throw new PersonServiceException(Reason.CONTRACT_RESPONSIBILITY);
+			}
+
 			return personDAO.deletePerson(person);
+		} catch (PersonServiceException e) {
+			throw e;
 		} catch (Exception e) {
 			log.error("An unexpected error occured while deleting Person with id=" + personId, e);
 			throw new ResBillException(e);

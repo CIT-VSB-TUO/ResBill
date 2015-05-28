@@ -9,5 +9,5 @@ public interface CustomerDAO {
 
 	Customer findCustomer(Integer id);
 
-	List<Customer> findCustomers(CustomerCriteria criteria);
+	List<Customer> findCustomers(CustomerCriteria criteria, Integer offset, Integer limit);
 }

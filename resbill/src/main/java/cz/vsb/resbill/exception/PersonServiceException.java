@@ -5,7 +5,14 @@ public class PersonServiceException extends ResBillException {
 	private static final long serialVersionUID = 1L;
 
 	public static enum Reason {
-		NONUNIQUE_EMAIL
+		/** Email neni unikatni */
+		NONUNIQUE_EMAIL,
+
+		/** Osoba je kontaktem zakaznika */
+		CUSTOMERS_CONTACT_PERSON,
+
+		/** Osoba zodpovedna za kontrakt */
+		CONTRACT_RESPONSIBILITY
 	}
 
 	private Reason reason;
