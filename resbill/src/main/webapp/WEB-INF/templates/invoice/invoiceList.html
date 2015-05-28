@@ -46,7 +46,41 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header" th:text="#{page.header.dailyImportList}">Denní importy</h1>
+				<h1 class="page-header" th:text="#{page.header.invoiceList}">Faktury</h1>
+			</div>
+		</div>
+
+		<!-- Zobrazeni chyb -->
+		<div class="row">
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${invoices}')}" th:errors="${invoices}">Global error</div>
+		</div>
+
+		<!-- Zobrazeni vypisu faktur -->
+		<div class="row" th:if="${invoices != null}">
+			<div class="col-lg-12">
+				<table class="table" id="invoices">
+					<thead>
+						<tr>
+							<th th:text="#{column.invoice.order}">Pořadí</th>
+							<th th:text="#{column.invoice.decisiveDate}">Rozhodné datum</th>
+							<th th:text="#{column.invoice.evidenceNumber}">Evidenční číslo</th>
+							<th th:text="#{column.invoice.amount}">Částka</th>
+							<th></th>
+						</tr>
+					</thead>
+
+					<tbody th:remove="all-but-first">
+						<tr th:each="invoice : ${invoices}">
+							<td th:text="${invoice.order}">1</td>
+							<td th:text="${#dates.format(invoice.decisiveDate,'__#{date.format.list}__')}">02.06.2015</td>
+							<td th:text="${invoice.evidenceNumber}">2000000123</td>
+							<td th:text="${#numbers.formatDecimal(invoice.amount,1,'DEFAULT',2,'DEFAULT')}">3 563,00</td>
+							<td><a class="btn btn-primary btn-circle" href="invoiceDetail.html" th:href="@{/invoice/detail(invoiceId=${invoice.id})}"
+								th:title="#{button.title.invoice.detail}"> <i class="fa fa-edit"></i>
+							</a></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
