@@ -45,6 +45,12 @@
     alter table if exists INVOICE_DAILY_USAGE 
         drop constraint if exists FK_invoice_daily_usage__invoice;        
         
+    alter table if exists INVOICE_PRICE_LIST 
+        drop constraint if exists FK_invoice_price_list__invoice;
+
+    alter table if exists INVOICE_PRICE_LIST 
+        drop constraint if exists FK_invoice_price_list__price_list;
+
     alter table if exists PRICE_LIST 
         drop constraint if exists FK_price_list__tariff;
 
@@ -79,6 +85,8 @@
     drop table if exists FILE cascade;
     
     drop table if exists INVOICE_DAILY_USAGE cascade;
+
+    drop table if exists INVOICE_PRICE_LIST cascade;
 
     drop table if exists INVOICE_TYPE cascade;
 
@@ -209,6 +217,14 @@
         primary key (id)
     );    
     
+    create table if not exists INVOICE_PRICE_LIST (
+        id int4 not null,
+        lock_version int4 not null,
+        invoice_id int4 not null,
+        price_list_id int4 not null,
+        primary key (id)
+    );
+
     create table if not exists INVOICE_TYPE (
         id int4 not null,
         title varchar(100) not null,
@@ -323,6 +339,9 @@
     alter table if exists INVOICE_DAILY_USAGE 
         add constraint UK_invoice_daily_usage__invoice_id__daily_usage_id  unique (invoice_id, daily_usage_id);        
         
+    alter table if exists INVOICE_PRICE_LIST 
+        add constraint UK_invoice_price_list__invoice_id__price_list_id  unique (invoice_id, price_list_id);
+
     alter table if exists PERSON 
         add constraint UK_person__email  unique (email);
 
@@ -410,6 +429,16 @@
         foreign key (invoice_id) 
         references TRANSACTION;        
         
+    alter table if exists INVOICE_PRICE_LIST 
+        add constraint FK_invoice_price_list__invoice 
+        foreign key (invoice_id) 
+        references TRANSACTION;
+
+    alter table if exists INVOICE_PRICE_LIST 
+        add constraint FK_invoice_price_list__price_list 
+        foreign key (price_list_id) 
+        references PRICE_LIST;
+
     alter table if exists PRICE_LIST 
         add constraint FK_price_list__tariff 
         foreign key (tariff_id) 

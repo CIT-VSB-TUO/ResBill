@@ -22,12 +22,12 @@ public class ContractServer extends BaseVersionedEntity implements PeriodLimited
 	@Valid
 	private Period period;
 
-	@ManyToOne(optional = true, fetch = FetchType.LAZY)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "contract_id", foreignKey = @ForeignKey(name = "FK_contract_server__contract"))
 	@NotNull
 	private Contract contract;
 
-	@ManyToOne(optional = true, fetch = FetchType.LAZY)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "server_id", foreignKey = @ForeignKey(name = "FK_contract_server__server"))
 	@NotNull
 	private Server server;

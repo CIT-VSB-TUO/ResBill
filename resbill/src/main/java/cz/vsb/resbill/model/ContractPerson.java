@@ -15,12 +15,12 @@ public class ContractPerson extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = 6372466046222089422L;
 
-	@ManyToOne(optional = true, fetch = FetchType.LAZY)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "contract_id", foreignKey = @ForeignKey(name = "FK_contract_person__contract"))
 	@NotNull
 	private Contract contract;
 
-	@ManyToOne(optional = true, fetch = FetchType.LAZY)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "person_id", foreignKey = @ForeignKey(name = "FK_contract_person__person"))
 	@NotNull
 	private Person person;
