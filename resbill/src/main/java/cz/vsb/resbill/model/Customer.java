@@ -3,7 +3,6 @@ package cz.vsb.resbill.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -42,7 +41,7 @@ public class Customer extends BaseVersionedEntity {
 	@NotNull
 	private Person contactPerson;
 
-	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
 	private Set<Contract> contracts = new HashSet<>();
 
 	public String getName() {

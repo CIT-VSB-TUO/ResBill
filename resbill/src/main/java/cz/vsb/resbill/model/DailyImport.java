@@ -34,83 +34,47 @@ import cz.vsb.resbill.util.ToStringBuilder;
 @Table(name = "DAILY_IMPORT", uniqueConstraints = @UniqueConstraint(name = "UK_daily_import__date", columnNames = { "import_date" }))
 public class DailyImport extends BaseVersionedEntity {
 
-	/**
-   * 
-   */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	@Column(name = "import_date")
 	@Temporal(TemporalType.DATE)
 	@NotNull
 	private Date date;
 
-	/**
-	 * 
-	 */
 	@Column(name = "report_name")
 	@NotEmpty
 	@Size(max = 100)
 	private String reportName;
 
-	/**
-	 * 
-	 */
 	@Column(name = "report")
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	private String report;
 
-	/**
-	 * 
-	 */
 	@Column(name = "import_begin_timestamp")
 	@Temporal(TemporalType.TIMESTAMP)
 	@NotNull
 	private Date importBeginTimestamp;
 
-	/**
-	 * 
-	 */
 	@Column(name = "import_end_timestamp")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date importEndTimestamp;
 
-	/**
-	 * 
-	 */
 	@Column(name = "success")
 	private Boolean success;
 
-	/**
-	 * 
-	 */
 	@Column(name = "all_lines")
 	private Integer allLines;
 
-	/**
-	 * 
-	 */
 	@Column(name = "ok_lines")
 	private Integer okLines;
 
-	/**
-	 * 
-	 */
 	@Column(name = "warn_lines")
 	private Integer warnLines;
 
-	/**
-	 * 
-	 */
 	@Column(name = "error_lines")
 	private Integer errorLines;
 
-	/**
-	 * 
-	 */
 	@Column(name = "protocol")
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
@@ -119,10 +83,7 @@ public class DailyImport extends BaseVersionedEntity {
 	public Date getDate() {
 		return date;
 	}
-	
-	/**
-	 * 
-	 */
+
 	@OneToMany(mappedBy = "dailyImport", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<DailyUsage> dailyUsages = new HashSet<>();
 
@@ -210,24 +171,25 @@ public class DailyImport extends BaseVersionedEntity {
 		this.protocol = protocol;
 	}
 
-	/* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString() {
-	  ToStringBuilder builder = new ToStringBuilder(this);
-	  builder.append("date", date);
-	  builder.append("reportName", reportName);
-	  builder.append("importBeginTimestamp", importBeginTimestamp);
-	  builder.append("importEndTimestamp", importEndTimestamp);
-	  builder.append("success", success);
-	  builder.append("allLines", allLines);
-	  builder.append("okLines", okLines);
-	  builder.append("warnLines", warnLines);
-	  builder.append("errorLines", errorLines);
-	  builder.append("toString()", super.toString());
-	  return builder.toString();
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this);
+		builder.append("date", date);
+		builder.append("reportName", reportName);
+		builder.append("importBeginTimestamp", importBeginTimestamp);
+		builder.append("importEndTimestamp", importEndTimestamp);
+		builder.append("success", success);
+		builder.append("allLines", allLines);
+		builder.append("okLines", okLines);
+		builder.append("warnLines", warnLines);
+		builder.append("errorLines", errorLines);
+		builder.append("toString()", super.toString());
+		return builder.toString();
+	}
 
-	
 }

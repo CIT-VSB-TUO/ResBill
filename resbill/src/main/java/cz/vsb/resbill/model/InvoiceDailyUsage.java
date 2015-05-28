@@ -23,9 +23,6 @@ import cz.vsb.resbill.util.ToStringBuilder;
 @Table(name = "INVOICE_DAILY_USAGE", uniqueConstraints = @UniqueConstraint(name = "UK_invoice_daily_usage__invoice_id__daily_usage_id", columnNames = { "invoice_id", "daily_usage_id" }))
 public class InvoiceDailyUsage extends BaseVersionedEntity {
 
-	/**
-   * 
-   */
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)

@@ -32,7 +32,7 @@ public class Tariff extends BaseVersionedEntity {
 	@OneToMany(mappedBy = "tariff", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<PriceList> prices = new HashSet<>();
 
-	@OneToMany(mappedBy = "tariff", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "tariff", fetch = FetchType.LAZY)
 	private Set<ContractTariff> contractTariffs = new HashSet<>();
 
 	public String getName() {

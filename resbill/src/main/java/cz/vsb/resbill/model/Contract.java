@@ -57,7 +57,7 @@ public class Contract extends BaseVersionedEntity implements PeriodLimitedEntity
 	@NotNull
 	private Customer customer;
 
-	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY)
 	private Set<Transaction> transactions = new HashSet<>();
 
 	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
