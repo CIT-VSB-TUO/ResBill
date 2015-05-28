@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "CONTRACT_PERSON", uniqueConstraints = @UniqueConstraint(name = "UK_contract_person__contract_id__person_id", columnNames = { "contract_id", "person_id" }))
-public class ContractPerson extends BaseGeneratedIdEntity {
+public class ContractPerson extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = 6372466046222089422L;
 

@@ -9,10 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import cz.vsb.resbill.criteria.ContractTariffCriteria;
 import cz.vsb.resbill.criteria.TariffCriteria;
+import cz.vsb.resbill.dao.ContractTariffDAO;
 import cz.vsb.resbill.dao.TariffDAO;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.exception.TariffServiceException;
+import cz.vsb.resbill.exception.TariffServiceException.Reason;
+import cz.vsb.resbill.model.ContractTariff;
 import cz.vsb.resbill.model.Tariff;
 import cz.vsb.resbill.service.TariffService;
 
@@ -30,6 +34,9 @@ public class TariffServiceImpl implements TariffService {
 
 	@Inject
 	private TariffDAO tariffDAO;
+
+	@Inject
+	private ContractTariffDAO contractTariffDAO;
 
 	@Override
 	public Tariff findTariff(Integer tariffId) throws ResBillException {
@@ -64,9 +71,20 @@ public class TariffServiceImpl implements TariffService {
 	@Override
 	public Tariff deleteTariff(Integer tariffId) throws TariffServiceException, ResBillException {
 		try {
-			// TODO chybi kontrola zavislosti
 			Tariff tariff = tariffDAO.findTariff(tariffId);
+
+			// kontrola zavislosti
+			// prirazeni ke kontraktu
+			ContractTariffCriteria ctCriteria = new ContractTariffCriteria();
+			ctCriteria.setTariffId(tariffId);
+			List<ContractTariff> contractTariffs = contractTariffDAO.findContractTariffs(ctCriteria, null, null);
+			if (!contractTariffs.isEmpty()) {
+				throw new TariffServiceException(Reason.CONTRACT_TARIFF);
+			}
+
 			return tariffDAO.deleteTariff(tariff);
+		} catch (TariffServiceException e) {
+			throw e;
 		} catch (Exception e) {
 			log.error("An unexpected error occured while deleting Tariff with id=" + tariffId, e);
 			throw new ResBillException(e);

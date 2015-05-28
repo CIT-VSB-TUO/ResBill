@@ -22,11 +22,6 @@ public class DailyUsage extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = 144836678591268182L;
 
-	// @Column(name = "usage_date")
-	// @Temporal(TemporalType.DATE)
-	// @NotNull
-	// private Date date;
-
 	@Column(name = "server_name")
 	@NotEmpty
 	@Size(max = 100)
@@ -73,18 +68,6 @@ public class DailyUsage extends BaseVersionedEntity {
 	@JoinColumn(name = "daily_import_id", foreignKey = @ForeignKey(name = "FK_daily_usage__daily_import"))
 	@NotNull
 	private DailyImport dailyImport;
-
-	// @ManyToOne(optional = true, fetch = FetchType.LAZY)
-	// @JoinColumn(name = "invoice_id", foreignKey = @ForeignKey(name = "FK_daily_usage__invoice"))
-	// private Invoice invoice;
-
-	// public Date getDate() {
-	// return date;
-	// }
-	//
-	// public void setDate(Date date) {
-	// this.date = date;
-	// }
 
 	/**
 	 * @return the dailyImport

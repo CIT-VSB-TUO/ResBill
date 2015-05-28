@@ -27,13 +27,20 @@ public class CustomerDAOImpl implements CustomerDAO {
 	}
 
 	@Override
-	public List<Customer> findCustomers(CustomerCriteria criteria) {
+	public List<Customer> findCustomers(CustomerCriteria criteria, Integer offset, Integer limit) {
 		StringBuilder jpql = new StringBuilder("SELECT c FROM Customer AS c");
 		if (criteria != null) {
 			// where
 			Set<String> where = new LinkedHashSet<String>();
 			if (StringUtils.isNotEmpty(criteria.getNamePrefix())) {
 				where.add("c.name LIKE :namePrefix");
+			}
+			if (criteria.getContactPersonId() != null) {
+				where.add("c.contactPerson.id = :contactPersonId");
+			}
+			if (!where.isEmpty()) {
+				jpql.append(" WHERE ");
+				jpql.append(StringUtils.join(where, " AND "));
 			}
 		}
 		// order by
@@ -45,6 +52,16 @@ public class CustomerDAOImpl implements CustomerDAO {
 			if (StringUtils.isNotEmpty(criteria.getNamePrefix())) {
 				query.setParameter("namePrefix", criteria.getNamePrefix() + "%");
 			}
+			if (criteria.getContactPersonId() != null) {
+				query.setParameter("contactPersonId", criteria.getContactPersonId());
+			}
+		}
+
+		if (offset != null) {
+			query.setFirstResult(offset.intValue());
+		}
+		if (limit != null) {
+			query.setMaxResults(limit.intValue());
 		}
 
 		return query.getResultList();
