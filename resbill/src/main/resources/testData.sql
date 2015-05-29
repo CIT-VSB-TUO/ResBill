@@ -2,6 +2,8 @@
 
 INSERT INTO "tariff" VALUES (1, 0, 'Tarif1', true);
 
+INSERT INTO "price_list" VALUES(1, 0, 1.23, 43.21, 456.78, '2015-01-01', '2015-12-31', 98745.03, 1);
+
 INSERT INTO "person" VALUES (1, 0, 'Obec1', 'Cast obce 1', 'CZE', '12', '23', 'Ulice 1', '78945', 'jjjj@ds.cz', 'Jméno 1', NULL, '456789123', 'Příjmení 1', NULL, NULL);
 
 INSERT INTO "customer" VALUES (1, 0, NULL, 'Zákazník 1', NULL, 1);
