@@ -40,6 +40,12 @@ public class Invoice extends Transaction implements PeriodLimitedEntity {
 	@NotNull
 	private File attachment;
 
+	@OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<InvoiceDailyUsage> invoiceDailyUsages = new HashSet<>();
+
+	@OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<InvoicePriceList> invoicePriceLists = new HashSet<>();
+
 	@Override
 	public Period getPeriod() {
 		return period;
@@ -66,11 +72,21 @@ public class Invoice extends Transaction implements PeriodLimitedEntity {
 		this.invoiceType = invoiceType;
 	}
 
-	/**
-	 * 
-	 */
-	@OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<InvoiceDailyUsage> invoiceDailyUsages = new HashSet<>();
+	public Set<InvoiceDailyUsage> getInvoiceDailyUsages() {
+		return invoiceDailyUsages;
+	}
+
+	public void setInvoiceDailyUsages(Set<InvoiceDailyUsage> invoiceDailyUsages) {
+		this.invoiceDailyUsages = invoiceDailyUsages;
+	}
+
+	public Set<InvoicePriceList> getInvoicePriceLists() {
+		return invoicePriceLists;
+	}
+
+	public void setInvoicePriceLists(Set<InvoicePriceList> invoicePriceLists) {
+		this.invoicePriceLists = invoicePriceLists;
+	}
 
 	@Override
 	public String toString() {
