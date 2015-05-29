@@ -227,6 +227,7 @@
 
     create table if not exists INVOICE_TYPE (
         id int4 not null,
+        divisor int4 not null,
         title varchar(100) not null,
         primary key (id)
     );
@@ -469,10 +470,10 @@
 -- initial DML commands --
 
     -- INVOICE_TYPE --
-    insert into invoice_type (id, title) values(1, 'měsíční');
-    insert into invoice_type (id, title) values(2, 'čtvrtletní');
-    insert into invoice_type (id, title) values(3, 'pololetní');
-    insert into invoice_type (id, title) values(4, 'roční');
+    insert into invoice_type (id, title, divisor) values(1, 'měsíční', 1);
+    insert into invoice_type (id, title, divisor) values(2, 'čtvrtletní', 3);
+    insert into invoice_type (id, title, divisor) values(3, 'pololetní', 6);
+    insert into invoice_type (id, title, divisor) values(4, 'roční', 12);
 
     -- TRANSACTION_TYPE --
     insert into transaction_type (id, title) values(1, 'faktura');
