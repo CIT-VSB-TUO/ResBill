@@ -4,6 +4,7 @@
  */
 package cz.vsb.resbill.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -13,8 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cz.vsb.resbill.criteria.InvoiceCreateCriteria;
 import cz.vsb.resbill.criteria.InvoiceCriteria;
 import cz.vsb.resbill.dao.InvoiceDAO;
+import cz.vsb.resbill.dto.DailyImportAllReportsResultDTO;
+import cz.vsb.resbill.dto.InvoiceCreateResultDTO;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Invoice;
 import cz.vsb.resbill.service.InvoiceService;
@@ -95,4 +99,23 @@ public class InvoiceServiceImpl implements InvoiceService {
 		}
 	}
 
+	/**
+	 * 
+	 * @param criteria
+	 * @return
+	 * @throws ResBillException
+	 */
+	@Override
+	public InvoiceCreateResultDTO createInvoices(InvoiceCreateCriteria criteria) throws ResBillException {
+		log.info("Zacinam fakturaci.");
+
+		InvoiceCreateResultDTO resultDTO = new InvoiceCreateResultDTO();
+		resultDTO.setBeginTimestamp(new Date());
+		
+		resultDTO.setEndTimestamp(new Date());
+		
+		log.info("Fakturace dokoncena: " + resultDTO);
+
+		return resultDTO;
+	}
 }

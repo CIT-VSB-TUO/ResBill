@@ -6,7 +6,9 @@ package cz.vsb.resbill.service;
 
 import java.util.List;
 
+import cz.vsb.resbill.criteria.InvoiceCreateCriteria;
 import cz.vsb.resbill.criteria.InvoiceCriteria;
+import cz.vsb.resbill.dto.InvoiceCreateResultDTO;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Invoice;
 
@@ -23,4 +25,6 @@ public interface InvoiceService {
 	List<Invoice> findInvoices(InvoiceCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
 	Invoice deleteInvoice(Integer invoiceId) throws ResBillException;
+
+	InvoiceCreateResultDTO createInvoices(InvoiceCreateCriteria criteria) throws ResBillException;
 }

@@ -53,7 +53,7 @@
 		<!-- Zobrazeni chyb -->
 		<div class="row">
 			<div class="col-lg-12 alert alert-danger"
-				th:if="${importAllResultsDTO != null and importAllResultsDTO.endTimestamp == null and #fields.hasErrors('${importAllResultsDTO}')}"
+				th:if="${showImportAllResults != null and #fields.hasErrors('${importAllResultsDTO}')}"
 				th:errors="${importAllResultsDTO}">Global error</div>
 		</div>
 		<div class="row">
@@ -75,7 +75,7 @@
 
 
 
-		<div class="row" th:if="${importAllResultsDTO != null and importAllResultsDTO.endTimestamp != null}">
+		<div class="row" th:if="${showImportAllResults}">
 			<div class="col-lg-12">
 
 				<div class="panel panel-default">
