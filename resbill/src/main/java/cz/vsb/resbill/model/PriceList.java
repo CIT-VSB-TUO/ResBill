@@ -1,6 +1,8 @@
 package cz.vsb.resbill.model;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -9,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.Digits;
@@ -49,6 +52,9 @@ public class PriceList extends BaseVersionedEntity implements PeriodLimitedEntit
 	@JoinColumn(name = "tariff_id", foreignKey = @ForeignKey(name = "FK_price_list__tariff"))
 	@NotNull
 	private Tariff tariff;
+
+	@OneToMany(mappedBy = "priceList", fetch = FetchType.LAZY)
+	private Set<InvoicePriceList> invoicePriceLists = new HashSet<InvoicePriceList>();
 
 	public BigDecimal getCpuPrice() {
 		return cpuPrice;
@@ -98,6 +104,14 @@ public class PriceList extends BaseVersionedEntity implements PeriodLimitedEntit
 
 	public void setTariff(Tariff tariff) {
 		this.tariff = tariff;
+	}
+
+	public Set<InvoicePriceList> getInvoicePriceLists() {
+		return invoicePriceLists;
+	}
+
+	public void setInvoicePriceLists(Set<InvoicePriceList> invoicePriceLists) {
+		this.invoicePriceLists = invoicePriceLists;
 	}
 
 	@Override

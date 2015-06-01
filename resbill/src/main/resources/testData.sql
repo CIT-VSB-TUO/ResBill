@@ -1,8 +1,10 @@
 -- SQL inserty, ktere do DB vlozi data pro vyvoj a testovani aplikace
 
+ALTER SEQUENCE hibernate_sequence RESTART WITH 100;
+
 INSERT INTO "tariff" VALUES (1, 0, 'Tarif1', true);
 
-INSERT INTO "price_list" VALUES(1, 0, 1.23, 43.21, 456.78, '2015-01-01', '2015-12-31', 98745.03, 1);
+INSERT INTO "price_list" VALUES(1, 0, 1.23, 43.21, 456.78, '2015-01-01', NULL, 98745.03, 1);
 
 INSERT INTO "person" VALUES (1, 0, 'Obec1', 'Cast obce 1', 'CZE', '12', '23', 'Ulice 1', '78945', 'jjjj@ds.cz', 'Jméno 1', NULL, '456789123', 'Příjmení 1', NULL, NULL);
 
