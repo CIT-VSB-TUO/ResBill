@@ -22,4 +22,5 @@ public interface InvoiceDAO {
 	Invoice saveInvoice(Invoice invoice);
 
 	Invoice deleteInvoice(Invoice invoice);
+
 }

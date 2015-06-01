@@ -35,6 +35,8 @@ public class DailyImportListController {
 
 	public static final String MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_DTO = "importAllResultsDTO";
 
+	public static final String MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_SHOW = "showImportAllResults";
+
 	@Inject
 	private DailyImportService dailyImportService;
 
@@ -88,26 +90,40 @@ public class DailyImportListController {
 
 	/**
 	 * 
-	 * @param dailyImportId
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "importAllReports")
 	public String importAllReports(ModelMap model) {
+		model.addAttribute(MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_DTO, null);
+		model.addAttribute(MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_SHOW, false);
+
+		// try {
+		//
+		// DailyImportAllReportsResultDTO resultDTO = dailyImportService.importAllReports();
+		// model.addAttribute(MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_DTO, resultDTO);
+		//
+		// } catch (Exception exc) {
+		// log.error("Cannot importAllReports.", exc);
+		// model.addAttribute(MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_DTO, new DailyImportAllReportsResultDTO());
+		// WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_DTO, "error.save.dailyImport.importAll");
+		// }
+		//
+		// loadDailyImports(model);
+		//
+		// return "dailyImport/dailyImportList";
 
 		try {
-
 			DailyImportAllReportsResultDTO resultDTO = dailyImportService.importAllReports();
 			model.addAttribute(MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_DTO, resultDTO);
 
+			model.addAttribute(MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_SHOW, true);
+
 		} catch (Exception exc) {
 			log.error("Cannot importAllReports.", exc);
-			model.addAttribute(MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_DTO, new DailyImportAllReportsResultDTO());
 			WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_IMPORT_ALL_RESULTS_DTO, "error.save.dailyImport.importAll");
 		}
 
-		loadDailyImports(model);
-
-		return "dailyImport/dailyImportList";
+		return view(model);
 	}
 }

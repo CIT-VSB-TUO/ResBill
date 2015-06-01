@@ -21,85 +21,107 @@ import javax.validation.constraints.NotNull;
 @DiscriminatorValue(value = "inv")
 public class Invoice extends Transaction implements PeriodLimitedEntity {
 
-	private static final long serialVersionUID = -3016705349881450838L;
+  private static final long      serialVersionUID   = -3016705349881450838L;
 
-	// kvuli dedicnosti povoluje mapovani hodnotu null
-	@Embedded
-	@AttributeOverride(name = "beginDate", column = @Column(name = "begin_date", nullable = true))
-	@NotNull
-	private Period period;
+  // kvuli dedicnosti povoluje mapovani hodnotu null
+  @Embedded
+  @AttributeOverride(name = "beginDate", column = @Column(name = "begin_date", nullable = true))
+  @NotNull
+  private Period                 period;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "invoice_type_id", foreignKey = @ForeignKey(name = "FK_invoice__invoice_type"))
-	@NotNull
-	private InvoiceType invoiceType;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "invoice_type_id", foreignKey = @ForeignKey(name = "FK_invoice__invoice_type"))
+  @NotNull
+  private InvoiceType            invoiceType;
 
-	// kvuli dedicnosti povoluje mapovani hodnotu null
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "attachment_id", foreignKey = @ForeignKey(name = "FK_invoice__attachment"))
-	@NotNull
-	private File attachment;
+  // kvuli dedicnosti povoluje mapovani hodnotu null
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "attachment_id", foreignKey = @ForeignKey(name = "FK_invoice__attachment"))
+  @NotNull
+  private File                   attachment;
 
-	@OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<InvoiceDailyUsage> invoiceDailyUsages = new HashSet<>();
+  @OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<InvoiceDailyUsage> invoiceDailyUsages = new HashSet<>();
 
-	@OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<InvoicePriceList> invoicePriceLists = new HashSet<>();
+  @OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<InvoicePriceList>  invoicePriceLists  = new HashSet<>();
 
-	@Override
-	public Period getPeriod() {
-		return period;
-	}
+  @Column(name = "no_price_list")
+  @NotNull
+  private Boolean                noPriceList        = Boolean.FALSE;
 
-	@Override
-	public void setPeriod(Period period) {
-		this.period = period;
-	}
+  @Override
+  public Period getPeriod() {
+    return period;
+  }
 
-	public File getAttachment() {
-		return attachment;
-	}
+  @Override
+  public void setPeriod(Period period) {
+    this.period = period;
+  }
 
-	public void setAttachment(File attachment) {
-		this.attachment = attachment;
-	}
+  public File getAttachment() {
+    return attachment;
+  }
 
-	public InvoiceType getInvoiceType() {
-		return invoiceType;
-	}
+  public void setAttachment(File attachment) {
+    this.attachment = attachment;
+  }
 
-	public void setInvoiceType(InvoiceType invoiceType) {
-		this.invoiceType = invoiceType;
-	}
+  public InvoiceType getInvoiceType() {
+    return invoiceType;
+  }
 
-	public Set<InvoiceDailyUsage> getInvoiceDailyUsages() {
-		return invoiceDailyUsages;
-	}
+  public void setInvoiceType(InvoiceType invoiceType) {
+    this.invoiceType = invoiceType;
+  }
 
-	public void setInvoiceDailyUsages(Set<InvoiceDailyUsage> invoiceDailyUsages) {
-		this.invoiceDailyUsages = invoiceDailyUsages;
-	}
+  public Set<InvoiceDailyUsage> getInvoiceDailyUsages() {
+    return invoiceDailyUsages;
+  }
 
-	public Set<InvoicePriceList> getInvoicePriceLists() {
-		return invoicePriceLists;
-	}
+  public void setInvoiceDailyUsages(Set<InvoiceDailyUsage> invoiceDailyUsages) {
+    this.invoiceDailyUsages = invoiceDailyUsages;
+  }
 
-	public void setInvoicePriceLists(Set<InvoicePriceList> invoicePriceLists) {
-		this.invoicePriceLists = invoicePriceLists;
-	}
+  public Set<InvoicePriceList> getInvoicePriceLists() {
+    return invoicePriceLists;
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Invoice [");
-		builder.append(super.toString());
-		builder.append(", period=");
-		builder.append(period);
-		builder.append(", attachment.id=");
-		builder.append(attachment != null ? attachment.getId() : null);
-		builder.append(", invoiceType.id=");
-		builder.append(invoiceType != null ? invoiceType.getId() : null);
-		builder.append("]");
-		return builder.toString();
-	}
+  public void setInvoicePriceLists(Set<InvoicePriceList> invoicePriceLists) {
+    this.invoicePriceLists = invoicePriceLists;
+  }
+
+  
+  /**
+   * @return the noPriceList
+   */
+  public Boolean getNoPriceList() {
+    return noPriceList;
+  }
+
+  
+  /**
+   * @param noPriceList the noPriceList to set
+   */
+  public void setNoPriceList(Boolean noPriceList) {
+    this.noPriceList = noPriceList;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Invoice [");
+    builder.append(super.toString());
+    builder.append(", period=");
+    builder.append(period);
+    builder.append(", attachment.id=");
+    builder.append(attachment != null ? attachment.getId() : null);
+    builder.append(", invoiceType.id=");
+    builder.append(invoiceType != null ? invoiceType.getId() : null);
+    builder.append(", noPriceList=");
+    builder.append(noPriceList);    
+    builder.append("]");
+    return builder.toString();
+  }
 }

@@ -1,5 +1,6 @@
 package cz.vsb.resbill.dao.impl;
 
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import cz.vsb.resbill.criteria.PriceListCriteria;
 import cz.vsb.resbill.dao.PriceListDAO;
+import cz.vsb.resbill.model.DailyUsage;
 import cz.vsb.resbill.model.PriceList;
 
 /**
@@ -82,6 +84,38 @@ public class PriceListDAOImpl implements PriceListDAO {
 		}
 
 		return query.getResultList();
+	}
+
+	/**
+	 * V ramci kontraktu nalezne cenik platny ke dni pro DailyUsage
+	 * 
+	 * @param contractId
+	 * @param dailyUsageId
+	 * @return
+	 */
+
+	@Override
+	public PriceList findContractDailyUsagePriceList(Integer contractId, Integer dailyUsageId) {
+		DailyUsage dailyUsage = em.find(DailyUsage.class, dailyUsageId);
+		Date day = dailyUsage.getDailyImport().getDate();
+
+		StringBuilder jpql = new StringBuilder();
+		jpql.append(" SELECT priceList ");
+		jpql.append(" FROM Contract AS contract ");
+		jpql.append(" JOIN contract.contractTariffs AS contractTariff ");
+		jpql.append(" JOIN contractTariff.tariff AS tariff");
+		jpql.append(" JOIN tariff.prices AS priceList ");
+		jpql.append(" WHERE contract.id = :contractId ");
+		jpql.append(" AND contractTariff.period.beginDate <= :day ");
+		jpql.append(" AND (contractTariff.period.endDate IS NULL OR contractTariff.period.endDate >= :day ) ");
+		jpql.append(" AND priceList.period.beginDate <= :day ");
+		jpql.append(" AND (priceList.period.endDate IS NULL OR priceList.period.endDate >= :day ) ");
+
+		TypedQuery<PriceList> query = em.createQuery(jpql.toString(), PriceList.class);
+		query.setParameter("contractId", contractId);
+		query.setParameter("day", day);
+
+		return DataAccessUtils.uniqueResult(query.getResultList());
 	}
 
 	@Override
