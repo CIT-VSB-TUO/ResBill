@@ -3,11 +3,9 @@ package cz.vsb.resbill.service.impl;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import cz.vsb.resbill.criteria.PriceListCriteria;
 import cz.vsb.resbill.dao.PriceListDAO;
@@ -15,6 +13,7 @@ import cz.vsb.resbill.exception.PriceListServiceException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.PriceList;
 import cz.vsb.resbill.service.PriceListService;
+import cz.vsb.resbill.service.ResBillService;
 
 /**
  * An implementation of {@link PriceListService} interface.
@@ -22,8 +21,7 @@ import cz.vsb.resbill.service.PriceListService;
  * @author HAL191
  *
  */
-@Service
-@Transactional
+@ResBillService
 public class PriceListServiceImpl implements PriceListService {
 
 	private static final Logger log = LoggerFactory.getLogger(PriceListServiceImpl.class);

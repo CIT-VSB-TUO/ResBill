@@ -49,12 +49,6 @@
 
 	<tx:annotation-driven transaction-manager="txManager"/>
 	
-	<tx:advice id="txAdvice" transaction-manager="txManager">
-		<tx:attributes>
-			<tx:method name="*" rollback-for="cz.vsb.resbill.exception.ResBillException"/>
-		</tx:attributes>
-	</tx:advice>
-	
 	<!-- Web layer -->
 	<mvc:resources location="/img/" mapping="/img/**"/>
 	<mvc:resources location="/css/" mapping="/css/**"/>

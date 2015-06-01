@@ -3,11 +3,9 @@ package cz.vsb.resbill.service.impl;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import cz.vsb.resbill.criteria.ContractTariffCriteria;
 import cz.vsb.resbill.criteria.TariffCriteria;
@@ -18,6 +16,7 @@ import cz.vsb.resbill.exception.TariffServiceException;
 import cz.vsb.resbill.exception.TariffServiceException.Reason;
 import cz.vsb.resbill.model.ContractTariff;
 import cz.vsb.resbill.model.Tariff;
+import cz.vsb.resbill.service.ResBillService;
 import cz.vsb.resbill.service.TariffService;
 
 /**
@@ -26,8 +25,7 @@ import cz.vsb.resbill.service.TariffService;
  * @author HAL191
  *
  */
-@Service
-@Transactional
+@ResBillService
 public class TariffServiceImpl implements TariffService {
 
 	private static final Logger log = LoggerFactory.getLogger(TariffServiceImpl.class);

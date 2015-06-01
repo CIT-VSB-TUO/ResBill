@@ -10,22 +10,20 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import cz.vsb.resbill.criteria.InvoiceCriteria;
 import cz.vsb.resbill.dao.InvoiceDAO;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Invoice;
 import cz.vsb.resbill.service.InvoiceService;
+import cz.vsb.resbill.service.ResBillService;
 
 /**
  * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
  *
  */
 
-@Service
-@Transactional
+@ResBillService
 public class InvoiceServiceImpl implements InvoiceService {
 
 	private static final Logger log = LoggerFactory.getLogger(InvoiceServiceImpl.class);

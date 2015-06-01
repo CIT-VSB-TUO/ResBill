@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +51,7 @@ import cz.vsb.resbill.model.ProductionLevel;
 import cz.vsb.resbill.model.Server;
 import cz.vsb.resbill.service.DailyImportService;
 import cz.vsb.resbill.service.MailSenderService;
+import cz.vsb.resbill.service.ResBillService;
 import cz.vsb.resbill.util.NumberUtils;
 import cz.vsb.resbill.util.ResourceBundleUtils;
 
@@ -60,8 +60,7 @@ import cz.vsb.resbill.util.ResourceBundleUtils;
  *
  */
 
-@Service
-@Transactional
+@ResBillService
 public class DailyImportServiceImpl implements DailyImportService {
 
 	private static final Logger log = LoggerFactory.getLogger(DailyImportServiceImpl.class);
@@ -248,7 +247,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 		}
 
 		resultDTO.setEndTimestamp(new Date());
-		
+
 		log.info("Import celeho adresare dokoncen: " + resultDTO);
 
 		return resultDTO;
@@ -273,7 +272,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 				date = DateUtils.parseDateStrictly(dateString, REPORT_FILE_NAME_DATE_PATERN);
 			} catch (ParseException exc) {
 				throw new DailyImportException(DailyImportException.Reason.IMPORT_REPORT_DATE_PARSE_ERROR, "An unexpected error occured while importDailyReport() for file: " + fileName
-				    + " - file date parse error.", exc);
+						+ " - file date parse error.", exc);
 			}
 
 			// Overeni, ze pro dane datum jeste nebyl import proveden
@@ -288,7 +287,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 				report = IOUtils.toString(buffReader);
 			} catch (IOException exc) {
 				throw new DailyImportException(DailyImportException.Reason.IMPORT_REPORT_DATA_UNREADABLE,
-				    "An unexpected error occured while importDailyReport() for file: " + fileName + " - data read error.", exc);
+						"An unexpected error occured while importDailyReport() for file: " + fileName + " - data read error.", exc);
 			}
 
 			// Zaznamenani zapoceti denniho importu.
@@ -387,7 +386,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 		dailyImport.setSuccess(errorLines == 0);
 
 		log.info("Vysledek importu: AllLines: " + dailyImport.getAllLines() + ", OkLines: " + dailyImport.getOkLines() + ", WarnLines: " + dailyImport.getWarnLines() + ", ErrorLines: "
-		    + dailyImport.getErrorLines());
+				+ dailyImport.getErrorLines());
 
 		// TODO: nacpat do prekladoveho souboru
 		// Souhrnne informace:

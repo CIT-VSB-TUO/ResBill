@@ -7,8 +7,6 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import cz.vsb.resbill.criteria.ContractPersonCriteria;
 import cz.vsb.resbill.criteria.CustomerCriteria;
@@ -23,6 +21,7 @@ import cz.vsb.resbill.model.ContractPerson;
 import cz.vsb.resbill.model.Customer;
 import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.service.PersonService;
+import cz.vsb.resbill.service.ResBillService;
 
 /**
  * An implementation of {@link PersonService} interface.
@@ -30,8 +29,7 @@ import cz.vsb.resbill.service.PersonService;
  * @author HAL191
  *
  */
-@Service
-@Transactional
+@ResBillService
 public class PersonServiceImpl implements PersonService {
 
 	private static final Logger log = LoggerFactory.getLogger(PersonServiceImpl.class);
