@@ -28,9 +28,11 @@ public class ContractDAOImpl implements ContractDAO {
 	private EntityManager em;
 
 	/**
-	 * Najde vsechny kontrakty, jejichz servery maji alespon jedno nevyfakturovane DailyUsage v pozadovanem dni.
+	 * Najde vsechny kontrakty, jejichz servery maji alespon jedno nevyfakturovane DailyUsage nejpozdeji v pozadovanem dni.
 	 * 
 	 * Server musi byt kontraktu prirazen take nejpozdeji v pozadovanem dni.
+	 * 
+	 * Pro kontrakt nesmi existovat faktura se stejnym pozadovanym dnem.
 	 * 
 	 * Vraceny budou pouze ty kontrakty, ktere maji typ fakturace (v pozadovanem dni) odpovidajici predanemu parametru invoiceTypeIds.
 	 */
@@ -52,6 +54,12 @@ public class ContractDAOImpl implements ContractDAO {
 		jpql.append(" AND contractServer.period.beginDate <= dailyImport.date ");
 		jpql.append(" AND (contractServer.period.endDate IS NULL OR contractServer.period.endDate >= dailyImport.date) ");
 		jpql.append(" AND dailyImport.date <= :lastDay ");
+		jpql.append(" AND NOT EXISTS ( ");
+		jpql.append("   SELECT invoice ");
+		jpql.append("   FROM Invoice AS invoice ");
+		jpql.append("   WHERE invoice.contract = contract ");
+		jpql.append("   AND invoice.period.endDate = :lastDay ");
+		jpql.append(" ) ");
 		jpql.append(" AND dailyUsage NOT IN ( ");
 		jpql.append("   SELECT invoiceDailyUsage.dailyUsage ");
 		jpql.append("   FROM InvoiceDailyUsage AS invoiceDailyUsage ");

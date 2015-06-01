@@ -4,6 +4,9 @@
  */
 package cz.vsb.resbill.dao;
 
+import java.util.Date;
+import java.util.List;
+
 import cz.vsb.resbill.model.DailyUsage;
 
 /**
@@ -13,4 +16,15 @@ import cz.vsb.resbill.model.DailyUsage;
 public interface DailyUsageDAO {
 
 	DailyUsage saveDailyUsage(DailyUsage dailyUsage);
+	
+	/**
+	 * Pro zadany kontrakt najde pres vsechny servery kontraktu vsechny DailyUsage, ktere doposud nebyly fakturovany a jsou nejpozdeji v pozadovanem dni.
+	 * 
+	 * Server musi byt kontraktu prirazen take nejpozdeji v pozadovanem dni.
+	 * 
+	 * @param lastDay
+	 * @param contractId
+	 * @return
+	 */
+	List<DailyUsage> findUninvoicedDailyUsages(Date lastDay, Integer contractId);
 }

@@ -33,6 +33,15 @@ public interface PriceListDAO {
 	List<PriceList> findPriceLists(PriceListCriteria criteria, Integer offset, Integer limit);
 
 	/**
+	 * V ramci kontraktu nalezne cenik platny ke dni pro DailyUsage
+	 * 
+	 * @param contractId
+	 * @param dailyUsageId
+	 * @return
+	 */
+	PriceList findContractDailyUsagePriceList(Integer contractId, Integer dailyUsageId);
+	
+	/**
 	 * Saves current state of given {@link PriceList} entity.
 	 * 
 	 * @param priceList

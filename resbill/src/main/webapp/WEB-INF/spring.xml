@@ -24,6 +24,7 @@
 	</bean>
 	
 	<bean id="dailyImportService" class="cz.vsb.resbill.service.impl.DailyImportServiceImpl"/>
+	<bean id="invoiceService" class="cz.vsb.resbill.service.impl.InvoiceServiceImpl"/>
 	
 	<!-- Persistence layer -->
 	<jee:jndi-lookup id="resbillDS" jndi-name="java:comp/env/jdbc/ResBillDS"/>

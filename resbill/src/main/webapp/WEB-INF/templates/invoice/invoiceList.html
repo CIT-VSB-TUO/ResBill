@@ -119,6 +119,23 @@
                   <label class="control-label" th:text="#{label.invoice.contractsNumberAll}">Počet všech zpracovávaných kontraktů</label>
                   <p class="form-control-static" th:text="${invoicesCreateResultsDTO.contractsNumberAll}">20</p>
                 </div>
+
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.contractsNumberOk}">Počet úspěšně fakturovaných kontraktů</label>
+                  <p class="form-control-static" th:text="${invoicesCreateResultsDTO.contractsNumberOk}">15</p>
+                </div>
+              </div>
+
+              <div class="col-lg-5">
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.contractsNumberNoPriceList}">Počet kontraktů bez ceníku</label>
+                  <p class="form-control-static" th:text="${invoicesCreateResultsDTO.contractsNumberNoPriceList}">4</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.contractsNumberError}">Počet kontraktů s jinou chybou</label>
+                  <p class="form-control-static" th:text="${invoicesCreateResultsDTO.contractsNumberError}">1</p>
+                </div>
               </div>
             </div>
           </div>
