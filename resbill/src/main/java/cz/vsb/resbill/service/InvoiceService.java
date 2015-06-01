@@ -22,7 +22,7 @@ public interface InvoiceService {
 
   Invoice findInvoice(Integer invoiceId) throws ResBillException;
 
-  Invoice findInvoice(Integer invoiceId, boolean initializeAttachment) throws ResBillException;
+  Invoice findInvoice(Integer invoiceId, boolean initializeDetails) throws ResBillException;
 
   List<Invoice> findInvoices(InvoiceCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 

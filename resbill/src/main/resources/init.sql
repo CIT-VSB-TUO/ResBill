@@ -298,6 +298,7 @@
         note varchar(1000),
         tx_order int4 not null,
         title varchar(250),
+        details text,
         no_price_list boolean,
         begin_date date,
         end_date date,

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.AttributeOverride;
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -12,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -49,6 +51,11 @@ public class Invoice extends Transaction implements PeriodLimitedEntity {
   @Column(name = "no_price_list")
   @NotNull
   private Boolean                noPriceList        = Boolean.FALSE;
+
+  @Column(name = "details")
+  @Lob
+  @Basic(fetch = FetchType.LAZY)
+  private String                 details;
 
   @Override
   public Period getPeriod() {
@@ -92,7 +99,6 @@ public class Invoice extends Transaction implements PeriodLimitedEntity {
     this.invoicePriceLists = invoicePriceLists;
   }
 
-  
   /**
    * @return the noPriceList
    */
@@ -100,12 +106,27 @@ public class Invoice extends Transaction implements PeriodLimitedEntity {
     return noPriceList;
   }
 
-  
   /**
-   * @param noPriceList the noPriceList to set
+   * @param noPriceList
+   *          the noPriceList to set
    */
   public void setNoPriceList(Boolean noPriceList) {
     this.noPriceList = noPriceList;
+  }
+
+  /**
+   * @return the details
+   */
+  public String getDetails() {
+    return details;
+  }
+
+  /**
+   * @param details
+   *          the details to set
+   */
+  public void setDetails(String details) {
+    this.details = details;
   }
 
   @Override
@@ -120,7 +141,7 @@ public class Invoice extends Transaction implements PeriodLimitedEntity {
     builder.append(", invoiceType.id=");
     builder.append(invoiceType != null ? invoiceType.getId() : null);
     builder.append(", noPriceList=");
-    builder.append(noPriceList);    
+    builder.append(noPriceList);
     builder.append("]");
     return builder.toString();
   }

@@ -4,6 +4,7 @@
  */
 package cz.vsb.resbill.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,11 +27,13 @@ import cz.vsb.resbill.dao.DailyUsageDAO;
 import cz.vsb.resbill.dao.InvoiceDAO;
 import cz.vsb.resbill.dao.InvoiceTypeDAO;
 import cz.vsb.resbill.dao.PriceListDAO;
+import cz.vsb.resbill.dao.TransactionTypeDAO;
 import cz.vsb.resbill.dto.InvoiceCreateResultDTO;
 import cz.vsb.resbill.exception.DailyImportException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.model.DailyUsage;
+import cz.vsb.resbill.model.File;
 import cz.vsb.resbill.model.Invoice;
 import cz.vsb.resbill.model.InvoiceType;
 import cz.vsb.resbill.model.Period;
@@ -53,6 +56,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 
   @Inject
   private InvoiceTypeDAO      invoiceTypeDAO;
+
+  @Inject
+  private TransactionTypeDAO  transactionTypeDAO;
 
   @Inject
   private ContractDAO         contractDAO;
@@ -78,13 +84,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 	 * 
 	 */
   @Override
-  public Invoice findInvoice(Integer invoiceId, boolean initializeAttachment) throws ResBillException {
+  public Invoice findInvoice(Integer invoiceId, boolean initializeDetails) throws ResBillException {
     try {
       Invoice invoice = invoiceDAO.findInvoice(invoiceId);
 
       if (invoice != null) {
-        if (initializeAttachment) {
-          invoice.getAttachment();
+        if (initializeDetails) {
+          invoice.getDetails();
         }
       }
 
@@ -200,11 +206,26 @@ public class InvoiceServiceImpl implements InvoiceService {
     log.info("Zacinam fakturovat pro kontrakt s ID: " + contract.getId());
 
     Invoice invoice = new Invoice();
-    invoice.setPeriod(new Period());
+    invoice.setContract(contract);
+    invoice.setDecisiveDate(new Date());
+
+    // TODO: fakturu naplnit smysluplnymi udaji
+    invoice.setInvoiceType(invoiceTypeDAO.findInvoiceType(1));
+    invoice.setAmount(BigDecimal.ZERO);
+    invoice.setTransactionType(transactionTypeDAO.findTransactionType(1));
+    invoice.setOrder(2);
+    File file = new File();
+    file.setName("Foo file");
+    file.setSize(new Long(0));
+    file.setContentType("Foo content type");
+    invoice.setAttachment(file);
+
+    StringBuilder details = new StringBuilder();
 
     Date firstDay = DateUtils.truncate(month, Calendar.MONTH);
     Date lastDay = DateUtils.addDays(DateUtils.addMonths(firstDay, 1), -1);
 
+    invoice.setPeriod(new Period());
     invoice.getPeriod().setBeginDate(firstDay);
     invoice.getPeriod().setEndDate(lastDay);
 
@@ -228,9 +249,85 @@ public class InvoiceServiceImpl implements InvoiceService {
       }
     }
 
+    // Kompletni vypis nalezenych DailyUsage s dohledanymi ceniky, roztrideno po jednotlivych serverech kontraktu
+    String serverId = null;
+    StringBuilder detailPricing = new StringBuilder();
+    for (TmpDailyUsagePriceList usagePrice : usagePrices) {
+      // Odradkovani
+      if (detailPricing.length() > 0) {
+        detailPricing.append("\n");
+      }
+
+      // Hlavicka serveru
+      if (serverId == null || !serverId.equals(usagePrice.dailyUsage.getServer().getServerId())) {
+        serverId = usagePrice.dailyUsage.getServer().getServerId();
+
+        detailPricing.append("\n");
+        detailPricing.append("Server - ID: ");
+        detailPricing.append(serverId);
+        detailPricing.append("; jmeno: ");
+        detailPricing.append(usagePrice.dailyUsage.getServer().getName());
+        detailPricing.append("\n");
+      }
+
+      detailPricing.append(createDetailPricing(usagePrice));
+    }
+    details.append("\n\n\n");
+    details.append("Detailní rozpis:\n");
+    details.append(detailPricing);
+
+    log.debug(details.toString());
+
+    invoice.setDetails(details.toString());
+
+    invoiceDAO.saveInvoice(invoice);
+
     log.info("Fakturace pro kontrakt s ID: " + contract.getId() + " ukoncena.");
 
     return invoice;
+  }
+
+  /**
+   * 
+   * @param usagePrice
+   * @return
+   */
+  protected String createDetailPricing(TmpDailyUsagePriceList usagePrice) {
+    // TODO: pokud toto zachovame, tak by bylo vhodne text nekam vytahnout
+
+    StringBuilder pricing = new StringBuilder();
+
+    pricing.append(usagePrice.dailyUsage.getDailyImport().getDate());
+
+    // CPU
+    pricing.append(": CPU: ");
+    pricing.append(usagePrice.dailyUsage.getCpu());
+    pricing.append(" á ");
+    pricing.append(usagePrice.priceList.getCpuPrice());
+    pricing.append(" Kč/měsíc");
+
+    // RAM
+    pricing.append("; RAM: ");
+    pricing.append(usagePrice.dailyUsage.getMemoryMB());
+    pricing.append(" á ");
+    pricing.append(usagePrice.priceList.getMemoryMBPrice());
+    pricing.append(" Kč/měsíc");
+
+    // Storage
+    pricing.append("; Storage: ");
+    pricing.append(usagePrice.dailyUsage.getProvisionedSpaceGB());
+    pricing.append(" á ");
+    pricing.append(usagePrice.priceList.getSpaceGBPrice());
+    pricing.append(" Kč/měsíc");
+
+    // Backup
+    pricing.append("; Backup: ");
+    pricing.append(usagePrice.dailyUsage.getBackupGB());
+    pricing.append(" á ");
+    pricing.append(usagePrice.priceList.getBackupGBPrice());
+    pricing.append(" Kč/měsíc");
+
+    return pricing.toString();
   }
 
   /**
