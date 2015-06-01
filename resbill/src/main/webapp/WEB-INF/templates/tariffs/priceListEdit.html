@@ -76,22 +76,15 @@
 						
 							<div class="form-group required" th:classappend="${#fields.hasErrors('period.beginDate')} ? 'has-error'">
 								<label class="control-label" th:text="#{label.priceList.period.beginDate}" th:for="period.beginDate">Platnost od</label>
-								<div class="input-group date" data-provide="datepicker" data-date-language="cs" data-date-week-start="1" data-date-autoclose="true" data-date-today-highlight="true" data-date-today-btn="linked" th:attr="data-date-format=#{datepicker.date.format}">
+								<div class="input-group date" data-provide="datepicker" data-date-language="cs" data-date-format="d.m.yyyy" 
+									data-date-week-start="1" data-date-autoclose="true" data-date-today-highlight="true" data-date-today-btn="linked" 
+									th:attr="data-date-language=${#locale.language},data-date-format=#{datepicker.date.format}">
 									<input type="text" class="form-control" th:field="*{period.beginDate}"/>
 									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 								</div>
 								<p class="help-block" th:if="${#fields.hasErrors('period.beginDate')}" th:errors="*{period.beginDate}"/>
 							</div>
 						
-							<div class="form-group" th:classappend="${#fields.hasErrors('period.endDate')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.priceList.period.endDate}" th:for="period.endDate">Platnost do</label>
-								<div class="input-group date" data-provide="datepicker" data-date-language="cs" data-date-week-start="1" data-date-autoclose="true" data-date-today-highlight="true" data-date-today-btn="linked" th:attr="data-date-format=#{datepicker.date.format}">
-									<input type="text" class="form-control" th:field="*{period.endDate}"/>
-									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-								</div>
-								<p class="help-block" th:if="${#fields.hasErrors('period.endDate')}" th:errors="*{period.endDate}"/>
-							</div>
-							
 							<div class="form-group" th:classappend="${#fields.hasErrors('cpuPrice')} ? 'has-error'">
 								<label class="control-label" th:text="#{label.priceList.price.cpu}" th:for="cpuPrice">CPU</label>
 								<input type="text" class="form-control" th:field="*{cpuPrice}"/>

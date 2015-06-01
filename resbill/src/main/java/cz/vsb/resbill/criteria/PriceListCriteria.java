@@ -12,7 +12,7 @@ public class PriceListCriteria implements Serializable {
 
 	private Integer tariffId;
 
-	private Boolean currentlyValid;
+	private Boolean lastValid;
 
 	public Integer getTariffId() {
 		return tariffId;
@@ -22,12 +22,12 @@ public class PriceListCriteria implements Serializable {
 		this.tariffId = tariffId;
 	}
 
-	public Boolean getCurrentlyValid() {
-		return currentlyValid;
+	public Boolean getLastValid() {
+		return lastValid;
 	}
 
-	public void setCurrentlyValid(Boolean currentlyValid) {
-		this.currentlyValid = currentlyValid;
+	public void setLastValid(Boolean lastValid) {
+		this.lastValid = lastValid;
 	}
 
 	@Override
@@ -37,8 +37,8 @@ public class PriceListCriteria implements Serializable {
 		builder.append(super.toString());
 		builder.append(", tariffId=");
 		builder.append(tariffId);
-		builder.append(", currentlyValid=");
-		builder.append(currentlyValid);
+		builder.append(", lastValid=");
+		builder.append(lastValid);
 		builder.append(", orderBy=");
 		builder.append("]");
 		return builder.toString();

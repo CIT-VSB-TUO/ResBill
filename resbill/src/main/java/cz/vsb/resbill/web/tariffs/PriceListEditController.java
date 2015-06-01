@@ -1,10 +1,13 @@
 package cz.vsb.resbill.web.tariffs;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -22,10 +25,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cz.vsb.resbill.exception.PriceListServiceException;
+import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.model.PriceList;
 import cz.vsb.resbill.service.PriceListService;
 import cz.vsb.resbill.service.TariffService;
-import cz.vsb.resbill.util.PeriodLimitedEntityValidator;
 import cz.vsb.resbill.util.WebUtils;
 
 /**
@@ -35,7 +38,7 @@ import cz.vsb.resbill.util.WebUtils;
  *
  */
 @Controller
-@RequestMapping("/tariffs/prices/edit")
+@RequestMapping("/tariffs/priceList")
 @SessionAttributes("priceList")
 public class PriceListEditController {
 
@@ -52,7 +55,6 @@ public class PriceListEditController {
 	@InitBinder
 	public void initBinder(WebDataBinder binder, Locale locale) {
 		binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
-		binder.addValidators(new PeriodLimitedEntityValidator());
 	}
 
 	private void loadPriceList(Integer priceListId, Integer tariffId, ModelMap model) {
@@ -65,6 +67,8 @@ public class PriceListEditController {
 				priceList = priceListService.findPriceList(priceListId);
 			} else {
 				priceList = new PriceList();
+				priceList.setPeriod(new Period());
+				priceList.getPeriod().setBeginDate(DateUtils.truncate(new Date(), Calendar.DATE));
 			}
 			if (tariffId != null) {
 				priceList.setTariff(tariffService.findTariff(tariffId));
@@ -119,6 +123,22 @@ public class PriceListEditController {
 				sessionStatus.setComplete();
 				redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
 				return "redirect:/tariffs/edit";
+			} catch (PriceListServiceException e) {
+				switch (e.getReason()) {
+				case INVOICE_DATE_CLASH:
+					bindingResult.reject("error.save.priceList.invoice.date");
+					break;
+				case INVALID_PERIOD:
+					bindingResult.reject("error.save.priceList.period");
+					break;
+				case INVOICE_PRICE_LIST:
+					bindingResult.reject("error.save.priceList.invoice");
+					break;
+				default:
+					log.warn("Unsupported reason: " + e);
+					bindingResult.reject("error.save.priceList");
+					break;
+				}
 			} catch (Exception e) {
 				log.error("Cannot save priceList: " + priceList, e);
 				bindingResult.reject("error.save.priceList");
@@ -152,8 +172,15 @@ public class PriceListEditController {
 			redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
 			return "redirect:/tariffs/edit";
 		} catch (PriceListServiceException e) {
-			// TODO implement
-			bindingResult.reject("error.delete.priceList.constraint.relations");
+			switch (e.getReason()) {
+			case INVOICE_PRICE_LIST:
+				bindingResult.reject("error.delete.priceList.invoice");
+				break;
+			default:
+				log.warn("Unsupported reason: " + e);
+				bindingResult.reject("error.delete.priceList");
+				break;
+			}
 		} catch (Exception e) {
 			log.error("Cannot delete priceList: " + priceList, e);
 			bindingResult.reject("error.delete.priceList");

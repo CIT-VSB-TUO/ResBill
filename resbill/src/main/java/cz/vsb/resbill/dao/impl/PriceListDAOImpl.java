@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 
 import cz.vsb.resbill.criteria.PriceListCriteria;
@@ -33,6 +34,15 @@ public class PriceListDAOImpl implements PriceListDAO {
 	}
 
 	@Override
+	public PriceList findLastValidPriceList(Integer tariffId) {
+		PriceListCriteria criteria = new PriceListCriteria();
+		criteria.setLastValid(Boolean.TRUE);
+		criteria.setTariffId(tariffId);
+		List<PriceList> results = findPriceLists(criteria, null, null);
+		return DataAccessUtils.singleResult(results);
+	}
+
+	@Override
 	public List<PriceList> findPriceLists(PriceListCriteria criteria, Integer offset, Integer limit) {
 		StringBuilder jpql = new StringBuilder("SELECT pl FROM PriceList AS pl");
 		if (criteria != null) {
@@ -41,12 +51,11 @@ public class PriceListDAOImpl implements PriceListDAO {
 			if (criteria.getTariffId() != null) {
 				where.add("pl.tariff.id = :tariffId");
 			}
-			if (criteria.getCurrentlyValid() != null) {
-				String condition = "(pl.period.beginDate <= CURRENT_DATE AND (pl.period.endDate IS NULL OR pl.period.endDate >= CURRENT_DATE))";
-				if (criteria.getCurrentlyValid()) {
-					where.add(condition);
+			if (criteria.getLastValid() != null) {
+				if (criteria.getLastValid()) {
+					where.add("pl.period.endDate IS NULL");
 				} else {
-					where.add("NOT " + condition);
+					where.add("pl.period.endDate IS NOT NULL");
 				}
 			}
 			if (!where.isEmpty()) {
