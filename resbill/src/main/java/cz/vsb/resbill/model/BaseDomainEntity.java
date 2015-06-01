@@ -6,8 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * A common ancestor of domain model entities. Each entity has its primary
- * identifier.
+ * A common ancestor of domain model entities. Each entity has its primary identifier.
  * 
  * @author HAL191
  *
@@ -17,8 +16,7 @@ public abstract class BaseDomainEntity implements IdentifiableEntity, Serializab
 	private static final long serialVersionUID = 9045791835477269437L;
 
 	/**
-	 * Default implementation using primary identifier. Should be overridden in
-	 * subclasses.
+	 * Default implementation using primary identifier. Should be overridden in subclasses.
 	 */
 	@Override
 	public int hashCode() {
@@ -26,15 +24,12 @@ public abstract class BaseDomainEntity implements IdentifiableEntity, Serializab
 	}
 
 	/**
-	 * Default implementation using primary identifier. Should be overridden in
-	 * subclasses.
+	 * Default implementation using primary identifier. Should be overridden in subclasses.
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof BaseDomainEntity))
-			return false;
+		if (this == obj) return true;
+		if (!(obj instanceof BaseDomainEntity)) return false;
 		BaseDomainEntity other = (BaseDomainEntity) obj;
 		return new EqualsBuilder().append(this.getId(), other.getId()).isEquals();
 	}

@@ -45,10 +45,12 @@ public interface PriceListService {
 	 * @param priceList
 	 *          entity to save
 	 * @return saved {@link PriceList} entity (with generated primary key)
+	 * @throws PriceListServiceException
+	 *           if specific saving error occurs
 	 * @throws ResBillException
 	 *           if unexpected error occurs
 	 */
-	PriceList savePriceList(PriceList priceList) throws ResBillException;
+	PriceList savePriceList(PriceList priceList) throws PriceListServiceException, ResBillException;
 
 	/**
 	 * Deletes {@link PriceList} entity with given primary key.

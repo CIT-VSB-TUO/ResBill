@@ -52,10 +52,10 @@
 		</div>
 		
 		<div class="row">
-			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${tariff}')}" th:errors="${tariff}">Global error</div>
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${tariffPriceListDTO}')}" th:errors="${tariffPriceListDTO}">Global error</div>
 		</div>
 		
-		<div class="row" th:if="${tariff == null}">
+		<div class="row" th:if="${tariffPriceListDTO == null}">
 			<div class="col-lg-12">
 				<p>
 					<a href="personList.html" class="btn btn-default" th:href="@{/tariffs}" >
@@ -66,22 +66,73 @@
 			</div>
 		</div>
 		
-		<div class="row" th:if="${tariff != null}">
+		<div class="row" th:if="${tariffPriceListDTO != null}">
 			<div class="col-lg-12">
-				<form role="form" method="post" action="#" th:object="${tariff}">
+				<form role="form" method="post" action="#" th:object="${tariffPriceListDTO}">
 					
 					<div class="row">
 						<div class="col-lg-6">
-							<div class="form-group required" th:classappend="${#fields.hasErrors('name')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.tariff.name}" th:for="name">Nazev</label>
-								<input type="text" class="form-control" th:field="*{name}"/>
-								<p class="help-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}" />
+							<div class="panel panel-default">
+								<div class="panel-heading" th:text="#{panel.tariff.data}">Tarifni udaje</div>
+								
+								<div class="panel-body">
+	
+									<div class="form-group required" th:classappend="${#fields.hasErrors('tariff.name')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.tariff.name}" th:for="tariff.name">Nazev</label>
+										<input type="text" class="form-control" th:field="*{tariff.name}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('tariff.name')}" th:errors="*{tariff.name}" />
+									</div>
+									
+									<div class="form-group" th:classappend="${#fields.hasErrors('tariff.valid')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.tariff.valid}" th:for="${#ids.next('tariff.valid')}">Platny</label>
+										<input type="checkbox" th:field="*{tariff.valid}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('tariff.valid')}" th:errors="*{tariff.valid}" />
+									</div>
+								</div>
 							</div>
 							
-							<div class="form-group" th:classappend="${#fields.hasErrors('valid')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.tariff.valid}" th:for="${#ids.next('valid')}">Platny</label>
-								<input type="checkbox" th:field="*{valid}"/>
-								<p class="help-block" th:if="${#fields.hasErrors('valid')}" th:errors="*{valid}" />
+							<div class="panel panel-default">
+								<div class="panel-heading" th:text="#{panel.priceList.data}">Platny cenik</div>
+								
+								<div class="panel-body">
+	
+									<div class="form-group required" th:classappend="${#fields.hasErrors('lastPriceList.period.beginDate')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.priceList.period.beginDate}" th:for="lastPriceList.period.beginDate">Platnost od</label>
+										<div class="input-group date" data-provide="datepicker" data-date-language="cs" data-date-format="d.m.yyyy" data-date-week-start="1" 
+											data-date-autoclose="true" data-date-today-highlight="true" data-date-today-btn="linked" data-date-enable-on-readonly="false"
+											th:attr="data-date-language=${#locale.language},data-date-format=#{datepicker.date.format}" th:readonly="*{not priceListEditable}">
+											<input type="text" class="form-control" th:field="*{lastPriceList.period.beginDate}" th:readonly="*{not priceListEditable}"/>
+											<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+										</div>
+										<p class="help-block" th:if="${#fields.hasErrors('lastPriceList.period.beginDate')}" th:errors="*{lastPriceList.period.beginDate}"/>
+									</div>
+								
+									<div class="form-group required" th:classappend="${#fields.hasErrors('lastPriceList.cpuPrice')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.priceList.price.cpu}" th:for="lastPriceList.cpuPrice">CPU</label>
+										<input type="text" class="form-control" th:field="*{lastPriceList.cpuPrice}" th:readonly="*{not priceListEditable}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('lastPriceList.cpuPrice')}" th:errors="*{lastPriceList.cpuPrice}" />
+									</div>
+								
+									<div class="form-group required" th:classappend="${#fields.hasErrors('lastPriceList.memoryMBPrice')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.priceList.price.memory}" th:for="lastPriceList.memoryMBPrice">Pamet</label>
+										<input type="text" class="form-control" th:field="*{lastPriceList.memoryMBPrice}" th:readonly="*{not priceListEditable}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('lastPriceList.memoryMBPrice')}" th:errors="*{lastPriceList.memoryMBPrice}" />
+									</div>
+								
+									<div class="form-group required" th:classappend="${#fields.hasErrors('lastPriceList.spaceGBPrice')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.priceList.price.space}" th:for="lastPriceList.spaceGBPrice">Data</label>
+										<input type="text" class="form-control" th:field="*{lastPriceList.spaceGBPrice}" th:readonly="*{not priceListEditable}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('lastPriceList.spaceGBPrice')}" th:errors="*{lastPriceList.spaceGBPrice}" />
+									</div>
+								
+									<div class="form-group required" th:classappend="${#fields.hasErrors('lastPriceList.backupGBPrice')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.priceList.price.backup}" th:for="lastPriceList.backupGBPrice">Zaloha</label>
+										<input type="text" class="form-control" th:field="*{lastPriceList.backupGBPrice}" th:readonly="*{not priceListEditable}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('lastPriceList.backupGBPrice')}" th:errors="*{lastPriceList.backupGBPrice}" />
+									</div>
+
+								</div>
+								
 							</div>
 						</div>
 					</div>
@@ -101,7 +152,7 @@
 						</div>
 					</div>
 					
-					<div class="row" th:if="*{id != null}">
+					<div class="row" th:if="*{tariff.id != null}">
 						<div class="col-lg-12">
 							<p>
 								<button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete" >
@@ -120,18 +171,14 @@
 		<!-- /.row -->
 		
 		<!-- Ceniky -->
-		<div th:if="${showPrices}">
+		<div th:if="${tariffPriceListDTO.previousPriceLists != null}">
 			<div class="row">
 				<div class="col-lg-12">
 					<h2 class="page-header" th:text="#{section.header.tariff.priceLists}">Ceniky tarifu</h2>
 				</div>
 			</div>
 			
-			<div class="row" >
-				<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${priceLists}')}" th:errors="${priceLists}">Global error</div>
-			</div>
-		
-			<div class="row" th:if="${priceLists != null}">
+			<div class="row">
 				<div class="col-lg-12">
 	
 					<table class="table" id="priceLists">
@@ -143,26 +190,16 @@
 								<th th:text="#{column.priceList.price.memory}">Cena pamet</th>
 								<th th:text="#{column.priceList.price.space}">Cena data</th>
 								<th th:text="#{column.priceList.price.backup}">Cena zaloha</th>
-								<th>
-									<a class="btn btn-primary btn-circle" href="priceListEdit.html" th:href="@{/tariffs/prices/edit(tariffId=${tariff.id})}" th:title="#{button.title.priceList.add}">
-										<i class="fa fa-plus-square"></i>
-									</a>
-								</th>
 							</tr>
 						</thead>
 						<tbody th:remove="all-but-first">
-							<tr th:each="priceList : ${priceLists}">
+							<tr th:each="priceList : ${tariffPriceListDTO.previousPriceLists}">
 								<td th:text="${#dates.format(priceList.period.beginDate, '__#{date.format.list}__')}">1.1.0001</td>
 								<td th:text="${#dates.format(priceList.period.endDate, '__#{date.format.list}__')}">31.12.9999</td>
 								<td th:text="${#numbers.formatDecimal(priceList.cpuPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
 								<td th:text="${#numbers.formatDecimal(priceList.memoryMBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
 								<td th:text="${#numbers.formatDecimal(priceList.spaceGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
 								<td th:text="${#numbers.formatDecimal(priceList.backupGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
-								<td>
-									<a class="btn btn-primary btn-circle" href="priceListEdit.html" th:href="@{/tariffs/prices/edit(priceListId=${priceList.id}, tariffId=${tariff.id})}" th:title="#{button.title.priceList.edit}">
-										<i class="fa fa-edit"></i>
-									</a>
-								</td>
 							</tr>
 							<tr>
 								<td>1.1.0001</td>
@@ -171,11 +208,6 @@
 								<td>10,25</td>
 								<td>10,25</td>
 								<td>10,25</td>
-								<td>
-									<a class="btn btn-primary btn-circle" href="priceListEdit.html">
-										<i class="fa fa-edit"></i>
-									</a>
-								</td>
 							</tr>
 							<tr>
 								<td>1.1.0001</td>
@@ -184,11 +216,6 @@
 								<td>10,25</td>
 								<td>10,25</td>
 								<td>10,25</td>
-								<td>
-									<a class="btn btn-primary btn-circle" href="priceListEdit.html">
-										<i class="fa fa-edit"></i>
-									</a>
-								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -197,6 +224,17 @@
 				<!-- /.col-lg-12 -->
 			</div>
 			<!-- /.row -->
+			
+			<div class="row">
+				<div class="col-lg-12">
+					<p>
+						<a class="btn btn-primary" href="priceListEdit.html" th:href="@{/tariffs/priceList(tariffId=${tariffPriceListDTO.tariff.id})}" th:title="#{button.title.priceList.add}">
+							<i class="fa fa-plus-square"></i>
+							<span th:text="#{button.title.priceList.add}">Pridat novy</span>
+						</a>
+					</p>
+				</div>
+			</div>
 		</div>
 	</div>
 

@@ -45,8 +45,7 @@ import cz.vsb.resbill.service.InvoiceService;
  *
  */
 
-@Service
-@Transactional
+@ResBillService
 public class InvoiceServiceImpl implements InvoiceService {
 
   private static final Logger log = LoggerFactory.getLogger(InvoiceServiceImpl.class);

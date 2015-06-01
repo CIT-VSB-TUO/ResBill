@@ -1,5 +1,6 @@
 package cz.vsb.resbill.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -8,8 +9,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.builder.CompareToBuilder;
+
 @Embeddable
-public class Period {
+public class Period implements Comparable<Period>, Serializable {
+
+	private static final long serialVersionUID = 6273411581118602454L;
 
 	/** Beginning of the period */
 	@Temporal(TemporalType.DATE)
@@ -39,13 +44,11 @@ public class Period {
 	}
 
 	/**
-	 * Checks if the specified date is covered by this period (is between its
-	 * bounds, inclusively).
+	 * Checks if the specified date is covered by this period (is between its bounds, inclusively).
 	 * 
 	 * @param date
 	 *          a date to check
-	 * @return <code>true</code> if the date is between this bounds,
-	 *         <code>false</code> otherwise
+	 * @return <code>true</code> if the date is between this bounds, <code>false</code> otherwise
 	 * @throws IllegalArgumentException
 	 *           if the date parameter is <code>null</code>
 	 */
@@ -54,13 +57,11 @@ public class Period {
 	}
 
 	/**
-	 * Checks if the specified period partially or fully overlaps this period
-	 * (bounds included).
+	 * Checks if the specified period partially or fully overlaps this period (bounds included).
 	 * 
 	 * @param period
 	 *          a period to check
-	 * @return <code>true</code> if there is an intersection of the periods,
-	 *         <code>false</code> otherwise
+	 * @return <code>true</code> if there is an intersection of the periods, <code>false</code> otherwise
 	 * @throws IllegalArgumentException
 	 *           if the period parameter is <code>null</code>
 	 */
@@ -72,15 +73,13 @@ public class Period {
 	}
 
 	/**
-	 * Checks if the specified date is between bounds of the specified period
-	 * (inclusively).
+	 * Checks if the specified date is between bounds of the specified period (inclusively).
 	 * 
 	 * @param date
 	 *          a date to check
 	 * @param period
 	 *          inclusive bounds
-	 * @return <code>true</code> if the date is between the bounds,
-	 *         <code>false</code> otherwise
+	 * @return <code>true</code> if the date is between the bounds, <code>false</code> otherwise
 	 * @throws IllegalArgumentException
 	 *           if any parameter is <code>null</code>
 	 */
@@ -92,24 +91,30 @@ public class Period {
 	}
 
 	/**
-	 * Checks if the specified periods are partially or fully overlapped (bounds
-	 * included).
+	 * Checks if the specified periods are partially or fully overlapped (bounds included).
 	 * 
 	 * @param period1
 	 *          first period
 	 * @param period2
 	 *          second period
-	 * @return <code>true</code> if there is an intersection of the periods,
-	 *         <code>false</code> otherwise
+	 * @return <code>true</code> if there is an intersection of the periods, <code>false</code> otherwise
 	 * @throws IllegalArgumentException
 	 *           if any parameter is <code>null</code>
 	 */
-	public static boolean isPeriodsOverlapped(Period period1, Period period2) {
+	public static boolean arePeriodsOverlapped(Period period1, Period period2) {
 		if (period1 == null || period2 == null) {
 			throw new IllegalArgumentException("Given parameters cannot be null.");
 		}
 		return (period2.getEndDate() == null || period1.getBeginDate().compareTo(period2.getEndDate()) <= 0)
 				&& (period1.getEndDate() == null || period2.getBeginDate().compareTo(period1.getEndDate()) <= 0);
+	}
+
+	@Override
+	public int compareTo(Period o) {
+		CompareToBuilder cmpBuilder = new CompareToBuilder();
+		cmpBuilder.append(this.getBeginDate(), o.getBeginDate());
+		cmpBuilder.append(this.getEndDate(), o.getEndDate());
+		return cmpBuilder.toComparison();
 	}
 
 	@Override

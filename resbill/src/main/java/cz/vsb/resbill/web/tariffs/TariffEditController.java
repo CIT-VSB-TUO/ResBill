@@ -1,11 +1,13 @@
 package cz.vsb.resbill.web.tariffs;
 
-import java.util.List;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -21,11 +23,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import cz.vsb.resbill.criteria.PriceListCriteria;
+import cz.vsb.resbill.dto.TariffPriceListDTO;
+import cz.vsb.resbill.exception.PriceListServiceException;
 import cz.vsb.resbill.exception.TariffServiceException;
+import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.model.PriceList;
 import cz.vsb.resbill.model.Tariff;
-import cz.vsb.resbill.service.PriceListService;
 import cz.vsb.resbill.service.TariffService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -37,138 +40,128 @@ import cz.vsb.resbill.util.WebUtils;
  */
 @Controller
 @RequestMapping("tariffs/edit")
-@SessionAttributes("tariff")
+@SessionAttributes("tariffPriceListDTO")
 public class TariffEditController {
 
 	private static final Logger log = LoggerFactory.getLogger(TariffEditController.class);
 
-	private static final String TARIFF_MODEL_KEY = "tariff";
-
-	private static final String PRICE_LISTS_MODEL_KEY = "priceLists";
-
-	private static final String SHOW_PRICES_MODEL_KEY = "showPrices";
+	private static final String DTO_MODEL_KEY = "tariffPriceListDTO";
 
 	@Inject
 	private TariffService tariffService;
-
-	@Inject
-	private PriceListService priceListService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder, Locale locale) {
 		binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
 	}
 
-	private void loadTariff(Integer tariffId, ModelMap model) {
+	private void loadTariffPriceListDTO(Integer tariffId, ModelMap model) {
 		if (log.isDebugEnabled()) {
 			log.debug("Requested tariffId=" + tariffId);
 		}
-		Tariff tariff = null;
+		TariffPriceListDTO dto = null;
 		try {
 			if (tariffId != null) {
-				tariff = tariffService.findTariff(tariffId);
+				dto = tariffService.findTariffPriceListDTO(tariffId);
 			} else {
-				tariff = new Tariff();
-				tariff.setValid(Boolean.TRUE);
+				dto = new TariffPriceListDTO();
+				dto.setTariff(new Tariff());
+				dto.setLastPriceList(new PriceList());
+				dto.getTariff().setValid(Boolean.TRUE);
+				dto.getTariff().getPrices().add(dto.getLastPriceList());
+				dto.getLastPriceList().setTariff(dto.getTariff());
+				dto.getLastPriceList().setPeriod(new Period());
+				dto.getLastPriceList().getPeriod().setBeginDate(DateUtils.truncate(new Date(), Calendar.DATE));
 			}
-			model.addAttribute(TARIFF_MODEL_KEY, tariff);
+			model.addAttribute(DTO_MODEL_KEY, dto);
 		} catch (Exception e) {
-			log.error("Cannot load tariff with id: " + tariffId, e);
+			log.error("Cannot load tariffPriceListDTO by id: " + tariffId, e);
 
-			model.addAttribute(TARIFF_MODEL_KEY, tariff);
-			WebUtils.addGlobalError(model, TARIFF_MODEL_KEY, "error.load.tariff");
+			model.addAttribute(DTO_MODEL_KEY, dto);
+			WebUtils.addGlobalError(model, DTO_MODEL_KEY, "error.load.tariff");
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Loaded tariff: " + tariff);
-		}
-	}
-
-	private void loadPriceLists(Integer tariffId, ModelMap model) {
-		if (tariffId != null) {
-			model.addAttribute(SHOW_PRICES_MODEL_KEY, Boolean.TRUE);
-			List<PriceList> priceLists = null;
-			try {
-				PriceListCriteria criteria = new PriceListCriteria();
-				criteria.setTariffId(tariffId);
-				priceLists = priceListService.findPriceLists(criteria, null, null);
-				model.addAttribute(PRICE_LISTS_MODEL_KEY, priceLists);
-			} catch (Exception e) {
-				log.error("Cannot load priceLists for tariff.id: " + tariffId, e);
-
-				model.addAttribute(PRICE_LISTS_MODEL_KEY, priceLists);
-				WebUtils.addGlobalError(model, PRICE_LISTS_MODEL_KEY, "error.load.priceLists");
-			}
-			if (log.isDebugEnabled()) {
-				log.debug("Loaded list of priceLists size: " + (priceLists != null ? priceLists.size() : null));
-			}
-		} else {
-			model.addAttribute(SHOW_PRICES_MODEL_KEY, Boolean.FALSE);
+			log.debug("Loaded tariffPriceListDTO: " + dto);
 		}
 	}
 
 	/**
-	 * Handles all GET requests. Binds loaded {@link Tariff} entity with the key "tariff" into a model and optionally "priceLists" with a list of tariff's price lists.
+	 * Handles all GET requests. Binds loaded {@link TariffPriceListDTO} entity with the key "tariffPriceListDTO" into a model and optionally "priceLists" with a list of tariff's price lists.
 	 * 
 	 * @param tariffId
-	 *          key of a {@link Tariff} to view/edit
+	 *          key of a {@link TariffPriceListDTO} to view/edit
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String view(@RequestParam(value = "tariffId", required = false) Integer tariffId, ModelMap model) {
 		// nacteni tarifu
-		loadTariff(tariffId, model);
-		// nacteni ceniku
-		loadPriceLists(tariffId, model);
+		loadTariffPriceListDTO(tariffId, model);
 
 		return "tariffs/tariffEdit";
 	}
 
 	/**
-	 * Handles POST requests for saving edited {@link Tariff} entity.
+	 * Handles POST requests for saving edited {@link TariffPriceListDTO} instance.
 	 * 
 	 * @param tariff
 	 * @param bindingResult
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
-	public String save(@Valid @ModelAttribute(TARIFF_MODEL_KEY) Tariff tariff, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus) {
+	public String save(@Valid @ModelAttribute(DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus) {
 		if (log.isDebugEnabled()) {
-			log.debug("Tariff to save: " + tariff);
+			log.debug("Tariff to save: " + dto.getTariff());
+			log.debug("PriceList to save: " + dto.getLastPriceList());
 		}
 		if (!bindingResult.hasErrors()) {
 			try {
-				tariff = tariffService.saveTariff(tariff);
+				tariffService.saveTariffPriceListDTO(dto);
 				if (log.isDebugEnabled()) {
-					log.debug("Saved tariff: " + tariff);
+					log.debug("Saved tariffPriceListDTO: " + dto);
 				}
 				sessionStatus.setComplete();
 				return "redirect:/tariffs";
+			} catch (PriceListServiceException e) {
+				switch (e.getReason()) {
+				case INVOICE_DATE_CLASH:
+					bindingResult.reject("error.save.priceList.invoice.date");
+					break;
+				case INVALID_PERIOD:
+					bindingResult.reject("error.save.priceList.period");
+					break;
+				case INVOICE_PRICE_LIST:
+					bindingResult.reject("error.save.priceList.invoice");
+					break;
+				default:
+					log.warn("Unsupported reason: " + e);
+					bindingResult.reject("error.save.priceList");
+					break;
+				}
 			} catch (Exception e) {
-				log.error("Cannot save tariff: " + tariff, e);
+				log.error("Cannot save tariffPriceListDTO: " + dto, e);
 				bindingResult.reject("error.save.tariff");
 			}
 		} else {
 			bindingResult.reject("error.save.tariff.validation");
 		}
-		loadPriceLists(tariff.getId(), model);
 		return "tariffs/tariffEdit";
 	}
 
 	/**
-	 * Handle POST requests for deleting {@link Tariff} entity.
+	 * Handle POST requests for deleting {@link TariffPriceListDTO} instance.
 	 * 
 	 * @param tariff
 	 * @param bindingResult
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-	public String delete(@ModelAttribute(TARIFF_MODEL_KEY) Tariff tariff, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus) {
+	public String delete(@ModelAttribute(DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus) {
 		if (log.isDebugEnabled()) {
-			log.debug("Tariff to delete: " + tariff);
+			log.debug("TariffPriceListDTO to delete: " + dto);
 		}
 		try {
-			tariff = tariffService.deleteTariff(tariff.getId());
+			Tariff tariff = tariffService.deleteTariff(dto.getTariff().getId());
 			if (log.isDebugEnabled()) {
 				log.debug("Deleted tariff: " + tariff);
 			}
@@ -185,10 +178,9 @@ public class TariffEditController {
 				break;
 			}
 		} catch (Exception e) {
-			log.error("Cannot delete tariff: " + tariff, e);
+			log.error("Cannot delete tariffPriceListDTO: " + dto, e);
 			bindingResult.reject("error.delete.tariff");
 		}
-		loadPriceLists(tariff.getId(), model);
 		return "tariffs/tariffEdit";
 	}
 }

@@ -11,8 +11,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import cz.vsb.resbill.criteria.TariffCriteria;
-import cz.vsb.resbill.model.Tariff;
+import cz.vsb.resbill.dto.TariffPriceListDTO;
 import cz.vsb.resbill.service.TariffService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -28,24 +27,24 @@ public class TariffListController {
 
 	private static final Logger log = LoggerFactory.getLogger(TariffListController.class);
 
-	private static final String TARIFFS_MODEL_KEY = "tariffs";
+	private static final String DTOS_MODEL_KEY = "tariffPriceListDTOs";
 
 	@Inject
 	private TariffService tariffService;
 
-	private void loadTariffs(ModelMap model) {
-		List<Tariff> tariffs = null;
+	private void loadTariffPriceListDTOs(ModelMap model) {
+		List<TariffPriceListDTO> dtos = null;
 		try {
-			tariffs = tariffService.findTariffs(new TariffCriteria(), null, null);
-			model.addAttribute(TARIFFS_MODEL_KEY, tariffs);
+			dtos = tariffService.findTariffPriceListDTOs();
+			model.addAttribute(DTOS_MODEL_KEY, dtos);
 		} catch (Exception e) {
-			log.error("Cannot load list of tariffs.", e);
+			log.error("Cannot load list of tariffDTOs.", e);
 
-			model.addAttribute(TARIFFS_MODEL_KEY, tariffs);
-			WebUtils.addGlobalError(model, TARIFFS_MODEL_KEY, "error.load.tariffs");
+			model.addAttribute(DTOS_MODEL_KEY, dtos);
+			WebUtils.addGlobalError(model, DTOS_MODEL_KEY, "error.load.tariffs");
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Loaded list of tariffs size: " + (tariffs != null ? tariffs.size() : null));
+			log.debug("Loaded list of tariffs size: " + (dtos != null ? dtos.size() : null));
 		}
 	}
 
@@ -57,7 +56,7 @@ public class TariffListController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String view(ModelMap model) {
-		loadTariffs(model);
+		loadTariffPriceListDTOs(model);
 
 		return "tariffs/tariffList";
 	}

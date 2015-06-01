@@ -1,5 +1,7 @@
 -- SQL inserty, ktere do DB vlozi data pro vyvoj a testovani aplikace
 
+ALTER SEQUENCE hibernate_sequence RESTART WITH 10000;
+
 INSERT INTO "tariff" VALUES (1, 0, 'Tarif1', true);
 
 INSERT INTO "price_list" VALUES (1, 0, 0.20, 170.00, 20.00, '2014-01-01', NULL, 1.00, 1);

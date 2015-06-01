@@ -43,7 +43,7 @@ public class TariffDAOImpl implements TariffDAO {
 				where.add("t.name LIKE :namePrefix");
 			}
 			if (criteria.getValid() != null) {
-				where.add("t.name = :valid");
+				where.add("t.valid = :valid");
 			}
 			if (!where.isEmpty()) {
 				jpql.append(" WHERE ");

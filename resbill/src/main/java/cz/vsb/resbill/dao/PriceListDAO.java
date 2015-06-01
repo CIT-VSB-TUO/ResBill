@@ -4,6 +4,7 @@ import java.util.List;
 
 import cz.vsb.resbill.criteria.PriceListCriteria;
 import cz.vsb.resbill.model.PriceList;
+import cz.vsb.resbill.model.Tariff;
 
 /**
  * Data access interface for {@link PriceList} model entity.
@@ -21,6 +22,14 @@ public interface PriceListDAO {
 	 * @return found {@link PriceList} entity
 	 */
 	PriceList findPriceList(Integer id);
+
+	/**
+	 * Finds a {@link PriceList} of the {@link Tariff} specified by the given key that is valid.
+	 * 
+	 * @param tariffId
+	 * @return
+	 */
+	PriceList findLastValidPriceList(Integer tariffId);
 
 	/**
 	 * Finds {@link PriceList} entities by specified criteria
