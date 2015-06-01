@@ -1,6 +1,6 @@
 -- SQL inserty, ktere do DB vlozi data pro vyvoj a testovani aplikace
 
-ALTER SEQUENCE hibernate_sequence RESTART WITH 100;
+ALTER SEQUENCE hibernate_sequence RESTART WITH 10000;
 
 INSERT INTO "tariff" VALUES (1, 0, 'Tarif1', true);
 
