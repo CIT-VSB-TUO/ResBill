@@ -70,7 +70,7 @@ public class DailyUsageDAOImpl implements DailyUsageDAO {
 	    jpql.append("   SELECT invoiceDailyUsage.dailyUsage ");
 	    jpql.append("   FROM InvoiceDailyUsage AS invoiceDailyUsage ");
 	    jpql.append(" ) ");
-	    jpql.append(" ORDER BY dailyImport.date ASC ");
+	    jpql.append(" ORDER BY server.serverId, dailyImport.date ASC ");
 
 	    TypedQuery<DailyUsage> query = em.createQuery(jpql.toString(), DailyUsage.class);
 	    query.setParameter("contractId", contractId);
