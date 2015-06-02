@@ -30,6 +30,8 @@ import javax.validation.constraints.Size;
 public class Transaction extends BaseVersionedEntity {
 
 	private static final long serialVersionUID = 8668454272440856542L;
+	
+	public static final int INVOICE_EVIDENCE_NUMBER_BASE = 2000000000;
 
 	@Column(name = "tx_order")
 	@NotNull

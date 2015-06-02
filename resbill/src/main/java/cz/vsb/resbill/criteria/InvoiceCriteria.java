@@ -5,6 +5,8 @@
 package cz.vsb.resbill.criteria;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 import cz.vsb.resbill.util.ToStringBuilder;
 
@@ -14,64 +16,76 @@ import cz.vsb.resbill.util.ToStringBuilder;
  */
 public class InvoiceCriteria implements Serializable {
 
-	/**
+  /**
    * 
    */
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private OrderBy orderBy = OrderBy.DECISIVE_DATE;
+  private List<OrderBy>     orderBy          = Arrays.asList(new OrderBy[] { OrderBy.DECISIVE_DATE_DESC });
 
-	private boolean orderDesc = false;
+  /**
+   * 
+   * @return
+   */
+  public boolean needsContract() {
+    return needsCustomer() || orderBy.contains(OrderBy.CONTRACT_NAME_ASC) || orderBy.contains(OrderBy.CONTRACT_NAME_DESC);
+  }
 
-	/**
-	 * @return the orderBy
-	 */
-	public OrderBy getOrderBy() {
-		return orderBy;
-	}
+  /**
+   * 
+   * @return
+   */
+  public boolean needsCustomer() {
+    return orderBy.contains(OrderBy.CUSTOMER_NAME_ASC) || orderBy.contains(OrderBy.CUSTOMER_NAME_DESC);
+  }
 
-	/**
-	 * @param orderBy
-	 *          the orderBy to set
-	 */
-	public void setOrderBy(OrderBy orderBy) {
-		this.orderBy = orderBy;
-	}
+  /**
+   * @return the orderBy
+   */
+  public List<OrderBy> getOrderBy() {
+    return orderBy;
+  }
 
-	/**
-	 * @return the orderDesc
-	 */
-	public boolean isOrderDesc() {
-		return orderDesc;
-	}
+  /**
+   * @param orderBy
+   *          the orderBy to set
+   */
+  public void setOrderBy(List<OrderBy> orderBy) {
+    this.orderBy = orderBy;
+  }
 
-	/**
-	 * @param orderDesc
-	 *          the orderDesc to set
-	 */
-	public void setOrderDesc(boolean orderDesc) {
-		this.orderDesc = orderDesc;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    ToStringBuilder builder = new ToStringBuilder(this);
+    builder.append("orderBy", orderBy);
+    return builder.toString();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("orderBy", orderBy);
-		builder.append("orderDesc", orderDesc);
-		return builder.toString();
-	}
+  /**
+   * 
+   * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
+   *
+   */
+  public static enum OrderBy {
+    ORDER_ASC,
 
-	/**
-	 * 
-	 * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
-	 *
-	 */
-	public static enum OrderBy {
-		DECISIVE_DATE,
-	}
+    ORDER_DESC,
+
+    DECISIVE_DATE_ASC,
+
+    DECISIVE_DATE_DESC,
+
+    CONTRACT_NAME_ASC,
+
+    CONTRACT_NAME_DESC,
+
+    CUSTOMER_NAME_ASC,
+
+    CUSTOMER_NAME_DESC,
+  }
 }

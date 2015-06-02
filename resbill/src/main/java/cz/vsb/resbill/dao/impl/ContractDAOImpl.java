@@ -24,52 +24,73 @@ import cz.vsb.resbill.model.Contract;
 @Repository
 public class ContractDAOImpl implements ContractDAO {
 
-	@PersistenceContext
-	private EntityManager em;
+  /**
+   * 
+   */
+  @PersistenceContext
+  private EntityManager em;
 
-	/**
-	 * Najde vsechny kontrakty, jejichz servery maji alespon jedno nevyfakturovane DailyUsage nejpozdeji v pozadovanem dni.
-	 * 
-	 * Server musi byt kontraktu prirazen take nejpozdeji v pozadovanem dni.
-	 * 
-	 * Pro kontrakt nesmi existovat faktura se stejnym pozadovanym dnem.
-	 * 
-	 * Vraceny budou pouze ty kontrakty, ktere maji typ fakturace (v pozadovanem dni) odpovidajici predanemu parametru invoiceTypeIds.
-	 */
-	@Override
-	public List<Contract> findUninvoicedContracts(Date lastDay, List<Integer> invoiceTypeIds) {
-		StringBuilder jpql = new StringBuilder();
-		jpql.append(" SELECT DISTINCT contract ");
-		jpql.append(" FROM Contract AS contract ");
-		jpql.append(" JOIN contract.contractInvoiceTypes AS contractInvoiceType ");
-		jpql.append(" JOIN contractInvoiceType.invoiceType AS invoiceType ");
-		jpql.append(" JOIN contract.contractServers AS contractServer ");
-		jpql.append(" JOIN contractServer.server AS server ");
-		jpql.append(" JOIN server.dailyUsages AS dailyUsage ");
-		jpql.append(" JOIN dailyUsage.dailyImport AS dailyImport ");
-		jpql.append(" WHERE invoiceType.id IN (:invoiceTypeIds) ");
-		jpql.append(" AND contractInvoiceType.period.beginDate <= :lastDay ");
-		jpql.append(" AND (contractInvoiceType.period.endDate IS NULL OR contractInvoiceType.period.endDate >= :lastDay) ");
-		jpql.append(" AND contractServer.period.beginDate <= :lastDay ");
-		jpql.append(" AND contractServer.period.beginDate <= dailyImport.date ");
-		jpql.append(" AND (contractServer.period.endDate IS NULL OR contractServer.period.endDate >= dailyImport.date) ");
-		jpql.append(" AND dailyImport.date <= :lastDay ");
-		jpql.append(" AND NOT EXISTS ( ");
-		jpql.append("   SELECT invoice ");
-		jpql.append("   FROM Invoice AS invoice ");
-		jpql.append("   WHERE invoice.contract = contract ");
-		jpql.append("   AND invoice.period.endDate = :lastDay ");
-		jpql.append(" ) ");
-		jpql.append(" AND dailyUsage NOT IN ( ");
-		jpql.append("   SELECT invoiceDailyUsage.dailyUsage ");
-		jpql.append("   FROM InvoiceDailyUsage AS invoiceDailyUsage ");
-		jpql.append(" ) ");
+  /**
+   * 
+   */
+  @Override
+  public Contract saveContract(Contract contract) {
+    if (contract.getId() == null) {
+      em.persist(contract);
+    } else {
+      contract = em.merge(contract);
+    }
 
-		TypedQuery<Contract> query = em.createQuery(jpql.toString(), Contract.class);
-		query.setParameter("lastDay", lastDay);
-		query.setParameter("invoiceTypeIds", invoiceTypeIds);
+    em.flush();
 
-		return query.getResultList();
-	}
+    return contract;
+  }
+
+  /**
+   * Najde vsechny kontrakty, jejichz servery maji alespon jedno nevyfakturovane DailyUsage nejpozdeji v pozadovanem dni.
+   * 
+   * Server musi byt kontraktu prirazen take nejpozdeji v pozadovanem dni.
+   * 
+   * Pro kontrakt nesmi existovat faktura se stejnym pozadovanym dnem.
+   * 
+   * Vraceny budou pouze ty kontrakty, ktere maji typ fakturace (v pozadovanem dni) odpovidajici predanemu parametru invoiceTypeIds.
+   * 
+   * Ke kazdemu kontraktu pripoji Typ uctovani, ktery ma byt pouzit.
+   */
+  @Override
+  public List<Object[]> findUninvoicedContracts(Date lastDay, List<Integer> invoiceTypeIds) {
+    StringBuilder jpql = new StringBuilder();
+    jpql.append(" SELECT DISTINCT contract, invoiceType ");
+    jpql.append(" FROM Contract AS contract ");
+    jpql.append(" JOIN contract.contractInvoiceTypes AS contractInvoiceType ");
+    jpql.append(" JOIN contractInvoiceType.invoiceType AS invoiceType ");
+    jpql.append(" JOIN contract.contractServers AS contractServer ");
+    jpql.append(" JOIN contractServer.server AS server ");
+    jpql.append(" JOIN server.dailyUsages AS dailyUsage ");
+    jpql.append(" JOIN dailyUsage.dailyImport AS dailyImport ");
+    jpql.append(" WHERE invoiceType.id IN (:invoiceTypeIds) ");
+    jpql.append(" AND contractInvoiceType.period.beginDate <= :lastDay ");
+    jpql.append(" AND (contractInvoiceType.period.endDate IS NULL OR contractInvoiceType.period.endDate >= :lastDay) ");
+    jpql.append(" AND contractServer.period.beginDate <= :lastDay ");
+    jpql.append(" AND contractServer.period.beginDate <= dailyImport.date ");
+    jpql.append(" AND (contractServer.period.endDate IS NULL OR contractServer.period.endDate >= dailyImport.date) ");
+    jpql.append(" AND dailyImport.date <= :lastDay ");
+    jpql.append(" AND NOT EXISTS ( ");
+    jpql.append("   SELECT invoice ");
+    jpql.append("   FROM Invoice AS invoice ");
+    jpql.append("   WHERE invoice.contract = contract ");
+    jpql.append("   AND invoice.period.endDate = :lastDay ");
+    jpql.append(" ) ");
+    jpql.append(" AND dailyUsage NOT IN ( ");
+    jpql.append("   SELECT invoiceDailyUsage.dailyUsage ");
+    jpql.append("   FROM InvoiceDailyUsage AS invoiceDailyUsage ");
+    jpql.append(" ) ");
+
+    TypedQuery<Object[]> query = em.createQuery(jpql.toString(), Object[].class);
+    query.setParameter("lastDay", lastDay);
+    query.setParameter("invoiceTypeIds", invoiceTypeIds);
+
+    return query.getResultList();
+  }
 
 }

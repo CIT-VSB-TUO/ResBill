@@ -11,9 +11,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -29,20 +33,26 @@ import cz.vsb.resbill.dao.DailyUsageDAO;
 import cz.vsb.resbill.dao.InvoiceDAO;
 import cz.vsb.resbill.dao.InvoiceTypeDAO;
 import cz.vsb.resbill.dao.PriceListDAO;
+import cz.vsb.resbill.dao.TransactionDAO;
 import cz.vsb.resbill.dao.TransactionTypeDAO;
 import cz.vsb.resbill.dto.InvoiceCreateResultDTO;
+import cz.vsb.resbill.dto.InvoiceDTO;
 import cz.vsb.resbill.exception.DailyImportException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.model.DailyUsage;
 import cz.vsb.resbill.model.File;
 import cz.vsb.resbill.model.Invoice;
+import cz.vsb.resbill.model.InvoicePriceList;
 import cz.vsb.resbill.model.InvoiceType;
 import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.model.PriceList;
 import cz.vsb.resbill.model.Server;
+import cz.vsb.resbill.model.Transaction;
+import cz.vsb.resbill.model.TransactionType;
 import cz.vsb.resbill.service.InvoiceService;
 import cz.vsb.resbill.service.ResBillService;
+import cz.vsb.resbill.service.TransactionService;
 
 /**
  * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
@@ -54,11 +64,20 @@ public class InvoiceServiceImpl implements InvoiceService {
 
   private static final Logger log = LoggerFactory.getLogger(InvoiceServiceImpl.class);
 
+  /**
+   * 
+   */
+  @PersistenceContext
+  private EntityManager       em;
+
   @Inject
   private InvoiceDAO          invoiceDAO;
 
   @Inject
   private InvoiceTypeDAO      invoiceTypeDAO;
+
+  @Inject
+  private TransactionDAO      transactionDAO;
 
   @Inject
   private TransactionTypeDAO  transactionTypeDAO;
@@ -75,25 +94,32 @@ public class InvoiceServiceImpl implements InvoiceService {
   @Inject
   private InvoiceService      invoiceService;
 
+  @Inject
+  private TransactionService  transactionService;
+
   /**
 	 * 
 	 */
   @Override
   public Invoice findInvoice(Integer invoiceId) throws ResBillException {
-    return findInvoice(invoiceId, false);
+    return findInvoice(invoiceId, false, false);
   }
 
   /**
 	 * 
 	 */
   @Override
-  public Invoice findInvoice(Integer invoiceId, boolean initializeDetails) throws ResBillException {
+  public Invoice findInvoice(Integer invoiceId, boolean initializeSummary, boolean initializeDetail) throws ResBillException {
     try {
       Invoice invoice = invoiceDAO.findInvoice(invoiceId);
 
       if (invoice != null) {
-        if (initializeDetails) {
-          invoice.getDetails();
+        if (initializeSummary) {
+          invoice.getSummary();
+        }
+
+        if (initializeDetail) {
+          invoice.getDetail();
         }
       }
 
@@ -121,13 +147,31 @@ public class InvoiceServiceImpl implements InvoiceService {
    * 
    */
   @Override
+  public List<InvoiceDTO> findInvoiceDTOs(InvoiceCriteria criteria, Integer offset, Integer limit) throws ResBillException {
+    try {
+      List<Invoice> invoices = findInvoices(criteria, offset, limit);
+      List<InvoiceDTO> dtos = new ArrayList<InvoiceDTO>();
+
+      for (Invoice invoice : invoices) {
+        InvoiceDTO dto = new InvoiceDTO();
+        dto.fill(invoice);
+        dtos.add(dto);
+      }
+
+      return dtos;
+    } catch (Exception exc) {
+      log.error("An unexpected error occured while finding InvoiceDTOs.", exc);
+      throw new ResBillException(exc);
+    }
+  }
+
+  /**
+   * 
+   */
+  @Override
   public Invoice deleteInvoice(Integer invoiceId) throws ResBillException {
     try {
-
-      Invoice invoice = invoiceDAO.findInvoice(invoiceId);
-      if (invoice != null) {
-        invoice = invoiceDAO.deleteInvoice(invoice);
-      }
+      Invoice invoice = (Invoice) transactionService.deleteTransaction(invoiceId);
 
       return invoice;
 
@@ -170,13 +214,18 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     // Ziskat vsechny kontrakty, jejichz servery maji alespon jedno nevyfakturovane DailyUsage v pozadovanem mesici NEBO DRIVE
     // Server musi byt kontraktu prirazen take nektery den v pozadovanem mesici NEBO DRIVE
-    List<Contract> contracts = contractDAO.findUninvoicedContracts(lastDay, invoiceTypeIds);
-    resultDTO.setContractsNumberAll(contracts.size());
+    List<Object[]> contractsWithInvTypes = contractDAO.findUninvoicedContracts(lastDay, invoiceTypeIds);
+    resultDTO.setContractsNumberAll(contractsWithInvTypes.size());
 
     // Vytvareni faktur pro jednotlive kontrakty
-    for (Contract contract : contracts) {
+    for (Object[] contractWithInvType : contractsWithInvTypes) {
+      Contract contract = (Contract) contractWithInvType[0];
+      InvoiceType invoiceType = (InvoiceType) contractWithInvType[1];
+
       try {
-        Invoice invoice = invoiceService.createContractInvoice(contract, month);
+        em.detach(contract);
+        em.detach(invoiceType);
+        Invoice invoice = invoiceService.createContractInvoice(contract, invoiceType, month);
 
         if (invoice.getNoPriceList().booleanValue()) {
           resultDTO.setContractsNumberNoPriceList(resultDTO.getContractsNumberNoPriceList() + 1);
@@ -205,32 +254,50 @@ public class InvoiceServiceImpl implements InvoiceService {
    */
   @Override
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public Invoice createContractInvoice(Contract contract, Date month) {
+  public Invoice createContractInvoice(Contract contract, InvoiceType invoiceType, Date month) {
     log.info("Zacinam fakturovat pro kontrakt s ID: " + contract.getId());
 
     Invoice invoice = new Invoice();
+    invoice.setTransactionType(transactionTypeDAO.findTransactionType(TransactionType.INVOICE));
+    invoice.setInvoiceType(invoiceType);
     invoice.setContract(contract);
     invoice.setDecisiveDate(new Date());
+    invoice.setOrder(transactionDAO.getNextOrder(contract.getId()));
 
     // TODO: fakturu naplnit smysluplnymi udaji
-    invoice.setInvoiceType(invoiceTypeDAO.findInvoiceType(1));
-    invoice.setAmount(BigDecimal.ZERO);
-    invoice.setTransactionType(transactionTypeDAO.findTransactionType(1));
-    invoice.setOrder(2);
     File file = new File();
     file.setName("Foo file");
     file.setSize(new Long(0));
     file.setContentType("Foo content type");
     invoice.setAttachment(file);
 
-    StringBuilder details = new StringBuilder();
+    StringBuilder summary = new StringBuilder();
 
-    Date firstDay = DateUtils.truncate(month, Calendar.MONTH);
-    Date lastDay = DateUtils.addDays(DateUtils.addMonths(firstDay, 1), -1);
+    Date firstMonthDay = DateUtils.truncate(month, Calendar.MONTH);
+    Date firstDay = DateUtils.addMonths(firstMonthDay, 1 - invoiceType.getDivisor());
+    Date lastDay = DateUtils.addDays(DateUtils.addMonths(firstMonthDay, 1), -1);
 
     invoice.setPeriod(new Period());
     invoice.getPeriod().setBeginDate(firstDay);
     invoice.getPeriod().setEndDate(lastDay);
+
+    // Nazev faktury
+    DateFormat titleDateFormat = new SimpleDateFormat("d.M.yyyy");
+    StringBuilder title = new StringBuilder();
+    title.append("Vyúčtování služeb datového centra za období: ");
+    title.append(titleDateFormat.format(firstDay));
+    title.append("-");
+    title.append(titleDateFormat.format(lastDay));
+    invoice.setTitle(title.toString());
+
+    // Hlavickove informace do vypisu
+    summary.append(invoice.getTitle());
+    summary.append("\n");
+    summary.append("Zákazník: ");
+    summary.append(contract.getCustomer().getName());
+    summary.append("\n");
+    summary.append("Kontrakt: ");
+    summary.append(contract.getName());
 
     // Ziskat vsechny DailyUsages, ktere maji byt fakturovany
     List<DailyUsage> dailyUsages = dailyUsageDAO.findUninvoicedDailyUsages(lastDay, contract.getId());
@@ -254,9 +321,19 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     // Pripraveni vypisu po serverech, polozkach, cenicich a mesicich
     List<TmpServerUsagePricing> serverPricings = prepareServerPricing(usagePrices);
+
+    // Souhrny vypis uctovanych castek po serverech
+    BigDecimal contractPrice = BigDecimal.ZERO;
+    Set<Integer> priceListIds = new HashSet<Integer>();
     StringBuilder groupPricing = new StringBuilder();
     for (TmpServerUsagePricing serverPricing : serverPricings) {
+      contractPrice = contractPrice.add(serverPricing.price);
+      priceListIds.addAll(serverPricing.priceListIds);
+
       // Odradkovani
+      if (groupPricing.length() > 0) {
+        groupPricing.append("\n");
+      }
       groupPricing.append("\n");
 
       groupPricing.append(serverPricing.server.getName());
@@ -267,11 +344,21 @@ public class InvoiceServiceImpl implements InvoiceService {
       groupPricing.append(buildGroupPricing(serverPricing));
 
     }
-    details.append("\n\n\n");
-    details.append("Rozpis po serverech:\n");
-    details.append(groupPricing);
+    summary.append("\n\n\n");
+    summary.append("Rozpis po serverech:\n");
+    summary.append(groupPricing);
+
+    // Celkova cena za kontrakt
+    invoice.setAmount(contractPrice.setScale(2, RoundingMode.HALF_UP).negate());
+    summary.append("\n\n");
+    summary.append("Celkem: ");
+    summary.append(invoice.getAmount().negate());
+
+    // Zaznamenat seskupene vyuctovani
+    invoice.setSummary(summary.toString());
 
     // Kompletni vypis nalezenych DailyUsage s dohledanymi ceniky, roztrideno po jednotlivych serverech kontraktu
+    StringBuilder detail = new StringBuilder();
     Integer sId = null;
     StringBuilder detailPricing = new StringBuilder();
     for (TmpDailyUsagePriceList usagePrice : usagePrices) {
@@ -296,15 +383,33 @@ public class InvoiceServiceImpl implements InvoiceService {
 
       detailPricing.append(buildDetailPricing(usagePrice));
     }
-    details.append("\n\n\n");
-    details.append("Detailní rozpis (po serverech):\n");
-    details.append(detailPricing);
+    detail.append("Detailní rozpis (po serverech):\n");
+    detail.append(detailPricing);
 
-    log.debug(details.toString());
+    log.debug(detail.toString());
 
-    invoice.setDetails(details.toString());
+    // Zaznamenat detailni rozpis
+    invoice.setDetail(detail.toString());
 
-    invoiceDAO.saveInvoice(invoice);
+    // Doplnit odkaz na pouzite ceniky
+    for (Integer priceListId : priceListIds) {
+      PriceList priceList = priceListDAO.findPriceList(priceListId);
+      InvoicePriceList invoicePriceList = new InvoicePriceList();
+      invoicePriceList.setInvoice(invoice);
+      invoicePriceList.setPriceList(priceList);
+      invoice.getInvoicePriceLists().add(invoicePriceList);
+    }
+
+    // Ulozit
+    invoice = (Invoice) transactionDAO.saveTransaction(invoice);
+
+    // Doplnit evidencni cislo na zaklade ID a znovu ulozit
+    invoice.setEvidenceNumber(Transaction.INVOICE_EVIDENCE_NUMBER_BASE + invoice.getId());
+    invoice = (Invoice) transactionDAO.saveTransaction(invoice);
+
+    // Aktualizovat stav uctu kontraktu
+    contract.setBalance(contract.getBalance().add(invoice.getAmount()));
+    contractDAO.saveContract(contract);
 
     log.info("Fakturace pro kontrakt s ID: " + contract.getId() + " ukoncena.");
 
@@ -453,7 +558,7 @@ public class InvoiceServiceImpl implements InvoiceService {
       serverPricing.backups = groupResourcePricings(serverPricing.backups);
     }
 
-    // Spocitat celkovou cenu za server
+    // Spocitat celkovou cenu za server a posbirat ID vsech pouzitych ceniku
     for (TmpServerUsagePricing serverPricing : serverPricings) {
       BigDecimal sum = BigDecimal.ZERO;
       sum = sum.add(sumPrices(serverPricing.cpus));
@@ -462,6 +567,11 @@ public class InvoiceServiceImpl implements InvoiceService {
       sum = sum.add(sumPrices(serverPricing.backups));
 
       serverPricing.price = sum;
+
+      serverPricing.priceListIds.addAll(sumPriceListIds(serverPricing.cpus));
+      serverPricing.priceListIds.addAll(sumPriceListIds(serverPricing.memories));
+      serverPricing.priceListIds.addAll(sumPriceListIds(serverPricing.spaces));
+      serverPricing.priceListIds.addAll(sumPriceListIds(serverPricing.backups));
     }
 
     return serverPricings;
@@ -481,6 +591,22 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     return sum;
+  }
+
+  /**
+   * Posbira vsechny pouzite ceniky
+   * 
+   * @param pricings
+   * @return
+   */
+  protected Set<Integer> sumPriceListIds(List<TmpResourcePricing> pricings) {
+    Set<Integer> ids = new HashSet<Integer>();
+
+    for (TmpResourcePricing pricing : pricings) {
+      ids.add(pricing.priceListId);
+    }
+
+    return ids;
   }
 
   /**
@@ -571,13 +697,16 @@ public class InvoiceServiceImpl implements InvoiceService {
     // Cena za cely server
     public BigDecimal               price;
 
-    public List<TmpResourcePricing> cpus     = new ArrayList<TmpResourcePricing>();
+    // Ceniky, ktere byly pro vypocet ceny pouzity
+    public Set<Integer>             priceListIds = new HashSet<Integer>();
 
-    public List<TmpResourcePricing> memories = new ArrayList<TmpResourcePricing>();
+    public List<TmpResourcePricing> cpus         = new ArrayList<TmpResourcePricing>();
 
-    public List<TmpResourcePricing> spaces   = new ArrayList<TmpResourcePricing>();
+    public List<TmpResourcePricing> memories     = new ArrayList<TmpResourcePricing>();
 
-    public List<TmpResourcePricing> backups  = new ArrayList<TmpResourcePricing>();
+    public List<TmpResourcePricing> spaces       = new ArrayList<TmpResourcePricing>();
+
+    public List<TmpResourcePricing> backups      = new ArrayList<TmpResourcePricing>();
   }
 
   /**

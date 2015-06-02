@@ -15,12 +15,8 @@ import cz.vsb.resbill.model.Invoice;
  */
 public interface InvoiceDAO {
 
-	Invoice findInvoice(Integer id);
+  Invoice findInvoice(Integer id);
 
-	List<Invoice> findInvoices(InvoiceCriteria criteria, Integer offset, Integer limit);
-
-	Invoice saveInvoice(Invoice invoice);
-
-	Invoice deleteInvoice(Invoice invoice);
+  List<Invoice> findInvoices(InvoiceCriteria criteria, Integer offset, Integer limit);
 
 }

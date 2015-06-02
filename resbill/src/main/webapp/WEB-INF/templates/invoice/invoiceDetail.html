@@ -148,8 +148,17 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="form-group">
-              <label class="control-label" th:text="#{label.invoice.details}">Detailní vyúčtování</label>
-              <textarea class="form-control" rows="10" readonly="readonly" th:text="${invoice.details}">Textový obsah faktury. Později zde bude odkaz na PDF</textarea>
+              <label class="control-label" th:text="#{label.invoice.summary}">Shrnutí faktury</label>
+              <textarea class="form-control" rows="10" readonly="readonly" th:text="${invoice.summary}">Textový obsah faktury. Později zde bude odkaz na PDF</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="form-group">
+              <label class="control-label" th:text="#{label.invoice.detail}">Detailní přehled účtovaných položek</label>
+              <textarea class="form-control" rows="10" readonly="readonly" th:text="${invoice.detail}">Detailní přehled účtovaných položek.</textarea>
             </div>
           </div>
         </div>
