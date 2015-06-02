@@ -5,6 +5,7 @@
 package cz.vsb.resbill.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,6 +38,7 @@ import cz.vsb.resbill.model.Invoice;
 import cz.vsb.resbill.model.InvoiceType;
 import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.model.PriceList;
+import cz.vsb.resbill.model.Server;
 import cz.vsb.resbill.service.InvoiceService;
 import cz.vsb.resbill.service.ResBillService;
 
@@ -248,8 +250,45 @@ public class InvoiceServiceImpl implements InvoiceService {
       }
     }
 
+    // Pripraveni vypisu po serverech, polozkach, cenicich a mesicich
+    List<TmpServerUsagePricing> serverPricings = prepareServerPricing(usagePrices);
+    StringBuilder groupPricing = new StringBuilder();
+    for (TmpServerUsagePricing serverPricing : serverPricings) {
+      // Odradkovani
+      groupPricing.append("\n");
+
+      groupPricing.append(serverPricing.server.getName());
+      groupPricing.append("\t");
+      groupPricing.append(serverPricing.price.setScale(2, RoundingMode.HALF_UP));
+      groupPricing.append(" Kč");
+
+      groupPricing.append("\n");
+      groupPricing.append("\tCPU: ");
+      groupPricing.append("\n");
+      groupPricing.append(buildGroupPricing(serverPricing.cpus, "\t\t"));
+
+      groupPricing.append("\n");
+      groupPricing.append("\tRAM: ");
+      groupPricing.append("\n");
+      groupPricing.append(buildGroupPricing(serverPricing.memories, "\t\t"));
+
+      groupPricing.append("\n");
+      groupPricing.append("\tStorage: ");
+      groupPricing.append("\n");
+      groupPricing.append(buildGroupPricing(serverPricing.spaces, "\t\t"));
+
+      groupPricing.append("\n");
+      groupPricing.append("\tBackup: ");
+      groupPricing.append("\n");
+      groupPricing.append(buildGroupPricing(serverPricing.backups, "\t\t"));
+
+    }
+    details.append("\n\n\n");
+    details.append("Rozpis po serverech:\n");
+    details.append(groupPricing);
+
     // Kompletni vypis nalezenych DailyUsage s dohledanymi ceniky, roztrideno po jednotlivych serverech kontraktu
-    String serverId = null;
+    Integer sId = null;
     StringBuilder detailPricing = new StringBuilder();
     for (TmpDailyUsagePriceList usagePrice : usagePrices) {
       // Odradkovani
@@ -258,21 +297,23 @@ public class InvoiceServiceImpl implements InvoiceService {
       }
 
       // Hlavicka serveru
-      if (serverId == null || !serverId.equals(usagePrice.dailyUsage.getServer().getServerId())) {
-        serverId = usagePrice.dailyUsage.getServer().getServerId();
+      if (sId == null || !sId.equals(usagePrice.dailyUsage.getServer().getId())) {
+        sId = usagePrice.dailyUsage.getServer().getId();
 
         detailPricing.append("\n");
         detailPricing.append("Server - ID: ");
-        detailPricing.append(serverId);
-        detailPricing.append("; jmeno: ");
+        detailPricing.append(sId);
+        detailPricing.append("; ServerId: ");
+        detailPricing.append(usagePrice.dailyUsage.getServer().getServerId());
+        detailPricing.append("; Jméno: ");
         detailPricing.append(usagePrice.dailyUsage.getServer().getName());
         detailPricing.append("\n");
       }
 
-      detailPricing.append(createDetailPricing(usagePrice));
+      detailPricing.append(buildDetailPricing(usagePrice));
     }
     details.append("\n\n\n");
-    details.append("Detailní rozpis:\n");
+    details.append("Detailní rozpis (po serverech):\n");
     details.append(detailPricing);
 
     log.debug(details.toString());
@@ -288,10 +329,39 @@ public class InvoiceServiceImpl implements InvoiceService {
 
   /**
    * 
+   * @param cpus
+   * @param linePrefix
+   * @return
+   */
+  protected String buildGroupPricing(List<TmpResourcePricing> resPricings, String linePrefix) {
+    StringBuilder pricing = new StringBuilder();
+
+    for (TmpResourcePricing resPricing : resPricings) {
+      // Odradkovani
+      if (pricing.length() > 0) {
+        pricing.append("\n");
+      }
+
+      pricing.append(linePrefix);
+      pricing.append(resPricing.beginDate);
+      pricing.append("-");
+      pricing.append(resPricing.endDate);
+      pricing.append(" - ");
+      pricing.append(resPricing.amount);
+      pricing.append(" - ");
+      pricing.append(resPricing.price.setScale(2, RoundingMode.HALF_UP));
+      pricing.append(" Kč");
+    }
+
+    return pricing.toString();
+  }
+
+  /**
+   * 
    * @param usagePrice
    * @return
    */
-  protected String createDetailPricing(TmpDailyUsagePriceList usagePrice) {
+  protected String buildDetailPricing(TmpDailyUsagePriceList usagePrice) {
     // TODO: pokud toto zachovame, tak by bylo vhodne text nekam vytahnout
 
     StringBuilder pricing = new StringBuilder();
@@ -331,6 +401,132 @@ public class InvoiceServiceImpl implements InvoiceService {
 
   /**
    * 
+   * @return
+   */
+  protected List<TmpServerUsagePricing> prepareServerPricing(List<TmpDailyUsagePriceList> usagePrices) {
+    List<TmpServerUsagePricing> serverPricings = new ArrayList<TmpServerUsagePricing>();
+
+    TmpServerUsagePricing curServerPricing = null;
+    for (TmpDailyUsagePriceList curUsagePrice : usagePrices) {
+      if (curServerPricing == null || !curServerPricing.server.getId().equals(curUsagePrice.dailyUsage.getServer().getId())) {
+        curServerPricing = new TmpServerUsagePricing();
+        curServerPricing.server = curUsagePrice.dailyUsage.getServer();
+
+        serverPricings.add(curServerPricing);
+      }
+
+      curServerPricing.cpus.add(prepareResourcePricing(curUsagePrice, new BigDecimal(curUsagePrice.dailyUsage.getCpu()), curUsagePrice.priceList.getCpuPrice()));
+      curServerPricing.memories.add(prepareResourcePricing(curUsagePrice, new BigDecimal(curUsagePrice.dailyUsage.getMemoryMB()), curUsagePrice.priceList.getMemoryMBPrice()));
+      curServerPricing.spaces.add(prepareResourcePricing(curUsagePrice, curUsagePrice.dailyUsage.getProvisionedSpaceGB(), curUsagePrice.priceList.getSpaceGBPrice()));
+      curServerPricing.backups.add(prepareResourcePricing(curUsagePrice, curUsagePrice.dailyUsage.getBackupGB(), curUsagePrice.priceList.getBackupGBPrice()));
+    }
+
+    // Seskupit radky, kde se shoduje: mesic, cenik a mnozstvi
+    for (TmpServerUsagePricing serverPricing : serverPricings) {
+      serverPricing.cpus = groupResourcePricings(serverPricing.cpus);
+      serverPricing.memories = groupResourcePricings(serverPricing.memories);
+      serverPricing.spaces = groupResourcePricings(serverPricing.spaces);
+      serverPricing.backups = groupResourcePricings(serverPricing.backups);
+    }
+
+    // Spocitat celkovou cenu za server
+    for (TmpServerUsagePricing serverPricing : serverPricings) {
+      BigDecimal sum = BigDecimal.ZERO;
+      sum = sum.add(sumPrices(serverPricing.cpus));
+      sum = sum.add(sumPrices(serverPricing.memories));
+      sum = sum.add(sumPrices(serverPricing.spaces));
+      sum = sum.add(sumPrices(serverPricing.backups));
+
+      serverPricing.price = sum;
+    }
+
+    return serverPricings;
+  }
+
+  /**
+   * Secte castky ze vsech jednotlivych dilcich polozek
+   * 
+   * @param pricings
+   * @return
+   */
+  protected BigDecimal sumPrices(List<TmpResourcePricing> pricings) {
+    BigDecimal sum = BigDecimal.ZERO;
+
+    for (TmpResourcePricing pricing : pricings) {
+      sum = sum.add(pricing.price);
+    }
+
+    return sum;
+  }
+
+  /**
+   * Seskupi radky, kde se shoduje: mesic, cenik a mnozstvi
+   * 
+   * Predpokladem je, ze vstupni List je setrideny dle data
+   */
+  protected List<TmpResourcePricing> groupResourcePricings(List<TmpResourcePricing> in) {
+
+    List<TmpResourcePricing> out = new ArrayList<TmpResourcePricing>();
+
+    TmpResourcePricing curPricing = null;
+    for (TmpResourcePricing inPricing : in) {
+      if (curPricing == null || !curPricing.month.equals(inPricing.month) || !curPricing.priceListId.equals(inPricing.priceListId) || !curPricing.amount.equals(inPricing.amount)) {
+        curPricing = inPricing;
+        out.add(curPricing);
+      } else {
+        curPricing.endDate = inPricing.endDate;
+        curPricing.price = curPricing.price.add(inPricing.price);
+      }
+    }
+
+    return out;
+  }
+
+  /**
+   * 
+   * @return
+   */
+  protected TmpResourcePricing prepareResourcePricing(TmpDailyUsagePriceList usagePrice, BigDecimal amount, BigDecimal unitPrice) {
+    TmpResourcePricing resourcePricing = new TmpResourcePricing();
+    resourcePricing.unitPrice = unitPrice;
+
+    resourcePricing.beginDate = usagePrice.dailyUsage.getDailyImport().getDate();
+    resourcePricing.endDate = usagePrice.dailyUsage.getDailyImport().getDate();
+    resourcePricing.amount = amount;
+
+    resourcePricing.month = getMonth(usagePrice.dailyUsage.getDailyImport().getDate());
+    resourcePricing.priceListId = usagePrice.priceList.getId();
+
+    int days = getMonthDaysCount(resourcePricing.month);
+    resourcePricing.price = resourcePricing.unitPrice.divide(new BigDecimal(days), 10, RoundingMode.HALF_UP).multiply(resourcePricing.amount);
+
+    return resourcePricing;
+  }
+
+  /**
+   * Vrati prvni den mesice, ve kterem se vyskytuje predany den
+   * 
+   * @param day
+   * @return
+   */
+  protected Date getMonth(Date day) {
+    return DateUtils.truncate(day, Calendar.MONTH);
+  }
+
+  /**
+   * Vrati pocet dnu mesice, ve kterem se vyskytuje predany den
+   * 
+   * @return
+   */
+  protected int getMonthDaysCount(Date day) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(day);
+
+    return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+  }
+
+  /**
+   * 
    * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
    *
    */
@@ -339,5 +535,48 @@ public class InvoiceServiceImpl implements InvoiceService {
     public DailyUsage dailyUsage;
 
     public PriceList  priceList;
+  }
+
+  /**
+   * 
+   */
+  private static class TmpServerUsagePricing {
+
+    public Server                   server;
+
+    // Cena za cely server
+    public BigDecimal               price;
+
+    public List<TmpResourcePricing> cpus     = new ArrayList<TmpResourcePricing>();
+
+    public List<TmpResourcePricing> memories = new ArrayList<TmpResourcePricing>();
+
+    public List<TmpResourcePricing> spaces   = new ArrayList<TmpResourcePricing>();
+
+    public List<TmpResourcePricing> backups  = new ArrayList<TmpResourcePricing>();
+  }
+
+  /**
+   * 
+   */
+  private static class TmpResourcePricing {
+
+    // Zobrzovane hodnoty
+    public Date       beginDate;
+
+    public Date       endDate;
+
+    public BigDecimal amount;
+
+    public BigDecimal unitPrice;
+
+    public BigDecimal price;
+
+    // Pomocne hodnoty
+
+    // prvni den mesice
+    public Date       month;
+
+    public Integer    priceListId;
   }
 }
