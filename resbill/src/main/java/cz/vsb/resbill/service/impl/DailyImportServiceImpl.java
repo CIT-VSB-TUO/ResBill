@@ -442,7 +442,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 			String production = StringUtils.stripToNull(lineElements[2]);
 			String powerState = StringUtils.stripToNull(lineElements[3]);
 			String cpu = StringUtils.stripToNull(lineElements[4]);
-			String memoryMb = StringUtils.stripToNull(lineElements[5]);
+			String memoryGb = StringUtils.stripToNull(lineElements[5]);
 			String provSpaceGb = StringUtils.stripToNull(lineElements[6]);
 			String usedSpaceGb = StringUtils.stripToNull(lineElements[7]);
 			String backupGb = StringUtils.stripToNull(lineElements[8]);
@@ -518,7 +518,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 			dailyUsage.setProductionLevel(productionLevel);
 			dailyUsage.setServerName(name);
 			dailyUsage.setCpu(NumberUtils.createInteger(cpu, 0));
-			dailyUsage.setMemoryMB(NumberUtils.createInteger(memoryMb, 0));
+			dailyUsage.setMemoryGB(NumberUtils.createBigDecimal(memoryGb, BigDecimal.ZERO)); 
 			dailyUsage.setProvisionedSpaceGB(NumberUtils.createBigDecimal(provSpaceGb, BigDecimal.ZERO));
 			dailyUsage.setUsedSpaceGB(NumberUtils.createBigDecimal(usedSpaceGb, BigDecimal.ZERO));
 			dailyUsage.setBackupGB(NumberUtils.createBigDecimal(backupGb, BigDecimal.ZERO));

@@ -377,7 +377,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     // RAM
     pricing.append("; RAM: ");
-    pricing.append(usagePrice.dailyUsage.getMemoryMB());
+    pricing.append(usagePrice.dailyUsage.getMemoryGB());
     pricing.append(" á ");
     pricing.append(usagePrice.priceList.getMemoryMBPrice());
     pricing.append(" Kč/měsíc");
@@ -416,7 +416,7 @@ public class InvoiceServiceImpl implements InvoiceService {
       }
 
       curServerPricing.cpus.add(prepareResourcePricing(curUsagePrice, new BigDecimal(curUsagePrice.dailyUsage.getCpu()), curUsagePrice.priceList.getCpuPrice()));
-      curServerPricing.memories.add(prepareResourcePricing(curUsagePrice, new BigDecimal(curUsagePrice.dailyUsage.getMemoryMB()), curUsagePrice.priceList.getMemoryMBPrice()));
+      curServerPricing.memories.add(prepareResourcePricing(curUsagePrice, curUsagePrice.dailyUsage.getMemoryGB(), curUsagePrice.priceList.getMemoryMBPrice()));
       curServerPricing.spaces.add(prepareResourcePricing(curUsagePrice, curUsagePrice.dailyUsage.getProvisionedSpaceGB(), curUsagePrice.priceList.getSpaceGBPrice()));
       curServerPricing.backups.add(prepareResourcePricing(curUsagePrice, curUsagePrice.dailyUsage.getBackupGB(), curUsagePrice.priceList.getBackupGBPrice()));
     }

@@ -189,7 +189,7 @@
         lock_version int4 not null,
         backup_gb numeric(10, 2) not null,
         cpu int4 not null,
-        memory_mb int4 not null,
+        memory_gb numeric(10, 2) not null,
         power_state boolean not null,
         prov_space_gb numeric(10, 2) not null,
         server_name varchar(100) not null,
