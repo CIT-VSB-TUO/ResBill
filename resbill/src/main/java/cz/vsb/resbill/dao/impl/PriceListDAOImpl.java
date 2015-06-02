@@ -10,6 +10,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 
@@ -26,6 +28,8 @@ import cz.vsb.resbill.model.PriceList;
  */
 @Repository
 public class PriceListDAOImpl implements PriceListDAO {
+
+	private static final Logger log = LoggerFactory.getLogger(PriceListDAOImpl.class);
 
 	@PersistenceContext
 	private EntityManager em;
@@ -64,9 +68,19 @@ public class PriceListDAOImpl implements PriceListDAO {
 				jpql.append(" WHERE ");
 				jpql.append(StringUtils.join(where, " AND "));
 			}
+
+			// order by
+			if (criteria.getOrderBy() != null) {
+				switch (criteria.getOrderBy()) {
+				case PERIOD:
+					jpql.append(" ORDER BY pl.period.beginDate, pl.period.endDate");
+					break;
+				default:
+					log.warn("Unsupported order by option: " + criteria.getOrderBy());
+					break;
+				}
+			}
 		}
-		// order by
-		jpql.append(" ORDER BY pl.period.beginDate, pl.period.endDate");
 
 		TypedQuery<PriceList> query = em.createQuery(jpql.toString(), PriceList.class);
 

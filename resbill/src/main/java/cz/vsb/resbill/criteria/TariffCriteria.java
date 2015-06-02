@@ -14,7 +14,7 @@ public class TariffCriteria implements Serializable {
 
 	private Boolean valid;
 
-	private OrderBy orderBy = OrderBy.NAME;
+	private OrderBy orderBy;
 
 	public String getNamePrefix() {
 		return namePrefix;

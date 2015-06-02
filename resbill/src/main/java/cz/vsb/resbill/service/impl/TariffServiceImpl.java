@@ -124,12 +124,13 @@ public class TariffServiceImpl implements TariffService {
 	}
 
 	@Override
-	public void saveTariffPriceListDTO(TariffPriceListDTO dto) throws PriceListServiceException, ResBillException {
+	public Tariff saveTariffPriceListDTO(TariffPriceListDTO dto) throws PriceListServiceException, ResBillException {
 		try {
-			this.saveTariff(dto.getTariff());
+			Tariff tariff = this.saveTariff(dto.getTariff());
 			if (dto.isPriceListEditable()) {
 				priceListService.savePriceList(dto.getLastPriceList());
 			}
+			return tariff;
 		} catch (PriceListServiceException e) {
 			throw e;
 		} catch (ResBillException e) {

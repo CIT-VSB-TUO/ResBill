@@ -104,6 +104,8 @@ public class PersonEditController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved person: " + person);
 				}
+				sessionStatus.setComplete();
+				return "redirect:/persons";
 			} catch (PersonServiceException e) {
 				switch (e.getReason()) {
 				case NONUNIQUE_EMAIL:
@@ -114,18 +116,14 @@ public class PersonEditController {
 					bindingResult.reject("error.save.person");
 					break;
 				}
-				return "persons/personEdit";
 			} catch (Exception e) {
 				log.error("Cannot save person: " + person, e);
 				bindingResult.reject("error.save.person");
-				return "persons/personEdit";
 			}
 		} else {
 			bindingResult.reject("error.save.person.validation");
-			return "persons/personEdit";
 		}
-		sessionStatus.setComplete();
-		return "redirect:/persons";
+		return "persons/personEdit";
 	}
 
 	/**

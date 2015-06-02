@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import cz.vsb.resbill.criteria.PersonCriteria;
+import cz.vsb.resbill.criteria.PersonCriteria.OrderBy;
 import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.service.PersonService;
 import cz.vsb.resbill.util.WebUtils;
 
 /**
- * A controller for handling requests for/from persons/personList.html page
- * template.
+ * A controller for handling requests for/from persons/personList.html page template.
  * 
  * @author HAL191
  *
@@ -37,7 +37,9 @@ public class PersonListController {
 	private void loadPersons(ModelMap model) {
 		List<Person> persons = null;
 		try {
-			persons = personService.findPersons(new PersonCriteria(), null, null);
+			PersonCriteria criteria = new PersonCriteria();
+			criteria.setOrderBy(OrderBy.EMAIL);
+			persons = personService.findPersons(criteria, null, null);
 			model.addAttribute(PERSONS_MODEL_KEY, persons);
 		} catch (Exception e) {
 			log.error("Cannot load list of persons.", e);
@@ -51,8 +53,7 @@ public class PersonListController {
 	}
 
 	/**
-	 * Handles all GET requests. Loads a list of all persons and binds it with the
-	 * key "persons" into a model.
+	 * Handles all GET requests. Loads a list of all persons and binds it with the key "persons" into a model.
 	 * 
 	 * @param model
 	 * @return

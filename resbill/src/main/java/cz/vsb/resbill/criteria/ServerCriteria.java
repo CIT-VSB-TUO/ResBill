@@ -18,7 +18,7 @@ public class ServerCriteria implements Serializable {
 
 	private Boolean inContract;
 
-	private OrderBy orderBy = OrderBy.SERVER_ID;
+	private OrderBy orderBy;
 
 	public String getServerId() {
 		return serverId;

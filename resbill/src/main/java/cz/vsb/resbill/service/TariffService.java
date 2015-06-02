@@ -75,12 +75,13 @@ public interface TariffService {
 	 * 
 	 * @param dto
 	 *          instance to save
+	 * @return saved {@link Tariff} entity (with generated primary key)
 	 * @throws PriceListServiceException
 	 *           if specific saving error occurs
 	 * @throws ResBillException
 	 *           if unexpected error occurs
 	 */
-	void saveTariffPriceListDTO(TariffPriceListDTO dto) throws PriceListServiceException, ResBillException;
+	Tariff saveTariffPriceListDTO(TariffPriceListDTO dto) throws PriceListServiceException, ResBillException;
 
 	/**
 	 * Deletes {@link Tariff} entity with given primary key.

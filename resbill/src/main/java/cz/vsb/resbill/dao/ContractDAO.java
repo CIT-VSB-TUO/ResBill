@@ -7,6 +7,7 @@ package cz.vsb.resbill.dao;
 import java.util.Date;
 import java.util.List;
 
+import cz.vsb.resbill.criteria.ContractCriteria;
 import cz.vsb.resbill.model.Contract;
 
 /**
@@ -14,6 +15,28 @@ import cz.vsb.resbill.model.Contract;
  *
  */
 public interface ContractDAO {
+
+	/**
+	 * Finds a {@link Contract} with given primary key.
+	 * 
+	 * @param contractId
+	 *          primary key
+	 * @return found {@link Contract} entity
+	 */
+	Contract findContract(Integer contractId);
+
+	/**
+	 * Finds {@link Contract} entities by specified criteria
+	 * 
+	 * @param criteria
+	 *          filtering criteria
+	 * @param offset
+	 *          order number of first result to return
+	 * @param limit
+	 *          maximum number of results to return
+	 * @return list of {@link Contract} entities
+	 */
+	List<Contract> findContracts(ContractCriteria criteria, Integer offset, Integer limit);
 
 	/**
 	 * Najde vsechny kontrakty, jejichz servery maji alespon jedno nevyfakturovane DailyUsage nejpozdeji v pozadovanem dni.

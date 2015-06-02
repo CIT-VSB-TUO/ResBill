@@ -7,12 +7,14 @@ public class PriceListCriteria implements Serializable {
 	private static final long serialVersionUID = 6310350455943495145L;
 
 	public static enum OrderBy {
-		DATE, VALIDITY
+		PERIOD
 	}
 
 	private Integer tariffId;
 
 	private Boolean lastValid;
+
+	private OrderBy orderBy;
 
 	public Integer getTariffId() {
 		return tariffId;
@@ -28,6 +30,14 @@ public class PriceListCriteria implements Serializable {
 
 	public void setLastValid(Boolean lastValid) {
 		this.lastValid = lastValid;
+	}
+
+	public OrderBy getOrderBy() {
+		return orderBy;
+	}
+
+	public void setOrderBy(OrderBy orderBy) {
+		this.orderBy = orderBy;
 	}
 
 	@Override

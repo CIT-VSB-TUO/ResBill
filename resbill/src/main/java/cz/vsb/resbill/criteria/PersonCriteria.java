@@ -24,7 +24,7 @@ public class PersonCriteria implements Serializable {
 
 	private String secondName;
 
-	private OrderBy orderBy = OrderBy.EMAIL;
+	private OrderBy orderBy;
 
 	public String getEmail() {
 		return email;

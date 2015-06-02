@@ -9,6 +9,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import cz.vsb.resbill.criteria.TariffCriteria;
@@ -23,6 +25,8 @@ import cz.vsb.resbill.model.Tariff;
  */
 @Repository
 public class TariffDAOImpl implements TariffDAO {
+
+	private static final Logger log = LoggerFactory.getLogger(TariffDAOImpl.class);
 
 	@PersistenceContext
 	private EntityManager em;
@@ -58,6 +62,9 @@ public class TariffDAOImpl implements TariffDAO {
 					break;
 				case VALIDITY:
 					jpql.append(" ORDER BY t.valid");
+					break;
+				default:
+					log.warn("Unsupported order by option: " + criteria.getOrderBy());
 					break;
 				}
 			}

@@ -5,14 +5,20 @@
 package cz.vsb.resbill.dao.impl;
 
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import cz.vsb.resbill.criteria.ContractCriteria;
 import cz.vsb.resbill.dao.ContractDAO;
 import cz.vsb.resbill.model.Contract;
 
@@ -24,8 +30,62 @@ import cz.vsb.resbill.model.Contract;
 @Repository
 public class ContractDAOImpl implements ContractDAO {
 
+	private static final Logger log = LoggerFactory.getLogger(ContractDAOImpl.class);
+
 	@PersistenceContext
 	private EntityManager em;
+
+	@Override
+	public Contract findContract(Integer contractId) {
+		return em.find(Contract.class, contractId);
+	}
+
+	@Override
+	public List<Contract> findContracts(ContractCriteria criteria, Integer offset, Integer limit) {
+		StringBuilder jpql = new StringBuilder("SELECT c FROM Contract AS c");
+		// building query
+		if (criteria != null) {
+			// where
+			Set<String> where = new LinkedHashSet<String>();
+			if (criteria.getCustomerId() != null) {
+				where.add("c.customer.id = :customerId");
+			}
+			if (!where.isEmpty()) {
+				jpql.append(" WHERE ");
+				jpql.append(StringUtils.join(where, " AND "));
+			}
+
+			// order by
+			if (criteria.getOrderBy() != null) {
+				switch (criteria.getOrderBy()) {
+				case EVIDENCE_NUMBER:
+					jpql.append(" ORDER BY c.evidenceNumber");
+					break;
+				case NAME:
+					jpql.append(" ORDER BY c.name");
+					break;
+				default:
+					log.warn("Unsupported order by option: " + criteria.getOrderBy());
+					break;
+				}
+			}
+		}
+		TypedQuery<Contract> query = em.createQuery(jpql.toString(), Contract.class);
+		// parameters
+		if (criteria != null) {
+			if (criteria.getCustomerId() != null) {
+				query.setParameter("customerId", criteria.getCustomerId());
+			}
+		}
+
+		if (offset != null) {
+			query.setFirstResult(offset.intValue());
+		}
+		if (limit != null) {
+			query.setMaxResults(limit.intValue());
+		}
+		return query.getResultList();
+	}
 
 	/**
 	 * Najde vsechny kontrakty, jejichz servery maji alespon jedno nevyfakturovane DailyUsage nejpozdeji v pozadovanem dni.

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+
+<head>
+
+	<th:block th:remove="all">
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+	</th:block>
+
+	<title th:text="#{head.title.customers}">Zakaznici</title>
+	
+	<th:block th:remove="all">
+	<!-- remove all duplicated template css due to auto-merge -->
+	
+		<!-- ResBill Custom CSS -->
+		<link href="../../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
+	
+		<!-- Bootstrap Core CSS -->
+		<link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+	
+		<!-- Custom Fonts -->
+		<link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+	
+		<!-- SB Admin 2 CSS -->
+		<link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
+	
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+	        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	
+	</th:block>
+
+</head>
+
+<body>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header" th:text="#{page.header.customers}">Správa zakazniku</h1>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${customers}')}" th:errors="${customers}">Global error</div>
+		</div>
+		
+		<div class="row" th:if="${customers != null}">
+			<div class="col-lg-12">
+
+				<table class="table" id="customers">
+					<thead>
+						<tr>
+							<th th:text="#{column.customer.name}">Jméno</th>
+							<th th:text="#{column.customer.contact.person}">Kontaktní osoba</th>
+							<th th:text="#{column.customer.contact.email}">E-mail</th>
+							<th th:text="#{column.customer.contact.phone}">Telefon</th>
+							<th th:text="#{column.customer.contact.address}">Adresa</th>
+							<th>
+								<a class="btn btn-primary btn-circle" href="customerEdit.html" th:href="@{/customers/edit}" th:title="#{button.title.customer.add}">
+									<i class="fa fa-plus-square"></i>
+								</a>
+							</th>
+						</tr>
+					</thead>
+					<tbody th:remove="all-but-first">
+						<tr th:each="customer : ${customers}">
+							<td th:text="${customer.name}">Firma 1</td>
+							<td th:text="${customer.contactPerson.fullNameWithTitles}">Ing. Jan Novák</td>
+							<td th:text="${customer.contactPerson.email}">email@email.cz</td>
+							<td th:text="${customer.contactPerson.phone}">123 456 789</td>
+							<td th:text="${customer.contactPerson.address?.inlineFormat}">17. listopadu 15/2172, Ostrava-Poruba, 708 33</td>
+							<td>
+								<a class="btn btn-primary btn-circle" href="customerEdit.html" th:href="@{/customers/edit(customerId=${customer.id})}" th:title="#{button.title.customer.edit}">
+									<i class="fa fa-edit"></i>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>Firma 2</td>
+							<td>Ing. Jan Novák</td>
+							<td>email@email.cz</td>
+							<td>123 456 789</td>
+							<td>17. listopadu 15/2172, Ostrava-Poruba, 708 33</td>
+							<td>
+								<a class="btn btn-primary btn-circle" href="customerEdit.html">
+									<i class="fa fa-edit"></i>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>Firma 3</td>
+							<td>Ing. Jan Novák</td>
+							<td>email@email.cz</td>
+							<td>123 456 789</td>
+							<td>17. listopadu 15/2172, Ostrava-Poruba, 708 33</td>
+							<td>
+								<a class="btn btn-primary btn-circle" href="customerEdit.html">
+									<i class="fa fa-edit"></i>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+			<!-- /.col-lg-12 -->
+		</div>
+		<!-- /.row -->
+	</div>
+
+	<!-- jQuery -->
+	<script src="../../../bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+
+	<!-- Bootstrap Core JavaScript -->
+	<script src="../../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+
+	<!-- Custom Theme JavaScript -->
+	<script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+
+</body>
+
+</html>

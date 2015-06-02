@@ -19,7 +19,7 @@ public interface PersonDAO {
 	 *          primary key
 	 * @return found {@link Person} entity
 	 */
-	Person findPerson(Integer perosnId);
+	Person findPerson(Integer personId);
 
 	/**
 	 * Finds {@link Person} entities by specified criteria

@@ -9,6 +9,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import cz.vsb.resbill.criteria.PersonCriteria;
@@ -23,6 +25,8 @@ import cz.vsb.resbill.model.Person;
  */
 @Repository
 public class PersonDAOImpl implements PersonDAO {
+
+	private static final Logger log = LoggerFactory.getLogger(PersonDAOImpl.class);
 
 	@PersistenceContext
 	private EntityManager em;
@@ -61,6 +65,9 @@ public class PersonDAOImpl implements PersonDAO {
 					break;
 				case NAME:
 					jpql.append(" ORDER BY p.secondName, p.firstName, p.email");
+					break;
+				default:
+					log.warn("Unsupported order by option: " + criteria.getOrderBy());
 					break;
 				}
 			}

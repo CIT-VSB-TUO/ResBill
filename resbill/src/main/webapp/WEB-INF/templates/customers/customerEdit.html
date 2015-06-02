@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+
+<head>
+
+	<th:block th:remove="all">
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+	</th:block>
+
+	<title th:text="#{head.title.customers}">Zakaznici</title>
+	
+	<th:block th:remove="all">
+	<!-- remove all duplicated template css due to auto-merge -->
+	
+		<!-- ResBill Custom CSS -->
+		<link href="../../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
+	
+		<!-- Bootstrap Core CSS -->
+		<link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+	
+		<!-- Custom Fonts -->
+		<link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+	
+		<!-- SB Admin 2 CSS -->
+		<link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
+	
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+	        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	
+	</th:block>
+
+</head>
+<body>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header" th:text="#{page.header.customer.edit}">Úprava zakaznik</h1>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${customerEditDTO}')}" th:errors="${customerEditDTO}">Global error</div>
+		</div>
+		
+		<div class="row" th:if="${customerEditDTO == null}">
+			<div class="col-lg-12">
+				<p>
+					<a href="personList.html" class="btn btn-default" th:href="@{/customers}" >
+						<i class="fa fa-reply"></i>
+						<span th:text="#{button.back}">Back</span>
+					</a>
+				</p>				
+			</div>
+		</div>
+		
+		<div class="row" th:if="${customerEditDTO != null}">
+			<div class="col-lg-12">
+				<form role="form" method="post" action="#" th:object="${customerEditDTO}">
+					
+					<div class="row">
+					
+						<div class="col-lg-6">
+
+							<div class="form-group required" th:classappend="${#fields.hasErrors('customer.name')} ? 'has-error'">
+								<label class="control-label" th:text="#{label.customer.name}" th:for="customer.name">Název</label>
+								<input type="tel" class="form-control" th:field="*{customer.name}"/>
+								<p class="help-block" th:if="${#fields.hasErrors('customer.name')}" th:errors="*{customer.name}" />
+							</div>
+							
+							<div class="form-group required" th:classappend="${#fields.hasErrors('contactPersonId')} ? 'has-error'">
+								<label class="control-label" th:text="#{label.customer.contact}" for="contactPersonId">Kontakt</label>
+								<select class="form-control" th:field="*{contactPersonId}">
+									<option value="" th:text="#{option.choose}">Vyberte</option>
+			  						<option th:each="person : ${persons}" th:value="${person.id}" 
+			  							th:text="${person.email} + (${#strings.isEmpty(person.fullName)} ? '' : ' (' + ${person.fullName} + ')')">Osoba</option>
+								</select>
+								<p class="help-block" th:if="${#fields.hasErrors('contactPersonId')}" th:errors="*{contactPersonId}">Error</p>					
+							</div>
+				
+							<div class="form-group" th:classappend="${#fields.hasErrors('customer.note')} ? 'has-error'">
+								<label class="control-label" th:text="#{label.customer.note}" th:for="customer.note">Poznámka</label>
+								<textarea class="form-control" th:field="*{customer.note}"></textarea>
+								<p class="help-block" th:if="${#fields.hasErrors('customer.note')}" th:errors="*{customer.note}" />
+							</div>
+						
+							<div class="form-group" th:classappend="${#fields.hasErrors('customer.billingNote')} ? 'has-error'">
+								<label class="control-label" th:text="#{label.customer.billingNote}" th:for="customer.billingNote">Poznámka pro ucetnictvi</label>
+								<textarea class="form-control" th:field="*{customer.billingNote}"></textarea>
+								<p class="help-block" th:if="${#fields.hasErrors('customer.billingNote')}" th:errors="*{customer.billingNote}" />
+							</div>
+							
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-lg-12">
+							<p>
+								<button class="btn btn-primary" type="submit" name="save" >
+									<i class="fa fa-save"></i>
+									<span th:text="#{button.save}">Save</span>
+								</button>
+								<a href="personList.html" class="btn btn-default" th:href="@{/customers}" >
+									<i class="fa fa-reply"></i>
+									<span th:text="#{button.back}">Back</span>
+								</a>
+							</p>				
+						</div>
+					</div>
+					
+					<div class="row" th:if="*{customer.id != null}">
+						<div class="col-lg-12">
+							<p>
+								<button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete" >
+									<i class="fa fa-trash-o"></i>
+									<span th:text="#{button.delete}">Delete</span>
+								</button>
+							</p>
+						</div>
+					</div>
+					
+				</form>
+			
+			</div>
+			<!-- /.col-lg-12 -->
+		</div>
+		<!-- /.row -->
+	</div>
+
+	<!-- jQuery -->
+	<script src="../../../bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+
+	<!-- Bootstrap Core JavaScript -->
+	<script src="../../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+
+	<!-- Custom Theme JavaScript -->
+	<script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+
+</body>
+
+</html>

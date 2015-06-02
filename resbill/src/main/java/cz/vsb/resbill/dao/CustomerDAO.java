@@ -33,4 +33,22 @@ public interface CustomerDAO {
 	 * @return list of {@link Customer} entities
 	 */
 	List<Customer> findCustomers(CustomerCriteria criteria, Integer offset, Integer limit);
+
+	/**
+	 * Saves current state of given {@link Customer} entity.
+	 * 
+	 * @param customer
+	 *          entity to save
+	 * @return saved entity
+	 */
+	Customer saveCustomer(Customer customer);
+
+	/**
+	 * Deletes given {@link Customer} entity.
+	 * 
+	 * @param customer
+	 *          entity to delete
+	 * @return deleted entity
+	 */
+	Customer deleteCustomer(Customer customer);
 }
