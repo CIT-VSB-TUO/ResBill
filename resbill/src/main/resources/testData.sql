@@ -7,14 +7,20 @@ INSERT INTO "tariff" VALUES (1, 0, 'Tarif1', true);
 INSERT INTO "price_list" VALUES (1, 0, 0.20, 170.00, 20.00, '2014-01-01', NULL, 1.00, 1);
 
 INSERT INTO "person" VALUES (1, 0, 'Obec1', 'Cast obce 1', 'CZE', '12', '23', 'Ulice 1', '78945', 'jjjj@ds.cz', 'Jméno 1', NULL, '456789123', 'Příjmení 1', NULL, NULL);
+INSERT INTO "person" VALUES (2, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'petr.pokus@test.cz', 'Petr', NULL, '123456789', 'Pokus', 'CSc', 'Ing.');
+
 
 INSERT INTO "customer" VALUES (1, 0, NULL, 'Zákazník 1', NULL, 1);
+INSERT INTO "customer" VALUES (2, 0, NULL, 'Zákazník 2', NULL, 2);
 
 INSERT INTO "contract" VALUES (1, 0, 0.00, 0, 'Kontrakt1', NULL, '2015-04-01', NULL, 1);
+INSERT INTO "contract" VALUES (2, 0, 0.00, 1, 'Fakulta strojní', NULL, '2015-04-01', NULL, 2);
 
 INSERT INTO "contract_invoice_type" VALUES (1, 0, '2014-01-01', NULL, 1, 1);
+INSERT INTO "contract_invoice_type" VALUES (2, 0, '2014-01-01', NULL, 2, 1);
 
 INSERT INTO "contract_tariff" VALUES (1, 0, '2014-01-01', NULL, 1, 1);
+INSERT INTO "contract_tariff" VALUES (2, 0, '2014-01-01', NULL, 2, 1);
 
 INSERT INTO "transaction" VALUES ('inv', 1, 0, 0.00, '2015-05-12', 12345, NULL, 1, 'Faktura 1', null, false, '2015-01-02', '2015-02-02', 1, 1, NULL, 1);
 
@@ -314,6 +320,9 @@ INSERT INTO "server" VALUES (8113, 0, 'mse', 'vm-x072');
 INSERT INTO "server" VALUES (8116, 0, 'ultsm', 'vm-x073');
 
 INSERT INTO "contract_server" VALUES (1, 0, '2014-01-01', NULL, 1, 2);
+INSERT INTO "contract_server" VALUES (2, 0, '2014-01-01', NULL, 2, 14);
+INSERT INTO "contract_server" VALUES (3, 0, '2014-01-01', NULL, 2, 242);
+INSERT INTO "contract_server" VALUES (4, 0, '2014-01-01', NULL, 2, 240);
 
 INSERT INTO "daily_import" VALUES (1, 1, 279, '2014-02-01', 0, '2015-06-02 09:17:19.036', '2015-06-02 09:17:22.788', 0, '37911', '37912', 'report_2014-02-01', true, 279);
 INSERT INTO "daily_import" VALUES (560, 1, 279, '2014-02-02', 0, '2015-06-02 09:17:23.008', '2015-06-02 09:17:25.981', 0, '37914', '37915', 'report_2014-02-02', true, 279);

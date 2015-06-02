@@ -6,6 +6,8 @@ package cz.vsb.resbill.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -262,25 +264,7 @@ public class InvoiceServiceImpl implements InvoiceService {
       groupPricing.append(serverPricing.price.setScale(2, RoundingMode.HALF_UP));
       groupPricing.append(" Kč");
 
-      groupPricing.append("\n");
-      groupPricing.append("\tCPU: ");
-      groupPricing.append("\n");
-      groupPricing.append(buildGroupPricing(serverPricing.cpus, "\t\t"));
-
-      groupPricing.append("\n");
-      groupPricing.append("\tRAM: ");
-      groupPricing.append("\n");
-      groupPricing.append(buildGroupPricing(serverPricing.memories, "\t\t"));
-
-      groupPricing.append("\n");
-      groupPricing.append("\tStorage: ");
-      groupPricing.append("\n");
-      groupPricing.append(buildGroupPricing(serverPricing.spaces, "\t\t"));
-
-      groupPricing.append("\n");
-      groupPricing.append("\tBackup: ");
-      groupPricing.append("\n");
-      groupPricing.append(buildGroupPricing(serverPricing.backups, "\t\t"));
+      groupPricing.append(buildGroupPricing(serverPricing));
 
     }
     details.append("\n\n\n");
@@ -329,26 +313,66 @@ public class InvoiceServiceImpl implements InvoiceService {
 
   /**
    * 
+   * @param serverPricing
+   * @return
+   */
+  protected String buildGroupPricing(TmpServerUsagePricing serverPricing) {
+    StringBuilder groupPricing = new StringBuilder();
+
+    groupPricing.append("\n");
+    groupPricing.append("\tCPU: ");
+    groupPricing.append("\n");
+    groupPricing.append(buildGroupOneResourcePricing(serverPricing.cpus, "\t\t"));
+
+    groupPricing.append("\n");
+    groupPricing.append("\tRAM: ");
+    groupPricing.append("\n");
+    groupPricing.append(buildGroupOneResourcePricing(serverPricing.memories, "\t\t"));
+
+    groupPricing.append("\n");
+    groupPricing.append("\tStorage: ");
+    groupPricing.append("\n");
+    groupPricing.append(buildGroupOneResourcePricing(serverPricing.spaces, "\t\t"));
+
+    groupPricing.append("\n");
+    groupPricing.append("\tBackup: ");
+    groupPricing.append("\n");
+    groupPricing.append(buildGroupOneResourcePricing(serverPricing.backups, "\t\t"));
+
+    return groupPricing.toString();
+  }
+
+  /**
+   * 
    * @param cpus
    * @param linePrefix
    * @return
    */
-  protected String buildGroupPricing(List<TmpResourcePricing> resPricings, String linePrefix) {
+  protected String buildGroupOneResourcePricing(List<TmpResourcePricing> resPricings, String linePrefix) {
     StringBuilder pricing = new StringBuilder();
 
+    DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
     for (TmpResourcePricing resPricing : resPricings) {
+      long pieces = 1 + DateUtils.getFragmentInDays(resPricing.endDate, Calendar.MONTH) - DateUtils.getFragmentInDays(resPricing.beginDate, Calendar.MONTH);
+
       // Odradkovani
       if (pricing.length() > 0) {
         pricing.append("\n");
       }
 
       pricing.append(linePrefix);
-      pricing.append(resPricing.beginDate);
+      pricing.append(dateFormat.format(resPricing.beginDate));
       pricing.append("-");
-      pricing.append(resPricing.endDate);
+      pricing.append(dateFormat.format(resPricing.endDate));
       pricing.append(" - ");
+      pricing.append(pieces);
+      pricing.append(" x ");
       pricing.append(resPricing.amount);
-      pricing.append(" - ");
+      pricing.append(" á ");
+      pricing.append(resPricing.unitPrice);
+      pricing.append(" Kč/měsíc");
+      pricing.append(" = ");
       pricing.append(resPricing.price.setScale(2, RoundingMode.HALF_UP));
       pricing.append(" Kč");
     }
