@@ -402,14 +402,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
     
     // Doplnit odkaz na pouzite DailyUsage
-    System.out.println("POCET DAILY USAGE: " + dailyUsages.size());
     for (DailyUsage dailyUsage : dailyUsages) {
       InvoiceDailyUsage invoiceDailyUsage = new InvoiceDailyUsage();
       invoiceDailyUsage.setInvoice(invoice);
       invoiceDailyUsage.setDailyUsage(dailyUsage);
       invoice.getInvoiceDailyUsages().add(invoiceDailyUsage);
-      
-      System.out.println("POCET INVOICE DAILY USAGE: " + invoice.getInvoiceDailyUsages().size());
     }
 
     // Ulozit
