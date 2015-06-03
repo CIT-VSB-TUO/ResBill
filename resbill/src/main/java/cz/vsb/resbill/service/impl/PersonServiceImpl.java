@@ -61,7 +61,6 @@ public class PersonServiceImpl implements PersonService {
 			log.error("An unexpected error occured while searching for Person entities by criteria: " + criteria, e);
 			throw new ResBillException(e);
 		}
-
 	}
 
 	@Override

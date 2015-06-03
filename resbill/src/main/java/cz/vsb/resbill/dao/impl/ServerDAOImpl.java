@@ -51,7 +51,7 @@ public class ServerDAOImpl implements ServerDAO {
 	 * 
 	 */
 	@Override
-	public List<Server> findServers(ServerCriteria criteria) {
+	public List<Server> findServers(ServerCriteria criteria, Integer offset, Integer limit) {
 		StringBuilder jpql = new StringBuilder("SELECT s FROM Server AS s");
 		// building query
 		if (criteria != null) {
@@ -104,6 +104,13 @@ public class ServerDAOImpl implements ServerDAO {
 			if (StringUtils.isNotEmpty(criteria.getNamePrefix())) {
 				query.setParameter("namePrefix", criteria.getNamePrefix() + "%");
 			}
+		}
+
+		if (offset != null) {
+			query.setFirstResult(offset.intValue());
+		}
+		if (limit != null) {
+			query.setMaxResults(limit.intValue());
 		}
 		return query.getResultList();
 	}
