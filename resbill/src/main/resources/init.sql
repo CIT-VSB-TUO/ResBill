@@ -288,7 +288,7 @@
         primary key (id)
     );
 
-    create table TRANSACTION (
+    create table if not exists TRANSACTION (
         disc varchar(3) not null,
         id int4 not null,
         lock_version int4 not null,

@@ -24,7 +24,7 @@
 	</bean>
 	
 	<bean id="dailyImportService" class="cz.vsb.resbill.service.impl.DailyImportServiceImpl"/>
-  <bean id="transactionService" class="cz.vsb.resbill.service.impl.TransactionServiceImpl"/>
+	<bean id="transactionService" class="cz.vsb.resbill.service.impl.TransactionServiceImpl"/>
 	<bean id="invoiceService" class="cz.vsb.resbill.service.impl.InvoiceServiceImpl"/>
 	
 	<!-- Persistence layer -->
