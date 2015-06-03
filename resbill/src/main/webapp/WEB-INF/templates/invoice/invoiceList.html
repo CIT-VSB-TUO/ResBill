@@ -54,48 +54,64 @@
     <div class="row">
       <div class="col-lg-12 alert alert-danger" th:if="${showInvoicesCreateResults != null and #fields.hasErrors('${invoicesCreateResultsDTO}')}"
         th:errors="${invoicesCreateResultsDTO}">Global error</div>
-
-      <!-- 
-      <div class="col-lg-12 alert alert-danger"
-        th:if="${#vars.containsKey('invoicesCreateResultsDTO') and #fields.hasErrors('${invoicesCreateResultsDTO}')}"
-        th:errors="${invoicesCreateResultsDTO}">Global error</div>
-         -->
+    </div>
+    <div class="row">
+      <div class="col-lg-12 alert alert-danger" th:if="${showInvoicesExportResults != null and #fields.hasErrors('${invoicesExportResultsDTO}')}"
+        th:errors="${invoicesExportResultsDTO}">Global error</div>
     </div>
     <div class="row">
       <div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${invoices}')}" th:errors="${invoices}">Global error</div>
     </div>
 
-    <!-- Akcni prvky pro spusteni fakturace -->
+    <!-- Akcni prvky pro spusteni fakturace a exportu faktur -->
     <div class="row">
       <div class="col-lg-12">
-        <form class="form-inline" role="form" method="post" action="#">
-          <div class="row">
-            <div class="col-lg-12">
 
+        <div class="row">
+
+          <div class="col-lg-6">
+            <form class="form-inline" role="form" method="post" action="#">
               <div class="form-group">
                 <label class="control-label" th:text="#{label.invoice.createForMonth}" th:for="month">Vytvořit faktury za měsíc</label>
                 <div class="input-group date" data-provide="datepicker" data-date-min-view-mode="1" data-date-autoclose="true" data-date-format="mm/yyyy"
                   th:attr="data-date-language=${#locale.language}">
                   <input type="text" class="form-control" name="month" readonly="readonly" /> <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
+
               </div>
 
               <button class="btn btn-primary" type="submit" name="createInvoices">
                 <i class="fa fa-calculator"></i> <span th:text="#{button.title.invoice.createForMonth}">Spustit</span>
               </button>
-
-            </div>
+            </form>
           </div>
-        </form>
+
+          <div class="col-lg-6">
+            <form class="form-inline" role="form" method="post" action="#">
+              <div class="form-group">
+                <label class="control-label" th:text="#{label.invoice.exportForMonth}" th:for="expMonth">Exportovat faktury za měsíc</label>
+                <div class="input-group date" data-provide="datepicker" data-date-min-view-mode="1" data-date-autoclose="true" data-date-format="mm/yyyy"
+                  th:attr="data-date-language=${#locale.language}">
+                  <input type="text" class="form-control" name="expMonth" readonly="readonly" /> <span class="input-group-addon"><i
+                    class="fa fa-calendar"></i></span>
+                </div>
+              </div>
+
+              <button class="btn btn-primary" type="submit" name="exportInvoices">
+                <i class="fa fa-upload"></i> <span th:text="#{button.title.invoice.exportForMonth}">Spustit</span>
+              </button>
+            </form>
+          </div>
+
+        </div>
       </div>
     </div>
 
+    <!-- Vypis vysledku fakturace -->
     <div class="row voffset3" th:if="${showInvoicesCreateResults}">
       <div class="col-lg-12">
-
-
         <div class="panel panel-default">
-          <div class="panel-heading" th:text="#{panel.invoice.createResults}">Výsledek fakturace</div>
+          <div class="panel-heading" th:text="#{panel.invoice.createInvoices}">Výsledek fakturace</div>
 
           <div class="panel-body">
             <div class="row">
@@ -140,10 +156,56 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
 
+
+    <!-- Vypis vysledku exportu faktur -->
+    <div class="row voffset3" th:if="${showInvoicesExportResults}">
+      <div class="col-lg-12">
+        <div class="panel panel-default">
+          <div class="panel-heading" th:text="#{panel.invoice.exportInvoices}">Výsledek exportu faktur</div>
+
+          <div class="panel-body">
+            <div class="row">
+
+              <div class="col-lg-2">
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.exportBegin}">Začátek exportu</label>
+                  <p class="form-control-static" th:text="${#dates.format(invoicesExportResultsDTO.beginTimestamp,'__#{timestamp.format.detail}__')}">1.5.2015
+                    08:05:30.123</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.exportEnd}">Konec exportu</label>
+                  <p class="form-control-static" th:text="${#dates.format(invoicesExportResultsDTO.endTimestamp,'__#{timestamp.format.detail}__')}">1.5.2015
+                    08:05:30.123</p>
+                </div>
+              </div>
+
+              <div class="col-lg-5">
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.exportNumberAll}">Počet všech faktur k exportu</label>
+                  <p class="form-control-static" th:text="${invoicesExportResultsDTO.invoicesNumberAll}">20</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.exportNumberOk}">Počet úspěšně exportovaných faktur</label>
+                  <p class="form-control-static" th:text="${invoicesExportResultsDTO.invoicesNumberOk}">17</p>
+                </div>
+              </div>
+
+              <div class="col-lg-5">
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.exportNumberError}">Počet faktur s chybou při exportu</label>
+                  <p class="form-control-static" th:text="${invoicesExportResultsDTO.invoicesNumberError}">3</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Zobrazeni vypisu faktur -->
     <div class="row" th:if="${invoices != null}">
@@ -154,6 +216,7 @@
               <th th:text="#{column.invoice.customer}">Zákazník</th>
               <th th:text="#{column.invoice.contract}">Kontrakt</th>
               <th th:text="#{column.invoice.order}">Pořadí</th>
+              <th th:text="#{column.invoice.period}">Období</th>
               <th th:text="#{column.invoice.decisiveDate}">Rozhodné datum</th>
               <th th:text="#{column.invoice.evidenceNumber}">Evidenční číslo</th>
               <th th:text="#{column.invoice.amount}">Částka</th>
@@ -167,10 +230,11 @@
               <td th:text="${invoice.customerName}">Fakulta strojní</td>
               <td th:text="${invoice.contractName}">P.FS</td>
               <td th:text="${invoice.order}">1</td>
+              <td th:text="${#dates.format(invoice.period.beginDate,'__#{date.format.list}__')} + '-' + ${#dates.format(invoice.period.endDate,'__#{date.format.list}__')}">01.05.2015-31.05.2015</td>
               <td th:text="${#dates.format(invoice.decisiveDate,'__#{date.format.list}__')}">02.06.2015</td>
               <td th:text="${invoice.evidenceNumber}">2000000123</td>
               <td th:text="${#numbers.formatDecimal(invoice.amount,1,'DEFAULT',2,'DEFAULT')}">3 563,00</td>
-              <td><i th:if="${invoice.noPriceList}" class="fa fa-exclamation-circle text-danger" ></i></td>
+              <td><i th:if="${invoice.noPriceList}" class="fa fa-exclamation-circle text-danger"></i></td>
               <td><a class="btn btn-primary btn-circle" href="invoiceDetail.html" th:href="@{/invoice/detail(invoiceId=${invoice.transactionId})}"
                 th:title="#{button.title.invoice.detail}"> <i class="fa fa-edit"></i>
               </a></td>

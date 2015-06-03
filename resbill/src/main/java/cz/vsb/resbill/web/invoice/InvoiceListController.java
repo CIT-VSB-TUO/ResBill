@@ -28,7 +28,7 @@ import cz.vsb.resbill.criteria.InvoiceCreateCriteria;
 import cz.vsb.resbill.criteria.InvoiceCriteria;
 import cz.vsb.resbill.dto.InvoiceCreateResultDTO;
 import cz.vsb.resbill.dto.InvoiceDTO;
-import cz.vsb.resbill.model.Invoice;
+import cz.vsb.resbill.dto.InvoiceExportResultDTO;
 import cz.vsb.resbill.service.InvoiceService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -47,6 +47,10 @@ public class InvoiceListController {
   public static final String  MODEL_OBJECT_KEY_INVOICES_CREATE_RESULTS_DTO  = "invoicesCreateResultsDTO";
 
   public static final String  MODEL_OBJECT_KEY_INVOICES_CREATE_RESULTS_SHOW = "showInvoicesCreateResults";
+
+  public static final String  MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_DTO  = "invoicesExportResultsDTO";
+
+  public static final String  MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_SHOW = "showInvoicesExportResults";
 
   @Inject
   private InvoiceService      invoiceService;
@@ -134,6 +138,33 @@ public class InvoiceListController {
     } catch (Exception exc) {
       log.error("Cannot createInvoices.", exc);
       WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICES_CREATE_RESULTS_DTO, "error.save.invoice.create");
+    }
+
+    return view(model);
+  }
+
+  /**
+   * 
+   * @param model
+   * @return
+   */
+  @RequestMapping(value = "", method = RequestMethod.POST, params = "exportInvoices")
+  public String exportInvoices(@RequestParam(value = "expMonth", required = true) Date expMonth, ModelMap model) {
+    model.addAttribute(MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_DTO, null);
+    model.addAttribute(MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_SHOW, false);
+
+    try {
+      if (expMonth != null) {
+        InvoiceExportResultDTO resultDTO = invoiceService.exportInvoices(expMonth);
+        model.addAttribute(MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_DTO, resultDTO);
+
+        model.addAttribute(MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_SHOW, true);
+      } else {
+        WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_DTO, "error.save.invoice.export.noMonth");
+      }
+    } catch (Exception exc) {
+      log.error("Cannot exportInvoices.", exc);
+      WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_DTO, "error.save.invoice.export");
     }
 
     return view(model);

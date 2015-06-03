@@ -4,6 +4,8 @@
  */
 package cz.vsb.resbill.service.impl;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DateFormat;
@@ -13,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -22,6 +25,8 @@ import javax.persistence.PersistenceContext;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +42,7 @@ import cz.vsb.resbill.dao.TransactionDAO;
 import cz.vsb.resbill.dao.TransactionTypeDAO;
 import cz.vsb.resbill.dto.InvoiceCreateResultDTO;
 import cz.vsb.resbill.dto.InvoiceDTO;
+import cz.vsb.resbill.dto.InvoiceExportResultDTO;
 import cz.vsb.resbill.exception.DailyImportException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Contract;
@@ -54,6 +60,7 @@ import cz.vsb.resbill.model.TransactionType;
 import cz.vsb.resbill.service.InvoiceService;
 import cz.vsb.resbill.service.ResBillService;
 import cz.vsb.resbill.service.TransactionService;
+import cz.vsb.resbill.util.ResourceBundleUtils;
 
 /**
  * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
@@ -70,6 +77,9 @@ public class InvoiceServiceImpl implements InvoiceService {
    */
   @PersistenceContext
   private EntityManager       em;
+
+  @Inject
+  private ApplicationContext  appContext;
 
   @Inject
   private InvoiceDAO          invoiceDAO;
@@ -178,6 +188,74 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     } catch (Exception exc) {
       log.error("An unexpected error occured while deleting Invoice with id=" + invoiceId, exc);
+      throw new ResBillException(exc);
+    }
+  }
+
+  /**
+   * Exportuje vsechny faktury za zadany mesic
+   * 
+   * @param month
+   * @return
+   */
+  public InvoiceExportResultDTO exportInvoices(Date month) throws ResBillException {
+    log.info("Zacinam export faktur.");
+    try {
+      InvoiceExportResultDTO resultDTO = new InvoiceExportResultDTO();
+      resultDTO.setBeginTimestamp(new Date());
+
+      Date firstDay = DateUtils.truncate(month, Calendar.MONTH);
+      Date lastDay = DateUtils.addDays(DateUtils.addMonths(firstDay, 1), -1);
+
+      InvoiceCriteria criteria = new InvoiceCriteria();
+      criteria.setBeginEndDate(firstDay);
+      criteria.setEndEndDate(lastDay);
+
+      List<Invoice> invoices = findInvoices(criteria, null, null);
+
+      ResourceBundle rb = ResourceBundle.getBundle(ResourceBundleUtils.CONFIG_BUNDLE);
+      String dirName = rb.getString("dir.export.invoices");
+      log.info("Jmeno adresare: " + dirName);
+
+      // Ziskani adresare
+      Resource dirRes = appContext.getResource("file:///" + dirName);
+
+      // Vystupni dormat datumu
+      DateFormat fileNameDateFormat = new SimpleDateFormat("yyyy-MM");
+
+      // Vytvoreni jednotlivych souboru
+      for (Invoice invoice : invoices) {
+        StringBuilder fileName = new StringBuilder();
+        fileName.append("invoice");
+        fileName.append("_");
+        fileName.append(invoice.getContract().getEvidenceNumber());
+        fileName.append("_");
+        fileName.append(fileNameDateFormat.format(lastDay));
+        fileName.append(".txt");
+
+        try (PrintWriter out = new PrintWriter(new java.io.File(dirRes.getFile(), fileName.toString()), "UTF-8")) {
+          out.print(invoice.getSummary());
+          resultDTO.setInvoicesNumberOk(resultDTO.getInvoicesNumberOk() + 1);
+        } catch (IOException exc) {
+          log.error("An unexpected error occured while exporting invoice with ID: " + invoice.getId(), exc);
+          resultDTO.setInvoicesNumberError(resultDTO.getInvoicesNumberError() + 1);
+        }
+      }
+
+      // java.io.File file = new java.io.File(dirRes.getFile(), "Pokus.txt");
+      // PrintWriter out = new PrintWriter(file);
+      // out.println("pokus");
+      // out.close();
+
+      // File dir = dirRes.getFile();
+
+      resultDTO.setEndTimestamp(new Date());
+
+      log.info("Zacinam export dokoncen: " + resultDTO);
+
+      return resultDTO;
+    } catch (Exception exc) {
+      log.error("An unexpected error occured while exportInvoices.", exc);
       throw new ResBillException(exc);
     }
   }
@@ -400,7 +478,7 @@ public class InvoiceServiceImpl implements InvoiceService {
       invoicePriceList.setPriceList(priceList);
       invoice.getInvoicePriceLists().add(invoicePriceList);
     }
-    
+
     // Doplnit odkaz na pouzite DailyUsage
     for (DailyUsage dailyUsage : dailyUsages) {
       InvoiceDailyUsage invoiceDailyUsage = new InvoiceDailyUsage();
