@@ -12,11 +12,29 @@ import cz.vsb.resbill.model.Server;
  */
 public interface ServerDAO {
 
+	/**
+	 * Finds a {@link Server} with given primary key.
+	 * 
+	 * @param id
+	 *          primary key
+	 * @return found {@link Server} entity
+	 */
 	Server findServer(Integer id);
 
 	Server findServer(String serverServerId);
 
-	List<Server> findServers(ServerCriteria criteria);
+	/**
+	 * Finds {@link Server} entities by specified criteria
+	 * 
+	 * @param criteria
+	 *          filtering criteria
+	 * @param offset
+	 *          order number of first result to return
+	 * @param limit
+	 *          maximum number of results to return
+	 * @return list of {@link Server} entities
+	 */
+	List<Server> findServers(ServerCriteria criteria, Integer offset, Integer limit);
 
 	Server saveServer(Server server);
 }
