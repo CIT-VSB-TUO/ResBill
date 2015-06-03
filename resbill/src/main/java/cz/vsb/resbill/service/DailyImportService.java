@@ -19,147 +19,149 @@ import cz.vsb.resbill.model.DailyImport;
  */
 public interface DailyImportService {
 
-	public static final String REPORT_FILE_NAME_PREFIX = "report_";
+  public static final String REPORT_FILE_NAME_PREFIX      = "report_";
 
-	public static final String REPORT_FILE_NAME_DATE_PATERN = "yyyy-MM-dd";
+  public static final String REPORT_FILE_NAME_SUFIX       = ".csv";
 
-	DailyImport findDailyImport(Integer dailyImportId) throws ResBillException;
+  public static final String REPORT_FILE_NAME_DATE_PATERN = "yyyyMMdd";
 
-	DailyImport findDailyImport(Integer dailyImportId, boolean initializeReport, boolean initializeProtocol) throws ResBillException;
+  DailyImport findDailyImport(Integer dailyImportId) throws ResBillException;
 
-	List<DailyImport> findDailyImports(DailyImportCriteria criteria, Integer offset, Integer limit) throws ResBillException;
+  DailyImport findDailyImport(Integer dailyImportId, boolean initializeReport, boolean initializeProtocol) throws ResBillException;
 
-	DailyImport deleteDailyImport(Integer dailyImportId) throws DailyImportException, ResBillException;
+  List<DailyImport> findDailyImports(DailyImportCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
-	DailyImportAllReportsResultDTO importAllReports() throws ResBillException;
+  DailyImport deleteDailyImport(Integer dailyImportId) throws DailyImportException, ResBillException;
 
-	DailyImport importDailyReport(File file) throws DailyImportException;
+  DailyImportAllReportsResultDTO importAllReports() throws ResBillException;
 
-	DailyImport beginDailyImport(DailyImport dailyImport);
+  DailyImport importDailyReport(File file) throws DailyImportException;
 
-	void endDailyImport(DailyImport dailyImport, List<LineImportData> lineImportDatas);
+  DailyImport beginDailyImport(DailyImport dailyImport);
 
-	void importLine(DailyImport dailyImport, LineImportData lineImportData);
+  void endDailyImport(DailyImport dailyImport, List<LineImportData> lineImportDatas);
 
-	/**
-	 * 
-	 * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
-	 *
-	 */
-	public static class LineImportData {
+  void importLine(DailyImport dailyImport, LineImportData lineImportData);
 
-		/**
-		 * Cislo radku zpracovavaneho souboru
-		 */
-		public int lineNumber;
+  /**
+   * 
+   * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
+   *
+   */
+  public static class LineImportData {
 
-		/**
-		 * Textovy obsah celeho radku
-		 */
-		public String line;
+    /**
+     * Cislo radku zpracovavaneho souboru
+     */
+    public int                  lineNumber;
 
-		/**
-		 * ID serveru, tak jak bylo precteno z radku
-		 */
-		public String serverId;
+    /**
+     * Textovy obsah celeho radku
+     */
+    public String               line;
 
-		/**
-		 * Priznak vysledku zpracovani
-		 */
-		public LineImportResultCode resultCode;
+    /**
+     * ID serveru, tak jak bylo precteno z radku
+     */
+    public String               serverId;
 
-		/**
-		 * Pokud dojde k vyjimce, zde je zaznamenana
-		 */
-		public Exception exception;
-	}
+    /**
+     * Priznak vysledku zpracovani
+     */
+    public LineImportResultCode resultCode;
 
-	/**
-	 * 
-	 * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
-	 *
-	 */
-	public enum LineImportResultCode {
-		/**
-		 * Vse je v poradku (bez vyhrad)
-		 */
-		OK(LineImportResultCodeGroup.OK),
+    /**
+     * Pokud dojde k vyjimce, zde je zaznamenana
+     */
+    public Exception            exception;
+  }
 
-		/**
-		 * Nacteno v poradku, pribyl novy server
-		 */
-		OK_NEW_SERVER(LineImportResultCodeGroup.WARN),
+  /**
+   * 
+   * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
+   *
+   */
+  public enum LineImportResultCode {
+    /**
+     * Vse je v poradku (bez vyhrad)
+     */
+    OK(LineImportResultCodeGroup.OK),
 
-		/**
-		 * Nasteno v poradku, ale existujici server neni prirazen zadnemu kontraktu
-		 */
-		OK_NO_CONTRACT(LineImportResultCodeGroup.WARN),
+    /**
+     * Nacteno v poradku, pribyl novy server
+     */
+    OK_NEW_SERVER(LineImportResultCodeGroup.WARN),
 
-		/**
-		 * Chyba - nepodarilo se rozparsovat udaje na radku
-		 */
-		ERROR_LINE_FORMAT(LineImportResultCodeGroup.ERROR),
+    /**
+     * Nasteno v poradku, ale existujici server neni prirazen zadnemu kontraktu
+     */
+    OK_NO_CONTRACT(LineImportResultCodeGroup.WARN),
 
-		/**
-		 * Chyba - importovany radek v DB jiz existuje (tj. existuje kombinace Server(serverID) a datumu)
-		 */
-		ERROR_LINE_EXISTS(LineImportResultCodeGroup.ERROR),
+    /**
+     * Chyba - nepodarilo se rozparsovat udaje na radku
+     */
+    ERROR_LINE_FORMAT(LineImportResultCodeGroup.ERROR),
 
-		/**
-		 * Uvedeny kod urovne produkce nebyla nalezena v ciselniku
-		 */
-		ERROR_PRODUCTION_LEVEL_NOT_EXISTS(LineImportResultCodeGroup.ERROR),
+    /**
+     * Chyba - importovany radek v DB jiz existuje (tj. existuje kombinace Server(serverID) a datumu)
+     */
+    ERROR_LINE_EXISTS(LineImportResultCodeGroup.ERROR),
 
-		/**
-		 * Chyba - nepodarilo se ulozit nacteny radek
-		 */
-		ERROR_SAVE(LineImportResultCodeGroup.ERROR),
+    /**
+     * Uvedeny kod urovne produkce nebyla nalezena v ciselniku
+     */
+    ERROR_PRODUCTION_LEVEL_NOT_EXISTS(LineImportResultCodeGroup.ERROR),
 
-		/**
-		 * Neznama chyba
-		 */
-		ERROR_OTHER(LineImportResultCodeGroup.ERROR),
+    /**
+     * Chyba - nepodarilo se ulozit nacteny radek
+     */
+    ERROR_SAVE(LineImportResultCodeGroup.ERROR),
 
-		;
+    /**
+     * Neznama chyba
+     */
+    ERROR_OTHER(LineImportResultCodeGroup.ERROR),
 
-		private LineImportResultCodeGroup codeGroup;
+    ;
 
-		/**
-		 * 
-		 * @param codeGroup
-		 */
-		private LineImportResultCode(LineImportResultCodeGroup codeGroup) {
-			this.codeGroup = codeGroup;
-		}
+    private LineImportResultCodeGroup codeGroup;
 
-		/**
-		 * @return the codeGroup
-		 */
-		public LineImportResultCodeGroup getCodeGroup() {
-			return codeGroup;
-		}
+    /**
+     * 
+     * @param codeGroup
+     */
+    private LineImportResultCode(LineImportResultCodeGroup codeGroup) {
+      this.codeGroup = codeGroup;
+    }
 
-	}
+    /**
+     * @return the codeGroup
+     */
+    public LineImportResultCodeGroup getCodeGroup() {
+      return codeGroup;
+    }
 
-	/**
-	 * 
-	 * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
-	 *
-	 */
-	public enum LineImportResultCodeGroup {
-		/**
-		 * Vse v poradku bez vyhrad
-		 */
-		OK,
+  }
 
-		/**
-		 * Vysledek v poradku, ale administrator by se na to mel podivat
-		 */
-		WARN,
+  /**
+   * 
+   * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
+   *
+   */
+  public enum LineImportResultCodeGroup {
+    /**
+     * Vse v poradku bez vyhrad
+     */
+    OK,
 
-		/**
-		 * Chyba
-		 */
-		ERROR,
-	}
+    /**
+     * Vysledek v poradku, ale administrator by se na to mel podivat
+     */
+    WARN,
+
+    /**
+     * Chyba
+     */
+    ERROR,
+  }
 }

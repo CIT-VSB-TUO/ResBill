@@ -242,13 +242,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
       }
 
-      // java.io.File file = new java.io.File(dirRes.getFile(), "Pokus.txt");
-      // PrintWriter out = new PrintWriter(file);
-      // out.println("pokus");
-      // out.close();
-
-      // File dir = dirRes.getFile();
-
       resultDTO.setEndTimestamp(new Date());
 
       log.info("Zacinam export dokoncen: " + resultDTO);
