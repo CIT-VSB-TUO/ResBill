@@ -13,25 +13,35 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public abstract class BaseDomainEntity implements IdentifiableEntity, Serializable {
 
-	private static final long serialVersionUID = 9045791835477269437L;
+  private static final long serialVersionUID = 9045791835477269437L;
 
-	/**
-	 * Default implementation using primary identifier. Should be overridden in subclasses.
-	 */
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder(13, 17).append(this.getId()).toHashCode();
-	}
+  /**
+   * Default implementation using primary identifier. Should be overridden in subclasses.
+   */
+  @Override
+  public int hashCode() {
+    if (this.getId() == null) {
+      return super.hashCode();
+    } else {
+      return new HashCodeBuilder(13, 17).append(this.getId()).toHashCode();
+    }
+  }
 
-	/**
-	 * Default implementation using primary identifier. Should be overridden in subclasses.
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!(obj instanceof BaseDomainEntity)) return false;
-		BaseDomainEntity other = (BaseDomainEntity) obj;
-		return new EqualsBuilder().append(this.getId(), other.getId()).isEquals();
-	}
+  /**
+   * Default implementation using primary identifier. Should be overridden in subclasses.
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
 
+    if (this.getId() == null) {
+      return super.equals(obj);
+    } else {
+      if (!(obj instanceof BaseDomainEntity))
+        return false;
+      BaseDomainEntity other = (BaseDomainEntity) obj;
+      return new EqualsBuilder().append(this.getId(), other.getId()).isEquals();
+    }
+  }
 }
