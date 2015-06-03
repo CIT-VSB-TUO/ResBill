@@ -28,10 +28,10 @@ public class PriceList extends BaseVersionedEntity implements PeriodLimitedEntit
 	@Digits(integer = 8, fraction = 2)
 	private BigDecimal cpuPrice;
 
-	@Column(name = "memory_mb_price")
+	@Column(name = "memory_gb_price")
 	@NotNull
 	@Digits(integer = 8, fraction = 2)
-	private BigDecimal memoryMBPrice;
+	private BigDecimal memoryGBPrice;
 
 	@Column(name = "space_gb_price")
 	@NotNull
@@ -64,12 +64,12 @@ public class PriceList extends BaseVersionedEntity implements PeriodLimitedEntit
 		this.cpuPrice = cpuPrice;
 	}
 
-	public BigDecimal getMemoryMBPrice() {
-		return memoryMBPrice;
+	public BigDecimal getMemoryGBPrice() {
+		return memoryGBPrice;
 	}
 
-	public void setMemoryMBPrice(BigDecimal memoryMBPrice) {
-		this.memoryMBPrice = memoryMBPrice;
+	public void setMemoryGBPrice(BigDecimal memoryGBPrice) {
+		this.memoryGBPrice = memoryGBPrice;
 	}
 
 	public BigDecimal getSpaceGBPrice() {
@@ -121,8 +121,8 @@ public class PriceList extends BaseVersionedEntity implements PeriodLimitedEntit
 		builder.append(super.toString());
 		builder.append(", cpuPrice=");
 		builder.append(cpuPrice);
-		builder.append(", memoryMBPrice=");
-		builder.append(memoryMBPrice);
+		builder.append(", memoryGBPrice=");
+		builder.append(memoryGBPrice);
 		builder.append(", spaceGBPrice=");
 		builder.append(spaceGBPrice);
 		builder.append(", backupGBPrice=");

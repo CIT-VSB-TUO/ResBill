@@ -113,10 +113,10 @@
 										<p class="help-block" th:if="${#fields.hasErrors('lastPriceList.cpuPrice')}" th:errors="*{lastPriceList.cpuPrice}" />
 									</div>
 								
-									<div class="form-group required" th:classappend="${#fields.hasErrors('lastPriceList.memoryMBPrice')} ? 'has-error'">
-										<label class="control-label" th:text="#{label.priceList.price.memory}" th:for="lastPriceList.memoryMBPrice">Pamet</label>
-										<input type="text" class="form-control" th:field="*{lastPriceList.memoryMBPrice}" th:readonly="*{not priceListEditable}"/>
-										<p class="help-block" th:if="${#fields.hasErrors('lastPriceList.memoryMBPrice')}" th:errors="*{lastPriceList.memoryMBPrice}" />
+									<div class="form-group required" th:classappend="${#fields.hasErrors('lastPriceList.memoryGBPrice')} ? 'has-error'">
+										<label class="control-label" th:text="#{label.priceList.price.memory}" th:for="lastPriceList.memoryGBPrice">Pamet</label>
+										<input type="text" class="form-control" th:field="*{lastPriceList.memoryGBPrice}" th:readonly="*{not priceListEditable}"/>
+										<p class="help-block" th:if="${#fields.hasErrors('lastPriceList.memoryGBPrice')}" th:errors="*{lastPriceList.memoryGBPrice}" />
 									</div>
 								
 									<div class="form-group required" th:classappend="${#fields.hasErrors('lastPriceList.spaceGBPrice')} ? 'has-error'">
@@ -197,7 +197,7 @@
 								<td th:text="${#dates.format(priceList.period.beginDate, '__#{date.format.list}__')}">1.1.0001</td>
 								<td th:text="${#dates.format(priceList.period.endDate, '__#{date.format.list}__')}">31.12.9999</td>
 								<td th:text="${#numbers.formatDecimal(priceList.cpuPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
-								<td th:text="${#numbers.formatDecimal(priceList.memoryMBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
+								<td th:text="${#numbers.formatDecimal(priceList.memoryGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
 								<td th:text="${#numbers.formatDecimal(priceList.spaceGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
 								<td th:text="${#numbers.formatDecimal(priceList.backupGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
 							</tr>

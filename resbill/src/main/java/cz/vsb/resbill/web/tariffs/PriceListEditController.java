@@ -69,9 +69,9 @@ public class PriceListEditController {
 				priceList = new PriceList();
 				priceList.setPeriod(new Period());
 				priceList.getPeriod().setBeginDate(DateUtils.truncate(new Date(), Calendar.DATE));
-			}
-			if (tariffId != null) {
-				priceList.setTariff(tariffService.findTariff(tariffId));
+				if (tariffId != null) {
+					priceList.setTariff(tariffService.findTariff(tariffId));
+				}
 			}
 			model.addAttribute(PRICE_LIST_MODEL_KEY, priceList);
 		} catch (Exception e) {
@@ -94,7 +94,7 @@ public class PriceListEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "priceListId", required = false) Integer priceListId, @RequestParam(value = "tariffId", required = true) Integer tariffId, ModelMap model) {
+	public String view(@RequestParam(value = "priceListId", required = false) Integer priceListId, @RequestParam(value = "tariffId", required = false) Integer tariffId, ModelMap model) {
 		loadPriceList(priceListId, tariffId, model);
 
 		return "tariffs/priceListEdit";

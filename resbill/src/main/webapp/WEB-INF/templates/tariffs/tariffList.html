@@ -84,7 +84,7 @@
 							</td>
 							<td th:text="${#dates.format(dto.lastPriceList.period.beginDate, '__#{date.format.list}__')}">1.1.0001</td>
 							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.cpuPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
-							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.memoryMBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
+							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.memoryGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
 							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.spaceGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
 							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.backupGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
 							<td>

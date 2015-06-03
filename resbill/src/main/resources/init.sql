@@ -257,7 +257,7 @@
         lock_version int4 not null,
         backup_gb_price numeric(10, 2) not null,
         cpu_price numeric(10, 2) not null,
-        memory_mb_price numeric(10, 2) not null,
+        memory_gb_price numeric(10, 2) not null,
         begin_date date not null,
         end_date date,
         space_gb_price numeric(10, 2) not null,

@@ -45,7 +45,7 @@ public class TariffEditController {
 
 	private static final Logger log = LoggerFactory.getLogger(TariffEditController.class);
 
-	private static final String DTO_MODEL_KEY = "tariffPriceListDTO";
+	private static final String TARIFF_PRICE_LIST_DTO_MODEL_KEY = "tariffPriceListDTO";
 
 	@Inject
 	private TariffService tariffService;
@@ -73,12 +73,12 @@ public class TariffEditController {
 				dto.getLastPriceList().setPeriod(new Period());
 				dto.getLastPriceList().getPeriod().setBeginDate(DateUtils.truncate(new Date(), Calendar.DATE));
 			}
-			model.addAttribute(DTO_MODEL_KEY, dto);
+			model.addAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY, dto);
 		} catch (Exception e) {
 			log.error("Cannot load tariffPriceListDTO by id: " + tariffId, e);
 
-			model.addAttribute(DTO_MODEL_KEY, dto);
-			WebUtils.addGlobalError(model, DTO_MODEL_KEY, "error.load.tariff");
+			model.addAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY, dto);
+			WebUtils.addGlobalError(model, TARIFF_PRICE_LIST_DTO_MODEL_KEY, "error.load.tariff");
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Loaded tariffPriceListDTO: " + dto);
@@ -109,7 +109,7 @@ public class TariffEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
-	public String save(@Valid @ModelAttribute(DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus) {
+	public String save(@Valid @ModelAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus) {
 		if (log.isDebugEnabled()) {
 			log.debug("Tariff to save: " + dto.getTariff());
 			log.debug("PriceList to save: " + dto.getLastPriceList());
@@ -156,7 +156,7 @@ public class TariffEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-	public String delete(@ModelAttribute(DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus) {
+	public String delete(@ModelAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus) {
 		if (log.isDebugEnabled()) {
 			log.debug("TariffPriceListDTO to delete: " + dto);
 		}
