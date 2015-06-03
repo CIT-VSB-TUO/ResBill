@@ -47,6 +47,9 @@ public interface ContractDAO {
 	 * 
 	 * Vraceny budou pouze ty kontrakty, ktere maji typ fakturace (v pozadovanem dni) odpovidajici predanemu parametru invoiceTypeIds.
 	 * 
+	 * Ke kazdemu kontraktu pripoji Typ uctovani, ktery ma byt pouzit.
 	 */
-	List<Contract> findUninvoicedContracts(Date lastDay, List<Integer> invoiceTypeIds);
+	List<Object[]> findUninvoicedContracts(Date lastDay, List<Integer> invoiceTypeIds);
+
+	Contract saveContract(Contract contract);
 }

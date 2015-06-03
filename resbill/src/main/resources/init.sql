@@ -288,7 +288,7 @@
         primary key (id)
     );
 
-    create table if not exists TRANSACTION (
+    create table TRANSACTION (
         disc varchar(3) not null,
         id int4 not null,
         lock_version int4 not null,
@@ -298,10 +298,11 @@
         note varchar(1000),
         tx_order int4 not null,
         title varchar(250),
-        details text,
+        detail text,
         no_price_list boolean,
         begin_date date,
         end_date date,
+        summary text,
         contract_id int4 not null,
         transaction_type_id int4 not null,
         attachment_id int4,

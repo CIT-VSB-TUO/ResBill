@@ -24,72 +24,80 @@ import cz.vsb.resbill.model.Invoice;
 @Repository
 public class InvoiceDAOImpl implements InvoiceDAO {
 
-	@PersistenceContext
-	private EntityManager em;
+  @PersistenceContext
+  private EntityManager em;
 
-	/**
+  /**
 	 * 
 	 */
-	@Override
-	public Invoice findInvoice(Integer id) {
-		return em.find(Invoice.class, id);
-	}
+  @Override
+  public Invoice findInvoice(Integer id) {
+    return em.find(Invoice.class, id);
+  }
 
-	/**
+  /**
 	 * 
 	 */
-	@Override
-	public List<Invoice> findInvoices(InvoiceCriteria criteria, Integer offset, Integer limit) {
-		StringBuilder jpql = new StringBuilder();
-		jpql.append(" SELECT invoice ");
-		jpql.append(" FROM Invoice AS invoice ");
-		if (criteria.getOrderBy() != null) {
-			jpql.append(" ORDER BY ");
-			if (criteria.getOrderBy() == InvoiceCriteria.OrderBy.DECISIVE_DATE) {
-				jpql.append(" invoice.decisiveDate ");
-			}
-			if (criteria.isOrderDesc()) {
-				jpql.append(" DESC ");
-			}
-		}
+  @Override
+  public List<Invoice> findInvoices(InvoiceCriteria criteria, Integer offset, Integer limit) {
+    StringBuilder jpql = new StringBuilder();
+    jpql.append(" SELECT invoice ");
+    jpql.append(" FROM Invoice AS invoice ");
+    if (criteria.needsContract()) {
+      jpql.append(" JOIN invoice.contract AS contract ");
+    }
+    if (criteria.needsCustomer()) {
+      jpql.append(" JOIN contract.customer AS customer ");
+    }
 
-		TypedQuery<Invoice> query = em.createQuery(jpql.toString(), Invoice.class);
-		if (offset != null) {
-			query.setFirstResult(offset);
-		}
-		if (limit != null) {
-			query.setMaxResults(limit);
-		}
+    if (criteria.getOrderBy() != null && !criteria.getOrderBy().isEmpty()) {
+      jpql.append(" ORDER BY ");
 
-		return query.getResultList();
-	}
+      StringBuilder order = new StringBuilder();
+      for (InvoiceCriteria.OrderBy orderBy : criteria.getOrderBy()) {
+        if (order.length() > 0) {
+          order.append(", ");
+        }
 
-	/**
-   * 
-   */
-	@Override
-	public Invoice saveInvoice(Invoice invoice) {
-		if (invoice.getId() == null) {
-			em.persist(invoice);
-		} else {
-			invoice = em.merge(invoice);
-		}
+        switch (orderBy) {
+        case ORDER_ASC:
+          order.append(" invoice.order ASC ");
+          break;
+        case ORDER_DESC:
+          order.append(" invoice.order DESC ");
+          break;
+        case DECISIVE_DATE_ASC:
+          order.append(" invoice.decisiveDate ASC ");
+          break;
+        case DECISIVE_DATE_DESC:
+          order.append(" invoice.decisiveDate DESC ");
+          break;
+        case CONTRACT_NAME_ASC:
+          order.append(" contract.name ASC ");
+          break;
+        case CONTRACT_NAME_DESC:
+          order.append(" contract.name DESC ");
+          break;
+        case CUSTOMER_NAME_ASC:
+          order.append(" customer.name ASC ");
+          break;
+        case CUSTOMER_NAME_DESC:
+          order.append(" customer.name DESC ");
+          break;
+        }
+      }
+      jpql.append(order);
+    }
 
-		em.flush();
+    TypedQuery<Invoice> query = em.createQuery(jpql.toString(), Invoice.class);
+    if (offset != null) {
+      query.setFirstResult(offset);
+    }
+    if (limit != null) {
+      query.setMaxResults(limit);
+    }
 
-		return invoice;
-	}
-
-	/**
-   * 
-   */
-	@Override
-	public Invoice deleteInvoice(Invoice invoice) {
-		em.remove(invoice);
-		
-		em.flush();
-		
-		return invoice;
-	}
+    return query.getResultList();
+  }
 
 }

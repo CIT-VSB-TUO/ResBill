@@ -52,10 +52,15 @@ public class Invoice extends Transaction implements PeriodLimitedEntity {
   @NotNull
   private Boolean                noPriceList        = Boolean.FALSE;
 
-  @Column(name = "details")
+  @Column(name = "summary")
   @Lob
   @Basic(fetch = FetchType.LAZY)
-  private String                 details;
+  private String                 summary;
+
+  @Column(name = "detail")
+  @Lob
+  @Basic(fetch = FetchType.LAZY)
+  private String                 detail;
 
   @Override
   public Period getPeriod() {
@@ -115,18 +120,33 @@ public class Invoice extends Transaction implements PeriodLimitedEntity {
   }
 
   /**
-   * @return the details
+   * @return the summary
    */
-  public String getDetails() {
-    return details;
+  public String getSummary() {
+    return summary;
   }
 
   /**
-   * @param details
-   *          the details to set
+   * @param summary
+   *          the summary to set
    */
-  public void setDetails(String details) {
-    this.details = details;
+  public void setSummary(String summary) {
+    this.summary = summary;
+  }
+
+  /**
+   * @return the detail
+   */
+  public String getDetail() {
+    return detail;
+  }
+
+  /**
+   * @param detail
+   *          the detail to set
+   */
+  public void setDetail(String detail) {
+    this.detail = detail;
   }
 
   @Override

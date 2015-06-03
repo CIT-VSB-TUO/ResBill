@@ -88,6 +88,22 @@ public class ContractDAOImpl implements ContractDAO {
 	}
 
 	/**
+   * 
+   */
+	@Override
+	public Contract saveContract(Contract contract) {
+		if (contract.getId() == null) {
+			em.persist(contract);
+		} else {
+			contract = em.merge(contract);
+		}
+
+		em.flush();
+
+		return contract;
+	}
+
+	/**
 	 * Najde vsechny kontrakty, jejichz servery maji alespon jedno nevyfakturovane DailyUsage nejpozdeji v pozadovanem dni.
 	 * 
 	 * Server musi byt kontraktu prirazen take nejpozdeji v pozadovanem dni.
@@ -95,11 +111,13 @@ public class ContractDAOImpl implements ContractDAO {
 	 * Pro kontrakt nesmi existovat faktura se stejnym pozadovanym dnem.
 	 * 
 	 * Vraceny budou pouze ty kontrakty, ktere maji typ fakturace (v pozadovanem dni) odpovidajici predanemu parametru invoiceTypeIds.
+	 * 
+	 * Ke kazdemu kontraktu pripoji Typ uctovani, ktery ma byt pouzit.
 	 */
 	@Override
-	public List<Contract> findUninvoicedContracts(Date lastDay, List<Integer> invoiceTypeIds) {
+	public List<Object[]> findUninvoicedContracts(Date lastDay, List<Integer> invoiceTypeIds) {
 		StringBuilder jpql = new StringBuilder();
-		jpql.append(" SELECT DISTINCT contract ");
+		jpql.append(" SELECT DISTINCT contract, invoiceType ");
 		jpql.append(" FROM Contract AS contract ");
 		jpql.append(" JOIN contract.contractInvoiceTypes AS contractInvoiceType ");
 		jpql.append(" JOIN contractInvoiceType.invoiceType AS invoiceType ");
@@ -125,7 +143,7 @@ public class ContractDAOImpl implements ContractDAO {
 		jpql.append("   FROM InvoiceDailyUsage AS invoiceDailyUsage ");
 		jpql.append(" ) ");
 
-		TypedQuery<Contract> query = em.createQuery(jpql.toString(), Contract.class);
+		TypedQuery<Object[]> query = em.createQuery(jpql.toString(), Object[].class);
 		query.setParameter("lastDay", lastDay);
 		query.setParameter("invoiceTypeIds", invoiceTypeIds);
 

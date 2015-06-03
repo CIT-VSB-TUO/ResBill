@@ -69,7 +69,7 @@ public class InvoiceDetailController {
 		Invoice invoice = null;
 
 		try {
-			invoice = invoiceService.findInvoice(invoiceId, true);
+			invoice = invoiceService.findInvoice(invoiceId, true, true);
 			model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoice);
 		} catch (Exception exc) {
 			log.error("Cannot load Invoice with id: " + invoiceId, exc);
