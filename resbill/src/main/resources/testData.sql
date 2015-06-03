@@ -22,7 +22,7 @@ INSERT INTO "contract_invoice_type" VALUES (2, 0, '2014-01-01', NULL, 2, 1);
 INSERT INTO "contract_tariff" VALUES (1, 0, '2014-01-01', NULL, 1, 1);
 INSERT INTO "contract_tariff" VALUES (2, 0, '2014-01-01', NULL, 2, 1);
 
-INSERT INTO "transaction" VALUES ('inv', 1, 0, 0.00, '2015-05-12', 12345, NULL, 1, 'Faktura 1', null, false, '2015-01-02', '2015-02-02', null, 1, 1, NULL, 1);
+INSERT INTO "transaction" VALUES ('inv', 1, 0, 0.00, '2015-05-12', 12345, NULL, 1, 'Faktura 1', null, true, '2015-01-02', '2015-02-02', null, 1, 1, NULL, 1);
 
 INSERT INTO "server" VALUES (2, 0, 'fbiapps', 'vm-1165');
 INSERT INTO "server" VALUES (4, 0, 'fbiprn', 'vm-1167');
