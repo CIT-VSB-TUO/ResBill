@@ -92,6 +92,10 @@ public class TariffPriceListDTO implements Serializable {
 		this.lastPriceListEditable = lastPriceListEditable;
 	}
 
+	public boolean isLastPriceListDeletable() {
+		return isLastPriceListEditable() && getLastPriceList() != null && getLastPriceList().getPrevious() != null;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
