@@ -6,6 +6,7 @@ package cz.vsb.resbill.criteria;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import cz.vsb.resbill.util.ToStringBuilder;
@@ -22,6 +23,40 @@ public class InvoiceCriteria implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private List<OrderBy>     orderBy          = Arrays.asList(new OrderBy[] { OrderBy.DECISIVE_DATE_DESC });
+
+  private Date              beginEndDate     = null;
+
+  private Date              endEndDate       = null;
+
+  /**
+   * @return the beginEndDate
+   */
+  public Date getBeginEndDate() {
+    return beginEndDate;
+  }
+
+  /**
+   * @param beginEndDate
+   *          the beginEndDate to set
+   */
+  public void setBeginEndDate(Date beginEndDate) {
+    this.beginEndDate = beginEndDate;
+  }
+
+  /**
+   * @return the endEndDate
+   */
+  public Date getEndEndDate() {
+    return endEndDate;
+  }
+
+  /**
+   * @param endEndDate
+   *          the endEndDate to set
+   */
+  public void setEndEndDate(Date endEndDate) {
+    this.endEndDate = endEndDate;
+  }
 
   /**
    * 
@@ -63,6 +98,9 @@ public class InvoiceCriteria implements Serializable {
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this);
     builder.append("orderBy", orderBy);
+    builder.append("beginEndDate", beginEndDate);
+    builder.append("endEndDate", endEndDate);
+    builder.append("toString()", super.toString());
     return builder.toString();
   }
 

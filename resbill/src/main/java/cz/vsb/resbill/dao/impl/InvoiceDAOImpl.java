@@ -49,6 +49,13 @@ public class InvoiceDAOImpl implements InvoiceDAO {
     if (criteria.needsCustomer()) {
       jpql.append(" JOIN contract.customer AS customer ");
     }
+    jpql.append(" WHERE 1 = 1 ");
+    if (criteria.getBeginEndDate() != null) {
+      jpql.append(" AND invoice.period.endDate >= :beginEndDate ");
+    }
+    if (criteria.getEndEndDate() != null) {
+      jpql.append(" AND invoice.period.endDate <= :endEndDate ");
+    }
 
     if (criteria.getOrderBy() != null && !criteria.getOrderBy().isEmpty()) {
       jpql.append(" ORDER BY ");
@@ -95,6 +102,13 @@ public class InvoiceDAOImpl implements InvoiceDAO {
     }
     if (limit != null) {
       query.setMaxResults(limit);
+    }
+
+    if (criteria.getBeginEndDate() != null) {
+      query.setParameter("beginEndDate", criteria.getBeginEndDate());
+    }
+    if (criteria.getEndEndDate() != null) {
+      query.setParameter("endEndDate", criteria.getEndEndDate());
     }
 
     return query.getResultList();

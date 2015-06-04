@@ -5,8 +5,8 @@
 package cz.vsb.resbill.dto;
 
 import cz.vsb.resbill.model.Invoice;
+import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.util.ToStringBuilder;
-
 
 /**
  * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
@@ -18,8 +18,10 @@ public class InvoiceDTO extends TransactionDTO {
    * 
    */
   private static final long serialVersionUID = 1L;
-  
-  private boolean noPriceList;
+
+  private boolean           noPriceList;
+
+  private Period            period;
 
   /**
    * 
@@ -27,10 +29,11 @@ public class InvoiceDTO extends TransactionDTO {
    */
   public void fill(Invoice invoice) {
     super.fill(invoice);
-    
+
     noPriceList = invoice.getNoPriceList();
+    period = invoice.getPeriod();
   }
-  
+
   /**
    * @return the noPriceList
    */
@@ -38,26 +41,41 @@ public class InvoiceDTO extends TransactionDTO {
     return noPriceList;
   }
 
-  
   /**
-   * @param noPriceList the noPriceList to set
+   * @param noPriceList
+   *          the noPriceList to set
    */
   public void setNoPriceList(boolean noPriceList) {
     this.noPriceList = noPriceList;
   }
 
+  /**
+   * @return the period
+   */
+  public Period getPeriod() {
+    return period;
+  }
 
-  /* (non-Javadoc)
+  /**
+   * @param period
+   *          the period to set
+   */
+  public void setPeriod(Period period) {
+    this.period = period;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#toString()
    */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this);
     builder.append("noPriceList", noPriceList);
+    builder.append("period", period);
     builder.append("toString()", super.toString());
     return builder.toString();
   }
-  
-  
 
 }
