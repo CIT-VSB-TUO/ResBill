@@ -15,6 +15,8 @@ INSERT INTO "customer" VALUES (2, 0, NULL, 'Zákazník 2', NULL, 2);
 
 INSERT INTO "contract" VALUES (1, 0, 0.00, 0, 'Kontrakt1', NULL, '2015-04-01', NULL, 1);
 INSERT INTO "contract" VALUES (2, 0, 0.00, 1, 'Fakulta strojní', NULL, '2015-04-01', NULL, 2);
+INSERT INTO "contract" VALUES (3, 0, 0.00, 2, 'Bez tarifu', NULL, '2015-04-01', NULL, 2);
+INSERT INTO "contract" VALUES (4, 0, 0.00, 3, 'Spotřeba po ukončení', NULL, '2014-01-01', '2014-01-31', 2);
 
 INSERT INTO "contract_invoice_type" VALUES (1, 0, '2014-01-01', NULL, 1, 1);
 INSERT INTO "contract_invoice_type" VALUES (2, 0, '2014-01-01', NULL, 2, 1);
@@ -323,6 +325,7 @@ INSERT INTO "contract_server" VALUES (1, 0, '2014-01-01', NULL, 1, 2);
 INSERT INTO "contract_server" VALUES (2, 0, '2014-01-01', NULL, 2, 14);
 INSERT INTO "contract_server" VALUES (3, 0, '2014-01-01', NULL, 2, 242);
 INSERT INTO "contract_server" VALUES (4, 0, '2014-01-01', NULL, 2, 240);
+INSERT INTO "contract_server" VALUES (5, 0, '2014-01-01', NULL, 4, 6134);
 
 INSERT INTO "daily_import" VALUES (1, 1, 279, '2014-02-01', 0, '2015-06-02 09:17:19.036', '2015-06-02 09:17:22.788', 0, null, null, 'report_2014-02-01', true, 279);
 INSERT INTO "daily_import" VALUES (560, 1, 279, '2014-02-02', 0, '2015-06-02 09:17:23.008', '2015-06-02 09:17:25.981', 0, null, null, 'report_2014-02-02', true, 279);

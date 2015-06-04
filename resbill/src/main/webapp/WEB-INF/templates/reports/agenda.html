@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorator="layout">
+
+<head>
+
+<th:block th:remove="all">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+</th:block>
+
+<title th:text="#{head.title.agenda}">Agenda</title>
+<th:block th:remove="all">
+  <!-- remove all duplicated template css due to auto-merge -->
+
+  <!-- ResBill Custom CSS -->
+  <link href="../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
+
+  <!-- Bootstrap Core CSS -->
+  <link href="../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"
+    th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+
+  <!-- Custom Fonts -->
+  <link href="../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"
+    th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+
+  <!-- SB Admin 2 CSS -->
+  <link href="../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css"
+    th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+
+</th:block>
+
+</head>
+
+<body>
+  <div layout:fragment="content">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1 class="page-header" th:text="#{page.header.agenda}">Agenda</h1>
+      </div>
+    </div>
+
+    <!-- Zobrazeni chyb -->
+    <div class="row">
+      <div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contracts}')}" th:errors="${contracts}">Global error</div>
+    </div>
+
+    <!-- Zobrazeni kontraktu -->
+    <div class="row">
+      <div class="col-lg-12">
+        <h2 class="page-header" th:text="#{page.header.agenda.contract}">Kontrakty</h2>
+      </div>
+    </div>
+    <!-- 
+    <div class="row" th:if="${contracts != null}">
+      <div class="col-lg-12">
+        <table class="table" id="contracts">
+          <thead>
+            <tr>
+              <th th:text="#{column.agenda.contract.evidenceNumber}">Evidenční číslo</th>
+              <th th:text="#{column.agenda.contract.name}">Název</th>
+              <th class="text-center" th:text="#{column.agenda.contract.afterEndUsage}">Spotřeba po ukončení</th>
+              <th class="text-center" th:text="#{column.agenda.contract.outOfTariffUsage}">Spotřeba mimo tarif</th>
+              <th class="text-center" th:text="#{column.agenda.contract.noInvoiceType}">Bez typu účtování</th>
+              <th class="text-center" th:text="#{column.agenda.contract.noTariff}">Bez tarifu</th>
+              <th class="text-center" th:text="#{column.agenda.contract.noServer}">Bez serveru</th>
+              <th class="text-center" th:text="#{column.agenda.contract.negativeBalance}">Záporný zůstatek</th>
+            </tr>
+          </thead>
+
+          <tbody th:remove="all-but-first">
+            <tr th:each="contract : ${contracts}">
+              <td th:text="${contract.evidenceNumber}">123</td>
+              <td th:text="${contract.name}">P.FS</td>
+              <td class="text-center"><i th:if="${contract.dailyUsagesAfterContractEnd}" class="fa fa-exclamation-circle text-danger"></i></td>
+              <td class="text-center"><i th:if="${contract.dailyUsagesOutOfTariff}" class="fa fa-exclamation-circle text-danger"></i></td>
+              <td class="text-center"><i th:if="${contract.noInvoiceType}" class="fa fa-exclamation-circle text-warning"></i></td>
+              <td class="text-center"><i th:if="${contract.noTariff}" class="fa fa-exclamation-circle text-warning"></i></td>
+              <td class="text-center"><i th:if="${contract.noServer}" class="fa fa-exclamation-circle text-warning"></i></td>
+              <td class="text-center"><i th:if="${contract.negativeBalance}" class="fa fa-exclamation-circle text-warning"></i></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+     -->
+
+
+    <div class="row" th:if="${contracts != null}">
+      <div class="col-lg-12">
+        <table class="table table-header-rotated" id="contracts">
+          <thead>
+            <tr>
+              <th class="nowrap" th:text="#{column.agenda.contract.evidenceNumber}">Evidenční číslo</th>
+              <th class="nowrap" th:text="#{column.agenda.contract.name}">Název</th>
+              <th class="rotate"><div>
+                  <span th:text="#{column.agenda.contract.afterEndUsage}">Spotřeba po ukončení</span>
+                </div></th>
+              <th class="rotate"><div>
+                  <span th:text="#{column.agenda.contract.outOfTariffUsage}">Spotřeba mimo tarif</span>
+                </div></th>
+              <th class="rotate"><div>
+                  <span th:text="#{column.agenda.contract.noInvoiceType}">Bez typu účtování</span>
+                </div></th>
+              <th class="rotate"><div>
+                  <span th:text="#{column.agenda.contract.noTariff}">Bez tarifu</span>
+                </div></th>
+              <th class="rotate"><div>
+                  <span th:text="#{column.agenda.contract.noServer}">Bez serveru</span>
+                </div></th>
+              <th class="rotate"><div>
+                  <span th:text="#{column.agenda.contract.negativeBalance}">Záporný zůstatek</span>
+                </div></th>
+            </tr>
+          </thead>
+
+          <tbody th:remove="all-but-first">
+            <tr th:each="contract : ${contracts}">
+              <td th:text="${contract.evidenceNumber}">123</td>
+              <td th:text="${contract.name}">P.FS</td>
+              <td class="text-center rotated-col"><i th:if="${contract.dailyUsagesAfterContractEnd}" class="fa fa-exclamation-circle text-danger"></i></td>
+              <td class="text-center rotated-col"><i th:if="${contract.dailyUsagesOutOfTariff}" class="fa fa-exclamation-circle text-danger"></i></td>
+              <td class="text-center rotated-col"><i th:if="${contract.noInvoiceType}" class="fa fa-exclamation-circle text-warning"></i></td>
+              <td class="text-center rotated-col"><i th:if="${contract.noTariff}" class="fa fa-exclamation-circle text-warning"></i></td>
+              <td class="text-center rotated-col"><i th:if="${contract.noServer}" class="fa fa-exclamation-circle text-warning"></i></td>
+              <td class="text-center rotated-col"><i th:if="${contract.negativeBalance}" class="fa fa-exclamation-circle text-warning"></i></td>
+
+              <!-- 
+              <td><a class="btn btn-primary btn-circle" href="invoiceDetail.html" th:href="@{/invoice/detail(invoiceId=${invoice.transactionId})}"
+                th:title="#{button.title.invoice.detail}"> <i class="fa fa-edit"></i>
+              </a></td>
+               -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- jQuery -->
+  <script src="../../bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+
+  <!-- Custom Theme JavaScript -->
+  <script src="../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"
+    th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+
+</body>
+
+</html>

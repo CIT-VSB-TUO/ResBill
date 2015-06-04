@@ -1,5 +1,9 @@
 /* Custom styles for ResBill */
 
+.nowrap {
+  white-space: nowrap;
+}
+
 .form-group.required .control-label:after {
   	content:"*";  	
 }
@@ -15,3 +19,28 @@
 .voffset7 { margin-top: 80px; }
 .voffset8 { margin-top: 100px; }
 .voffset9 { margin-top: 150px; }
+
+/* Tabulka s otocenou hlavickou sloupcu - pouziti pro tabulku s kratkym obsahem, ale velkym nadpisem sloupce */
+.table-header-rotated {
+  width: auto !important;
+}
+.table-header-rotated td {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+.table-header-rotated td.rotated-col {
+  border: 1px solid #ddd;
+}
+.table-header-rotated th.rotate {
+  height: 140px;
+  white-space: nowrap;
+}
+.table-header-rotated th.rotate > div {
+  -webkit-transform: translate(0px, 0px) rotate(315deg);
+      -ms-transform: translate(0px, 0px) rotate(315deg);
+          transform: translate(0px, 0px) rotate(315deg);
+  width: 30px;
+}
+.table-header-rotated th.rotate > div > span {
+  padding: 5px 10px;
+}
