@@ -24,12 +24,12 @@ public interface PriceListDAO {
 	PriceList findPriceList(Integer id);
 
 	/**
-	 * Finds a {@link PriceList} of the {@link Tariff} specified by the given key that is valid.
+	 * Finds a {@link PriceList} of the {@link Tariff} specified by the given key that is its last.
 	 * 
 	 * @param tariffId
 	 * @return
 	 */
-	PriceList findLastValidPriceList(Integer tariffId);
+	PriceList findLastPriceList(Integer tariffId);
 
 	/**
 	 * Finds {@link PriceList} entities by specified criteria
@@ -49,7 +49,7 @@ public interface PriceListDAO {
 	 * @return
 	 */
 	PriceList findContractDailyUsagePriceList(Integer contractId, Integer dailyUsageId);
-	
+
 	/**
 	 * Saves current state of given {@link PriceList} entity.
 	 * 

@@ -5,10 +5,16 @@ public class PriceListServiceException extends ResBillException {
 	private static final long serialVersionUID = -4874174019205202442L;
 
 	public static enum Reason {
+		/** jedna se o prvni cenik */
+		FIRST_PRICE_LIST,
+		/** nejedna se o posledni cenik */
+		NOT_LAST_PRICE_LIST,
 		/** podle ceniku je uz vytvorena faktura */
-		INVOICE_PRICE_LIST,
-		/** Platnost cenik zasahuje do obdobi, ktere uz bylo fakturovano */
-		INVOICE_DATE_CLASH,
+		INVOICE_EXISTENCE,
+		/** Platnost ceniku zasahuje do obdobi, ktere uz bylo fakturovano */
+		INVOICE_DATE_COLLISION,
+		/** Platnost ceniku nepokryva obdobi prirazeni tarifu ke kontraktu */
+		CONTRACT_PERIOD_UNCOVERED,
 		/** Obdobi platnosti ceniku je nespravne (konec predchazi pocatku) */
 		INVALID_PERIOD
 	}

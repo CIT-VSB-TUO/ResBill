@@ -26,7 +26,9 @@ public class TariffPriceListDTO implements Serializable {
 
 	private List<PriceList> previousPriceLists;
 
-	private boolean priceListEditable = true;
+	private boolean tariffDeletable = true;
+
+	private boolean lastPriceListEditable = true;
 
 	public TariffPriceListDTO() {
 	}
@@ -34,11 +36,12 @@ public class TariffPriceListDTO implements Serializable {
 	public void fill(Tariff tariff) {
 		this.tariff = tariff;
 		if (tariff != null) {
+			tariffDeletable = tariff.getContractTariffs().isEmpty();
 			previousPriceLists = new ArrayList<PriceList>();
 			for (PriceList priceList : tariff.getPrices()) {
 				if (priceList.getPeriod().getEndDate() == null) {
 					lastPriceList = priceList;
-					priceListEditable = priceList.getInvoicePriceLists().isEmpty();
+					lastPriceListEditable = priceList.getInvoicePriceLists().isEmpty();
 				} else {
 					previousPriceLists.add(priceList);
 				}
@@ -73,12 +76,20 @@ public class TariffPriceListDTO implements Serializable {
 		this.previousPriceLists = previousPriceLists;
 	}
 
-	public boolean isPriceListEditable() {
-		return priceListEditable;
+	public boolean isTariffDeletable() {
+		return tariffDeletable;
 	}
 
-	public void setPriceListEditable(boolean priceListEditable) {
-		this.priceListEditable = priceListEditable;
+	public void setTariffDeletable(boolean tariffDeletable) {
+		this.tariffDeletable = tariffDeletable;
+	}
+
+	public boolean isLastPriceListEditable() {
+		return lastPriceListEditable;
+	}
+
+	public void setLastPriceListEditable(boolean lastPriceListEditable) {
+		this.lastPriceListEditable = lastPriceListEditable;
 	}
 
 	@Override
@@ -92,8 +103,10 @@ public class TariffPriceListDTO implements Serializable {
 		builder.append(lastPriceList);
 		builder.append(", previousPriceLists.size=");
 		builder.append(previousPriceLists != null ? previousPriceLists.size() : null);
-		builder.append(", priceListEditable=");
-		builder.append(priceListEditable);
+		builder.append(", tariffDeletable=");
+		builder.append(tariffDeletable);
+		builder.append(", lastPriceListEditable=");
+		builder.append(lastPriceListEditable);
 		builder.append("]");
 		return builder.toString();
 	}

@@ -62,18 +62,21 @@
 				<table class="table" id="tariffs">
 					<thead>
 						<tr>
-							<th th:text="#{column.tariff.name}">Nazev</th>
-							<th th:text="#{column.tariff.validity}">Platnost</th>
+							<th rowspan="2" th:text="#{column.tariff.name}">Nazev</th>
+							<th rowspan="2" th:text="#{column.tariff.validity}">Platnost</th>
+							<th colspan="5" th:text="#{column.tariff.priceList.last}">Ceník</th>
+							<th rowspan="2">
+								<a class="btn btn-primary btn-circle" href="tariffEdit.html" th:href="@{/tariffs/edit}" th:title="#{button.title.tariff.add}">
+									<i class="fa fa-plus-square"></i>
+								</a>
+							</th>
+						</tr>
+						<tr>
 							<th th:text="#{column.priceList.period.beginDate}">Platnost od</th>
 							<th th:text="#{column.priceList.price.cpu}">Cena CPU</th>
 							<th th:text="#{column.priceList.price.memory}">Cena pamet</th>
 							<th th:text="#{column.priceList.price.space}">Cena data</th>
 							<th th:text="#{column.priceList.price.backup}">Cena zaloha</th>
-							<th>
-								<a class="btn btn-primary btn-circle" href="tariffEdit.html" th:href="@{/tariffs/edit}" th:title="#{button.title.tariff.add}">
-									<i class="fa fa-plus-square"></i>
-								</a>
-							</th>
 						</tr>
 					</thead>
 					<tbody th:remove="all-but-first">

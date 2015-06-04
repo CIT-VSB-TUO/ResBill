@@ -40,7 +40,7 @@ public class PriceListDAOImpl implements PriceListDAO {
 	}
 
 	@Override
-	public PriceList findLastValidPriceList(Integer tariffId) {
+	public PriceList findLastPriceList(Integer tariffId) {
 		PriceListCriteria criteria = new PriceListCriteria();
 		criteria.setLastValid(Boolean.TRUE);
 		criteria.setTariffId(tariffId);
