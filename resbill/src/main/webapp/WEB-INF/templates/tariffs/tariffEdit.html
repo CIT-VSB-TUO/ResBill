@@ -92,7 +92,7 @@
 							</div>
 							
 							<div class="panel panel-default">
-								<div class="panel-heading" th:text="#{panel.priceList.data}">Platny cenik</div>
+								<div class="panel-heading" th:text="#{panel.lastPriceList.data}">Platny cenik</div>
 								
 								<div class="panel-body">
 	
@@ -100,8 +100,8 @@
 										<label class="control-label" th:text="#{label.priceList.period.beginDate}" th:for="lastPriceList.period.beginDate">Platnost od</label>
 										<div class="input-group date" data-provide="datepicker" data-date-language="cs" data-date-format="d.m.yyyy" data-date-week-start="1" 
 											data-date-autoclose="true" data-date-today-highlight="true" data-date-today-btn="linked" data-date-enable-on-readonly="false"
-											th:attr="data-date-language=${#locale.language},data-date-format=#{datepicker.date.format}" th:readonly="*{not priceListEditable}">
-											<input type="text" class="form-control" th:field="*{lastPriceList.period.beginDate}" th:readonly="*{not priceListEditable}"/>
+											th:attr="data-date-language=${#locale.language},data-date-format=#{datepicker.date.format}" th:readonly="*{not lastPriceListEditable}">
+											<input type="text" class="form-control" th:field="*{lastPriceList.period.beginDate}" th:readonly="*{not lastPriceListEditable}"/>
 											<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 										</div>
 										<p class="help-block" th:if="${#fields.hasErrors('lastPriceList.period.beginDate')}" th:errors="*{lastPriceList.period.beginDate}"/>
@@ -109,25 +109,25 @@
 								
 									<div class="form-group required" th:classappend="${#fields.hasErrors('lastPriceList.cpuPrice')} ? 'has-error'">
 										<label class="control-label" th:text="#{label.priceList.price.cpu}" th:for="lastPriceList.cpuPrice">CPU</label>
-										<input type="text" class="form-control" th:field="*{lastPriceList.cpuPrice}" th:readonly="*{not priceListEditable}"/>
+										<input type="text" class="form-control" th:field="*{lastPriceList.cpuPrice}" th:readonly="*{not lastPriceListEditable}"/>
 										<p class="help-block" th:if="${#fields.hasErrors('lastPriceList.cpuPrice')}" th:errors="*{lastPriceList.cpuPrice}" />
 									</div>
 								
 									<div class="form-group required" th:classappend="${#fields.hasErrors('lastPriceList.memoryGBPrice')} ? 'has-error'">
 										<label class="control-label" th:text="#{label.priceList.price.memory}" th:for="lastPriceList.memoryGBPrice">Pamet</label>
-										<input type="text" class="form-control" th:field="*{lastPriceList.memoryGBPrice}" th:readonly="*{not priceListEditable}"/>
+										<input type="text" class="form-control" th:field="*{lastPriceList.memoryGBPrice}" th:readonly="*{not lastPriceListEditable}"/>
 										<p class="help-block" th:if="${#fields.hasErrors('lastPriceList.memoryGBPrice')}" th:errors="*{lastPriceList.memoryGBPrice}" />
 									</div>
 								
 									<div class="form-group required" th:classappend="${#fields.hasErrors('lastPriceList.spaceGBPrice')} ? 'has-error'">
 										<label class="control-label" th:text="#{label.priceList.price.space}" th:for="lastPriceList.spaceGBPrice">Data</label>
-										<input type="text" class="form-control" th:field="*{lastPriceList.spaceGBPrice}" th:readonly="*{not priceListEditable}"/>
+										<input type="text" class="form-control" th:field="*{lastPriceList.spaceGBPrice}" th:readonly="*{not lastPriceListEditable}"/>
 										<p class="help-block" th:if="${#fields.hasErrors('lastPriceList.spaceGBPrice')}" th:errors="*{lastPriceList.spaceGBPrice}" />
 									</div>
 								
 									<div class="form-group required" th:classappend="${#fields.hasErrors('lastPriceList.backupGBPrice')} ? 'has-error'">
 										<label class="control-label" th:text="#{label.priceList.price.backup}" th:for="lastPriceList.backupGBPrice">Zaloha</label>
-										<input type="text" class="form-control" th:field="*{lastPriceList.backupGBPrice}" th:readonly="*{not priceListEditable}"/>
+										<input type="text" class="form-control" th:field="*{lastPriceList.backupGBPrice}" th:readonly="*{not lastPriceListEditable}"/>
 										<p class="help-block" th:if="${#fields.hasErrors('lastPriceList.backupGBPrice')}" th:errors="*{lastPriceList.backupGBPrice}" />
 									</div>
 
@@ -155,9 +155,13 @@
 					<div class="row" th:if="*{tariff.id != null}">
 						<div class="col-lg-12">
 							<p>
-								<button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete" >
+								<button th:if="*{tariffDeletable}" class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="deleteTariff" >
 									<i class="fa fa-trash-o"></i>
-									<span th:text="#{button.delete}">Delete</span>
+									<span th:text="#{button.delete.tariff}">Delete</span>
+								</button>
+								<button th:if="*{lastPriceListDeletable}" class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="deletePriceList" >
+									<i class="fa fa-trash-o"></i>
+									<span th:text="#{button.delete.lastPriceList}">Delete</span>
 								</button>
 							</p>
 						</div>

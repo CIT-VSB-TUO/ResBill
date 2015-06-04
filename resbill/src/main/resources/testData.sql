@@ -4,7 +4,7 @@ ALTER SEQUENCE hibernate_sequence RESTART WITH 10000;
 
 INSERT INTO "tariff" VALUES (1, 0, 'Tarif1', true);
 
-INSERT INTO "price_list" VALUES (1, 0, 0.20, 170.00, 20.00, '2014-01-01', NULL, 1.00, 1);
+INSERT INTO "price_list" VALUES (1, 0, 0.20, 170.00, 20.00, '2014-01-01', NULL, 1.00, NULL, 1);
 
 INSERT INTO "person" VALUES (1, 0, 'Obec1', 'Cast obce 1', 'CZE', '12', '23', 'Ulice 1', '78945', 'jjjj@ds.cz', 'Jméno 1', NULL, '456789123', 'Příjmení 1', NULL, NULL);
 INSERT INTO "person" VALUES (2, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'petr.pokus@test.cz', 'Petr', NULL, '123456789', 'Pokus', 'CSc', 'Ing.');

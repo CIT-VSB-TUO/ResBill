@@ -125,14 +125,20 @@ public class PriceListEditController {
 				return "redirect:/tariffs/edit";
 			} catch (PriceListServiceException e) {
 				switch (e.getReason()) {
-				case INVOICE_DATE_CLASH:
+				case NOT_LAST_PRICE_LIST:
+					bindingResult.reject("error.save.priceList.not.last");
+					break;
+				case INVOICE_EXISTENCE:
+					bindingResult.reject("error.save.priceList.invoice.exists");
+					break;
+				case INVOICE_DATE_COLLISION:
 					bindingResult.reject("error.save.priceList.invoice.date");
+					break;
+				case CONTRACT_PERIOD_UNCOVERED:
+					bindingResult.reject("error.save.priceList.contract.uncovered");
 					break;
 				case INVALID_PERIOD:
 					bindingResult.reject("error.save.priceList.period");
-					break;
-				case INVOICE_PRICE_LIST:
-					bindingResult.reject("error.save.priceList.invoice");
 					break;
 				default:
 					log.warn("Unsupported reason: " + e);
@@ -173,7 +179,10 @@ public class PriceListEditController {
 			return "redirect:/tariffs/edit";
 		} catch (PriceListServiceException e) {
 			switch (e.getReason()) {
-			case INVOICE_PRICE_LIST:
+			case FIRST_PRICE_LIST:
+				bindingResult.reject("error.delete.priceList.first");
+				break;
+			case INVOICE_EXISTENCE:
 				bindingResult.reject("error.delete.priceList.invoice");
 				break;
 			default:

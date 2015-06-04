@@ -67,42 +67,40 @@ public class PriceListServiceImpl implements PriceListService {
 	@Override
 	public PriceList savePriceList(PriceList priceList) throws PriceListServiceException, ResBillException {
 		try {
-			if (priceList.getId() == null) {
-				// zjisteni dosud platneho ceniku
-				PriceList lastValid = priceListDAO.findLastValidPriceList(priceList.getTariff().getId());
-				if (lastValid != null) {
-					// zjisteni minimalniho mozneho datumu pocatku platnosti ceniku
-					StringBuilder jpql = new StringBuilder();
-					jpql.append("SELECT MAX(inv.period.endDate) FROM InvoicePriceList AS ipl");
-					jpql.append(" JOIN ipl.invoice AS inv");
-					jpql.append(" WHERE ipl.priceList.id = :priceListId");
+			// kontrola: je ukladany cenik poslednim platnym
+			if (priceList.getPeriod().getEndDate() != null) {
+				throw new PriceListServiceException(Reason.NOT_LAST_PRICE_LIST);
+			}
 
-					Query query = em.createQuery(jpql.toString());
-					query.setParameter("priceListId", lastValid.getId());
+			if (priceList.getId() == null) { // novy cenik - pridani
+				// zjisteni dosud platneho ceniku pro ukonceni jeho platnosti
+				PriceList lastValid = priceListDAO.findLastPriceList(priceList.getTariff().getId());
+				if (lastValid == null) { // prvni cenik u tarifu - netreba provadet dalsi kontroly
+					priceList.setPrevious(null);
+				} else { // nasledny cenik u tarifu - nutne kontroly
+					priceList.setPrevious(lastValid);
 
-					Date maxDate = (Date) query.getSingleResult();
+					// kontrola pripadne kolize dat s fakturovanym predchozim cenikem
+					checkInvoiceDateCollision(priceList);
 
-					// kontrola: pocatek musi byt az po fakturaci
-					if (maxDate != null && priceList.getPeriod().getBeginDate().compareTo(maxDate) <= 0) {
-						throw new PriceListServiceException(Reason.INVOICE_DATE_CLASH);
-					}
-
-					// ukonceni platnosti dosud platneho ceniku
-					Date newEndDate = DateUtils.addDays(priceList.getPeriod().getBeginDate(), -1);
-					// kontrola: nevznikl by spatny interval?
-					if (lastValid.getPeriod().getBeginDate().compareTo(newEndDate) > 0) {
-						throw new PriceListServiceException(Reason.INVALID_PERIOD);
-					}
-					lastValid.getPeriod().setEndDate(newEndDate);
-					priceListDAO.savePriceList(lastValid);
+					// ukonceni platnosti predchoziho ceniku
+					Date terminationDate = DateUtils.addDays(priceList.getPeriod().getBeginDate(), -1);
+					terminatePriceList(priceList.getPrevious(), terminationDate);
 				}
-			} else {
-				// kontrola zda jiz bylo podle ceniku fakturovano
-				InvoicePriceListCriteria iplCriteria = new InvoicePriceListCriteria();
-				iplCriteria.setPriceListId(priceList.getId());
-				List<InvoicePriceList> ipls = invoicePriceListDAO.findInvoicePriceLists(iplCriteria, null, null);
-				if (!ipls.isEmpty()) {
-					throw new PriceListServiceException(Reason.INVOICE_PRICE_LIST);
+			} else { // existujici cenik - editace
+				// kontrola fakturace podle ceniku
+				checkInvoiceExistence(priceList);
+
+				if (priceList.getPrevious() == null) { // prvni cenik u tarifu
+					// kontrola pokryti kontraktu
+					checkContractPeriodCoverage(priceList);
+				} else { // nasledny cenik u tarifu
+					// kontrola pripadne kolize dat s fakturovanym predchozim cenikem
+					checkInvoiceDateCollision(priceList);
+
+					// ukonceni platnosti predchoziho ceniku
+					Date terminationDate = DateUtils.addDays(priceList.getPeriod().getBeginDate(), -1);
+					terminatePriceList(priceList.getPrevious(), terminationDate);
 				}
 			}
 			return priceListDAO.savePriceList(priceList);
@@ -114,18 +112,111 @@ public class PriceListServiceImpl implements PriceListService {
 		}
 	}
 
+	/**
+	 * kontrola pokryti obdobi prirazeni ke kontraktu - zjisteni prvniho data prirazeni -> maximalni mozne datum pocatku platnosti ceniku
+	 * 
+	 * @param priceList
+	 * @throws PriceListServiceException
+	 *           nepokryva-li cenik obdobi prirazeni tarifu ke kontraktu
+	 */
+	private void checkContractPeriodCoverage(PriceList priceList) throws PriceListServiceException {
+		StringBuilder jpql = new StringBuilder();
+		jpql.append("SELECT MIN(ct.period.beginDate) FROM ContractTariff AS ct");
+		jpql.append(" WHERE ct.tariff.id = :tariffId");
+
+		Query query = em.createQuery(jpql.toString());
+		query.setParameter("tariffId", priceList.getTariff().getId());
+
+		Date minDate = (Date) query.getSingleResult();
+
+		if (minDate != null && priceList.getPeriod().getBeginDate().compareTo(minDate) > 0) {
+			throw new PriceListServiceException(Reason.CONTRACT_PERIOD_UNCOVERED);
+		}
+	}
+
+	/**
+	 * kontrola existence faktury k danemu ceniku
+	 * 
+	 * @param priceList
+	 * @throws PriceListServiceException
+	 *           existuje-li faktura podle tohoto ceniku
+	 */
+	private void checkInvoiceExistence(PriceList priceList) throws PriceListServiceException {
+		InvoicePriceListCriteria iplCriteria = new InvoicePriceListCriteria();
+		iplCriteria.setPriceListId(priceList.getId());
+		List<InvoicePriceList> ipls = invoicePriceListDAO.findInvoicePriceLists(iplCriteria, null, null);
+		if (!ipls.isEmpty()) {
+			throw new PriceListServiceException(Reason.INVOICE_EXISTENCE);
+		}
+	}
+
+	/**
+	 * kontrola kolize s fakturaci - urceni posledniho data fakturace podle predchoziho ceniku -> minimalni mozne datum (+ 1 den) pocatku platnosti noveho ceniku
+	 * 
+	 * @param priceList
+	 * @throws PriceListServiceException
+	 *           existuje-li faktura podle predchoziho ceniku a datum pocatku platnosti aktualniho ceniku zasahuje do jejiho obdobi
+	 */
+	private void checkInvoiceDateCollision(PriceList priceList) throws PriceListServiceException {
+		StringBuilder jpql = new StringBuilder();
+		jpql.append("SELECT MAX(inv.period.endDate) FROM InvoicePriceList AS ipl");
+		jpql.append(" JOIN ipl.invoice AS inv");
+		jpql.append(" WHERE ipl.priceList.id = :priceListId");
+
+		Query query = em.createQuery(jpql.toString());
+		query.setParameter("priceListId", priceList.getPrevious().getId());
+
+		Date maxDate = (Date) query.getSingleResult();
+
+		if (maxDate != null && priceList.getPeriod().getBeginDate().compareTo(maxDate) <= 0) {
+			throw new PriceListServiceException(Reason.INVOICE_DATE_COLLISION);
+		}
+	}
+
+	/**
+	 * ukonci platnost ceniku k danemu dni - provede kontrolu na spravnost vznikleho obdobi platnosti
+	 * 
+	 * @param priceList
+	 *          ukoncovany cenik
+	 * @throws PriceListServiceException
+	 *           pokud by platnost cenika nebyla spravnym obdobim (konec by predchazel pocatku)
+	 */
+	private void terminatePriceList(PriceList priceList, Date terminationDate) throws PriceListServiceException {
+		// kontrola: nevznikl by ukoncenim platnosti predchoziho ceniku spatny interval?
+		if (priceList.getPeriod().getBeginDate().compareTo(terminationDate) > 0) {
+			throw new PriceListServiceException(Reason.INVALID_PERIOD);
+		}
+		priceList.getPeriod().setEndDate(terminationDate);
+
+		// ulozeni predchoziho ceniku
+		priceListDAO.savePriceList(priceList);
+	}
+
+	/**
+	 * zrusi ukonceni platnosti predchoziho ceniku - znovu zplatni cenik
+	 * 
+	 * @param priceList
+	 */
+	private void unterminatePriceList(PriceList priceList) {
+		priceList.getPeriod().setEndDate(null);
+		// ulozeni predchoziho ceniku
+		priceListDAO.savePriceList(priceList);
+	}
+
 	@Override
 	public PriceList deletePriceList(Integer priceListId) throws PriceListServiceException, ResBillException {
 		try {
 			PriceList priceList = priceListDAO.findPriceList(priceListId);
-			// kontrola zavislosti
-			// vytvorena faktura
-			InvoicePriceListCriteria iplCriteria = new InvoicePriceListCriteria();
-			iplCriteria.setPriceListId(priceListId);
-			List<InvoicePriceList> ipls = invoicePriceListDAO.findInvoicePriceLists(iplCriteria, null, null);
-			if (!ipls.isEmpty()) {
-				throw new PriceListServiceException(Reason.INVOICE_PRICE_LIST);
+
+			// nelze smazat prvni cenik
+			if (priceList.getPrevious() == null) {
+				throw new PriceListServiceException(Reason.FIRST_PRICE_LIST);
 			}
+			// nelze smazat fakturovany cenik
+			checkInvoiceExistence(priceList);
+
+			// zplatneni predchoziho ceniku
+			unterminatePriceList(priceList.getPrevious());
 
 			return priceListDAO.deletePriceList(priceList);
 		} catch (PriceListServiceException e) {

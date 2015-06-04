@@ -60,17 +60,6 @@ public interface TariffService {
 	TariffPriceListDTO findTariffPriceListDTO(Integer tariffId) throws ResBillException;
 
 	/**
-	 * Persists given {@link Tariff} entity.
-	 * 
-	 * @param person
-	 *          entity to save
-	 * @return saved {@link Tariff} entity (with generated primary key)
-	 * @throws ResBillException
-	 *           if unexpected error occurs
-	 */
-	Tariff saveTariff(Tariff tariff) throws ResBillException;
-
-	/**
 	 * Saves content of {@link TariffPriceListDTO} instance.
 	 * 
 	 * @param dto

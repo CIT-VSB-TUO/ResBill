@@ -52,6 +52,9 @@
         drop constraint if exists FK_invoice_price_list__price_list;
 
     alter table if exists PRICE_LIST 
+        drop constraint if exists FK_price_list__previous;
+
+    alter table if exists PRICE_LIST 
         drop constraint if exists FK_price_list__tariff;
 
     alter table if exists TRANSACTION 
@@ -261,6 +264,7 @@
         begin_date date not null,
         end_date date,
         space_gb_price numeric(10, 2) not null,
+        previous_id int4,
         tariff_id int4 not null,
         primary key (id)
     );
@@ -441,6 +445,11 @@
     alter table if exists INVOICE_PRICE_LIST 
         add constraint FK_invoice_price_list__price_list 
         foreign key (price_list_id) 
+        references PRICE_LIST;
+
+    alter table if exists PRICE_LIST 
+        add constraint FK_price_list__previous 
+        foreign key (previous_id) 
         references PRICE_LIST;
 
     alter table if exists PRICE_LIST 

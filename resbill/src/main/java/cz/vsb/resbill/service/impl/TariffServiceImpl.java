@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import cz.vsb.resbill.criteria.ContractTariffCriteria;
 import cz.vsb.resbill.criteria.TariffCriteria;
 import cz.vsb.resbill.dao.ContractTariffDAO;
+import cz.vsb.resbill.dao.PriceListDAO;
 import cz.vsb.resbill.dao.TariffDAO;
 import cz.vsb.resbill.dto.TariffPriceListDTO;
 import cz.vsb.resbill.exception.PriceListServiceException;
@@ -46,6 +47,9 @@ public class TariffServiceImpl implements TariffService {
 
 	@Inject
 	private ContractTariffDAO contractTariffDAO;
+
+	@Inject
+	private PriceListDAO priceListDAO;
 
 	@Inject
 	private PriceListService priceListService;
@@ -114,20 +118,10 @@ public class TariffServiceImpl implements TariffService {
 	}
 
 	@Override
-	public Tariff saveTariff(Tariff tariff) throws ResBillException {
-		try {
-			return tariffDAO.saveTariff(tariff);
-		} catch (Exception e) {
-			log.error("An unexpected error occured while saving Tariff entity: " + tariff, e);
-			throw new ResBillException(e);
-		}
-	}
-
-	@Override
 	public Tariff saveTariffPriceListDTO(TariffPriceListDTO dto) throws PriceListServiceException, ResBillException {
 		try {
-			Tariff tariff = this.saveTariff(dto.getTariff());
-			if (dto.isPriceListEditable()) {
+			Tariff tariff = tariffDAO.saveTariff(dto.getTariff());
+			if (dto.isLastPriceListEditable()) {
 				priceListService.savePriceList(dto.getLastPriceList());
 			}
 			return tariff;
@@ -153,6 +147,13 @@ public class TariffServiceImpl implements TariffService {
 			List<ContractTariff> contractTariffs = contractTariffDAO.findContractTariffs(ctCriteria, null, null);
 			if (!contractTariffs.isEmpty()) {
 				throw new TariffServiceException(Reason.CONTRACT_TARIFF);
+			}
+
+			// nutno nejprve smazat ceniky (od posledniho)
+			PriceList priceList = priceListDAO.findLastPriceList(tariffId);
+			while (priceList != null) {
+				priceListDAO.deletePriceList(priceList);
+				priceList = priceList.getPrevious();
 			}
 
 			return tariffDAO.deleteTariff(tariff);

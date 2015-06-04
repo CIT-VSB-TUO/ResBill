@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cz.vsb.resbill.dto.TariffPriceListDTO;
 import cz.vsb.resbill.exception.PriceListServiceException;
@@ -29,6 +30,7 @@ import cz.vsb.resbill.exception.TariffServiceException;
 import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.model.PriceList;
 import cz.vsb.resbill.model.Tariff;
+import cz.vsb.resbill.service.PriceListService;
 import cz.vsb.resbill.service.TariffService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -49,6 +51,9 @@ public class TariffEditController {
 
 	@Inject
 	private TariffService tariffService;
+
+	@Inject
+	private PriceListService priceListService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder, Locale locale) {
@@ -124,14 +129,20 @@ public class TariffEditController {
 				return "redirect:/tariffs";
 			} catch (PriceListServiceException e) {
 				switch (e.getReason()) {
-				case INVOICE_DATE_CLASH:
+				case NOT_LAST_PRICE_LIST:
+					bindingResult.reject("error.save.priceList.not.last");
+					break;
+				case INVOICE_EXISTENCE:
+					bindingResult.reject("error.save.priceList.invoice.exists");
+					break;
+				case INVOICE_DATE_COLLISION:
 					bindingResult.reject("error.save.priceList.invoice.date");
+					break;
+				case CONTRACT_PERIOD_UNCOVERED:
+					bindingResult.reject("error.save.priceList.contract.uncovered");
 					break;
 				case INVALID_PERIOD:
 					bindingResult.reject("error.save.priceList.period");
-					break;
-				case INVOICE_PRICE_LIST:
-					bindingResult.reject("error.save.priceList.invoice");
 					break;
 				default:
 					log.warn("Unsupported reason: " + e);
@@ -151,12 +162,9 @@ public class TariffEditController {
 	/**
 	 * Handle POST requests for deleting {@link TariffPriceListDTO} instance.
 	 * 
-	 * @param tariff
-	 * @param bindingResult
-	 * @return
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-	public String delete(@ModelAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus) {
+	@RequestMapping(value = "", method = RequestMethod.POST, params = "deleteTariff")
+	public String deleteTariff(@ModelAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus) {
 		if (log.isDebugEnabled()) {
 			log.debug("TariffPriceListDTO to delete: " + dto);
 		}
@@ -165,6 +173,7 @@ public class TariffEditController {
 			if (log.isDebugEnabled()) {
 				log.debug("Deleted tariff: " + tariff);
 			}
+
 			sessionStatus.setComplete();
 			return "redirect:/tariffs";
 		} catch (TariffServiceException e) {
@@ -180,6 +189,45 @@ public class TariffEditController {
 		} catch (Exception e) {
 			log.error("Cannot delete tariffPriceListDTO: " + dto, e);
 			bindingResult.reject("error.delete.tariff");
+		}
+		return "tariffs/tariffEdit";
+	}
+
+	/**
+	 * Handle POST requests for deleting last {@link PriceList} instance.
+	 * 
+	 */
+	@RequestMapping(value = "", method = RequestMethod.POST, params = "deletePriceList")
+	public String deletePriceList(@ModelAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus,
+			RedirectAttributes redirectAttributes) {
+		if (log.isDebugEnabled()) {
+			log.debug("TariffPriceListDTO.lastPriceList to delete: " + dto.getLastPriceList());
+		}
+		try {
+			PriceList priceList = priceListService.deletePriceList(dto.getLastPriceList().getId());
+			if (log.isDebugEnabled()) {
+				log.debug("Deleted priceList: " + priceList);
+			}
+
+			sessionStatus.setComplete();
+			redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
+			return "redirect:/tariffs/edit";
+		} catch (PriceListServiceException e) {
+			switch (e.getReason()) {
+			case FIRST_PRICE_LIST:
+				bindingResult.reject("error.delete.priceList.first");
+				break;
+			case INVOICE_EXISTENCE:
+				bindingResult.reject("error.delete.priceList.invoice");
+				break;
+			default:
+				log.warn("Unsupported reason: " + e);
+				bindingResult.reject("error.delete.priceList");
+				break;
+			}
+		} catch (Exception e) {
+			log.error("Cannot delete tariffPriceListDTO.lastPriceList: " + dto.getLastPriceList(), e);
+			bindingResult.reject("error.delete.priceList");
 		}
 		return "tariffs/tariffEdit";
 	}

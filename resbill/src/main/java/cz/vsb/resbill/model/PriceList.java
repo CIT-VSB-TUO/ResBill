@@ -12,6 +12,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.Digits;
@@ -55,6 +56,10 @@ public class PriceList extends BaseVersionedEntity implements PeriodLimitedEntit
 
 	@OneToMany(mappedBy = "priceList", fetch = FetchType.LAZY)
 	private Set<InvoicePriceList> invoicePriceLists = new HashSet<InvoicePriceList>();
+
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "previous_id", foreignKey = @ForeignKey(name = "FK_price_list__previous"))
+	private PriceList previous;
 
 	public BigDecimal getCpuPrice() {
 		return cpuPrice;
@@ -114,6 +119,14 @@ public class PriceList extends BaseVersionedEntity implements PeriodLimitedEntit
 		this.invoicePriceLists = invoicePriceLists;
 	}
 
+	public PriceList getPrevious() {
+		return previous;
+	}
+
+	public void setPrevious(PriceList previous) {
+		this.previous = previous;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -129,6 +142,8 @@ public class PriceList extends BaseVersionedEntity implements PeriodLimitedEntit
 		builder.append(backupGBPrice);
 		builder.append(", period=");
 		builder.append(period);
+		builder.append(", previous.id=");
+		builder.append(previous != null ? previous.getId() : null);
 		builder.append(", tariff.id=");
 		builder.append(tariff != null ? tariff.getId() : null);
 		builder.append("]");
