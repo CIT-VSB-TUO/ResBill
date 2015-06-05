@@ -21,7 +21,14 @@ public interface ServerDAO {
 	 */
 	Server findServer(Integer id);
 
-	Server findServer(String serverServerId);
+	/**
+	 * Finds a {@link Server} with given serverID.
+	 * 
+	 * @param serverId
+	 *          natural identification of server
+	 * @return found {@link Server} entity
+	 */
+	Server findServer(String serverId);
 
 	/**
 	 * Finds {@link Server} entities by specified criteria
@@ -36,5 +43,21 @@ public interface ServerDAO {
 	 */
 	List<Server> findServers(ServerCriteria criteria, Integer offset, Integer limit);
 
+	/**
+	 * Saves current state of given {@link Server} entity.
+	 * 
+	 * @param server
+	 *          entity to save
+	 * @return saved entity
+	 */
 	Server saveServer(Server server);
+
+	/**
+	 * Deletes given {@link Server} entity.
+	 * 
+	 * @param server
+	 *          entity to delete
+	 * @return deleted entity
+	 */
+	Server deleteServer(Server server);
 }

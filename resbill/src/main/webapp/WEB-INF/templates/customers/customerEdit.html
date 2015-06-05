@@ -76,7 +76,7 @@
 
 							<div class="form-group required" th:classappend="${#fields.hasErrors('customer.name')} ? 'has-error'">
 								<label class="control-label" th:text="#{label.customer.name}" th:for="customer.name">Název</label>
-								<input type="tel" class="form-control" th:field="*{customer.name}"/>
+								<input type="text" class="form-control" th:field="*{customer.name}"/>
 								<p class="help-block" th:if="${#fields.hasErrors('customer.name')}" th:errors="*{customer.name}" />
 							</div>
 							

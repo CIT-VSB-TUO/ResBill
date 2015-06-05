@@ -76,11 +76,9 @@ public class CustomerEditController {
 		CustomerEditDTO customerEditDTO = null;
 		try {
 			if (customerId != null) {
-				customerEditDTO = new CustomerEditDTO();
-				customerEditDTO.fill(customerService.findCustomer(customerId));
+				customerEditDTO = new CustomerEditDTO(customerService.findCustomer(customerId));
 			} else {
-				customerEditDTO = new CustomerEditDTO();
-				customerEditDTO.fill(new Customer());
+				customerEditDTO = new CustomerEditDTO(new Customer());
 			}
 			model.addAttribute(CUSTOMER_EDIT_DTO_MODEL_KEY, customerEditDTO);
 		} catch (Exception e) {

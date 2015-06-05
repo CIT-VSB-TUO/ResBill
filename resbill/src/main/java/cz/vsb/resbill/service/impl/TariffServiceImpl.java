@@ -111,6 +111,8 @@ public class TariffServiceImpl implements TariffService {
 			dto.fill(tariff);
 
 			return dto;
+		} catch (ResBillException e) {
+			throw e;
 		} catch (Exception e) {
 			log.error("An error occured while finding TariffPriceListDTO by Tariff.id=" + tariffId, e);
 			throw new ResBillException(e);
@@ -146,7 +148,7 @@ public class TariffServiceImpl implements TariffService {
 			ctCriteria.setTariffId(tariffId);
 			List<ContractTariff> contractTariffs = contractTariffDAO.findContractTariffs(ctCriteria, null, null);
 			if (!contractTariffs.isEmpty()) {
-				throw new TariffServiceException(Reason.CONTRACT_TARIFF);
+				throw new TariffServiceException(Reason.CONTRACT_ASSOCIATED);
 			}
 
 			// nutno nejprve smazat ceniky (od posledniho)

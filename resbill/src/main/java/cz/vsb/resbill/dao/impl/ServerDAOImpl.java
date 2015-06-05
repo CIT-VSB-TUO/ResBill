@@ -22,19 +22,13 @@ public class ServerDAOImpl implements ServerDAO {
 	@PersistenceContext
 	private EntityManager em;
 
-	/**
-	 * 
-	 */
 	@Override
 	public Server findServer(Integer id) {
 		return em.find(Server.class, id);
 	}
 
-	/**
-	 * 
-	 */
 	@Override
-	public Server findServer(String serverServerId) {
+	public Server findServer(String serverId) {
 		StringBuilder jpql = new StringBuilder();
 		jpql.append(" SELECT server ");
 		jpql.append(" FROM Server AS server ");
@@ -42,14 +36,11 @@ public class ServerDAOImpl implements ServerDAO {
 
 		TypedQuery<Server> query = em.createQuery(jpql.toString(), Server.class);
 
-		query.setParameter("serverId", serverServerId);
+		query.setParameter("serverId", serverId);
 
 		return DataAccessUtils.uniqueResult(query.getResultList());
 	}
 
-	/**
-	 * 
-	 */
 	@Override
 	public List<Server> findServers(ServerCriteria criteria, Integer offset, Integer limit) {
 		StringBuilder jpql = new StringBuilder("SELECT s FROM Server AS s");
@@ -89,7 +80,7 @@ public class ServerDAOImpl implements ServerDAO {
 					jpql.append(" ORDER BY s.serverId");
 					break;
 				case NAME:
-					jpql.append(" ORDER BY s.name");
+					jpql.append(" ORDER BY s.name, s.serverId");
 					break;
 				}
 			}
@@ -115,11 +106,6 @@ public class ServerDAOImpl implements ServerDAO {
 		return query.getResultList();
 	}
 
-	/**
-	 * 
-	 * @param person
-	 * @return
-	 */
 	@Override
 	public Server saveServer(Server server) {
 		if (server.getId() == null) {
@@ -127,7 +113,14 @@ public class ServerDAOImpl implements ServerDAO {
 		} else {
 			server = em.merge(server);
 		}
+		em.flush();
 
+		return server;
+	}
+
+	@Override
+	public Server deleteServer(Server server) {
+		em.remove(server);
 		em.flush();
 
 		return server;
