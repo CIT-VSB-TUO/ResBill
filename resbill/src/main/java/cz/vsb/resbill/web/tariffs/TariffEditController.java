@@ -178,7 +178,7 @@ public class TariffEditController {
 			return "redirect:/tariffs";
 		} catch (TariffServiceException e) {
 			switch (e.getReason()) {
-			case CONTRACT_TARIFF:
+			case CONTRACT_ASSOCIATED:
 				bindingResult.reject("error.delete.tariff.contract");
 				break;
 			default:

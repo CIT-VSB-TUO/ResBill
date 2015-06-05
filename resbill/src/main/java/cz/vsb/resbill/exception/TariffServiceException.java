@@ -7,7 +7,7 @@ public class TariffServiceException extends ResBillException {
 	public static enum Reason {
 
 		/** Tariff je prirazen ke kontraktu */
-		CONTRACT_TARIFF
+		CONTRACT_ASSOCIATED
 	}
 
 	private Reason reason;

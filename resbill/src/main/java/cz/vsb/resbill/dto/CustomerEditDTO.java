@@ -18,10 +18,7 @@ public class CustomerEditDTO implements Serializable {
 	@NotNull
 	private Integer contactPersonId;
 
-	public CustomerEditDTO() {
-	}
-
-	public void fill(Customer customer) {
+	public CustomerEditDTO(Customer customer) {
 		this.customer = customer;
 		if (customer != null) {
 			this.contactPersonId = customer.getContactPerson() != null ? customer.getContactPerson().getId() : null;

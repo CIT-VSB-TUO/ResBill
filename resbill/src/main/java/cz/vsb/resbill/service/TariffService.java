@@ -20,7 +20,7 @@ public interface TariffService {
 	/**
 	 * Finds a {@link Tariff} with given key.
 	 * 
-	 * @param personId
+	 * @param tariffId
 	 *          primary key of a {@link Tariff}
 	 * @return found {@link Tariff}, otherwise <code>null</code>
 	 * @throws ResBillException
@@ -51,7 +51,7 @@ public interface TariffService {
 	/**
 	 * Finds a {@link TariffPriceListDTO} for given key.
 	 * 
-	 * @param personId
+	 * @param tariffId
 	 *          primary key of a {@link Tariff}
 	 * @return found {@link TariffPriceListDTO}, otherwise <code>null</code>
 	 * @throws ResBillException

@@ -26,8 +26,6 @@ public class TariffPriceListDTO implements Serializable {
 
 	private List<PriceList> previousPriceLists;
 
-	private boolean tariffDeletable = true;
-
 	private boolean lastPriceListEditable = true;
 
 	public TariffPriceListDTO() {
@@ -36,7 +34,6 @@ public class TariffPriceListDTO implements Serializable {
 	public void fill(Tariff tariff) {
 		this.tariff = tariff;
 		if (tariff != null) {
-			tariffDeletable = tariff.getContractTariffs().isEmpty();
 			previousPriceLists = new ArrayList<PriceList>();
 			for (PriceList priceList : tariff.getPrices()) {
 				if (priceList.getPeriod().getEndDate() == null) {
@@ -76,24 +73,12 @@ public class TariffPriceListDTO implements Serializable {
 		this.previousPriceLists = previousPriceLists;
 	}
 
-	public boolean isTariffDeletable() {
-		return tariffDeletable;
-	}
-
-	public void setTariffDeletable(boolean tariffDeletable) {
-		this.tariffDeletable = tariffDeletable;
-	}
-
 	public boolean isLastPriceListEditable() {
 		return lastPriceListEditable;
 	}
 
 	public void setLastPriceListEditable(boolean lastPriceListEditable) {
 		this.lastPriceListEditable = lastPriceListEditable;
-	}
-
-	public boolean isLastPriceListDeletable() {
-		return isLastPriceListEditable() && getLastPriceList() != null && getLastPriceList().getPrevious() != null;
 	}
 
 	@Override
@@ -107,8 +92,6 @@ public class TariffPriceListDTO implements Serializable {
 		builder.append(lastPriceList);
 		builder.append(", previousPriceLists.size=");
 		builder.append(previousPriceLists != null ? previousPriceLists.size() : null);
-		builder.append(", tariffDeletable=");
-		builder.append(tariffDeletable);
 		builder.append(", lastPriceListEditable=");
 		builder.append(lastPriceListEditable);
 		builder.append("]");
