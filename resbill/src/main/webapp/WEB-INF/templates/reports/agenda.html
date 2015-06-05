@@ -55,6 +55,9 @@
     <div class="row">
       <div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contracts}')}" th:errors="${contracts}">Global error</div>
     </div>
+    <div class="row">
+      <div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${dailyImports}')}" th:errors="${dailyImports}">Global error</div>
+    </div>
 
     <!-- Zobrazeni kontraktu -->
     <div class="row">
@@ -146,6 +149,56 @@
         </table>
       </div>
     </div>
+
+    <!-- Zobrazeni importu -->
+    <div class="row">
+      <div class="col-lg-12">
+        <h2 class="page-header" th:text="#{page.header.agenda.import}">Importy (poslední týden)</h2>
+      </div>
+    </div>
+
+    <div class="row" th:if="${dailyImports != null}">
+      <div class="col-lg-12">
+        <table class="table table-header-rotated" id="contracts">
+          <thead>
+            <tr>
+              <th class="nowrap" th:text="#{column.agenda.dailyImport.date}">Datum</th>
+              <th class="nowrap" th:text="#{column.agenda.dailyImport.importTimestamp}">Čas importu</th>
+              <th class="rotate"><div>
+                  <span th:text="#{column.agenda.dailyImport.errorLines}">Řádky s chybou</span>
+                </div></th>
+              <th class="rotate"><div>
+                  <span th:text="#{column.agenda.dailyImport.warnLines}">Řádky s varováním</span>
+                </div></th>
+              <th class="rotate"><div>
+                  <span></span>
+                </div></th>
+            </tr>
+          </thead>
+
+          <tbody th:remove="all-but-first">
+            <tr th:each="dailyImport : ${dailyImports}">
+              <td th:text="${#dates.format(dailyImport.date,'__#{date.format.list}__')}">31.05.2015</td>
+              <td th:text="${#dates.format(dailyImport.importEndTimestamp,'__#{timestamp.format.detail}__')}">01.06.2015 08:01:05.123</td>
+              <td class="text-center rotated-col"><i th:if="${dailyImport.hasErrors}" class="fa fa-exclamation-circle text-danger"></i></td>
+              <td class="text-center rotated-col"><i th:if="${dailyImport.hasWarns}" class="fa fa-exclamation-circle text-warning"></i></td>
+
+              <td class="text-center rotated-col"><a class=" " href="../dailyImport/dailyImportDetail.html"
+                th:href="@{/dailyImport/detail(dailyImportId=${dailyImport.dailyImportId})}" th:title="#{button.title.dailyImport.detail}"> <i
+                  class="fa fa-edit"></i>
+              </a></td>
+
+              <!-- 
+              <td><a class="btn btn-primary btn-circle" href="invoiceDetail.html" th:href="@{/invoice/detail(invoiceId=${invoice.transactionId})}"
+                th:title="#{button.title.invoice.detail}"> <i class="fa fa-edit"></i>
+              </a></td>
+               -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 
 

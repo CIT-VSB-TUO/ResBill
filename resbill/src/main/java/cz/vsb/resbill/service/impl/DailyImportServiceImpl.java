@@ -14,8 +14,11 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -40,7 +43,9 @@ import cz.vsb.resbill.dao.DailyImportDAO;
 import cz.vsb.resbill.dao.DailyUsageDAO;
 import cz.vsb.resbill.dao.ProductionLevelDAO;
 import cz.vsb.resbill.dao.ServerDAO;
+import cz.vsb.resbill.dto.DailyImportAgendaDTO;
 import cz.vsb.resbill.dto.DailyImportAllReportsResultDTO;
+import cz.vsb.resbill.dto.DailyImportDTO;
 import cz.vsb.resbill.exception.DailyImportException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.ContractServer;
@@ -138,6 +143,97 @@ public class DailyImportServiceImpl implements DailyImportService {
       return dailyImportDAO.findDailyImports(criteria, offset, limit);
     } catch (Exception exc) {
       log.error("An unexpected error occured while finding DailyImports.", exc);
+      throw new ResBillException(exc);
+    }
+  }
+
+  /**
+   * 
+   */
+  @Override
+  public List<DailyImportDTO> findDailyImportDTOs(DailyImportCriteria criteria, Integer offset, Integer limit) throws ResBillException {
+    try {
+      List<DailyImport> dailyImports = findDailyImports(criteria, offset, limit);
+      List<DailyImportDTO> dtos = new ArrayList<DailyImportDTO>();
+
+      for (DailyImport dailyImport : dailyImports) {
+        DailyImportDTO dto = new DailyImportDTO();
+        dto.fill(dailyImport);
+        dtos.add(dto);
+      }
+
+      return dtos;
+    } catch (Exception exc) {
+      log.error("An unexpected error occured while finding DailyImportDTOs.", exc);
+      throw new ResBillException(exc);
+    }
+  }
+
+  /**
+   * Nalezne denni importy pro pouziti na Dashboardu (Agenda).
+   * 
+   * Tj. nalezne vsechny denni importy, ktere splnuji alespon jednu pozadovanou vlastnost (Feature) - tim se lisi od standardni metody findDailyImports.
+   * 
+   * @param criteria
+   * @param offset
+   * @param limit
+   * @return
+   */
+  public List<DailyImportAgendaDTO> findDailyImportAgendaDTOs(DailyImportCriteria criteria, Integer offset, Integer limit) throws ResBillException {
+    try {
+      DailyImportCriteria crit = null;
+      List<DailyImport> dailyImports = null;
+      Set<Integer> dailyImportIds = new HashSet<Integer>();
+
+      // Denni importy s chybou
+      crit = criteria.clone();
+      crit.setFeatures(EnumSet.of(DailyImportCriteria.Feature.HAS_ERRORS));
+      dailyImports = findDailyImports(crit, null, null);
+      Set<Integer> hasErrorsDailyImportIds = new HashSet<Integer>();
+      for (DailyImport dailyImport : dailyImports) {
+        hasErrorsDailyImportIds.add(dailyImport.getId());
+      }
+      dailyImportIds.addAll(hasErrorsDailyImportIds);
+
+      // Denni importy s varovanim
+      crit = criteria.clone();
+      crit.setFeatures(EnumSet.of(DailyImportCriteria.Feature.HAS_WARNS));
+      dailyImports = findDailyImports(crit, null, null);
+      Set<Integer> hasWarnsDailyImportIds = new HashSet<Integer>();
+      for (DailyImport dailyImport : dailyImports) {
+        hasWarnsDailyImportIds.add(dailyImport.getId());
+      }
+      dailyImportIds.addAll(hasWarnsDailyImportIds);
+
+      // Pokud neexistuje zadny "zajimavy" denni import, pak vratim prazdny seznam
+      if (dailyImportIds.isEmpty()) {
+        return new ArrayList<DailyImportAgendaDTO>();
+      }
+
+      // Ziskam vsechny "zajimave" denni importy setridene dle puvodniho pozadavku
+      crit = new DailyImportCriteria();
+      crit.setDailyImportIds(dailyImportIds);
+      crit.setOrderBy(criteria.getOrderBy());
+
+      dailyImports = findDailyImports(crit, offset, limit);
+      List<DailyImportAgendaDTO> dtos = new ArrayList<DailyImportAgendaDTO>();
+
+      for (DailyImport dailyImport : dailyImports) {
+        DailyImportAgendaDTO dto = new DailyImportAgendaDTO();
+        dto.fill(dailyImport);
+        dtos.add(dto);
+
+        if (hasErrorsDailyImportIds.contains(dailyImport.getId())) {
+          dto.setHasErrors(true);
+        }
+        if (hasWarnsDailyImportIds.contains(dailyImport.getId())) {
+          dto.setHasWarns(true);
+        }
+      }
+
+      return dtos;
+    } catch (Exception exc) {
+      log.error("An unexpected error occured while finding DailyImportAgendaDTOs.", exc);
       throw new ResBillException(exc);
     }
   }
