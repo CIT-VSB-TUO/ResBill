@@ -148,6 +148,16 @@ public class ContractServiceImpl implements ContractService {
         negativeBalanceContractIds.add(contract.getId());
       }
       contractIds.addAll(negativeBalanceContractIds);
+      
+      // Kontrakty s kladnym zustatkem
+      crit = criteria.clone();
+      crit.setFeatures(EnumSet.of(ContractCriteria.Feature.POSITIVE_BALANCE));
+      contracts = findContracts(crit, null, null);
+      Set<Integer> positiveBalanceContractIds = new HashSet<Integer>();
+      for (Contract contract : contracts) {
+        positiveBalanceContractIds.add(contract.getId());
+      }
+      contractIds.addAll(positiveBalanceContractIds);
 
       // Pokud neexistuje zadny "zajimavy" kontrakt, pak vratim prazdny seznam
       if (contractIds.isEmpty()) {
@@ -184,6 +194,9 @@ public class ContractServiceImpl implements ContractService {
         }
         if (negativeBalanceContractIds.contains(contract.getId())) {
           dto.setNegativeBalance(true);
+        }
+        if (positiveBalanceContractIds.contains(contract.getId())) {
+          dto.setPositiveBalance(true);
         }
       }
 

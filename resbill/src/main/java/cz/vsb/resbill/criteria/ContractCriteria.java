@@ -149,6 +149,11 @@ public class ContractCriteria implements Serializable, Cloneable {
      */
     NEGATIVE_BALANCE,
 
+    /**
+     * Kontrakty s kladným kreditem
+     */
+    POSITIVE_BALANCE,
+    
   }
 
   /**

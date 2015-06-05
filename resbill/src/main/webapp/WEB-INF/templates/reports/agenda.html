@@ -128,6 +128,9 @@
               <th class="rotate"><div>
                   <span th:text="#{column.agenda.contract.negativeBalance}">Záporný zůstatek</span>
                 </div></th>
+              <th class="rotate"><div>
+                  <span th:text="#{column.agenda.contract.positiveBalance}">Kladný zůstatek</span>
+                </div></th>
             </tr>
           </thead>
 
@@ -141,6 +144,7 @@
               <td class="text-center rotated-col"><i th:if="${contract.noTariff}" class="fa fa-exclamation-circle text-warning"></i></td>
               <td class="text-center rotated-col"><i th:if="${contract.noServer}" class="fa fa-exclamation-circle text-warning"></i></td>
               <td class="text-center rotated-col"><i th:if="${contract.negativeBalance}" class="fa fa-exclamation-circle text-warning"></i></td>
+              <td class="text-center rotated-col"><i th:if="${contract.positiveBalance}" class="fa fa-exclamation-circle text-success"></i></td>
 
               <!-- 
               <td><a class="btn btn-primary btn-circle" href="invoiceDetail.html" th:href="@{/invoice/detail(invoiceId=${invoice.transactionId})}"

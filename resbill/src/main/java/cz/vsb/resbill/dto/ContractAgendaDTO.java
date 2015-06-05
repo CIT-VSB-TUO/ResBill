@@ -29,6 +29,8 @@ public class ContractAgendaDTO extends ContractDTO {
 
   private boolean           negativeBalance             = false;
 
+  private boolean           positiveBalance             = false;
+
   /**
    * @return the dailyUsagesAfterContractEnd
    */
@@ -119,6 +121,21 @@ public class ContractAgendaDTO extends ContractDTO {
     this.negativeBalance = negativeBalance;
   }
 
+  /**
+   * @return the positiveBalance
+   */
+  public boolean isPositiveBalance() {
+    return positiveBalance;
+  }
+
+  /**
+   * @param positiveBalance
+   *          the positiveBalance to set
+   */
+  public void setPositiveBalance(boolean positiveBalance) {
+    this.positiveBalance = positiveBalance;
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -133,6 +150,7 @@ public class ContractAgendaDTO extends ContractDTO {
     builder.append("noServer", noServer);
     builder.append("noTariff", noTariff);
     builder.append("negativeBalance", negativeBalance);
+    builder.append("positiveBalance", positiveBalance);
     builder.append("toString()", super.toString());
     return builder.toString();
   }

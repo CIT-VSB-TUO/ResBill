@@ -141,6 +141,11 @@ public class ContractDAOImpl implements ContractDAO {
         if (criteria.getFeatures().contains(ContractCriteria.Feature.NEGATIVE_BALANCE)) {
           where.add("contract.balance < 0");
         }
+
+        // Kontrakty s kladnym kreditem
+        if (criteria.getFeatures().contains(ContractCriteria.Feature.POSITIVE_BALANCE)) {
+          where.add("contract.balance > 0");
+        }
       }
 
       if (!where.isEmpty()) {
