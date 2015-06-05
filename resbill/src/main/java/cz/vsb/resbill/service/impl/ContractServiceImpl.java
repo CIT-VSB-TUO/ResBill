@@ -148,7 +148,7 @@ public class ContractServiceImpl implements ContractService {
       }
       contractIds.addAll(negativeBalanceContractIds);
 
-      // Pokud neexistuje zadny "zajima" kontrakt, pak vratim prazdny seznam
+      // Pokud neexistuje zadny "zajimavy" kontrakt, pak vratim prazdny seznam
       if (contractIds.isEmpty()) {
         return new ArrayList<ContractAgendaDTO>();
       }

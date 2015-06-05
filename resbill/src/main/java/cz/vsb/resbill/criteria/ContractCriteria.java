@@ -3,7 +3,6 @@ package cz.vsb.resbill.criteria;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
@@ -28,11 +27,11 @@ public class ContractCriteria implements Serializable, Cloneable {
 
   private Set<Integer>      contractIds      = null;
 
-  private EnumSet<Feature>  features;
+  private EnumSet<Feature>  features         = null;
 
   /**
- * 
- */
+   * 
+   */
   @Override
   public ContractCriteria clone() throws CloneNotSupportedException {
     ContractCriteria clone = (ContractCriteria) super.clone();
@@ -134,7 +133,7 @@ public class ContractCriteria implements Serializable, Cloneable {
      * Kontrakty bez typu účtování
      */
     NO_INVOICE_TYPE,
-    
+
     /**
      * Kontrakty bez serveru
      */
