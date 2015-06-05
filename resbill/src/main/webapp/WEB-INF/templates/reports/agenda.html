@@ -56,6 +56,9 @@
       <div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contracts}')}" th:errors="${contracts}">Global error</div>
     </div>
     <div class="row">
+      <div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${servers}')}" th:errors="${servers}">Global error</div>
+    </div>
+    <div class="row">
       <div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${dailyImports}')}" th:errors="${dailyImports}">Global error</div>
     </div>
 
@@ -157,6 +160,45 @@
         <h2 class="page-header" th:text="#{page.header.agenda.server}">Servery</h2>
       </div>
     </div>
+
+    <div class="row" th:if="${servers != null}">
+      <div class="col-lg-12">
+        <table class="table table-header-rotated" id="contracts">
+          <thead>
+            <tr>
+              <th class="nowrap" th:text="#{column.agenda.server.serverId}">ServerID</th>
+              <th class="nowrap" th:text="#{column.agenda.server.name}">Jméno</th>
+              <th class="rotate"><div>
+                  <span th:text="#{column.agenda.server.outOfContractUsage}">Spotřeba bez kontraktu</span>
+                </div></th>
+              <th class="rotate"><div>
+                  <span th:text="#{column.agenda.server.noContract}">Bez kontraktu</span>
+                </div></th>
+              <th class="rotate"><div>
+                  <span th:text="#{column.agenda.server.noUsage}">Bez spotřeby</span>
+                </div></th>
+            </tr>
+          </thead>
+
+          <tbody th:remove="all-but-first">
+            <tr th:each="server : ${servers}">
+              <td th:text="${server.serverId}">abcde123</td>
+              <td th:text="${server.name}">Server XYZ</td>
+              <td class="text-center rotated-col"><i th:if="${server.dailyUsagesOutOfContract}" class="fa fa-exclamation-circle text-danger"></i></td>
+              <td class="text-center rotated-col"><i th:if="${server.noContract}" class="fa fa-exclamation-circle text-warning"></i></td>
+              <td class="text-center rotated-col"><i th:if="${server.noDailyUsage}" class="fa fa-exclamation-circle text-warning"></i></td>
+
+              <!-- 
+              <td><a class="btn btn-primary btn-circle" href="invoiceDetail.html" th:href="@{/invoice/detail(invoiceId=${invoice.transactionId})}"
+                th:title="#{button.title.invoice.detail}"> <i class="fa fa-edit"></i>
+              </a></td>
+               -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
 
     <!-- Zobrazeni dennich importu -->
     <div class="row">

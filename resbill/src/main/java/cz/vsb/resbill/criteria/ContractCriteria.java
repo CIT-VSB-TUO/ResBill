@@ -23,9 +23,9 @@ public class ContractCriteria implements Serializable, Cloneable {
 
   private List<OrderBy>     orderBy          = Arrays.asList(new OrderBy[] { OrderBy.EVIDENCE_NUMBER_ASC });
 
-  private Integer           customerId       = null;
-
   private Set<Integer>      contractIds      = null;
+
+  private Integer           customerId       = null;
 
   private EnumSet<Feature>  features         = null;
 
@@ -36,7 +36,7 @@ public class ContractCriteria implements Serializable, Cloneable {
   public ContractCriteria clone() throws CloneNotSupportedException {
     ContractCriteria clone = (ContractCriteria) super.clone();
 
-    clone.setOrderBy(orderBy != null ? new ArrayList<ContractCriteria.OrderBy>(orderBy) : null);
+    clone.setOrderBy(orderBy != null ? new ArrayList<OrderBy>(orderBy) : null);
     clone.setContractIds(contractIds != null ? new HashSet<Integer>(contractIds) : null);
     clone.setFeatures(features != null ? features.clone() : null);
 

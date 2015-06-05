@@ -21,10 +21,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import cz.vsb.resbill.criteria.ContractCriteria;
 import cz.vsb.resbill.criteria.DailyImportCriteria;
+import cz.vsb.resbill.criteria.ServerCriteria;
 import cz.vsb.resbill.dto.ContractAgendaDTO;
 import cz.vsb.resbill.dto.DailyImportAgendaDTO;
+import cz.vsb.resbill.dto.ServerAgendaDTO;
 import cz.vsb.resbill.service.ContractService;
 import cz.vsb.resbill.service.DailyImportService;
+import cz.vsb.resbill.service.ServerService;
 import cz.vsb.resbill.util.WebUtils;
 
 /**
@@ -44,10 +47,15 @@ public class AgendaController {
 
   public static final String  MODEL_OBJECT_KEY_CONTRACTS     = "contracts";
 
+  public static final String  MODEL_OBJECT_KEY_SERVERS       = "servers";
+
   public static final String  MODEL_OBJECT_KEY_DAILY_IMPORTS = "dailyImports";
 
   @Inject
   private ContractService     contractService;
+
+  @Inject
+  private ServerService       serverService;
 
   @Inject
   private DailyImportService  dailyImportService;
@@ -66,6 +74,15 @@ public class AgendaController {
    * @param model
    * @param msgKey
    */
+  protected static void addServersGlobalError(ModelMap model, String msgKey) {
+    WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_SERVERS, msgKey);
+  }
+
+  /**
+   * 
+   * @param model
+   * @param msgKey
+   */
   protected static void addDailyImportsGlobalError(ModelMap model, String msgKey) {
     WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_DAILY_IMPORTS, msgKey);
   }
@@ -77,6 +94,7 @@ public class AgendaController {
   @RequestMapping(method = RequestMethod.GET)
   public String view(ModelMap model) {
     loadContractAgendaDTOs(model);
+    loadServerAgendaDTOs(model);
     loadDailyImportAgendaDTOs(model);
 
     return "reports/agenda";
@@ -117,6 +135,36 @@ public class AgendaController {
    * 
    * @return
    */
+  protected List<ServerAgendaDTO> loadServerAgendaDTOs(ModelMap model) {
+
+    List<ServerAgendaDTO> dtos = null;
+
+    try {
+      List<ServerCriteria.OrderBy> orderBy = new ArrayList<ServerCriteria.OrderBy>();
+      orderBy.add(ServerCriteria.OrderBy.SERVER_ID_ASC);
+
+      ServerCriteria criteria = new ServerCriteria();
+      criteria.setOrderBy(orderBy);
+
+      dtos = serverService.findServerAgendaDTOs(criteria, null, null);
+
+      model.addAttribute(MODEL_OBJECT_KEY_SERVERS, dtos);
+    } catch (Exception exc) {
+      log.error("Cannot load Servers.", exc);
+
+      dtos = null;
+
+      model.addAttribute(MODEL_OBJECT_KEY_SERVERS, dtos);
+      addServersGlobalError(model, "error.load.agenda.servers");
+    }
+
+    return dtos;
+  }
+
+  /**
+   * 
+   * @return
+   */
   protected List<DailyImportAgendaDTO> loadDailyImportAgendaDTOs(ModelMap model) {
 
     List<DailyImportAgendaDTO> dtos = null;
@@ -129,7 +177,6 @@ public class AgendaController {
       Date now = new Date();
       Date today = DateUtils.truncate(now, Calendar.DATE);
       Date histDay = DateUtils.addDays(today, -DAILY_IMPORT_HISTORY_DAYS);
-      
 
       DailyImportCriteria criteria = new DailyImportCriteria();
       criteria.setOrderBy(orderBy);

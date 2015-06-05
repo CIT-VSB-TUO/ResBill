@@ -100,6 +100,7 @@ public class DailyImportServiceImpl implements DailyImportService {
    * @return
    * @throws ResBillException
    */
+  @Override
   public DailyImport findDailyImport(Integer dailyImportId) throws ResBillException {
     return findDailyImport(dailyImportId, false, false);
   }
@@ -112,6 +113,7 @@ public class DailyImportServiceImpl implements DailyImportService {
    * @return
    * @throws ResBillException
    */
+  @Override
   public DailyImport findDailyImport(Integer dailyImportId, boolean initializeReport, boolean initializeProtocol) throws ResBillException {
     try {
       DailyImport dailyImport = dailyImportDAO.findDailyImport(dailyImportId);
@@ -138,6 +140,7 @@ public class DailyImportServiceImpl implements DailyImportService {
    * @param criteria
    * @return
    */
+  @Override
   public List<DailyImport> findDailyImports(DailyImportCriteria criteria, Integer offset, Integer limit) throws ResBillException {
     try {
       return dailyImportDAO.findDailyImports(criteria, offset, limit);
@@ -179,6 +182,7 @@ public class DailyImportServiceImpl implements DailyImportService {
    * @param limit
    * @return
    */
+  @Override
   public List<DailyImportAgendaDTO> findDailyImportAgendaDTOs(DailyImportCriteria criteria, Integer offset, Integer limit) throws ResBillException {
     try {
       DailyImportCriteria crit = null;

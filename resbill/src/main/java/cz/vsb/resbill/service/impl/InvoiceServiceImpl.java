@@ -198,6 +198,7 @@ public class InvoiceServiceImpl implements InvoiceService {
    * @param month
    * @return
    */
+  @Override
   public InvoiceExportResultDTO exportInvoices(Date month) throws ResBillException {
     log.info("Zacinam export faktur.");
     try {

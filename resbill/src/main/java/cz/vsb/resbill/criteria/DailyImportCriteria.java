@@ -47,7 +47,7 @@ public class DailyImportCriteria implements Serializable, Cloneable {
   public DailyImportCriteria clone() throws CloneNotSupportedException {
     DailyImportCriteria clone = (DailyImportCriteria) super.clone();
 
-    clone.setOrderBy(orderBy != null ? new ArrayList<DailyImportCriteria.OrderBy>(orderBy) : null);
+    clone.setOrderBy(orderBy != null ? new ArrayList<OrderBy>(orderBy) : null);
     clone.setDailyImportIds(dailyImportIds != null ? new HashSet<Integer>(dailyImportIds) : null);
     clone.setFeatures(features != null ? features.clone() : null);
 

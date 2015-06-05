@@ -6,64 +6,64 @@ package cz.vsb.resbill.dto;
 
 import java.io.Serializable;
 
-import cz.vsb.resbill.model.Contract;
+import cz.vsb.resbill.model.Server;
 import cz.vsb.resbill.util.ToStringBuilder;
 
 /**
  * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
  *
  */
-public class ContractDTO implements Serializable {
+public class ServerDTO implements Serializable {
 
   /**
    * 
    */
   private static final long serialVersionUID = 1L;
 
-  private Integer           contractId       = null;
+  private Integer           id               = null;
 
-  private Integer           evidenceNumber   = null;
+  private String            serverId         = null;
 
   private String            name             = null;
 
   /**
    * 
-   * @param contract
+   * @param server
    */
-  public void fill(Contract contract) {
-    contractId = contract.getId();
-    evidenceNumber = contract.getEvidenceNumber();
-    name = contract.getName();
+  public void fill(Server server) {
+    id = server.getId();
+    serverId = server.getServerId();
+    name = server.getName();
   }
 
   /**
-   * @return the contractId
+   * @return the id
    */
-  public Integer getContractId() {
-    return contractId;
+  public Integer getId() {
+    return id;
   }
 
   /**
-   * @param contractId
-   *          the contractId to set
+   * @param id
+   *          the id to set
    */
-  public void setContractId(Integer contractId) {
-    this.contractId = contractId;
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   /**
-   * @return the evidenceNumber
+   * @return the serverId
    */
-  public Integer getEvidenceNumber() {
-    return evidenceNumber;
+  public String getServerId() {
+    return serverId;
   }
 
   /**
-   * @param evidenceNumber
-   *          the evidenceNumber to set
+   * @param serverId
+   *          the serverId to set
    */
-  public void setEvidenceNumber(Integer evidenceNumber) {
-    this.evidenceNumber = evidenceNumber;
+  public void setServerId(String serverId) {
+    this.serverId = serverId;
   }
 
   /**
@@ -89,8 +89,8 @@ public class ContractDTO implements Serializable {
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this);
-    builder.append("contractId", contractId);
-    builder.append("evidenceNumber", evidenceNumber);
+    builder.append("id", id);
+    builder.append("serverId", serverId);
     builder.append("name", name);
     builder.append("toString()", super.toString());
     return builder.toString();

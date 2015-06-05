@@ -82,6 +82,7 @@ public class ContractServiceImpl implements ContractService {
    * @param limit
    * @return
    */
+  @Override
   public List<ContractAgendaDTO> findContractAgendaDTOs(ContractCriteria criteria, Integer offset, Integer limit) throws ResBillException {
     try {
       ContractCriteria crit = null;
@@ -106,7 +107,7 @@ public class ContractServiceImpl implements ContractService {
       for (Contract contract : contracts) {
         outOfTariffContractIds.add(contract.getId());
       }
-      outOfTariffContractIds.addAll(afterEndContractIds);
+      contractIds.addAll(outOfTariffContractIds);
 
       // Kontrakty bez typu účtování
       crit = criteria.clone();

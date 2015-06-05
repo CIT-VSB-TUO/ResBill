@@ -1,82 +1,158 @@
 package cz.vsb.resbill.criteria;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class ServerCriteria implements Serializable {
+import cz.vsb.resbill.util.ToStringBuilder;
 
-	private static final long serialVersionUID = -1967413195158720777L;
+public class ServerCriteria implements Serializable, Cloneable {
 
-	public static enum OrderBy {
-		SERVER_ID, NAME
-	}
+  private static final long serialVersionUID = -1967413195158720777L;
 
-	private String serverId;
+  private List<OrderBy>     orderBy          = Arrays.asList(new OrderBy[] { OrderBy.SERVER_ID_ASC });
 
-	private String namePrefix;
+  private String            serverId         = null;
 
-	private Boolean used;
+  private Set<Integer>      serverIds        = null;
 
-	private Boolean inContract;
+  private String            namePrefix       = null;
 
-	private OrderBy orderBy;
+  private EnumSet<Feature>  features         = null;
 
-	public String getServerId() {
-		return serverId;
-	}
+  /**
+   * 
+   */
+  @Override
+  public ServerCriteria clone() throws CloneNotSupportedException {
+    ServerCriteria clone = (ServerCriteria) super.clone();
 
-	public void setServerId(String serverId) {
-		this.serverId = serverId;
-	}
+    clone.setOrderBy(orderBy != null ? new ArrayList<OrderBy>(orderBy) : null);
+    clone.setServerIds(serverIds != null ? new HashSet<Integer>(serverIds) : null);
+    clone.setFeatures(features != null ? features.clone() : null);
 
-	public String getNamePrefix() {
-		return namePrefix;
-	}
+    return clone;
+  }
 
-	public void setNamePrefix(String namePrefix) {
-		this.namePrefix = namePrefix;
-	}
+  public String getServerId() {
+    return serverId;
+  }
 
-	public Boolean getUsed() {
-		return used;
-	}
+  public void setServerId(String serverId) {
+    this.serverId = serverId;
+  }
 
-	public void setUsed(Boolean used) {
-		this.used = used;
-	}
+  /**
+   * @return the serverIds
+   */
+  public Set<Integer> getServerIds() {
+    return serverIds;
+  }
 
-	public Boolean getInContract() {
-		return inContract;
-	}
+  /**
+   * @param serverIds
+   *          the serverIds to set
+   */
+  public void setServerIds(Set<Integer> serverIds) {
+    this.serverIds = serverIds;
+  }
 
-	public void setInContract(Boolean inContract) {
-		this.inContract = inContract;
-	}
+  public String getNamePrefix() {
+    return namePrefix;
+  }
 
-	public OrderBy getOrderBy() {
-		return orderBy;
-	}
+  public void setNamePrefix(String namePrefix) {
+    this.namePrefix = namePrefix;
+  }
 
-	public void setOrderBy(OrderBy orderBy) {
-		this.orderBy = orderBy;
-	}
+  /**
+   * @return the features
+   */
+  public EnumSet<Feature> getFeatures() {
+    return features;
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("ServerCriteria [");
-		builder.append(super.toString());
-		builder.append(", serverId=");
-		builder.append(serverId);
-		builder.append(", namePrefix=");
-		builder.append(namePrefix);
-		builder.append(", used=");
-		builder.append(used);
-		builder.append(", inContract=");
-		builder.append(inContract);
-		builder.append(", orderBy=");
-		builder.append(orderBy);
-		builder.append("]");
-		return builder.toString();
-	}
+  /**
+   * @param features
+   *          the features to set
+   */
+  public void setFeatures(EnumSet<Feature> features) {
+    this.features = features;
+  }
+
+  /**
+   * @return the orderBy
+   */
+  public List<OrderBy> getOrderBy() {
+    return orderBy;
+  }
+
+  /**
+   * @param orderBy
+   *          the orderBy to set
+   */
+  public void setOrderBy(List<OrderBy> orderBy) {
+    this.orderBy = orderBy;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    ToStringBuilder builder = new ToStringBuilder(this);
+    builder.append("orderBy", orderBy);
+    builder.append("serverId", serverId);
+    builder.append("serverIds", serverIds);
+    builder.append("namePrefix", namePrefix);
+    builder.append("features", features);
+    builder.append("toString()", super.toString());
+    return builder.toString();
+  }
+
+  /**
+   * Pri hledani se vrati pouze ty servery, ktere splnuji pozadovanou vlastnost
+   * 
+   * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
+   *
+   */
+  public static enum Feature {
+    /**
+     * Servery odebírající zdroje mimo období prirazeni ke kontraktu
+     */
+    DAILY_USAGE_OUT_OF_CONTRACT,
+
+    /**
+     * Servery bez kontraktu
+     */
+    NO_CONTRACT,
+
+    /**
+     * Servery bez denniho vyuziti zdroju
+     */
+    NO_DAILY_USAGE,
+
+  }
+
+  /**
+   * 
+   * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
+   *
+   */
+  public static enum OrderBy {
+    SERVER_ID_ASC,
+
+    SERVER_ID_DESC,
+
+    NAME_ASC,
+
+    NAME_DESC,
+  }
 
 }
