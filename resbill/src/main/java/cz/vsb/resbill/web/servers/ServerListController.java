@@ -28,41 +28,41 @@ import cz.vsb.resbill.util.WebUtils;
 @RequestMapping("/servers")
 public class ServerListController {
 
-  private static final Logger log               = LoggerFactory.getLogger(ServerListController.class);
+	private static final Logger log = LoggerFactory.getLogger(ServerListController.class);
 
-  private static final String SERVERS_MODEL_KEY = "servers";
+	private static final String SERVERS_MODEL_KEY = "servers";
 
-  @Inject
-  private ServerService       serverService;
+	@Inject
+	private ServerService serverService;
 
-  private void loadServers(ModelMap model) {
-    List<Server> servers = null;
-    try {
-      ServerCriteria criteria = new ServerCriteria();
-      criteria.setOrderBy(Arrays.asList(new OrderBy[] { OrderBy.SERVER_ID_ASC }));
-      servers = serverService.findServers(criteria, null, null);
-      model.addAttribute(SERVERS_MODEL_KEY, servers);
-    } catch (Exception e) {
-      log.error("Cannot load list of servers.", e);
+	private void loadServers(ModelMap model) {
+		List<Server> servers = null;
+		try {
+			ServerCriteria criteria = new ServerCriteria();
+			criteria.setOrderBy(Arrays.asList(new OrderBy[] { OrderBy.SERVER_ID_ASC }));
+			servers = serverService.findServers(criteria, null, null);
+			model.addAttribute(SERVERS_MODEL_KEY, servers);
+		} catch (Exception e) {
+			log.error("Cannot load list of servers.", e);
 
-      model.addAttribute(SERVERS_MODEL_KEY, servers);
-      WebUtils.addGlobalError(model, SERVERS_MODEL_KEY, "error.load.servers");
-    }
-    if (log.isDebugEnabled()) {
-      log.debug("Loaded list of servers size: " + (servers != null ? servers.size() : null));
-    }
-  }
+			model.addAttribute(SERVERS_MODEL_KEY, servers);
+			WebUtils.addGlobalError(model, SERVERS_MODEL_KEY, "error.load.servers");
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("Loaded list of servers size: " + (servers != null ? servers.size() : null));
+		}
+	}
 
-  /**
-   * Handles all GET requests. Loads a list of all servers and binds it with the key "servers" into a model.
-   * 
-   * @param model
-   * @return
-   */
-  @RequestMapping(method = RequestMethod.GET)
-  public String view(ModelMap model) {
-    loadServers(model);
+	/**
+	 * Handles all GET requests. Loads a list of all servers and binds it with the key "servers" into a model.
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET)
+	public String view(ModelMap model) {
+		loadServers(model);
 
-    return "servers/serverList";
-  }
+		return "servers/serverList";
+	}
 }

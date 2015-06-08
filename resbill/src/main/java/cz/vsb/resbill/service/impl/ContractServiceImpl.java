@@ -32,179 +32,189 @@ import cz.vsb.resbill.service.ResBillService;
 @ResBillService
 public class ContractServiceImpl implements ContractService {
 
-  private static final Logger log = LoggerFactory.getLogger(ContractServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ContractServiceImpl.class);
 
-  @Inject
-  private ContractDAO         contractDAO;
+	@Inject
+	private ContractDAO contractDAO;
 
-  /**
+	@Override
+	public Contract findContract(Integer contractId) throws ResBillException {
+		try {
+			return contractDAO.findContract(contractId);
+		} catch (Exception e) {
+			log.error("An unexpected error occured while finding Contract by id=" + contractId, e);
+			throw new ResBillException(e);
+		}
+	}
+
+	/**
    * 
    */
-  @Override
-  public List<Contract> findContracts(ContractCriteria criteria, Integer offset, Integer limit) throws ResBillException {
-    try {
-      return contractDAO.findContracts(criteria, offset, limit);
-    } catch (Exception exc) {
-      log.error("An unexpected error occured while finding Contracts.", exc);
-      throw new ResBillException(exc);
-    }
-  }
+	@Override
+	public List<Contract> findContracts(ContractCriteria criteria, Integer offset, Integer limit) throws ResBillException {
+		try {
+			return contractDAO.findContracts(criteria, offset, limit);
+		} catch (Exception exc) {
+			log.error("An unexpected error occured while finding Contracts.", exc);
+			throw new ResBillException(exc);
+		}
+	}
 
-  /**
+	/**
    * 
    */
-  @Override
-  public List<ContractDTO> findContractDTOs(ContractCriteria criteria, Integer offset, Integer limit) throws ResBillException {
-    try {
-      List<Contract> contracts = findContracts(criteria, offset, limit);
-      List<ContractDTO> dtos = new ArrayList<ContractDTO>();
+	@Override
+	public List<ContractDTO> findContractDTOs(ContractCriteria criteria, Integer offset, Integer limit) throws ResBillException {
+		try {
+			List<Contract> contracts = findContracts(criteria, offset, limit);
+			List<ContractDTO> dtos = new ArrayList<ContractDTO>();
 
-      for (Contract contract : contracts) {
-        ContractDTO dto = new ContractDTO();
-        dto.fill(contract);
-        dtos.add(dto);
-      }
+			for (Contract contract : contracts) {
+				ContractDTO dto = new ContractDTO();
+				dto.fill(contract);
+				dtos.add(dto);
+			}
 
-      return dtos;
-    } catch (Exception exc) {
-      log.error("An unexpected error occured while finding ContractDTOs.", exc);
-      throw new ResBillException(exc);
-    }
-  }
+			return dtos;
+		} catch (Exception exc) {
+			log.error("An unexpected error occured while finding ContractDTOs.", exc);
+			throw new ResBillException(exc);
+		}
+	}
 
-  /**
-   * Nalezne kontrakty pro pouziti na Dashboardu (Agenda).
-   * 
-   * Tj. nalezne vsechny kontrakty, ktere splnuji alespon jednu pozadovanou vlastnost (Feature) - tim se lisi od standardni metody findContracts.
-   * 
-   * @param criteria
-   * @param offset
-   * @param limit
-   * @return
-   */
-  @Override
-  public List<ContractAgendaDTO> findContractAgendaDTOs(ContractCriteria criteria, Integer offset, Integer limit) throws ResBillException {
-    try {
-      ContractCriteria crit = null;
-      List<Contract> contracts = null;
-      Set<Integer> contractIds = new HashSet<Integer>();
+	/**
+	 * Nalezne kontrakty pro pouziti na Dashboardu (Agenda).
+	 * 
+	 * Tj. nalezne vsechny kontrakty, ktere splnuji alespon jednu pozadovanou vlastnost (Feature) - tim se lisi od standardni metody findContracts.
+	 * 
+	 * @param criteria
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	@Override
+	public List<ContractAgendaDTO> findContractAgendaDTOs(ContractCriteria criteria, Integer offset, Integer limit) throws ResBillException {
+		try {
+			ContractCriteria crit = null;
+			List<Contract> contracts = null;
+			Set<Integer> contractIds = new HashSet<Integer>();
 
-      // Kontrakty odebírající zdroje po skončení platnosti
-      crit = criteria.clone();
-      crit.setFeatures(EnumSet.of(ContractCriteria.Feature.DAILY_USAGE_AFTER_CONTRACT_END));
-      contracts = findContracts(crit, null, null);
-      Set<Integer> afterEndContractIds = new HashSet<Integer>();
-      for (Contract contract : contracts) {
-        afterEndContractIds.add(contract.getId());
-      }
-      contractIds.addAll(afterEndContractIds);
+			// Kontrakty odebírající zdroje po skončení platnosti
+			crit = criteria.clone();
+			crit.setFeatures(EnumSet.of(ContractCriteria.Feature.DAILY_USAGE_AFTER_CONTRACT_END));
+			contracts = findContracts(crit, null, null);
+			Set<Integer> afterEndContractIds = new HashSet<Integer>();
+			for (Contract contract : contracts) {
+				afterEndContractIds.add(contract.getId());
+			}
+			contractIds.addAll(afterEndContractIds);
 
-      // Kontrakty odebírající zdroje mimo období tarifu
-      crit = criteria.clone();
-      crit.setFeatures(EnumSet.of(ContractCriteria.Feature.DAILY_USAGE_OUT_OF_TARIFF));
-      contracts = findContracts(crit, null, null);
-      Set<Integer> outOfTariffContractIds = new HashSet<Integer>();
-      for (Contract contract : contracts) {
-        outOfTariffContractIds.add(contract.getId());
-      }
-      contractIds.addAll(outOfTariffContractIds);
+			// Kontrakty odebírající zdroje mimo období tarifu
+			crit = criteria.clone();
+			crit.setFeatures(EnumSet.of(ContractCriteria.Feature.DAILY_USAGE_OUT_OF_TARIFF));
+			contracts = findContracts(crit, null, null);
+			Set<Integer> outOfTariffContractIds = new HashSet<Integer>();
+			for (Contract contract : contracts) {
+				outOfTariffContractIds.add(contract.getId());
+			}
+			contractIds.addAll(outOfTariffContractIds);
 
-      // Kontrakty bez typu účtování
-      crit = criteria.clone();
-      crit.setFeatures(EnumSet.of(ContractCriteria.Feature.NO_INVOICE_TYPE));
-      contracts = findContracts(crit, null, null);
-      Set<Integer> noInvoiceTypeContractIds = new HashSet<Integer>();
-      for (Contract contract : contracts) {
-        noInvoiceTypeContractIds.add(contract.getId());
-      }
-      contractIds.addAll(noInvoiceTypeContractIds);
+			// Kontrakty bez typu účtování
+			crit = criteria.clone();
+			crit.setFeatures(EnumSet.of(ContractCriteria.Feature.NO_INVOICE_TYPE));
+			contracts = findContracts(crit, null, null);
+			Set<Integer> noInvoiceTypeContractIds = new HashSet<Integer>();
+			for (Contract contract : contracts) {
+				noInvoiceTypeContractIds.add(contract.getId());
+			}
+			contractIds.addAll(noInvoiceTypeContractIds);
 
-      // Contract bez serveru
-      crit = criteria.clone();
-      crit.setFeatures(EnumSet.of(ContractCriteria.Feature.NO_SERVER));
-      contracts = findContracts(crit, null, null);
-      Set<Integer> noServerContractIds = new HashSet<Integer>();
-      for (Contract contract : contracts) {
-        noServerContractIds.add(contract.getId());
-      }
-      contractIds.addAll(noServerContractIds);
+			// Contract bez serveru
+			crit = criteria.clone();
+			crit.setFeatures(EnumSet.of(ContractCriteria.Feature.NO_SERVER));
+			contracts = findContracts(crit, null, null);
+			Set<Integer> noServerContractIds = new HashSet<Integer>();
+			for (Contract contract : contracts) {
+				noServerContractIds.add(contract.getId());
+			}
+			contractIds.addAll(noServerContractIds);
 
-      // Contract bez tarifu
-      crit = criteria.clone();
-      crit.setFeatures(EnumSet.of(ContractCriteria.Feature.NO_TARIFF));
-      contracts = findContracts(crit, null, null);
-      Set<Integer> noTariffContractIds = new HashSet<Integer>();
-      for (Contract contract : contracts) {
-        noTariffContractIds.add(contract.getId());
-      }
-      contractIds.addAll(noTariffContractIds);
+			// Contract bez tarifu
+			crit = criteria.clone();
+			crit.setFeatures(EnumSet.of(ContractCriteria.Feature.NO_TARIFF));
+			contracts = findContracts(crit, null, null);
+			Set<Integer> noTariffContractIds = new HashSet<Integer>();
+			for (Contract contract : contracts) {
+				noTariffContractIds.add(contract.getId());
+			}
+			contractIds.addAll(noTariffContractIds);
 
-      // Kontrakty se zapornym zustatkem
-      crit = criteria.clone();
-      crit.setFeatures(EnumSet.of(ContractCriteria.Feature.NEGATIVE_BALANCE));
-      contracts = findContracts(crit, null, null);
-      Set<Integer> negativeBalanceContractIds = new HashSet<Integer>();
-      for (Contract contract : contracts) {
-        negativeBalanceContractIds.add(contract.getId());
-      }
-      contractIds.addAll(negativeBalanceContractIds);
-      
-      // Kontrakty s kladnym zustatkem
-      crit = criteria.clone();
-      crit.setFeatures(EnumSet.of(ContractCriteria.Feature.POSITIVE_BALANCE));
-      contracts = findContracts(crit, null, null);
-      Set<Integer> positiveBalanceContractIds = new HashSet<Integer>();
-      for (Contract contract : contracts) {
-        positiveBalanceContractIds.add(contract.getId());
-      }
-      contractIds.addAll(positiveBalanceContractIds);
+			// Kontrakty se zapornym zustatkem
+			crit = criteria.clone();
+			crit.setFeatures(EnumSet.of(ContractCriteria.Feature.NEGATIVE_BALANCE));
+			contracts = findContracts(crit, null, null);
+			Set<Integer> negativeBalanceContractIds = new HashSet<Integer>();
+			for (Contract contract : contracts) {
+				negativeBalanceContractIds.add(contract.getId());
+			}
+			contractIds.addAll(negativeBalanceContractIds);
 
-      // Pokud neexistuje zadny "zajimavy" kontrakt, pak vratim prazdny seznam
-      if (contractIds.isEmpty()) {
-        return new ArrayList<ContractAgendaDTO>();
-      }
+			// Kontrakty s kladnym zustatkem
+			crit = criteria.clone();
+			crit.setFeatures(EnumSet.of(ContractCriteria.Feature.POSITIVE_BALANCE));
+			contracts = findContracts(crit, null, null);
+			Set<Integer> positiveBalanceContractIds = new HashSet<Integer>();
+			for (Contract contract : contracts) {
+				positiveBalanceContractIds.add(contract.getId());
+			}
+			contractIds.addAll(positiveBalanceContractIds);
 
-      // Ziskam vsechny "zajimave" kontrakty setridene dle puvodniho pozadavku
-      crit = new ContractCriteria();
-      crit.setContractIds(contractIds);
-      crit.setOrderBy(criteria.getOrderBy());
+			// Pokud neexistuje zadny "zajimavy" kontrakt, pak vratim prazdny seznam
+			if (contractIds.isEmpty()) {
+				return new ArrayList<ContractAgendaDTO>();
+			}
 
-      contracts = findContracts(crit, offset, limit);
-      List<ContractAgendaDTO> dtos = new ArrayList<ContractAgendaDTO>();
+			// Ziskam vsechny "zajimave" kontrakty setridene dle puvodniho pozadavku
+			crit = new ContractCriteria();
+			crit.setContractIds(contractIds);
+			crit.setOrderBy(criteria.getOrderBy());
 
-      for (Contract contract : contracts) {
-        ContractAgendaDTO dto = new ContractAgendaDTO();
-        dto.fill(contract);
-        dtos.add(dto);
+			contracts = findContracts(crit, offset, limit);
+			List<ContractAgendaDTO> dtos = new ArrayList<ContractAgendaDTO>();
 
-        if (afterEndContractIds.contains(contract.getId())) {
-          dto.setDailyUsagesAfterContractEnd(true);
-        }
-        if (outOfTariffContractIds.contains(contract.getId())) {
-          dto.setDailyUsagesOutOfTariff(true);
-        }
-        if (noInvoiceTypeContractIds.contains(contract.getId())) {
-          dto.setNoInvoiceType(true);
-        }
-        if (noServerContractIds.contains(contract.getId())) {
-          dto.setNoServer(true);
-        }
-        if (noTariffContractIds.contains(contract.getId())) {
-          dto.setNoTariff(true);
-        }
-        if (negativeBalanceContractIds.contains(contract.getId())) {
-          dto.setNegativeBalance(true);
-        }
-        if (positiveBalanceContractIds.contains(contract.getId())) {
-          dto.setPositiveBalance(true);
-        }
-      }
+			for (Contract contract : contracts) {
+				ContractAgendaDTO dto = new ContractAgendaDTO();
+				dto.fill(contract);
+				dtos.add(dto);
 
-      return dtos;
-    } catch (Exception exc) {
-      log.error("An unexpected error occured while finding ContractAgendaDTOs.", exc);
-      throw new ResBillException(exc);
-    }
-  }
+				if (afterEndContractIds.contains(contract.getId())) {
+					dto.setDailyUsagesAfterContractEnd(true);
+				}
+				if (outOfTariffContractIds.contains(contract.getId())) {
+					dto.setDailyUsagesOutOfTariff(true);
+				}
+				if (noInvoiceTypeContractIds.contains(contract.getId())) {
+					dto.setNoInvoiceType(true);
+				}
+				if (noServerContractIds.contains(contract.getId())) {
+					dto.setNoServer(true);
+				}
+				if (noTariffContractIds.contains(contract.getId())) {
+					dto.setNoTariff(true);
+				}
+				if (negativeBalanceContractIds.contains(contract.getId())) {
+					dto.setNegativeBalance(true);
+				}
+				if (positiveBalanceContractIds.contains(contract.getId())) {
+					dto.setPositiveBalance(true);
+				}
+			}
+
+			return dtos;
+		} catch (Exception exc) {
+			log.error("An unexpected error occured while finding ContractAgendaDTOs.", exc);
+			throw new ResBillException(exc);
+		}
+	}
 
 }

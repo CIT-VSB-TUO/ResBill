@@ -18,19 +18,21 @@ import cz.vsb.resbill.model.Contract;
  */
 public interface ContractService {
 
-  List<Contract> findContracts(ContractCriteria criteria, Integer offset, Integer limit) throws ResBillException;
+	Contract findContract(Integer contractId) throws ResBillException;
 
-  List<ContractDTO> findContractDTOs(ContractCriteria criteria, Integer offset, Integer limit) throws ResBillException;
+	List<Contract> findContracts(ContractCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
-  /**
-   * Nalezne kontrakty pro pouziti na Dashboardu (Agenda).
-   * 
-   * Tj. nalezne vsechny kontrakty, ktere splnuji alespon jednu pozadovanou vlastnost (Feature) - tim se lisi od standardni metody findContracts.
-   * 
-   * @param criteria
-   * @param offset
-   * @param limit
-   * @return
-   */
-  List<ContractAgendaDTO> findContractAgendaDTOs(ContractCriteria criteria, Integer offset, Integer limit) throws ResBillException;
+	List<ContractDTO> findContractDTOs(ContractCriteria criteria, Integer offset, Integer limit) throws ResBillException;
+
+	/**
+	 * Nalezne kontrakty pro pouziti na Dashboardu (Agenda).
+	 * 
+	 * Tj. nalezne vsechny kontrakty, ktere splnuji alespon jednu pozadovanou vlastnost (Feature) - tim se lisi od standardni metody findContracts.
+	 * 
+	 * @param criteria
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	List<ContractAgendaDTO> findContractAgendaDTOs(ContractCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 }
