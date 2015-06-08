@@ -57,6 +57,19 @@ public class Period implements Comparable<Period>, Serializable {
 	}
 
 	/**
+	 * Checks if the specified period is covered by this period (is between its bounds, inclusively).
+	 * 
+	 * @param period
+	 *          a period to check
+	 * @return <code>true</code> if the period is between this bounds, <code>false</code> otherwise
+	 * @throws IllegalArgumentException
+	 *           if the period parameter is <code>null</code>
+	 */
+	public boolean covers(Period period) {
+		return isPeriodInPeriod(period, this);
+	}
+
+	/**
 	 * Checks if the specified period partially or fully overlaps this period (bounds included).
 	 * 
 	 * @param period
@@ -88,6 +101,22 @@ public class Period implements Comparable<Period>, Serializable {
 			throw new IllegalArgumentException("Given parameters cannot be null.");
 		}
 		return (period.getBeginDate().compareTo(date) <= 0) && (period.getEndDate() == null || period.getEndDate().compareTo(date) >= 0);
+	}
+
+	/**
+	 * Checks if the first specified period is between bounds of the specified second period (inclusively).
+	 * 
+	 * @param p1
+	 * @param p2
+	 * @return <code>true</code> if the p1 is between the bounds od p2, <code>false</code> otherwise
+	 * @throws IllegalArgumentException
+	 *           if any parameter is <code>null</code>
+	 */
+	public static boolean isPeriodInPeriod(Period p1, Period p2) {
+		if (p1 == null || p2 == null) {
+			throw new IllegalArgumentException("Given parameters cannot be null.");
+		}
+		return isDateInPeriod(p1.getBeginDate(), p2) && (p2.getEndDate() == null || (p1.getEndDate() != null && isDateInPeriod(p1.getEndDate(), p2)));
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package cz.vsb.resbill.criteria;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import cz.vsb.resbill.model.ContractServer;
 
@@ -22,7 +23,11 @@ public class ContractServerCriteria implements Serializable {
 
 	private Integer serverId;
 
-	private Boolean currentlyValid;
+	private Boolean currentlyAssociated;
+
+	private Date associatedFrom;
+
+	private Date associatedTo;
 
 	private boolean fetchContract;
 
@@ -46,12 +51,28 @@ public class ContractServerCriteria implements Serializable {
 		this.serverId = serverId;
 	}
 
-	public Boolean getCurrentlyValid() {
-		return currentlyValid;
+	public Boolean getCurrentlyAssociated() {
+		return currentlyAssociated;
 	}
 
-	public void setCurrentlyValid(Boolean currentlyValid) {
-		this.currentlyValid = currentlyValid;
+	public void setCurrentlyAssociated(Boolean currentlyAssociated) {
+		this.currentlyAssociated = currentlyAssociated;
+	}
+
+	public Date getAssociatedFrom() {
+		return associatedFrom;
+	}
+
+	public void setAssociatedFrom(Date from) {
+		this.associatedFrom = from;
+	}
+
+	public Date getAssociatedTo() {
+		return associatedTo;
+	}
+
+	public void setAssociatedTo(Date to) {
+		this.associatedTo = to;
 	}
 
 	public boolean isFetchContract() {
@@ -87,8 +108,12 @@ public class ContractServerCriteria implements Serializable {
 		builder.append(contractId);
 		builder.append(", serverId=");
 		builder.append(serverId);
-		builder.append(", currentlyValid=");
-		builder.append(currentlyValid);
+		builder.append(", currentlyAssociated=");
+		builder.append(currentlyAssociated);
+		builder.append(", associatedFrom=");
+		builder.append(associatedFrom);
+		builder.append(", associatedTo=");
+		builder.append(associatedTo);
 		builder.append(", fetchContract=");
 		builder.append(fetchContract);
 		builder.append(", fetchServer=");
