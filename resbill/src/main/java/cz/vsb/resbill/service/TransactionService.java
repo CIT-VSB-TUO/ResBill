@@ -4,6 +4,10 @@
  */
 package cz.vsb.resbill.service;
 
+import java.util.List;
+
+import cz.vsb.resbill.criteria.TransactionCriteria;
+import cz.vsb.resbill.dto.TransactionDTO;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Transaction;
 
@@ -12,6 +16,12 @@ import cz.vsb.resbill.model.Transaction;
  *
  */
 public interface TransactionService {
+
+  Transaction findTransaction(Integer transactionId) throws ResBillException;
+
+  List<Transaction> findTransactions(TransactionCriteria criteria, Integer offset, Integer limit) throws ResBillException;
+
+  List<TransactionDTO> findTransactionDTOs(TransactionCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
   Transaction deleteTransaction(Integer transactionId) throws ResBillException;
 }

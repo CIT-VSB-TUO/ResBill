@@ -4,6 +4,9 @@
  */
 package cz.vsb.resbill.dao;
 
+import java.util.List;
+
+import cz.vsb.resbill.criteria.TransactionCriteria;
 import cz.vsb.resbill.model.Transaction;
 
 /**
@@ -13,6 +16,8 @@ import cz.vsb.resbill.model.Transaction;
 public interface TransactionDAO {
 
   Transaction findTransaction(Integer id);
+
+  List<Transaction> findTransactions(TransactionCriteria criteria, Integer offset, Integer limit);
 
   Transaction saveTransaction(Transaction transaction);
 

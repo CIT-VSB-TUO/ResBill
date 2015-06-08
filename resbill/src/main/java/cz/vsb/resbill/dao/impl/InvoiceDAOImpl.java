@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import cz.vsb.resbill.criteria.ContractCriteria;
 import cz.vsb.resbill.criteria.InvoiceCriteria;
 import cz.vsb.resbill.dao.InvoiceDAO;
 import cz.vsb.resbill.model.Invoice;

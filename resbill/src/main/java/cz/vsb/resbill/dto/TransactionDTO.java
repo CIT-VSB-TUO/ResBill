@@ -20,21 +20,25 @@ public class TransactionDTO implements Serializable {
   /**
    * 
    */
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID     = 1L;
 
-  private Integer           transactionId    = null;
+  private Integer           transactionId        = null;
 
-  private Integer           order            = null;
+  private Integer           order                = null;
 
-  private Integer           evidenceNumber   = null;
+  private Integer           evidenceNumber       = null;
 
-  private Date              decisiveDate     = null;
+  private Date              decisiveDate         = null;
 
-  private BigDecimal        amount           = null;
+  private BigDecimal        amount               = null;
 
-  private String            contractName     = null;
+  private String            title                = null;
 
-  private String            customerName     = null;
+  private String            transactionTypeTitle = null;
+
+  private String            contractName         = null;
+
+  private String            customerName         = null;
 
   /**
    * 
@@ -46,6 +50,8 @@ public class TransactionDTO implements Serializable {
     evidenceNumber = transaction.getEvidenceNumber();
     decisiveDate = transaction.getDecisiveDate();
     amount = transaction.getAmount();
+    title = transaction.getTitle();
+    transactionTypeTitle = transaction.getTransactionType().getTitle();
     contractName = transaction.getContract().getName();
     customerName = transaction.getContract().getCustomer().getName();
   }
@@ -155,6 +161,36 @@ public class TransactionDTO implements Serializable {
     this.customerName = customerName;
   }
 
+  /**
+   * @return the title
+   */
+  public String getTitle() {
+    return title;
+  }
+
+  /**
+   * @param title
+   *          the title to set
+   */
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  /**
+   * @return the transactionTypeTitle
+   */
+  public String getTransactionTypeTitle() {
+    return transactionTypeTitle;
+  }
+
+  /**
+   * @param transactionTypeTitle
+   *          the transactionTypeTitle to set
+   */
+  public void setTransactionTypeTitle(String transactionTypeTitle) {
+    this.transactionTypeTitle = transactionTypeTitle;
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -168,6 +204,8 @@ public class TransactionDTO implements Serializable {
     builder.append("evidenceNumber", evidenceNumber);
     builder.append("decisiveDate", decisiveDate);
     builder.append("amount", amount);
+    builder.append("title", title);
+    builder.append("transactionTypeTitle", transactionTypeTitle);
     builder.append("contractName", contractName);
     builder.append("customerName", customerName);
     builder.append("toString()", super.toString());
