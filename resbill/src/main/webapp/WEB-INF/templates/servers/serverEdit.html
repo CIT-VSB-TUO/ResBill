@@ -15,7 +15,7 @@
 		<meta name="author" content="" />
 	</th:block>
 
-	<title th:text="#{head.title.servers}">Servery</title>
+	<title th:text="#{head.title.server.edit}">Server</title>
 	
 	<th:block th:remove="all">
 	<!-- remove all duplicated template css due to auto-merge -->
@@ -50,56 +50,58 @@
 				<h1 class="page-header" th:text="#{page.header.server.edit}">Úprava serveru</h1>
 			</div>
 		</div>
-
+		
 		<div class="row">
-			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${customerEditDTO}')}" th:errors="${customerEditDTO}">Global error</div>
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${serverEditDTO}')}" th:errors="${serverEditDTO}">Global error</div>
 		</div>
 		
-		<div class="row" th:if="${customerEditDTO == null}">
+		<div class="row" th:if="${serverEditDTO != null and serverEditDTO.server.id != null}">
+			<div class="col-lg-12">
+				
+				<h4 th:text="${serverEditDTO.server.serverId + ' - ' + serverEditDTO.server.name}">jmeno serveru</h4>
+			
+				<ul class="nav nav-tabs">
+					<li class="active">
+						<a href="serverEdit.html" th:href="@{/servers/edit(serverId=${serverEditDTO.server.id})}" th:text="#{tab.server.edit}">Editace</a>
+					</li>
+					<li>
+						<a href="serverContractList.html" th:href="@{/servers/contracts(serverId=${serverEditDTO.server.id})}" th:text="#{tab.server.contracs}">Kontrakty</a>
+					</li>
+				</ul>
+				<div class="voffset2 tab-content"></div>
+			</div>
+		</div>
+		
+		<div class="row" th:if="${serverEditDTO == null}">
 			<div class="col-lg-12">
 				<p>
-					<a href="personList.html" class="btn btn-default" th:href="@{/customers}" >
+					<a href="serverList.html" class="btn btn-default" th:href="@{/servers}" >
 						<i class="fa fa-reply"></i>
 						<span th:text="#{button.back}">Back</span>
 					</a>
 				</p>				
 			</div>
 		</div>
-		
-		<div class="row" th:if="${customerEditDTO != null}">
+
+		<div class="row" th:if="${serverEditDTO != null}">
 			<div class="col-lg-12">
-				<form role="form" method="post" action="#" th:object="${customerEditDTO}">
+
+				<form role="form" method="post" action="#" th:object="${serverEditDTO}">
 					
 					<div class="row">
 					
 						<div class="col-lg-6">
 
-							<div class="form-group required" th:classappend="${#fields.hasErrors('customer.name')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.customer.name}" th:for="customer.name">Název</label>
-								<input type="tel" class="form-control" th:field="*{customer.name}"/>
-								<p class="help-block" th:if="${#fields.hasErrors('customer.name')}" th:errors="*{customer.name}" />
+							<div class="form-group required" th:classappend="${#fields.hasErrors('server.serverId')} ? 'has-error'">
+								<label class="control-label" th:text="#{label.server.serverId}" th:for="server.serverId">ID</label>
+								<input type="text" class="form-control" th:field="*{server.serverId}" th:readonly="*{not serverIdEditable}"/>
+								<p class="help-block" th:if="${#fields.hasErrors('server.serverId')}" th:errors="*{server.serverId}" />
 							</div>
 							
-							<div class="form-group required" th:classappend="${#fields.hasErrors('contactPersonId')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.customer.contact}" for="contactPersonId">Kontakt</label>
-								<select class="form-control" th:field="*{contactPersonId}">
-									<option value="" th:text="#{option.choose}">Vyberte</option>
-			  						<option th:each="person : ${persons}" th:value="${person.id}" 
-			  							th:text="${person.email} + (${#strings.isEmpty(person.fullName)} ? '' : ' (' + ${person.fullName} + ')')">Osoba</option>
-								</select>
-								<p class="help-block" th:if="${#fields.hasErrors('contactPersonId')}" th:errors="*{contactPersonId}">Error</p>					
-							</div>
-				
-							<div class="form-group" th:classappend="${#fields.hasErrors('customer.note')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.customer.note}" th:for="customer.note">Poznámka</label>
-								<textarea class="form-control" th:field="*{customer.note}"></textarea>
-								<p class="help-block" th:if="${#fields.hasErrors('customer.note')}" th:errors="*{customer.note}" />
-							</div>
-						
-							<div class="form-group" th:classappend="${#fields.hasErrors('customer.billingNote')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.customer.billingNote}" th:for="customer.billingNote">Poznámka pro ucetnictvi</label>
-								<textarea class="form-control" th:field="*{customer.billingNote}"></textarea>
-								<p class="help-block" th:if="${#fields.hasErrors('customer.billingNote')}" th:errors="*{customer.billingNote}" />
+							<div class="form-group required" th:classappend="${#fields.hasErrors('server.name')} ? 'has-error'">
+								<label class="control-label" th:text="#{label.server.name}" th:for="server.name">Název</label>
+								<input type="tel" class="form-control" th:field="*{server.name}"/>
+								<p class="help-block" th:if="${#fields.hasErrors('server.name')}" th:errors="*{server.name}" />
 							</div>
 							
 						</div>
@@ -112,7 +114,7 @@
 									<i class="fa fa-save"></i>
 									<span th:text="#{button.save}">Save</span>
 								</button>
-								<a href="personList.html" class="btn btn-default" th:href="@{/customers}" >
+								<a href="serverList.html" class="btn btn-default" th:href="@{/servers}" >
 									<i class="fa fa-reply"></i>
 									<span th:text="#{button.back}">Back</span>
 								</a>
@@ -120,7 +122,7 @@
 						</div>
 					</div>
 					
-					<div class="row" th:if="*{customer.id != null}">
+					<div class="row" th:if="*{server.id != null}">
 						<div class="col-lg-12">
 							<p>
 								<button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete" >
@@ -132,11 +134,54 @@
 					</div>
 					
 				</form>
-			
+				
 			</div>
 			<!-- /.col-lg-12 -->
 		</div>
 		<!-- /.row -->
+		
+		<!-- prirazeni ke kontraktu -->
+		<div class="row" th:if="${serverEditDTO.server.id != null}">
+			<div class="col-lg-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<span th:text="#{panel.server.contract.current}">Prirazeni ke kontraktu</span>
+						<a th:if="${serverEditDTO.currentContractServer != null}" class="btn btn-default" href="serverContractEdit.html" th:href="@{/servers/contracts/edit(contractServerId=${serverEditDTO.currentContractServer.id})}" th:title="#{button.title.server.contract.edit}">
+							<i class="fa fa-edit"></i>
+							<span th:text="#{button.title.server.contract.edit}">Upravit</span>
+						</a>
+					</div>
+					
+					<div class="panel-body">
+					
+						<p th:if="${serverEditDTO.currentContractServer == null}">
+							<a class="btn btn-primary" href="serverContractEdit.html" th:href="@{/servers/contracts/edit(serverId=${serverEditDTO.server.id})}" th:title="#{button.title.server.contract.add}">
+								<i class="fa fa-plus-square"></i>
+								<span th:text="#{button.title.server.contract.add}">Pridat novy</span>
+							</a>
+						</p>
+						
+						<div th:if="${serverEditDTO.currentContractServer != null}">
+							<div class="form-group">
+								<label class="control-label" th:text="#{label.server.contract.name}">Kontrakt</label>
+								<div class="form-control-static" th:text="${serverEditDTO.currentContractServer.contract.name}">Kontrakt 1</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label" th:text="#{label.server.contract.from}">Prirazeno od</label>
+								<div class="form-control-static" th:text="${serverEditDTO.currentContractServer.period.beginDate}">1.1.2015</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label" th:text="#{label.server.contract.to}">Prirazeno do</label>
+								<div class="form-control-static" th:text="${serverEditDTO.currentContractServer.period.endDate}">31.12.2015</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</div>
 
 	<!-- jQuery -->

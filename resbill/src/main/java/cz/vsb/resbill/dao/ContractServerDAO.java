@@ -42,4 +42,22 @@ public interface ContractServerDAO {
 	 * @return list of {@link ContractServer} entities
 	 */
 	List<ContractServer> findContractServers(ContractServerCriteria criteria, Integer offset, Integer limit);
+
+	/**
+	 * Saves current state of given {@link ContractServer} entity.
+	 * 
+	 * @param contractServer
+	 *          entity to save
+	 * @return saved entity
+	 */
+	ContractServer saveContractServer(ContractServer contractServer);
+
+	/**
+	 * Deletes given {@link ContractServer} entity.
+	 * 
+	 * @param contractServer
+	 *          entity to delete
+	 * @return deleted entity
+	 */
+	ContractServer deleteContractServer(ContractServer contractServer);
 }

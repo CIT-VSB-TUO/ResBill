@@ -52,7 +52,7 @@ public class ContractServerDAOImpl implements ContractServerDAO {
 	public ContractServer findCurrentContractServer(Integer serverId) {
 		ContractServerCriteria criteria = new ContractServerCriteria();
 		criteria.setServerId(serverId);
-		criteria.setCurrentlyValid(Boolean.TRUE);
+		criteria.setCurrentlyAssociated(Boolean.TRUE);
 		criteria.setFetchContract(true);
 		List<ContractServer> results = findContractServers(criteria, null, null);
 		return DataAccessUtils.singleResult(results);
@@ -78,9 +78,15 @@ public class ContractServerDAOImpl implements ContractServerDAO {
 			if (criteria.getServerId() != null) {
 				where.add("cs.server.id = :serverId");
 			}
-			if (criteria.getCurrentlyValid() != null) {
+			if (criteria.getAssociatedFrom() != null) {
+				where.add("(cs.period.endDate IS NULL OR cs.period.endDate >= :associatedFrom)");
+			}
+			if (criteria.getAssociatedTo() != null) {
+				where.add("cs.period.beginDate <= :associatedTo");
+			}
+			if (criteria.getCurrentlyAssociated() != null) {
 				String condition = "(cs.period.beginDate <= CURRENT_DATE AND (cs.period.endDate IS NULL OR cs.period.endDate >= CURRENT_DATE))";
-				if (criteria.getCurrentlyValid()) {
+				if (criteria.getCurrentlyAssociated()) {
 					where.add(condition);
 				} else {
 					where.add("NOT " + condition);
@@ -113,6 +119,12 @@ public class ContractServerDAOImpl implements ContractServerDAO {
 			if (criteria.getServerId() != null) {
 				query.setParameter("serverId", criteria.getServerId());
 			}
+			if (criteria.getAssociatedFrom() != null) {
+				query.setParameter("associatedFrom", criteria.getAssociatedFrom());
+			}
+			if (criteria.getAssociatedTo() != null) {
+				query.setParameter("associatedTo", criteria.getAssociatedTo());
+			}
 		}
 		if (offset != null) {
 			query.setFirstResult(offset.intValue());
@@ -123,4 +135,23 @@ public class ContractServerDAOImpl implements ContractServerDAO {
 		return query.getResultList();
 	}
 
+	@Override
+	public ContractServer saveContractServer(ContractServer contractServer) {
+		if (contractServer.getId() == null) {
+			em.persist(contractServer);
+		} else {
+			contractServer = em.merge(contractServer);
+		}
+		em.flush();
+
+		return contractServer;
+	}
+
+	@Override
+	public ContractServer deleteContractServer(ContractServer contractServer) {
+		em.remove(contractServer);
+		em.flush();
+
+		return contractServer;
+	}
 }

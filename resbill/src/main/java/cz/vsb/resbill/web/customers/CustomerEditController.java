@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 
 import cz.vsb.resbill.criteria.PersonCriteria;
 import cz.vsb.resbill.criteria.PersonCriteria.OrderBy;
@@ -115,7 +114,7 @@ public class CustomerEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
-	public String save(@Valid @ModelAttribute(CUSTOMER_EDIT_DTO_MODEL_KEY) CustomerEditDTO customerEditDTO, BindingResult bindingResult, SessionStatus sessionStatus) {
+	public String save(@Valid @ModelAttribute(CUSTOMER_EDIT_DTO_MODEL_KEY) CustomerEditDTO customerEditDTO, BindingResult bindingResult) {
 		if (log.isDebugEnabled()) {
 			log.debug("CustomerEditDTO to save: " + customerEditDTO);
 		}
@@ -127,7 +126,6 @@ public class CustomerEditController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved customer: " + customer);
 				}
-				sessionStatus.setComplete();
 				return "redirect:/customers";
 			} catch (CustomerServiceException e) {
 				switch (e.getReason()) {
@@ -157,7 +155,7 @@ public class CustomerEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-	public String delete(@ModelAttribute(CUSTOMER_EDIT_DTO_MODEL_KEY) CustomerEditDTO customerEditDTO, BindingResult bindingResult, SessionStatus sessionStatus) {
+	public String delete(@ModelAttribute(CUSTOMER_EDIT_DTO_MODEL_KEY) CustomerEditDTO customerEditDTO, BindingResult bindingResult) {
 		if (log.isDebugEnabled()) {
 			log.debug("CustomerEditDTO to delete: " + customerEditDTO);
 		}
@@ -166,7 +164,6 @@ public class CustomerEditController {
 			if (log.isDebugEnabled()) {
 				log.debug("Deleted customer: " + customer);
 			}
-			sessionStatus.setComplete();
 			return "redirect:/customers";
 		} catch (CustomerServiceException e) {
 			switch (e.getReason()) {
