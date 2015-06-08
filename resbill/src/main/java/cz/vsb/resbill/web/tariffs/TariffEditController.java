@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cz.vsb.resbill.dto.TariffPriceListDTO;
@@ -114,7 +113,7 @@ public class TariffEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
-	public String save(@Valid @ModelAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus) {
+	public String save(@Valid @ModelAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model) {
 		if (log.isDebugEnabled()) {
 			log.debug("Tariff to save: " + dto.getTariff());
 			log.debug("PriceList to save: " + dto.getLastPriceList());
@@ -125,7 +124,6 @@ public class TariffEditController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved tariffPriceListDTO: " + dto);
 				}
-				sessionStatus.setComplete();
 				return "redirect:/tariffs";
 			} catch (PriceListServiceException e) {
 				switch (e.getReason()) {
@@ -164,7 +162,7 @@ public class TariffEditController {
 	 * 
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "deleteTariff")
-	public String deleteTariff(@ModelAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus) {
+	public String deleteTariff(@ModelAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model) {
 		if (log.isDebugEnabled()) {
 			log.debug("TariffPriceListDTO to delete: " + dto);
 		}
@@ -174,7 +172,6 @@ public class TariffEditController {
 				log.debug("Deleted tariff: " + tariff);
 			}
 
-			sessionStatus.setComplete();
 			return "redirect:/tariffs";
 		} catch (TariffServiceException e) {
 			switch (e.getReason()) {
@@ -198,8 +195,7 @@ public class TariffEditController {
 	 * 
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "deletePriceList")
-	public String deletePriceList(@ModelAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model, SessionStatus sessionStatus,
-			RedirectAttributes redirectAttributes) {
+	public String deletePriceList(@ModelAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model, RedirectAttributes redirectAttributes) {
 		if (log.isDebugEnabled()) {
 			log.debug("TariffPriceListDTO.lastPriceList to delete: " + dto.getLastPriceList());
 		}
@@ -209,7 +205,6 @@ public class TariffEditController {
 				log.debug("Deleted priceList: " + priceList);
 			}
 
-			sessionStatus.setComplete();
 			redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
 			return "redirect:/tariffs/edit";
 		} catch (PriceListServiceException e) {

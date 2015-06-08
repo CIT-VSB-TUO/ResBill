@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 
 import cz.vsb.resbill.exception.PersonServiceException;
 import cz.vsb.resbill.model.Person;
@@ -94,7 +93,7 @@ public class PersonEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
-	public String save(@Valid @ModelAttribute(PERSON_MODEL_KEY) Person person, BindingResult bindingResult, SessionStatus sessionStatus) {
+	public String save(@Valid @ModelAttribute(PERSON_MODEL_KEY) Person person, BindingResult bindingResult) {
 		if (log.isDebugEnabled()) {
 			log.debug("Person to save: " + person);
 		}
@@ -104,7 +103,6 @@ public class PersonEditController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved person: " + person);
 				}
-				sessionStatus.setComplete();
 				return "redirect:/persons";
 			} catch (PersonServiceException e) {
 				switch (e.getReason()) {
@@ -134,7 +132,7 @@ public class PersonEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-	public String delete(@ModelAttribute(PERSON_MODEL_KEY) Person person, BindingResult bindingResult, SessionStatus sessionStatus) {
+	public String delete(@ModelAttribute(PERSON_MODEL_KEY) Person person, BindingResult bindingResult) {
 		if (log.isDebugEnabled()) {
 			log.debug("Person to delete: " + person);
 		}
@@ -143,7 +141,6 @@ public class PersonEditController {
 			if (log.isDebugEnabled()) {
 				log.debug("Deleted person: " + person);
 			}
-			sessionStatus.setComplete();
 			return "redirect:/persons";
 		} catch (PersonServiceException e) {
 			switch (e.getReason()) {

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cz.vsb.resbill.exception.PriceListServiceException;
@@ -110,7 +109,7 @@ public class PriceListEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
-	public String save(@Valid @ModelAttribute(PRICE_LIST_MODEL_KEY) PriceList priceList, BindingResult bindingResult, SessionStatus sessionStatus, RedirectAttributes redirectAttributes) {
+	public String save(@Valid @ModelAttribute(PRICE_LIST_MODEL_KEY) PriceList priceList, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (log.isDebugEnabled()) {
 			log.debug("PriceList to save: " + priceList);
 		}
@@ -120,7 +119,6 @@ public class PriceListEditController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved priceList: " + priceList);
 				}
-				sessionStatus.setComplete();
 				redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
 				return "redirect:/tariffs/edit";
 			} catch (PriceListServiceException e) {
@@ -165,7 +163,7 @@ public class PriceListEditController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-	public String delete(@ModelAttribute(PRICE_LIST_MODEL_KEY) PriceList priceList, BindingResult bindingResult, SessionStatus sessionStatus, RedirectAttributes redirectAttributes) {
+	public String delete(@ModelAttribute(PRICE_LIST_MODEL_KEY) PriceList priceList, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (log.isDebugEnabled()) {
 			log.debug("PriceList to delete: " + priceList);
 		}
@@ -174,7 +172,6 @@ public class PriceListEditController {
 			if (log.isDebugEnabled()) {
 				log.debug("Deleted priceList: " + priceList);
 			}
-			sessionStatus.setComplete();
 			redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
 			return "redirect:/tariffs/edit";
 		} catch (PriceListServiceException e) {
