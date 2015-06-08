@@ -80,11 +80,9 @@
               <td th:text="${{contract.period.beginDate}}">1.1.2014</td>
               <td th:text="${{contract.period.endDate}}">31.12.2015</td>
 
-              <!-- 
-              <td><a class="btn btn-primary btn-circle" href="invoiceDetail.html" th:href="@{/invoice/detail(invoiceId=${invoice.transactionId})}"
-                th:title="#{button.title.invoice.detail}"> <i class="fa fa-edit"></i>
+              <td><a class="btn btn-primary btn-circle" href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contract.id})}"
+                th:title="#{button.title.contract.edit}"> <i class="fa fa-edit"></i>
               </a></td>
-               -->
             </tr>
           </tbody>
         </table>
