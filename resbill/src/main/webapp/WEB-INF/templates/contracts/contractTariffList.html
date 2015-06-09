@@ -15,7 +15,7 @@
 		<meta name="author" content="" />
 	</th:block>
 
-	<title th:text="#{head.title.contract.servers}">Kontrakt - servery</title>
+	<title th:text="#{head.title.contract.tariffs}">Kontrakt - tarify</title>
 	
 	<th:block th:remove="all">
 	<!-- remove all duplicated template css due to auto-merge -->
@@ -48,7 +48,7 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header" th:text="#{page.header.contract.servers}">Servery</h1>
+				<h1 class="page-header" th:text="#{page.header.contract.tariffs}">Kontrakty</h1>
 			</div>
 		</div>
 
@@ -65,11 +65,10 @@
 					<li>
 						<a href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.edit}">Editace</a>
 					</li>
-					<li>
+					<li class="active">
 						<a href="contractTariffList.html" th:href="@{/contracts/tariffs(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.tariffs}">Tarify</a>
 					</li>
-					
-					<li class="active">
+					<li>
 						<a href="contractServerList.html" th:href="@{/contracts/servers(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.servers}">Servery</a>
 					</li>
 				</ul>
@@ -78,32 +77,32 @@
 		</div>
 		
 		<div class="row">
-			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contractServers}')}" th:errors="${contractServers}">Global error</div>
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contractTariffs}')}" th:errors="${contractTariffs}">Global error</div>
 		</div>
 		
-		<div class="row" th:if="${contractServers != null}">
+		<div class="row" th:if="${contractTariffs != null}">
 			<div class="col-lg-12">
 
-				<table class="table" id="contractServers">
+				<table class="table" id="contractTariffs">
 					<thead>
 						<tr>
-							<th th:text="#{column.contract.server.from}">Prirazeno od</th>
-							<th th:text="#{column.contract.server.to}">Prirazeno do</th>
-							<th th:text="#{column.contract.server.name}">Název</th>
+							<th th:text="#{column.contract.tariff.from}">Prirazeno od</th>
+							<th th:text="#{column.contract.tariff.to}">Prirazeno do</th>
+							<th th:text="#{column.contract.tariff.name}">Název</th>
 							<th>
-								<a class="btn btn-primary btn-circle" href="contractServerEdit.html" th:href="@{/contracts/servers/edit(contractId=${contractEditDTO.contract.id})}" th:title="#{button.title.contract.server.add}">
+								<a class="btn btn-primary btn-circle" href="contractTariffEdit.html" th:href="@{/contracts/tariffs/edit(contractId=${contractEditDTO.contract.id})}" th:title="#{button.title.contract.tariff.add}">
 									<i class="fa fa-plus-square"></i>
 								</a>
 							</th>
 						</tr>
 					</thead>
 					<tbody th:remove="all-but-first">
-						<tr th:each="contractServer : ${contractServers}">
-							<td th:text="${contractServer.period.beginDate}">1.1.2000</td>
-							<td th:text="${contractServer.period.endDate}">30.6.2001</td>
-							<td th:text="${contractServer.server.name}">Server 1</td>
+						<tr th:each="contractTariff : ${contractTariffs}">
+							<td th:text="${contractTariff.period.beginDate}">1.1.2000</td>
+							<td th:text="${contractTariff.period.endDate}">30.6.2001</td>
+							<td th:text="${contractTariff.tariff.name}">Tarif 1</td>
 							<td>
-								<a class="btn btn-primary btn-circle" href="contractServerEdit.html" th:href="@{/contracts/servers/edit(contractServerId=${contractServer.id})}" th:title="#{button.title.contract.server.edit}">
+								<a class="btn btn-primary btn-circle" href="contractTariffEdit.html" th:href="@{/contracts/tariffs/edit(contractTariffId=${contractTariff.id})}" th:title="#{button.title.contract.tariff.edit}">
 									<i class="fa fa-edit"></i>
 								</a>
 							</td>
@@ -111,9 +110,9 @@
 						<tr>
 							<td>1.1.2000</td>
 							<td>30.6.2001</td>
-							<td>Server 1</td>
+							<td>Tarif 2</td>
 							<td>
-								<a class="btn btn-primary btn-circle" href="contractServerEdit.html">
+								<a class="btn btn-primary btn-circle" href="contractTariffEdit.html">
 									<i class="fa fa-edit"></i>
 								</a>
 							</td>
@@ -121,9 +120,9 @@
 						<tr>
 							<td>1.1.2000</td>
 							<td>30.6.2001</td>
-							<td>Server 1</td>
+							<td>Tarif 3</td>
 							<td>
-								<a class="btn btn-primary btn-circle" href="contractServerEdit.html">
+								<a class="btn btn-primary btn-circle" href="contractTariffEdit.html">
 									<i class="fa fa-edit"></i>
 								</a>
 							</td>

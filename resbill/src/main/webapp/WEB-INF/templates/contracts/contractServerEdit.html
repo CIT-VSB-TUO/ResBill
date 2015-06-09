@@ -64,6 +64,9 @@
 					<li>
 						<a href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.edit}">Editace</a>
 					</li>
+					<li>
+						<a href="contractTariffList.html" th:href="@{/contracts/tariffs(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.tariffs}">Tarify</a>
+					</li>
 					<li class="active">
 						<a href="contractServerList.html" th:href="@{/contracts/servers(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.servers}">Servery</a>
 					</li>

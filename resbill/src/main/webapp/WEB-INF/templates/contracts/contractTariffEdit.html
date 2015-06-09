@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:th="http://www.thymeleaf.org" 
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layout">
 
 <head>
+
 	<th:block th:remove="all">
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -13,11 +14,11 @@
 		<meta name="description" content="" />
 		<meta name="author" content="" />
 	</th:block>
-	
-	<title th:text="#{head.title.contract.edit}">Kontrakt</title>
+
+	<title th:text="#{head.title.contract.server.edit}">Kontrakt - servery</title>
 	
 	<th:block th:remove="all">
-		<!-- remove all duplicated template css due to auto-merge -->
+	<!-- remove all duplicated template css due to auto-merge -->
 	
 		<!-- ResBill Custom CSS -->
 		<link href="../../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
@@ -29,28 +30,27 @@
 		<link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
 	
 		<!-- SB Admin 2 CSS -->
-		<link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css"
-			th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}"
-		/>
+		<link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
 	
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 		<!--[if lt IE 9]>
-			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-		<![endif]-->
+	        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
 	
 	</th:block>
-</head>
 
+</head>
 <body>
+
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header" th:text="#{page.header.contract.edit}">Kontrakt</h1>
+				<h1 class="page-header" th:text="#{page.header.contract.server.edit}">Server</h1>
 			</div>
 		</div>
-
+		
 		<div class="row">
 			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contractEditDTO}')}" th:errors="${contractEditDTO}">Global error</div>
 		</div>
@@ -61,10 +61,10 @@
 				<h4 th:text="${contractEditDTO.contract.evidenceNumber + ' - ' + contractEditDTO.contract.name + ' (' + #numbers.formatDecimal(contractEditDTO.contract.balance,1,'DEFAULT',2,'DEFAULT') + ')'}">Identifikace kontraktu</h4>
 			
 				<ul class="nav nav-tabs">
-					<li class="active">
+					<li>
 						<a href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.edit}">Editace</a>
 					</li>
-					<li>
+					<li class="active">
 						<a href="contractTariffList.html" th:href="@{/contracts/tariffs(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.tariffs}">Tarify</a>
 					</li>
 					<li>
@@ -75,10 +75,14 @@
 			</div>
 		</div>
 		
-		<div class="row" th:if="${contractEditDTO == null}">
+		<div class="row">
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contractServerEditDTO}')}" th:errors="${contractServerEditDTO}">Global error</div>
+		</div>
+		
+		<div class="row" th:if="${contractServerEditDTO == null}">
 			<div class="col-lg-12">
 				<p>
-					<a href="contractList.html" class="btn btn-default" th:href="@{/contracts}" >
+					<a href="contractServerList.html" class="btn btn-default" th:href="@{/contracts/servers(serverId=${serverEditDTO.server.id})}" >
 						<i class="fa fa-reply"></i>
 						<span th:text="#{button.back}">Back</span>
 					</a>
@@ -86,56 +90,44 @@
 			</div>
 		</div>
 
-		<div class="row" th:if="${contractEditDTO != null}">
+		<div class="row" th:if="${contractServerEditDTO != null}">
 			<div class="col-lg-12">
 
-				<form role="form" method="post" action="#" th:object="${contractEditDTO}">
+				<form role="form" method="post" action="#" th:object="${contractServerEditDTO}">
 					
 					<div class="row">
 					
 						<div class="col-lg-6">
 
-							<div class="form-group required" th:classappend="${#fields.hasErrors('customerId')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.contract.customer}" for="customerId">Zakaznik</label>
-								<select class="form-control" th:field="*{customerId}" th:disabled="*{not customerEditable}">
+							<div class="form-group required" th:classappend="${#fields.hasErrors('serverId')} ? 'has-error'">
+								<label class="control-label" th:text="#{label.contract.server}" for="serverId">Server</label>
+								<select class="form-control" th:field="*{serverId}" th:disabled="*{not serverEditable}">
 									<option value="" th:text="#{option.choose}">Vyberte</option>
-			  						<option th:each="customer : ${customers}" th:value="${customer.id}" th:text="${customer.name}">zak 1</option>
+			  						<option th:each="server : ${servers}" th:value="${server.id}" th:text="${server.name} + ' (' + ${server.serverId} + ')'">server</option>
 								</select>
-								<p class="help-block" th:if="${#fields.hasErrors('customerId')}" th:errors="*{customerId}">Error</p>					
+								<p class="help-block" th:if="${#fields.hasErrors('serverId')}" th:errors="*{serverId}">Error</p>					
 							</div>
 				
-							<div class="form-group required" th:classappend="${#fields.hasErrors('contract.name')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.contract.name}" th:for="contract.name">Název</label>
-								<input type="text" class="form-control" th:field="*{contract.name}"/>
-								<p class="help-block" th:if="${#fields.hasErrors('contract.name')}" th:errors="*{contract.name}" />
-							</div>
-							
-							<div class="form-group required" th:classappend="${#fields.hasErrors('contract.period.beginDate')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.contract.beginDate}" th:for="contract.period.beginDate">Platnost od</label>
+							<div class="form-group required" th:classappend="${#fields.hasErrors('contractServer.period.beginDate')} ? 'has-error'">
+								<label class="control-label" th:text="#{label.contract.server.from}" th:for="contractServer.period.beginDate">Platnost od</label>
 								<div class="input-group date" data-provide="datepicker" data-date-language="cs" data-date-format="d.m.yyyy" 
 									data-date-week-start="1" data-date-autoclose="true" data-date-today-highlight="true" data-date-today-btn="linked" 
 									th:attr="data-date-language=${#locale.language},data-date-format=#{datepicker.date.format}">
-									<input type="text" class="form-control" th:field="*{contract.period.beginDate}"/>
+									<input type="text" class="form-control" th:field="*{contractServer.period.beginDate}"/>
 									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 								</div>
-								<p class="help-block" th:if="${#fields.hasErrors('contract.period.beginDate')}" th:errors="*{contract.period.beginDate}"/>
+								<p class="help-block" th:if="${#fields.hasErrors('contractServer.period.beginDate')}" th:errors="*{contractServer.period.beginDate}"/>
 							</div>
 						
-							<div class="form-group" th:classappend="${#fields.hasErrors('contract.period.endDate')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.contract.endDate}" th:for="contract.period.endDate">Platnost od</label>
+							<div class="form-group" th:classappend="${#fields.hasErrors('contractServer.period.endDate')} ? 'has-error'">
+								<label class="control-label" th:text="#{label.contract.server.from}" th:for="contractServer.period.endDate">Platnost od</label>
 								<div class="input-group date" data-provide="datepicker" data-date-language="cs" data-date-format="d.m.yyyy" 
 									data-date-week-start="1" data-date-autoclose="true" data-date-today-highlight="true" data-date-today-btn="linked" 
 									th:attr="data-date-language=${#locale.language},data-date-format=#{datepicker.date.format}">
-									<input type="text" class="form-control" th:field="*{contract.period.endDate}"/>
+									<input type="text" class="form-control" th:field="*{contractServer.period.endDate}"/>
 									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 								</div>
-								<p class="help-block" th:if="${#fields.hasErrors('contract.period.endDate')}" th:errors="*{contract.period.endDate}"/>
-							</div>
-						
-							<div class="form-group" th:classappend="${#fields.hasErrors('contract.note')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.contract.note}" th:for="contract.note">Poznámka</label>
-								<textarea class="form-control" th:field="*{contract.note}"></textarea>
-								<p class="help-block" th:if="${#fields.hasErrors('contract.note')}" th:errors="*{contract.note}" />
+								<p class="help-block" th:if="${#fields.hasErrors('contractServer.period.endDate')}" th:errors="*{contractServer.period.endDate}"/>
 							</div>
 						
 						</div>
@@ -148,7 +140,7 @@
 									<i class="fa fa-save"></i>
 									<span th:text="#{button.save}">Save</span>
 								</button>
-								<a href="contractList.html" class="btn btn-default" th:href="@{/contracts}" >
+								<a href="serverList.html" class="btn btn-default" th:href="@{/contracts/servers(contractId=${contractEditDTO.contract.id})}" >
 									<i class="fa fa-reply"></i>
 									<span th:text="#{button.back}">Back</span>
 								</a>
@@ -156,7 +148,7 @@
 						</div>
 					</div>
 					
-					<div class="row" th:if="*{contract.id != null}">
+					<div class="row" th:if="*{contractServer.id != null}">
 						<div class="col-lg-12">
 							<p>
 								<button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete" >
@@ -173,6 +165,7 @@
 			<!-- /.col-lg-12 -->
 		</div>
 		<!-- /.row -->
+
 	</div>
 
 	<!-- jQuery -->
@@ -183,5 +176,7 @@
 
 	<!-- Custom Theme JavaScript -->
 	<script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+
 </body>
+
 </html>

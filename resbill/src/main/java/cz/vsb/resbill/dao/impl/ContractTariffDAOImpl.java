@@ -1,5 +1,6 @@
 package cz.vsb.resbill.dao.impl;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,9 +10,12 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import cz.vsb.resbill.criteria.ContractTariffCriteria;
+import cz.vsb.resbill.criteria.ContractTariffCriteria.OrderBy;
 import cz.vsb.resbill.dao.ContractTariffDAO;
 import cz.vsb.resbill.model.ContractTariff;
 
@@ -23,6 +27,8 @@ import cz.vsb.resbill.model.ContractTariff;
  */
 @Repository
 public class ContractTariffDAOImpl implements ContractTariffDAO {
+
+	private static final Logger log = LoggerFactory.getLogger(ContractTariffDAOImpl.class);
 
 	@PersistenceContext
 	private EntityManager em;
@@ -37,6 +43,14 @@ public class ContractTariffDAOImpl implements ContractTariffDAO {
 		StringBuilder jpql = new StringBuilder("SELECT ct FROM ContractTariff AS ct");
 		// building query
 		if (criteria != null) {
+			// join
+			Set<String> joins = new LinkedHashSet<String>();
+			if (criteria.isFetchContract()) {
+				joins.add("FETCH ct.contract AS contract");
+			}
+			if (criteria.isFetchTariff()) {
+				joins.add("FETCH ct.tariff AS tariff");
+			}
 			// where
 			Set<String> where = new LinkedHashSet<String>();
 			if (criteria.getContractId() != null) {
@@ -45,9 +59,36 @@ public class ContractTariffDAOImpl implements ContractTariffDAO {
 			if (criteria.getTariffId() != null) {
 				where.add("ct.tariff.id = :tariffId");
 			}
+			// order by
+			List<String> order = new ArrayList<String>();
+			if (criteria.getOrderBy() != null && !criteria.getOrderBy().isEmpty()) {
+				for (OrderBy orderBy : criteria.getOrderBy()) {
+					switch (orderBy) {
+					case PERIOD_ASC:
+						order.add("ct.period.beginDate ASC");
+						order.add("ct.period.endDate ASC");
+						break;
+					case PERIOD_DESC:
+						order.add("ct.period.beginDate DESC");
+						order.add("ct.period.endDate DESC");
+						break;
+					default:
+						log.warn("Unsupported order by option: " + orderBy);
+						break;
+					}
+				}
+			}
+			if (!joins.isEmpty()) {
+				jpql.append(" LEFT JOIN ");
+				jpql.append(StringUtils.join(joins, " LEFT JOIN "));
+			}
 			if (!where.isEmpty()) {
 				jpql.append(" WHERE ");
 				jpql.append(StringUtils.join(where, " AND "));
+			}
+			if (!order.isEmpty()) {
+				jpql.append(" ORDER BY ");
+				jpql.append(StringUtils.join(order, ", "));
 			}
 		}
 
