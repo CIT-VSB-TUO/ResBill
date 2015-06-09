@@ -67,7 +67,11 @@
               <th th:text="#{column.contract.transaction.decisiveDate}">Rozhodné datum</th>
               <th th:text="#{column.contract.transaction.title}">Název</th>
               <th th:text="#{column.contract.transaction.amount}">Částka</th>
-              <th></th>
+              <th>
+                <a class="btn btn-primary btn-circle" href="contractTransactionEdit.html" th:href="@{/contracts/transactions/edit(contractId=${param.contractId})}" th:title="#{button.title.contract.transaction.add}">
+                  <i class="fa fa-plus-square"></i>
+                </a>
+              </th>
             </tr>
           </thead>
 
@@ -81,11 +85,9 @@
               <td th:text="${#numbers.formatDecimal(transaction.amount,1,'DEFAULT',2,'DEFAULT')}">-1 000,0</td>
 
               <td>
-                <!-- 
-              <a class="btn btn-primary btn-circle" href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contract.id})}"
-                th:title="#{button.title.contract.edit}"> <i class="fa fa-edit"></i>
+              <a class="btn btn-primary btn-circle" href="contractTransactionEdit.html" th:href="@{/contracts/transactions/edit(contractId=${param.contractId},transactionId=${transaction.transactionId})}"
+                th:title="#{button.title.contract.transaction.edit}"> <i class="fa fa-edit"></i>
               </a>
-               -->
               </td>
 
             </tr>

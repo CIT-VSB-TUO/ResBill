@@ -4,6 +4,7 @@
  */
 package cz.vsb.resbill.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +16,12 @@ import org.slf4j.LoggerFactory;
 import cz.vsb.resbill.criteria.TransactionCriteria;
 import cz.vsb.resbill.dao.ContractDAO;
 import cz.vsb.resbill.dao.TransactionDAO;
-import cz.vsb.resbill.dto.InvoiceDTO;
 import cz.vsb.resbill.dto.TransactionDTO;
 import cz.vsb.resbill.exception.ResBillException;
+import cz.vsb.resbill.exception.TransactionServiceException;
 import cz.vsb.resbill.model.Contract;
-import cz.vsb.resbill.model.Invoice;
 import cz.vsb.resbill.model.Transaction;
+import cz.vsb.resbill.model.TransactionType;
 import cz.vsb.resbill.service.ResBillService;
 import cz.vsb.resbill.service.TransactionService;
 
@@ -89,6 +90,52 @@ public class TransactionServiceImpl implements TransactionService {
     } catch (Exception exc) {
       log.error("An unexpected error occured while finding TransactionDTOs.", exc);
       throw new ResBillException(exc);
+    }
+  }
+
+  /**
+   * 
+   * @param transaction
+   * @return
+   * @throws TransactionServiceException
+   * @throws ResBillException
+   */
+  @Override
+  public Transaction saveTransaction(Transaction transaction) throws TransactionServiceException, ResBillException {
+    try {
+      // Editace ucetnich polozek neni povolena (mohou se pouze zakladat)
+      // DULEZITE - pokud by mela byt editace umoznena, musela by se od zustatku kontraktu nejprve odecist puvodni castka a pak pricist nova
+      if (transaction.getId() != null) {
+        throw new TransactionServiceException(TransactionServiceException.Reason.EDIT_NOT_ALLOWED);
+      }
+
+      // Vytvareni ani editace ucetnich polozek typu "faktura" neni povolena (vytvari se jinde)
+      if (transaction.getTransactionType().getId().equals(TransactionType.INVOICE)) {
+        throw new TransactionServiceException(TransactionServiceException.Reason.INVOICE_NOT_ALLOWED);
+      }
+
+      // Ucetni polozka typu "dosla platba" muze mit pouze kladnou hodnotu
+      if (transaction.getTransactionType().getId().equals(TransactionType.INCOMING_PAYMENT) && transaction.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+        throw new TransactionServiceException(TransactionServiceException.Reason.INCOMING_PAYMENT_NO_POSITIVE);
+      }
+
+      // Nastavit poradi
+      transaction.setOrder(transactionDAO.getNextOrder(transaction.getContract().getId()));
+
+      // Ulozit ucetni polozku
+      transaction = transactionDAO.saveTransaction(transaction);
+
+      // Aktualizovat stav uctu kontraktu
+      Contract contract = transaction.getContract();
+      contract.setBalance(contract.getBalance().add(transaction.getAmount()));
+      contractDAO.saveContract(contract);
+
+      return transaction;
+    } catch (TransactionServiceException e) {
+      throw e;
+    } catch (Exception e) {
+      log.error("An unexpected error occured while saving Transaction entity: " + transaction, e);
+      throw new ResBillException(e);
     }
   }
 

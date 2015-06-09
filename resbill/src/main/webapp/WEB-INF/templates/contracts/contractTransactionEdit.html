@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorator="layout">
+
+<head>
+<th:block th:remove="all">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+</th:block>
+
+<title th:text="#{head.title.contract.transaction.edit}">Kontrakt - editace účetní položky</title>
+
+<th:block th:remove="all">
+  <!-- remove all duplicated template css due to auto-merge -->
+
+  <!-- ResBill Custom CSS -->
+  <link href="../../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
+
+  <!-- Bootstrap Core CSS -->
+  <link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"
+    th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+
+  <!-- Custom Fonts -->
+  <link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"
+    th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+
+  <!-- SB Admin 2 CSS -->
+  <link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css"
+    th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+
+</th:block>
+</head>
+
+<body>
+  <div layout:fragment="content">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1 class="page-header" th:text="#{page.header.contract.transaction.edit}">Kontrakt - editace účetní položky</h1>
+      </div>
+    </div>
+
+    <!-- Zobrazeni chyb -->
+    <div class="row">
+      <div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${transactionEditDTO}')}" th:errors="${transactionEditDTO}">Global error</div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${transactionTypes}')}" th:errors="${transactionTypes}">Global error</div>
+    </div>
+
+    <!-- Editace/zobrazeni transakce -->
+    <div class="row" th:if="${transactionEditDTO != null &amp;&amp; transactionTypes != null}">
+      <div class="col-lg-12">
+        <form role="form" method="post" action="#" th:object="${transactionEditDTO}">
+
+          <div class="row">
+            <div class="col-lg-6">
+
+              <div class="form-group required" th:classappend="${#fields.hasErrors('transactionTypeId')} ? 'has-error'">
+                <label class="control-label" th:text="#{label.contract.transaction.transactionType}" for="transactionTypeId">Typ</label> <select
+                  class="form-control" th:field="*{transactionTypeId}" th:disabled="*{editDisabled}">
+                  <option value="" th:text="#{option.choose}">Vyberte</option>
+                  <option th:each="transactionType : ${transactionTypes}" th:value="${transactionType.id}" th:text="${transactionType.title}">Typ</option>
+                </select>
+                <p class="help-block" th:if="${#fields.hasErrors('transactionTypeId')}" th:errors="*{transactionTypeId}">Error</p>
+              </div>
+
+              <div class="form-group" th:classappend="${#fields.hasErrors('transaction.evidenceNumber')} ? 'has-error'">
+                <label class="control-label" th:text="#{label.contract.transaction.evidenceNumber}" th:for="transaction.evidenceNumber">Evidenční číslo</label>
+                <input type="text" class="form-control" th:field="*{transaction.evidenceNumber}" th:disabled="*{editDisabled}"/>
+                <p class="help-block" th:if="${#fields.hasErrors('transaction.evidenceNumber')}" th:errors="*{transaction.evidenceNumber}" />
+              </div>
+
+              <div class="form-group required" th:classappend="${#fields.hasErrors('transaction.decisiveDate')} ? 'has-error'">
+                <label class="control-label" th:text="#{label.contract.transaction.decisiveDate}" th:for="transaction.decisiveDate">Rozhodné datum</label>
+                <div class="input-group date" data-provide="datepicker" data-date-language="cs" data-date-format="d.m.yyyy" data-date-week-start="1"
+                  data-date-autoclose="true" data-date-today-highlight="true" data-date-today-btn="linked" data-date-enable-on-readonly="false"
+                  th:attr="data-date-language=${#locale.language},data-date-format=#{datepicker.date.format}" th:readonly="*{editDisabled}">
+                  <input type="text" class="form-control" th:field="*{transaction.decisiveDate}" th:disabled="*{editDisabled}"/> <span class="input-group-addon"><i
+                    class="fa fa-calendar"></i></span>
+                </div>
+                <p class="help-block" th:if="${#fields.hasErrors('transaction.decisiveDate')}" th:errors="*{transaction.decisiveDate}" />
+              </div>
+
+              <div class="form-group required" th:classappend="${#fields.hasErrors('transaction.amount')} ? 'has-error'">
+                <label class="control-label" th:text="#{label.contract.transaction.amount}" th:for="transaction.amount">Částka</label> <input type="text"
+                  class="form-control" th:field="*{transaction.amount}" th:disabled="*{editDisabled}"/>
+                <p class="help-block" th:if="${#fields.hasErrors('transaction.amount')}" th:errors="*{transaction.amount}" />
+              </div>
+
+              <div class="form-group" th:classappend="${#fields.hasErrors('transaction.title')} ? 'has-error'">
+                <label class="control-label" th:text="#{label.contract.transaction.title}" th:for="transaction.title">Název</label> <input type="text"
+                  class="form-control" th:field="*{transaction.title}" th:disabled="*{editDisabled}"/>
+                <p class="help-block" th:if="${#fields.hasErrors('transaction.title')}" th:errors="*{transaction.title}" />
+              </div>
+
+              <div class="form-group" th:classappend="${#fields.hasErrors('transaction.note')} ? 'has-error'">
+                <label class="control-label" th:text="#{label.contract.transaction.note}" th:for="transaction.note">Poznámka</label>
+                <textarea class="form-control" rows="5" th:field="*{transaction.note}" th:disabled="*{editDisabled}"></textarea>
+                <p class="help-block" th:if="${#fields.hasErrors('transaction.note')}" th:errors="*{transaction.note}" />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-12">
+              <p>
+                <button class="btn btn-primary" type="submit" name="save" th:disabled="*{editDisabled}">
+                  <i class="fa fa-save"></i> <span th:text="#{button.save}">Save</span>
+                </button>
+                <a href="contractTransactionList.html" class="btn btn-default" th:href="@{/contracts/transactions(contractId=${param.contractId})}"> <i
+                  class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
+                </a>
+              </p>
+            </div>
+          </div>
+
+          <div class="row" th:if="*{transaction.id != null}">
+            <div class="col-lg-12">
+              <p>
+                <button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete">
+                  <i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
+                </button>
+              </p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="../../../bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+
+  <!-- Custom Theme JavaScript -->
+  <script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"
+    th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+</body>
+</html>

@@ -29,133 +29,130 @@ import javax.validation.constraints.Size;
 @Table(name = "TRANSACTION", uniqueConstraints = @UniqueConstraint(name = "UK_transaction__tx_order__contract_id", columnNames = { "tx_order", "contract_id" }))
 public class Transaction extends BaseVersionedEntity {
 
-	private static final long serialVersionUID = 8668454272440856542L;
-	
-	public static final int INVOICE_EVIDENCE_NUMBER_BASE = 2000000000;
+  private static final long serialVersionUID             = 8668454272440856542L;
 
-	@Column(name = "tx_order")
-	@NotNull
-	private Integer order;
+  public static final long  INVOICE_EVIDENCE_NUMBER_BASE = 2000000000;
 
-	@Column(name = "evidence_number")
-	@Digits(integer = 10, fraction = 0)
-	private Integer evidenceNumber;
+  @Column(name = "tx_order", nullable = false)
+  private Integer           order;
 
-	@Column(name = "decisive_date")
-	@Temporal(TemporalType.DATE)
-	@NotNull
-	private Date decisiveDate;
+  @Column(name = "evidence_number")
+  @Digits(integer = 10, fraction = 0)
+  private Long              evidenceNumber;
 
-	@Column(name = "amount")
-	@NotNull
-	@Digits(integer = 14, fraction = 2)
-	private BigDecimal amount;
+  @Column(name = "decisive_date")
+  @Temporal(TemporalType.DATE)
+  @NotNull
+  private Date              decisiveDate;
 
-	@Column(name = "title")
-	@Size(max = 250)
-	private String title;
+  @Column(name = "amount")
+  @NotNull
+  @Digits(integer = 14, fraction = 2)
+  private BigDecimal        amount;
 
-	@Column(name = "note")
-	@Size(max = 1000)
-	private String note;
+  @Column(name = "title")
+  @Size(max = 250)
+  private String            title;
 
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "transaction_type_id", foreignKey = @ForeignKey(name = "FK_transaction__transaction_type"))
-	@NotNull
-	private TransactionType transactionType;
+  @Column(name = "note")
+  @Size(max = 1000)
+  private String            note;
 
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "contract_id", foreignKey = @ForeignKey(name = "FK_transaction__contract"))
-	@NotNull
-	private Contract contract;
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
+  @JoinColumn(name = "transaction_type_id", nullable = false, foreignKey = @ForeignKey(name = "FK_transaction__transaction_type"))
+  private TransactionType   transactionType;
 
-	public Integer getOrder() {
-		return order;
-	}
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
+  @JoinColumn(name = "contract_id", nullable = false, foreignKey = @ForeignKey(name = "FK_transaction__contract"))
+  private Contract          contract;
 
-	public void setOrder(Integer order) {
-		this.order = order;
-	}
+  public Integer getOrder() {
+    return order;
+  }
 
-	public Integer getEvidenceNumber() {
-		return evidenceNumber;
-	}
+  public void setOrder(Integer order) {
+    this.order = order;
+  }
 
-	public void setEvidenceNumber(Integer evidenceNumber) {
-		this.evidenceNumber = evidenceNumber;
-	}
+  public Long getEvidenceNumber() {
+    return evidenceNumber;
+  }
 
-	public Date getDecisiveDate() {
-		return decisiveDate;
-	}
+  public void setEvidenceNumber(Long evidenceNumber) {
+    this.evidenceNumber = evidenceNumber;
+  }
 
-	public void setDecisiveDate(Date decisiveDate) {
-		this.decisiveDate = decisiveDate;
-	}
+  public Date getDecisiveDate() {
+    return decisiveDate;
+  }
 
-	public BigDecimal getAmount() {
-		return amount;
-	}
+  public void setDecisiveDate(Date decisiveDate) {
+    this.decisiveDate = decisiveDate;
+  }
 
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
-	}
+  public BigDecimal getAmount() {
+    return amount;
+  }
 
-	public String getTitle() {
-		return title;
-	}
+  public void setAmount(BigDecimal amount) {
+    this.amount = amount;
+  }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public String getNote() {
-		return note;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public void setNote(String note) {
-		this.note = note;
-	}
+  public String getNote() {
+    return note;
+  }
 
-	public TransactionType getTransactionType() {
-		return transactionType;
-	}
+  public void setNote(String note) {
+    this.note = note;
+  }
 
-	public void setTransactionType(TransactionType transactionType) {
-		this.transactionType = transactionType;
-	}
+  public TransactionType getTransactionType() {
+    return transactionType;
+  }
 
-	public Contract getContract() {
-		return contract;
-	}
+  public void setTransactionType(TransactionType transactionType) {
+    this.transactionType = transactionType;
+  }
 
-	public void setContract(Contract contract) {
-		this.contract = contract;
-	}
+  public Contract getContract() {
+    return contract;
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Transaction [");
-		builder.append(super.toString());
-		builder.append(", order=");
-		builder.append(order);
-		builder.append(", evidenceNumber=");
-		builder.append(evidenceNumber);
-		builder.append(", decisiveDate=");
-		builder.append(decisiveDate);
-		builder.append(", amount=");
-		builder.append(amount);
-		builder.append(", title=");
-		builder.append(title);
-		builder.append(", note=");
-		builder.append(note);
-		builder.append(", transactionType.id=");
-		builder.append(transactionType != null ? transactionType.getId() : null);
-		builder.append(", contract.id=");
-		builder.append(contract != null ? contract.getId() : null);
-		builder.append("]");
-		return builder.toString();
-	}
+  public void setContract(Contract contract) {
+    this.contract = contract;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Transaction [");
+    builder.append(super.toString());
+    builder.append(", order=");
+    builder.append(order);
+    builder.append(", evidenceNumber=");
+    builder.append(evidenceNumber);
+    builder.append(", decisiveDate=");
+    builder.append(decisiveDate);
+    builder.append(", amount=");
+    builder.append(amount);
+    builder.append(", title=");
+    builder.append(title);
+    builder.append(", note=");
+    builder.append(note);
+    builder.append(", transactionType.id=");
+    builder.append(transactionType != null ? transactionType.getId() : null);
+    builder.append(", contract.id=");
+    builder.append(contract != null ? contract.getId() : null);
+    builder.append("]");
+    return builder.toString();
+  }
 
 }
