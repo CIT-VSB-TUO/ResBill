@@ -38,7 +38,7 @@ import cz.vsb.resbill.service.ServerService;
 import cz.vsb.resbill.util.WebUtils;
 
 /**
- * A controller for handling requests for/from servers/serverContractEdit.html page template.
+ * A controller for handling requests for/from contracts/contractServerEdit.html page template.
  * 
  * @author HAL191
  *

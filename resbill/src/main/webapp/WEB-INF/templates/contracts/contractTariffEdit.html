@@ -64,15 +64,12 @@
 					<li>
 						<a href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.edit}">Editace</a>
 					</li>
-					<li>
+					<li class="active">
 						<a href="contractTariffList.html" th:href="@{/contracts/tariffs(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.tariffs}">Tarify</a>
 					</li>
-					<li class="active">
+					<li>
 						<a href="contractServerList.html" th:href="@{/contracts/servers(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.servers}">Servery</a>
 					</li>
-          <li>
-            <a href="contractTransactionList.html" th:href="@{/contracts/transactions(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.transactions}">Účetní položky</a>
-          </li>             
 				</ul>
 				<div class="voffset2 tab-content"></div>
 			</div>
