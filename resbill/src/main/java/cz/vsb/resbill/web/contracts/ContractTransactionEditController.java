@@ -43,8 +43,7 @@ import cz.vsb.resbill.util.WebUtils;
  */
 @Controller
 @RequestMapping("/contracts/transactions/edit")
-@SessionAttributes({ "transactionEditDTO", "transactionTypes" })
-// @SessionAttributes("transactionEditDTO")
+@SessionAttributes({ "transactionEditDTO", "transactionTypes", "contractEditDTO" })
 public class ContractTransactionEditController {
 
   private static final Logger    log                                   = LoggerFactory.getLogger(ContractTransactionEditController.class);
