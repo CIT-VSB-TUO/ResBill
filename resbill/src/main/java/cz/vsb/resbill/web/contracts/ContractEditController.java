@@ -137,10 +137,10 @@ public class ContractEditController {
 			} catch (ContractServiceException e) {
 				switch (e.getReason()) {
 				case CUSTOMER_MODIFICATION:
-					bindingResult.reject("error.save.contract.modified");
+					bindingResult.reject("error.save.contract.customer.modified");
 					break;
 				case SERVER_ASSOCIATION_EXCLUSION:
-					bindingResult.reject("error.save.contract.server.collision");
+					bindingResult.reject("error.save.contract.server.exclusion");
 					break;
 				default:
 					log.warn("Unsupported reason: " + e);
