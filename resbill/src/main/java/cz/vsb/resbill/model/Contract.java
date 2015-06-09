@@ -28,10 +28,9 @@ public class Contract extends BaseVersionedEntity implements PeriodLimitedEntity
 
 	private static final long serialVersionUID = 346744894255948553L;
 
-	@Column(name = "evidence_number", columnDefinition = "bigserial", insertable = false, updatable = false)
-	@NotNull
+	@Column(name = "evidence_number", nullable = false, columnDefinition = "bigserial", insertable = false, updatable = false)
 	@Digits(integer = 10, fraction = 0)
-	private Long evidenceNumber = Long.valueOf(0L);
+	private Long evidenceNumber;
 
 	@Column(name = "name")
 	@Size(max = 250)
@@ -42,10 +41,9 @@ public class Contract extends BaseVersionedEntity implements PeriodLimitedEntity
 	@Size(max = 1000)
 	private String note;
 
-	@Column(name = "balance")
-	@NotNull
+	@Column(name = "balance", nullable = false)
 	@Digits(integer = 14, fraction = 2)
-	private BigDecimal balance = BigDecimal.ZERO.setScale(2);
+	private BigDecimal balance;
 
 	@Embedded
 	@NotNull
