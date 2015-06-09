@@ -219,17 +219,23 @@ public class ContractDAOImpl implements ContractDAO {
 		return query.getResultList();
 	}
 
-	/**
-   * 
-   */
 	@Override
 	public Contract saveContract(Contract contract) {
 		if (contract.getId() == null) {
+
 			em.persist(contract);
 		} else {
 			contract = em.merge(contract);
 		}
 
+		em.flush();
+
+		return contract;
+	}
+
+	@Override
+	public Contract deleteContract(Contract contract) {
+		em.remove(contract);
 		em.flush();
 
 		return contract;

@@ -20,7 +20,7 @@ public interface ContractServerDAO {
 	 *          primary key
 	 * @return found {@link ContractServer} entity
 	 */
-	ContractServer findContractServer(Integer contractServerId, boolean fetchContract, boolean fetchServer);
+	ContractServer findContractServer(Integer contractServerId);
 
 	/**
 	 * Finds a {@link ContractServer} currently associated with given {@link Server}.

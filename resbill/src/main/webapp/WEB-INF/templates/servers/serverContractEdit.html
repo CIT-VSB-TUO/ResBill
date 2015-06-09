@@ -65,7 +65,7 @@
 						<a href="serverEdit.html" th:href="@{/servers/edit(serverId=${serverEditDTO.server.id})}" th:text="#{tab.server.edit}">Editace</a>
 					</li>
 					<li class="active">
-						<a href="serverContractList.html" th:href="@{/servers/contracts(serverId=${serverEditDTO.server.id})}" th:text="#{tab.server.contracs}">Kontrakty</a>
+						<a href="serverContractList.html" th:href="@{/servers/contracts(serverId=${serverEditDTO.server.id})}" th:text="#{tab.server.contracts}">Kontrakty</a>
 					</li>
 				</ul>
 				<div class="voffset2 tab-content"></div>
@@ -98,7 +98,7 @@
 
 							<div class="form-group required" th:classappend="${#fields.hasErrors('contractId')} ? 'has-error'">
 								<label class="control-label" th:text="#{label.server.contract}" for="contractId">Kontrakt</label>
-								<select class="form-control" th:field="*{contractId}" th:disabled="*{contractServer.id != null}">
+								<select class="form-control" th:field="*{contractId}" th:disabled="*{not contractEditable}">
 									<option value="" th:text="#{option.choose}">Vyberte</option>
 			  						<option th:each="contract : ${contracts}" th:value="${contract.id}" th:text="${contract.name}">kontrakt</option>
 								</select>

@@ -9,7 +9,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.support.DataAccessUtils;
@@ -35,17 +34,8 @@ public class ContractServerDAOImpl implements ContractServerDAO {
 	private EntityManager em;
 
 	@Override
-	public ContractServer findContractServer(Integer contractServerId, boolean fetchContract, boolean fetchServer) {
-		ContractServer cs = em.find(ContractServer.class, contractServerId);
-		if (cs != null) {
-			if (fetchContract) {
-				Hibernate.initialize(cs.getContract());
-			}
-			if (fetchServer) {
-				Hibernate.initialize(cs.getServer());
-			}
-		}
-		return cs;
+	public ContractServer findContractServer(Integer contractServerId) {
+		return em.find(ContractServer.class, contractServerId);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
--- SQL inserty, ktere do DB vlozi data pro vyvoj a testovani aplikace
+﻿-- SQL inserty, ktere do DB vlozi data pro vyvoj a testovani aplikace
 
 ALTER SEQUENCE hibernate_sequence RESTART WITH 10000;
 
@@ -13,10 +13,10 @@ INSERT INTO "person" VALUES (2, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'pe
 INSERT INTO "customer" VALUES (1, 0, NULL, 'Zákazník 1', NULL, 1);
 INSERT INTO "customer" VALUES (2, 0, NULL, 'Zákazník 2', NULL, 2);
 
-INSERT INTO "contract" VALUES (1, 0, -110.00, 0, 'Kontrakt1', NULL, '2015-04-01', NULL, 1);
-INSERT INTO "contract" VALUES (2, 0, 0.00, 1, 'Fakulta strojní', NULL, '2015-04-01', NULL, 2);
-INSERT INTO "contract" VALUES (3, 0, 0.00, 2, 'Bez tarifu', NULL, '2015-04-01', NULL, 2);
-INSERT INTO "contract" VALUES (4, 0, 0.00, 3, 'Spotřeba po ukončení', NULL, '2014-01-01', '2014-01-31', 2);
+INSERT INTO "contract" VALUES (1, 0, -110.00, DEFAULT, 'Kontrakt1', NULL, '2015-04-01', NULL, 1);
+INSERT INTO "contract" VALUES (2, 0, 0.00, DEFAULT, 'Fakulta strojní', NULL, '2015-04-01', NULL, 2);
+INSERT INTO "contract" VALUES (3, 0, 0.00, DEFAULT, 'Bez tarifu', NULL, '2015-04-01', NULL, 2);
+INSERT INTO "contract" VALUES (4, 0, 0.00, DEFAULT, 'Spotřeba po ukončení', NULL, '2014-01-01', '2014-01-31', 2);
 
 INSERT INTO "contract_invoice_type" VALUES (1, 0, '2014-01-01', NULL, 1, 1);
 INSERT INTO "contract_invoice_type" VALUES (2, 0, '2014-01-01', NULL, 2, 1);

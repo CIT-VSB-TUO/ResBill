@@ -9,6 +9,7 @@ import java.util.List;
 import cz.vsb.resbill.criteria.ContractCriteria;
 import cz.vsb.resbill.dto.ContractAgendaDTO;
 import cz.vsb.resbill.dto.ContractDTO;
+import cz.vsb.resbill.exception.ContractServiceException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Contract;
 
@@ -35,4 +36,30 @@ public interface ContractService {
 	 * @return
 	 */
 	List<ContractAgendaDTO> findContractAgendaDTOs(ContractCriteria criteria, Integer offset, Integer limit) throws ResBillException;
+
+	/**
+	 * Persists given {@link Contract} entity.
+	 * 
+	 * @param contract
+	 *          entity to save
+	 * @return saved {@link Contract} entity (with generated primary key)
+	 * @throws ContractServiceException
+	 *           if specific error occurs
+	 * @throws ResBillException
+	 *           if unexpected error occurs
+	 */
+	Contract saveContract(Contract contract) throws ContractServiceException, ResBillException;
+
+	/**
+	 * Deletes {@link Contract} entity with given primary key.
+	 * 
+	 * @param contractId
+	 *          key of deleted {@link Contract} entity
+	 * @return deleted {@link Contract} entity
+	 * @throws ContractServiceException
+	 *           if specific error occurs
+	 * @throws ResBillException
+	 *           if unexpected error occurs
+	 */
+	Contract deleteContract(Integer contractId) throws ContractServiceException, ResBillException;
 }
