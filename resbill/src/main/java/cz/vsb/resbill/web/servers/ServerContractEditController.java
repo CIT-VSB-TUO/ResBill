@@ -88,7 +88,7 @@ public class ServerContractEditController {
 		ContractServerEditDTO csEditDTO = null;
 		try {
 			if (contractServerId != null) {
-				csEditDTO = new ContractServerEditDTO(contractServerService.findContractServer(contractServerId, false, false));
+				csEditDTO = new ContractServerEditDTO(contractServerService.findContractServer(contractServerId));
 			} else {
 				ContractServer cs = new ContractServer();
 				cs.setPeriod(new Period());
@@ -100,7 +100,7 @@ public class ServerContractEditController {
 			}
 			model.addAttribute(CONTRACT_SERVER_EDIT_DTO_MODEL_KEY, csEditDTO);
 		} catch (Exception e) {
-			log.error("Cannot load server with id: " + contractServerId, e);
+			log.error("Cannot load contract server with id: " + contractServerId, e);
 
 			model.addAttribute(CONTRACT_SERVER_EDIT_DTO_MODEL_KEY, csEditDTO);
 			WebUtils.addGlobalError(model, CONTRACT_SERVER_EDIT_DTO_MODEL_KEY, "error.load.server.contract");

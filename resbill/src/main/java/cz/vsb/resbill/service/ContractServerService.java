@@ -24,7 +24,7 @@ public interface ContractServerService {
 	 * @throws ResBillException
 	 *           if unexpected error occurs
 	 */
-	ContractServer findContractServer(Integer contractServerId, boolean fetchContract, boolean fetchServer) throws ResBillException;
+	ContractServer findContractServer(Integer contractServerId) throws ResBillException;
 
 	/**
 	 * Finds a list of {@link ContractServer} entities according to given criteria.

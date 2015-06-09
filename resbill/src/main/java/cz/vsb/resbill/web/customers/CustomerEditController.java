@@ -167,7 +167,7 @@ public class CustomerEditController {
 			return "redirect:/customers";
 		} catch (CustomerServiceException e) {
 			switch (e.getReason()) {
-			case CONTRACTS_EXIST:
+			case CONTRACT_EXISTENCE:
 				bindingResult.reject("error.delete.customer.contracts.exist");
 				break;
 			default:

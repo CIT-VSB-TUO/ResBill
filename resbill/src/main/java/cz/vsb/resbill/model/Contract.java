@@ -28,10 +28,10 @@ public class Contract extends BaseVersionedEntity implements PeriodLimitedEntity
 
 	private static final long serialVersionUID = 346744894255948553L;
 
-	@Column(name = "evidence_number")
+	@Column(name = "evidence_number", columnDefinition = "bigserial", insertable = false, updatable = false)
 	@NotNull
 	@Digits(integer = 10, fraction = 0)
-	private Integer evidenceNumber;
+	private Long evidenceNumber = Long.valueOf(0L);
 
 	@Column(name = "name")
 	@Size(max = 250)
@@ -45,7 +45,7 @@ public class Contract extends BaseVersionedEntity implements PeriodLimitedEntity
 	@Column(name = "balance")
 	@NotNull
 	@Digits(integer = 14, fraction = 2)
-	private BigDecimal balance;
+	private BigDecimal balance = BigDecimal.ZERO.setScale(2);
 
 	@Embedded
 	@NotNull
@@ -53,8 +53,7 @@ public class Contract extends BaseVersionedEntity implements PeriodLimitedEntity
 	private Period period;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_contract__customer"))
-	@NotNull
+	@JoinColumn(name = "customer_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract__customer"))
 	private Customer customer;
 
 	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY)
@@ -72,11 +71,11 @@ public class Contract extends BaseVersionedEntity implements PeriodLimitedEntity
 	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ContractTariff> contractTariffs = new HashSet<>();
 
-	public Integer getEvidenceNumber() {
+	public Long getEvidenceNumber() {
 		return evidenceNumber;
 	}
 
-	public void setEvidenceNumber(Integer evidenceNumber) {
+	public void setEvidenceNumber(Long evidenceNumber) {
 		this.evidenceNumber = evidenceNumber;
 	}
 

@@ -9,7 +9,7 @@ public class CustomerServiceException extends ResBillException {
 		NONUNIQUE_NAME,
 
 		/** Zakaznik jiz ma vytvorene kontrakty */
-		CONTRACTS_EXIST
+		CONTRACT_EXISTENCE
 	}
 
 	private Reason reason;

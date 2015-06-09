@@ -113,7 +113,7 @@
         id int4 not null,
         lock_version int4 not null,
         balance numeric(16, 2) not null,
-        evidence_number int4 not null,
+        evidence_number bigserial not null,
         name varchar(250) not null,
         note varchar(1000),
         begin_date date not null,

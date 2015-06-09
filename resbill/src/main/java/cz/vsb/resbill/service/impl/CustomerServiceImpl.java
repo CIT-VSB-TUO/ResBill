@@ -88,7 +88,7 @@ public class CustomerServiceImpl implements CustomerService {
 			conCriteria.setCustomerId(customerId);
 			List<Contract> contracts = contractDAO.findContracts(conCriteria, null, null);
 			if (!contracts.isEmpty()) {
-				throw new CustomerServiceException(Reason.CONTRACTS_EXIST);
+				throw new CustomerServiceException(Reason.CONTRACT_EXISTENCE);
 			}
 
 			return customerDAO.deleteCustomer(customer);

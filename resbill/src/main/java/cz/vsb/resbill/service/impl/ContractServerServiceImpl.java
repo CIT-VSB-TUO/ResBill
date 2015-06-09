@@ -50,9 +50,9 @@ public class ContractServerServiceImpl implements ContractServerService {
 	private ContractTariffDAO contractTariffDAO;
 
 	@Override
-	public ContractServer findContractServer(Integer contractServerId, boolean fetchContract, boolean fetchServer) throws ResBillException {
+	public ContractServer findContractServer(Integer contractServerId) throws ResBillException {
 		try {
-			return contractServerDAO.findContractServer(contractServerId, fetchContract, fetchServer);
+			return contractServerDAO.findContractServer(contractServerId);
 		} catch (Exception e) {
 			log.error("An unexpected error occured while finding ContractServer by id=" + contractServerId, e);
 			throw new ResBillException(e);
@@ -87,17 +87,17 @@ public class ContractServerServiceImpl implements ContractServerService {
 				throw new ContractServerServiceException(Reason.OUT_OF_CONTRACT_DURATION);
 			}
 
-			// kontrola, zda ma kontrakt prirazen tarif
-			ContractTariffCriteria ctCriteria = new ContractTariffCriteria();
-			ctCriteria.setContractId(contractServer.getContract().getId());
-			List<ContractTariff> cts = contractTariffDAO.findContractTariffs(ctCriteria, null, null);
-			if (cts.isEmpty()) {
-				throw new ContractServerServiceException(Reason.CONTRACT_WITHOUT_TARIFF);
-			}
-
-			if (contractServer.getId() != null) {
+			if (contractServer.getId() == null) {
+				// kontrola, zda ma kontrakt prirazen tarif
+				ContractTariffCriteria ctCriteria = new ContractTariffCriteria();
+				ctCriteria.setContractId(contractServer.getContract().getId());
+				List<ContractTariff> cts = contractTariffDAO.findContractTariffs(ctCriteria, null, null);
+				if (cts.isEmpty()) {
+					throw new ContractServerServiceException(Reason.CONTRACT_WITHOUT_TARIFF);
+				}
+			} else {
 				// kontrola pokusu o zmenu prirazeni
-				ContractServer origCS = contractServerDAO.findContractServer(contractServer.getId(), false, false);
+				ContractServer origCS = contractServerDAO.findContractServer(contractServer.getId());
 				if (!origCS.getContract().getId().equals(contractServer.getContract().getId()) || !origCS.getServer().getId().equals(contractServer.getServer().getId())) {
 					throw new ContractServerServiceException(Reason.CONTRACT_SERVER_MODIFICATION);
 				}
@@ -141,7 +141,7 @@ public class ContractServerServiceImpl implements ContractServerService {
 	@Override
 	public ContractServer deleteContractServer(Integer contractServerId) throws ContractServerServiceException, ResBillException {
 		try {
-			ContractServer cs = contractServerDAO.findContractServer(contractServerId, false, false);
+			ContractServer cs = contractServerDAO.findContractServer(contractServerId);
 			// konrola, zda nebylo jiz fakturovano
 			StringBuilder jpql = new StringBuilder();
 			jpql.append("SELECT DISTINCT dailyUsage.id");

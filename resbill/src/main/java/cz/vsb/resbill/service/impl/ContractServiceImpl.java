@@ -5,22 +5,32 @@
 package cz.vsb.resbill.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.vsb.resbill.criteria.ContractCriteria;
+import cz.vsb.resbill.criteria.TransactionCriteria;
 import cz.vsb.resbill.dao.ContractDAO;
+import cz.vsb.resbill.dao.TransactionDAO;
 import cz.vsb.resbill.dto.ContractAgendaDTO;
 import cz.vsb.resbill.dto.ContractDTO;
+import cz.vsb.resbill.exception.ContractServiceException;
+import cz.vsb.resbill.exception.ContractServiceException.Reason;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Contract;
+import cz.vsb.resbill.model.Period;
+import cz.vsb.resbill.model.Transaction;
 import cz.vsb.resbill.service.ContractService;
 import cz.vsb.resbill.service.ResBillService;
 
@@ -34,8 +44,14 @@ public class ContractServiceImpl implements ContractService {
 
 	private static final Logger log = LoggerFactory.getLogger(ContractServiceImpl.class);
 
+	@PersistenceContext
+	private EntityManager em;
+
 	@Inject
 	private ContractDAO contractDAO;
+
+	@Inject
+	private TransactionDAO transactionDAO;
 
 	@Override
 	public Contract findContract(Integer contractId) throws ResBillException {
@@ -217,4 +233,60 @@ public class ContractServiceImpl implements ContractService {
 		}
 	}
 
+	@Override
+	public Contract saveContract(Contract contract) throws ContractServiceException, ResBillException {
+		try {
+			if (contract.getId() != null) {
+				// kontrola pokusu o zmenu zakaznika
+				Contract origContract = contractDAO.findContract(contract.getId());
+				if (!origContract.getCustomer().getId().equals(contract.getCustomer().getId())) {
+					throw new ContractServiceException(Reason.CUSTOMER_MODIFICATION);
+				}
+
+				// kontrola, zda neni narusena platnost prirazeni serveru
+				StringBuilder jpql = new StringBuilder();
+				jpql.append("SELECT MIN(cs.period.beginDate), CASE WHEN COUNT(*) = COUNT(cs.period.endDate) THEN MAX(cs.period.endDate) END");
+				jpql.append(" FROM ContractServer AS cs");
+				jpql.append(" WHERE cs.contract.id = :contractId");
+				Query query = em.createQuery(jpql.toString());
+				query.setParameter("contractId", contract.getId());
+
+				Object[] result = (Object[]) query.getSingleResult();
+				Period minMaxPeriod = new Period();
+				minMaxPeriod.setBeginDate((Date) result[0]);
+				minMaxPeriod.setEndDate((Date) result[1]);
+
+				if (minMaxPeriod.getBeginDate() != null && !Period.isPeriodInPeriod(minMaxPeriod, contract.getPeriod())) {
+					throw new ContractServiceException(Reason.SERVER_ASSOCIATION_EXCLUSION);
+				}
+			}
+			return contractDAO.saveContract(contract);
+		} catch (ContractServiceException e) {
+			throw e;
+		} catch (Exception e) {
+			log.error("An unexpected error occured while saving Contract entity: " + contract, e);
+			throw new ResBillException(e);
+		}
+	}
+
+	@Override
+	public Contract deleteContract(Integer contractId) throws ContractServiceException, ResBillException {
+		try {
+			Contract contract = contractDAO.findContract(contractId);
+			// kontrola, zda existuje jiz transakce
+			TransactionCriteria txCriteria = new TransactionCriteria();
+			txCriteria.setContractId(contractId);
+			List<Transaction> transactions = transactionDAO.findTransactions(txCriteria, null, null);
+			if (!transactions.isEmpty()) {
+				throw new ContractServiceException(Reason.TRANSACTION_EXISTENCE);
+			}
+
+			return contractDAO.deleteContract(contract);
+		} catch (ContractServiceException e) {
+			throw e;
+		} catch (Exception e) {
+			log.error("An unexpected error occured while deleting Contract with id=" + contractId, e);
+			throw new ResBillException(e);
+		}
+	}
 }
