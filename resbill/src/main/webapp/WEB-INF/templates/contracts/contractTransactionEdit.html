@@ -69,6 +69,8 @@
         <ul class="nav nav-tabs">
           <li><a href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.edit}">Editace</a>
           </li>
+          <li><a href="contractTariffList.html" th:href="@{/contracts/tariffs(contractId=${contractEditDTO.contract.id})}"
+            th:text="#{tab.contract.tariffs}">Tarify</a></li>
           <li><a href="contractServerList.html" th:href="@{/contracts/servers(contractId=${contractEditDTO.contract.id})}"
             th:text="#{tab.contract.servers}">Servery</a></li>
           <li class="active"><a href="contractTransactionList.html" th:href="@{/contracts/transactions(contractId=${contractEditDTO.contract.id})}"
@@ -97,7 +99,7 @@
 
               <div class="form-group" th:classappend="${#fields.hasErrors('transaction.evidenceNumber')} ? 'has-error'">
                 <label class="control-label" th:text="#{label.contract.transaction.evidenceNumber}" th:for="transaction.evidenceNumber">Evidenční číslo</label>
-                <input type="text" class="form-control" th:field="*{transaction.evidenceNumber}" th:disabled="*{editDisabled}"/>
+                <input type="text" class="form-control" th:field="*{transaction.evidenceNumber}" th:disabled="*{editDisabled}" />
                 <p class="help-block" th:if="${#fields.hasErrors('transaction.evidenceNumber')}" th:errors="*{transaction.evidenceNumber}" />
               </div>
 
@@ -106,21 +108,21 @@
                 <div class="input-group date" data-provide="datepicker" data-date-language="cs" data-date-format="d.m.yyyy" data-date-week-start="1"
                   data-date-autoclose="true" data-date-today-highlight="true" data-date-today-btn="linked" data-date-enable-on-readonly="false"
                   th:attr="data-date-language=${#locale.language},data-date-format=#{datepicker.date.format}" th:readonly="*{editDisabled}">
-                  <input type="text" class="form-control" th:field="*{transaction.decisiveDate}" th:disabled="*{editDisabled}"/> <span class="input-group-addon"><i
-                    class="fa fa-calendar"></i></span>
+                  <input type="text" class="form-control" th:field="*{transaction.decisiveDate}" th:disabled="*{editDisabled}" /> <span
+                    class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
                 <p class="help-block" th:if="${#fields.hasErrors('transaction.decisiveDate')}" th:errors="*{transaction.decisiveDate}" />
               </div>
 
               <div class="form-group required" th:classappend="${#fields.hasErrors('transaction.amount')} ? 'has-error'">
                 <label class="control-label" th:text="#{label.contract.transaction.amount}" th:for="transaction.amount">Částka</label> <input type="text"
-                  class="form-control" th:field="*{transaction.amount}" th:disabled="*{editDisabled}"/>
+                  class="form-control" th:field="*{transaction.amount}" th:disabled="*{editDisabled}" />
                 <p class="help-block" th:if="${#fields.hasErrors('transaction.amount')}" th:errors="*{transaction.amount}" />
               </div>
 
               <div class="form-group" th:classappend="${#fields.hasErrors('transaction.title')} ? 'has-error'">
                 <label class="control-label" th:text="#{label.contract.transaction.title}" th:for="transaction.title">Název</label> <input type="text"
-                  class="form-control" th:field="*{transaction.title}" th:disabled="*{editDisabled}"/>
+                  class="form-control" th:field="*{transaction.title}" th:disabled="*{editDisabled}" />
                 <p class="help-block" th:if="${#fields.hasErrors('transaction.title')}" th:errors="*{transaction.title}" />
               </div>
 
