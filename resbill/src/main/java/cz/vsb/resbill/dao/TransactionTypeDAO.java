@@ -4,6 +4,9 @@
  */
 package cz.vsb.resbill.dao;
 
+import java.util.List;
+
+import cz.vsb.resbill.criteria.TransactionTypeCriteria;
 import cz.vsb.resbill.model.TransactionType;
 
 /**
@@ -13,4 +16,6 @@ import cz.vsb.resbill.model.TransactionType;
 public interface TransactionTypeDAO {
 
   TransactionType findTransactionType(Integer id);
+
+  List<TransactionType> findTransactionTypes(TransactionTypeCriteria criteria, Integer offset, Integer limit);
 }

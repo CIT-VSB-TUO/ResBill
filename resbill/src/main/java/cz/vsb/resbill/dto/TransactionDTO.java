@@ -26,7 +26,7 @@ public class TransactionDTO implements Serializable {
 
   private Integer           order                = null;
 
-  private Integer           evidenceNumber       = null;
+  private Long              evidenceNumber       = null;
 
   private Date              decisiveDate         = null;
 
@@ -89,7 +89,7 @@ public class TransactionDTO implements Serializable {
   /**
    * @return the evidenceNumber
    */
-  public Integer getEvidenceNumber() {
+  public Long getEvidenceNumber() {
     return evidenceNumber;
   }
 
@@ -97,7 +97,7 @@ public class TransactionDTO implements Serializable {
    * @param evidenceNumber
    *          the evidenceNumber to set
    */
-  public void setEvidenceNumber(Integer evidenceNumber) {
+  public void setEvidenceNumber(Long evidenceNumber) {
     this.evidenceNumber = evidenceNumber;
   }
 

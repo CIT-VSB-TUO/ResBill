@@ -298,7 +298,7 @@
         lock_version int4 not null,
         amount numeric(16, 2) not null,
         decisive_date date not null,
-        evidence_number int4,
+        evidence_number int8,
         note varchar(1000),
         tx_order int4 not null,
         title varchar(250),

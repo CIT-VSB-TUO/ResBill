@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import cz.vsb.resbill.criteria.ContractCriteria;
 import cz.vsb.resbill.criteria.TransactionCriteria;
 import cz.vsb.resbill.dto.TransactionDTO;
 import cz.vsb.resbill.service.TransactionService;
@@ -31,7 +30,7 @@ import cz.vsb.resbill.util.WebUtils;
 @RequestMapping("/contracts/transactions")
 public class ContractTransactionListController {
 
-  private static final Logger log                           = LoggerFactory.getLogger(ContractEditController.class);
+  private static final Logger log                           = LoggerFactory.getLogger(ContractTransactionListController.class);
 
   public static final String  MODEL_OBJECT_KEY_TRANSACTIONS = "transactions";
 
