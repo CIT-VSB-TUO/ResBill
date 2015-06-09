@@ -1,9 +1,5 @@
 /* Custom styles for ResBill */
 
-.nowrap {
-  white-space: nowrap;
-}
-
 .form-group.required .control-label:after {
   	content:"*";  	
 }
