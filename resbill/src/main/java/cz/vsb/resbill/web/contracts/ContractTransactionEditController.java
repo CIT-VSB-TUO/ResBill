@@ -126,6 +126,7 @@ public class ContractTransactionEditController {
     try {
       TransactionTypeCriteria criteria = new TransactionTypeCriteria();
       criteria.setOrderBy(Arrays.asList(new TransactionTypeCriteria.OrderBy[] { TransactionTypeCriteria.OrderBy.ID_ASC }));
+      criteria.setSystemManaged(false);
 
       transactionTypes = transactionTypeService.findTransactionTypes(criteria, null, null);
       model.addAttribute(MODEL_OBJECT_KEY_TRANSACTION_TYPES, transactionTypes);

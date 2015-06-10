@@ -55,6 +55,10 @@ public class TransactionTypeDAOImpl implements TransactionTypeDAO {
     Set<String> join = new LinkedHashSet<String>();
     Set<String> where = new LinkedHashSet<String>();
 
+    if (criteria.getSystemManaged() != null) {
+      where.add("transactionType.systemManaged = :systemManaged");
+    }
+
     // Order by
     Set<String> order = new LinkedHashSet<String>();
     if (criteria.getOrderBy() != null && !criteria.getOrderBy().isEmpty()) {
@@ -104,6 +108,10 @@ public class TransactionTypeDAOImpl implements TransactionTypeDAO {
     }
     if (limit != null) {
       query.setMaxResults(limit.intValue());
+    }
+
+    if (criteria.getSystemManaged() != null) {
+      query.setParameter("systemManaged", criteria.getSystemManaged());
     }
 
     return query.getResultList();
