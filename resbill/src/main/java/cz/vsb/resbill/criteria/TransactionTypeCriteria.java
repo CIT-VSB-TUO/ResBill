@@ -23,6 +23,23 @@ public class TransactionTypeCriteria implements Serializable {
 
   private List<OrderBy>     orderBy          = Arrays.asList(new OrderBy[] { OrderBy.ID_ASC });
 
+  private Boolean           systemManaged    = null;
+
+  /**
+   * @return the systemManaged
+   */
+  public Boolean getSystemManaged() {
+    return systemManaged;
+  }
+
+  /**
+   * @param systemManaged
+   *          the systemManaged to set
+   */
+  public void setSystemManaged(Boolean systemManaged) {
+    this.systemManaged = systemManaged;
+  }
+
   /**
    * @return the orderBy
    */
@@ -47,6 +64,7 @@ public class TransactionTypeCriteria implements Serializable {
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this);
     builder.append("orderBy", orderBy);
+    builder.append("systemManaged", systemManaged);
     builder.append("toString()", super.toString());
     return builder.toString();
   }

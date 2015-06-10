@@ -316,6 +316,7 @@
 
     create table if not exists TRANSACTION_TYPE (
         id int4 not null,
+        system_managed boolean not null,
         title varchar(100) not null,
         primary key (id)
     );
@@ -488,9 +489,9 @@
     insert into invoice_type (id, title, divisor) values(4, 'roční', 12);
 
     -- TRANSACTION_TYPE --
-    insert into transaction_type (id, title) values(1, 'faktura');
-    insert into transaction_type (id, title) values(2, 'příchozí platba');
-    insert into transaction_type (id, title) values(3, 'extra položka');
+    insert into transaction_type (id, title) values(1, 'faktura', true);
+    insert into transaction_type (id, title) values(2, 'příchozí platba', false);
+    insert into transaction_type (id, title) values(3, 'extra položka', false);
     
     -- PRODUCTION_LEVEL --
     insert into production_level (id, code, title) values(1, 'init', null);
