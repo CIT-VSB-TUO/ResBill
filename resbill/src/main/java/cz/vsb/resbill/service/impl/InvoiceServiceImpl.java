@@ -516,12 +516,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     groupPricing.append(buildGroupOneResourcePricing(serverPricing.memories, "\t\t"));
 
     groupPricing.append("\n");
-    groupPricing.append("\tStorage: ");
+    groupPricing.append("\tHDD: ");
     groupPricing.append("\n");
     groupPricing.append(buildGroupOneResourcePricing(serverPricing.spaces, "\t\t"));
 
     groupPricing.append("\n");
-    groupPricing.append("\tBackup: ");
+    groupPricing.append("\tZálohování: ");
     groupPricing.append("\n");
     groupPricing.append(buildGroupOneResourcePricing(serverPricing.backups, "\t\t"));
 
@@ -593,14 +593,14 @@ public class InvoiceServiceImpl implements InvoiceService {
     pricing.append(" Kč/měsíc");
 
     // Storage
-    pricing.append("; Storage: ");
+    pricing.append("; HDD: ");
     pricing.append(usagePrice.dailyUsage.getProvisionedSpaceGB());
     pricing.append(" á ");
     pricing.append(usagePrice.priceList.getSpaceGBPrice());
     pricing.append(" Kč/měsíc");
 
     // Backup
-    pricing.append("; Backup: ");
+    pricing.append("; Zálohování: ");
     pricing.append(usagePrice.dailyUsage.getBackupGB());
     pricing.append(" á ");
     pricing.append(usagePrice.priceList.getBackupGBPrice());
