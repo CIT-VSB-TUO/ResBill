@@ -126,7 +126,7 @@
 							</div>
 						
 							<div class="form-group" th:classappend="${#fields.hasErrors('contractInvoiceType.period.endDate')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.contract.invoiceType.from}" th:for="contractInvoiceType.period.endDate">Platnost do</label>
+								<label class="control-label" th:text="#{label.contract.invoiceType.to}" th:for="contractInvoiceType.period.endDate">Platnost do</label>
 								<div class="input-group date" data-provide="datepicker" data-date-language="cs" data-date-format="d.m.yyyy" 
 									data-date-week-start="1" data-date-autoclose="true" data-date-today-highlight="true" data-date-today-btn="linked" 
 									th:attr="data-date-language=${#locale.language},data-date-format=#{datepicker.date.format}">
