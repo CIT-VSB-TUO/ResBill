@@ -131,6 +131,9 @@
               <th class="rotate"><div>
                   <span th:text="#{column.agenda.contract.positiveBalance}">Kladný zůstatek</span>
                 </div></th>
+              <th class="rotate"><div>
+                  <span></span>
+                </div></th>
             </tr>
           </thead>
 
@@ -146,11 +149,12 @@
               <td class="text-center rotated-col"><i th:if="${contract.negativeBalance}" class="fa fa-exclamation-circle text-warning"></i></td>
               <td class="text-center rotated-col"><i th:if="${contract.positiveBalance}" class="fa fa-exclamation-circle text-success"></i></td>
 
-              <!-- 
-              <td><a class="btn btn-primary btn-circle" href="invoiceDetail.html" th:href="@{/invoice/detail(invoiceId=${invoice.transactionId})}"
-                th:title="#{button.title.invoice.detail}"> <i class="fa fa-edit"></i>
+              <td class="text-center rotated-col"><a class=" " href="../contracts/contractEdit.html"
+                th:href="@{/contracts/edit(contractId=${contract.contractId})}" th:title="#{button.title.contract.edit}"> <i
+                  class="fa fa-edit"></i>
               </a></td>
-               -->
+
+
             </tr>
           </tbody>
         </table>
@@ -242,11 +246,6 @@
                   class="fa fa-edit"></i>
               </a></td>
 
-              <!-- 
-              <td><a class="btn btn-primary btn-circle" href="invoiceDetail.html" th:href="@{/invoice/detail(invoiceId=${invoice.transactionId})}"
-                th:title="#{button.title.invoice.detail}"> <i class="fa fa-edit"></i>
-              </a></td>
-               -->
             </tr>
           </tbody>
         </table>
