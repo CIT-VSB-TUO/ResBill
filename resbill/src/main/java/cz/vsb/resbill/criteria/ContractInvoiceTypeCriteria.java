@@ -2,15 +2,15 @@ package cz.vsb.resbill.criteria;
 
 import java.io.Serializable;
 
-import cz.vsb.resbill.model.ContractTariff;
+import cz.vsb.resbill.model.ContractInvoiceType;
 
 /**
- * A criteria class for searching {@link ContractTariff} entities.
+ * A criteria class for searching {@link ContractInvoiceType} entities.
  * 
  * @author HAL191
  *
  */
-public class ContractTariffCriteria implements Serializable {
+public class ContractInvoiceTypeCriteria implements Serializable {
 
 	private static final long serialVersionUID = 3752663052905075572L;
 
@@ -20,13 +20,13 @@ public class ContractTariffCriteria implements Serializable {
 
 	private Integer contractId;
 
-	private Integer tariffId;
+	private Integer invoiceTypeId;
 
 	private OrderBy orderBy;
 
 	private boolean fetchContract;
 
-	private boolean fetchTariff;
+	private boolean fetchInvoiceType;
 
 	public Integer getContractId() {
 		return contractId;
@@ -36,12 +36,12 @@ public class ContractTariffCriteria implements Serializable {
 		this.contractId = contractId;
 	}
 
-	public Integer getTariffId() {
-		return tariffId;
+	public Integer getInvoiceTypeId() {
+		return invoiceTypeId;
 	}
 
-	public void setTariffId(Integer tariffId) {
-		this.tariffId = tariffId;
+	public void setInvoiceTypeId(Integer invoiceTypeId) {
+		this.invoiceTypeId = invoiceTypeId;
 	}
 
 	public OrderBy getOrderBy() {
@@ -60,29 +60,29 @@ public class ContractTariffCriteria implements Serializable {
 		this.fetchContract = fetchContract;
 	}
 
-	public boolean isFetchTariff() {
-		return fetchTariff;
+	public boolean isFetchInvoiceType() {
+		return fetchInvoiceType;
 	}
 
-	public void setFetchTariff(boolean fetchTariff) {
-		this.fetchTariff = fetchTariff;
+	public void setFetchInvoiceType(boolean fetchInvoiceType) {
+		this.fetchInvoiceType = fetchInvoiceType;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ContractTariffCriteria [");
+		builder.append("ContractInvoiceTypeCriteria [");
 		builder.append(super.toString());
 		builder.append(", contractId=");
 		builder.append(contractId);
-		builder.append(", tariffId=");
-		builder.append(tariffId);
+		builder.append(", invoiceTypeId=");
+		builder.append(invoiceTypeId);
 		builder.append(", orderBy=");
 		builder.append(orderBy);
 		builder.append(", fetchContract=");
 		builder.append(fetchContract);
-		builder.append(", fetchTariff=");
-		builder.append(fetchTariff);
+		builder.append(", fetchInvoiceType=");
+		builder.append(fetchInvoiceType);
 		builder.append("]");
 		return builder.toString();
 	}

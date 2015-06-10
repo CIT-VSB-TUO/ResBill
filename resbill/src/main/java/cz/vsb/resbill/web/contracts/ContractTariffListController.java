@@ -1,6 +1,5 @@
 package cz.vsb.resbill.web.contracts;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,7 +20,7 @@ import cz.vsb.resbill.service.ContractTariffService;
 import cz.vsb.resbill.util.WebUtils;
 
 /**
- * A controller for handling requests for/from servers/serverContractList.html page template.
+ * A controller for handling requests for/from contracts/contractTariffList.html page template.
  * 
  * @author HAL191
  *
@@ -44,7 +43,7 @@ public class ContractTariffListController {
 			ContractTariffCriteria criteria = new ContractTariffCriteria();
 			criteria.setContractId(contractId);
 			criteria.setFetchTariff(true);
-			criteria.setOrderBy(Collections.singletonList(OrderBy.PERIOD_ASC));
+			criteria.setOrderBy(OrderBy.PERIOD_ASC);
 			cts = contractTariffService.findContractTariffs(criteria, null, null);
 			model.addAttribute(CONTRACT_TARIFFS_MODEL_KEY, cts);
 		} catch (Exception e) {

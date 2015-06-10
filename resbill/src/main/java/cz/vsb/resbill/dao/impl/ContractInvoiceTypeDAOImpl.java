@@ -14,61 +14,61 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import cz.vsb.resbill.criteria.ContractTariffCriteria;
-import cz.vsb.resbill.dao.ContractTariffDAO;
-import cz.vsb.resbill.model.ContractTariff;
+import cz.vsb.resbill.criteria.ContractInvoiceTypeCriteria;
+import cz.vsb.resbill.dao.ContractInvoiceTypeDAO;
+import cz.vsb.resbill.model.ContractInvoiceType;
 
 /**
- * Implementation class of {@link ContractTariffDAO} interface.
+ * Implementation class of {@link ContractInvoiceTypeDAO} interface.
  * 
  * @author HAL191
  *
  */
 @Repository
-public class ContractTariffDAOImpl implements ContractTariffDAO {
+public class ContractInvoiceTypeDAOImpl implements ContractInvoiceTypeDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(ContractTariffDAOImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ContractInvoiceTypeDAOImpl.class);
 
 	@PersistenceContext
 	private EntityManager em;
 
 	@Override
-	public ContractTariff findContractTariff(Integer contractTariffId) {
-		return em.find(ContractTariff.class, contractTariffId);
+	public ContractInvoiceType findContractInvoiceType(Integer contractInvoiceTypeId) {
+		return em.find(ContractInvoiceType.class, contractInvoiceTypeId);
 	}
 
 	@Override
-	public List<ContractTariff> findContractTariffs(ContractTariffCriteria criteria, Integer offset, Integer limit) {
-		StringBuilder jpql = new StringBuilder("SELECT ct FROM ContractTariff AS ct");
+	public List<ContractInvoiceType> findContractInvoiceTypes(ContractInvoiceTypeCriteria criteria, Integer offset, Integer limit) {
+		StringBuilder jpql = new StringBuilder("SELECT cit FROM ContractInvoiceType AS cit");
 		// building query
 		if (criteria != null) {
 			// join
 			Set<String> joins = new LinkedHashSet<String>();
 			if (criteria.isFetchContract()) {
-				joins.add("FETCH ct.contract AS contract");
+				joins.add("FETCH cit.contract AS contract");
 			}
-			if (criteria.isFetchTariff()) {
-				joins.add("FETCH ct.tariff AS tariff");
+			if (criteria.isFetchInvoiceType()) {
+				joins.add("FETCH cit.invoiceType AS invoiceType");
 			}
 			// where
 			Set<String> where = new LinkedHashSet<String>();
 			if (criteria.getContractId() != null) {
-				where.add("ct.contract.id = :contractId");
+				where.add("cit.contract.id = :contractId");
 			}
-			if (criteria.getTariffId() != null) {
-				where.add("ct.tariff.id = :tariffId");
+			if (criteria.getInvoiceTypeId() != null) {
+				where.add("cit.invoiceType.id = :invoiceTypeId");
 			}
 			// order by
 			List<String> order = new ArrayList<String>();
 			if (criteria.getOrderBy() != null) {
 				switch (criteria.getOrderBy()) {
 				case PERIOD_ASC:
-					order.add("ct.period.beginDate ASC");
-					order.add("ct.period.endDate ASC");
+					order.add("cit.period.beginDate ASC");
+					order.add("cit.period.endDate ASC");
 					break;
 				case PERIOD_DESC:
-					order.add("ct.period.beginDate DESC");
-					order.add("ct.period.endDate DESC");
+					order.add("cit.period.beginDate DESC");
+					order.add("cit.period.endDate DESC");
 					break;
 				default:
 					log.warn("Unsupported order by option: " + criteria.getOrderBy());
@@ -89,15 +89,15 @@ public class ContractTariffDAOImpl implements ContractTariffDAO {
 			}
 		}
 
-		TypedQuery<ContractTariff> query = em.createQuery(jpql.toString(), ContractTariff.class);
+		TypedQuery<ContractInvoiceType> query = em.createQuery(jpql.toString(), ContractInvoiceType.class);
 
 		// parameters
 		if (criteria != null) {
 			if (criteria.getContractId() != null) {
 				query.setParameter("contractId", criteria.getContractId());
 			}
-			if (criteria.getTariffId() != null) {
-				query.setParameter("tariffId", criteria.getTariffId());
+			if (criteria.getInvoiceTypeId() != null) {
+				query.setParameter("invoiceTypeId", criteria.getInvoiceTypeId());
 			}
 		}
 		if (offset != null) {
@@ -110,22 +110,22 @@ public class ContractTariffDAOImpl implements ContractTariffDAO {
 	}
 
 	@Override
-	public ContractTariff saveContractTariff(ContractTariff contractTariff) {
-		if (contractTariff.getId() == null) {
-			em.persist(contractTariff);
+	public ContractInvoiceType saveContractInvoiceType(ContractInvoiceType contractInvoiceType) {
+		if (contractInvoiceType.getId() == null) {
+			em.persist(contractInvoiceType);
 		} else {
-			contractTariff = em.merge(contractTariff);
+			contractInvoiceType = em.merge(contractInvoiceType);
 		}
 		em.flush();
 
-		return contractTariff;
+		return contractInvoiceType;
 	}
 
 	@Override
-	public ContractTariff deleteContractTariff(ContractTariff contractTariff) {
-		em.remove(contractTariff);
+	public ContractInvoiceType deleteContractInvoiceType(ContractInvoiceType contractInvoiceType) {
+		em.remove(contractInvoiceType);
 		em.flush();
 
-		return contractTariff;
+		return contractInvoiceType;
 	}
 }
