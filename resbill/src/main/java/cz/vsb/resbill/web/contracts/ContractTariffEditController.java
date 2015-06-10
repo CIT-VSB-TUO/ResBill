@@ -82,10 +82,10 @@ public class ContractTariffEditController {
 		if (log.isDebugEnabled()) {
 			log.debug("Requested contractTariff.id=" + contractTariffId);
 		}
-		ContractTariffEditDTO csEditDTO = null;
+		ContractTariffEditDTO ctEditDTO = null;
 		try {
 			if (contractTariffId != null) {
-				csEditDTO = new ContractTariffEditDTO(contractTariffService.findContractTariff(contractTariffId));
+				ctEditDTO = new ContractTariffEditDTO(contractTariffService.findContractTariff(contractTariffId));
 			} else {
 				ContractTariff cs = new ContractTariff();
 				cs.setPeriod(new Period());
@@ -93,17 +93,17 @@ public class ContractTariffEditController {
 				if (contractId != null) {
 					cs.setContract(contractService.findContract(contractId));
 				}
-				csEditDTO = new ContractTariffEditDTO(cs);
+				ctEditDTO = new ContractTariffEditDTO(cs);
 			}
-			model.addAttribute(CONTRACT_TARIFF_EDIT_DTO_MODEL_KEY, csEditDTO);
+			model.addAttribute(CONTRACT_TARIFF_EDIT_DTO_MODEL_KEY, ctEditDTO);
 		} catch (Exception e) {
 			log.error("Cannot load contract tariff with id: " + contractTariffId, e);
 
-			model.addAttribute(CONTRACT_TARIFF_EDIT_DTO_MODEL_KEY, csEditDTO);
+			model.addAttribute(CONTRACT_TARIFF_EDIT_DTO_MODEL_KEY, ctEditDTO);
 			WebUtils.addGlobalError(model, CONTRACT_TARIFF_EDIT_DTO_MODEL_KEY, "error.load.contract.tariff");
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Loaded contractTariffEditDTO: " + csEditDTO);
+			log.debug("Loaded contractTariffEditDTO: " + ctEditDTO);
 		}
 	}
 
@@ -136,18 +136,19 @@ public class ContractTariffEditController {
 		}
 		if (!bindingResult.hasErrors()) {
 			try {
-				ContractTariff cs = contractTariffEditDTO.getContractTariff();
-				if (cs.getId() == null) {
-					cs.setTariff(tariffService.findTariff(contractTariffEditDTO.getTariffId()));
+				ContractTariff ct = contractTariffEditDTO.getContractTariff();
+				if (ct.getId() == null) {
+					ct.setTariff(tariffService.findTariff(contractTariffEditDTO.getTariffId()));
 				}
-				cs = contractTariffService.saveContractTariff(cs);
+				ct = contractTariffService.saveContractTariff(ct);
 				if (log.isDebugEnabled()) {
-					log.debug("Saved contract tariff: " + cs);
+					log.debug("Saved contract tariff: " + ct);
 				}
-				redirectAttributes.addAttribute("contractId", cs.getContract().getId());
+				redirectAttributes.addAttribute("contractId", ct.getContract().getId());
 				return "redirect:/contracts/tariffs";
 			} catch (ContractTariffServiceException e) {
 				switch (e.getReason()) {
+				// TODO osetreni vyjimek
 				default:
 					log.warn("Unsupported reason: " + e);
 					bindingResult.reject("error.save.contract.tariff");
@@ -176,14 +177,15 @@ public class ContractTariffEditController {
 			log.debug("ContractTariffEditDTO to delete: " + contractTariffEditDTO);
 		}
 		try {
-			ContractTariff cs = contractTariffService.deleteContractTariff(contractTariffEditDTO.getContractTariff().getId());
+			ContractTariff ct = contractTariffService.deleteContractTariff(contractTariffEditDTO.getContractTariff().getId());
 			if (log.isDebugEnabled()) {
-				log.debug("Deleted ContractTariff: " + cs);
+				log.debug("Deleted ContractTariff: " + ct);
 			}
-			redirectAttributes.addAttribute("contractId", cs.getContract().getId());
+			redirectAttributes.addAttribute("contractId", ct.getContract().getId());
 			return "redirect:/contracts/tariffs";
 		} catch (ContractTariffServiceException e) {
 			switch (e.getReason()) {
+			// TODO osetreni vyjimek
 			default:
 				log.warn("Unsupported reason: " + e);
 				bindingResult.reject("error.delete.contract.tariff");

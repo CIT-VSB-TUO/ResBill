@@ -28,7 +28,7 @@ public class DateFormatter implements Formatter<Date> {
 
 	@Override
 	public String print(Date date, Locale locale) {
-		return getDateFormat(locale).format(date);
+		return date != null ? getDateFormat(locale).format(date) : null;
 	}
 
 	@Override

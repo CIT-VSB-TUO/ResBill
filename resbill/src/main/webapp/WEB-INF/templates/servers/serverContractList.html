@@ -95,8 +95,8 @@
 					</thead>
 					<tbody th:remove="all-but-first">
 						<tr th:each="serverContract : ${serverContracts}">
-							<td th:text="${serverContract.period.beginDate}">1.1.2000</td>
-							<td th:text="${serverContract.period.endDate}">30.6.2001</td>
+							<td th:text="${#dates.format(serverContract.period.beginDate, '__#{date.format.list}__')}">1.1.2000</td>
+							<td th:text="${serverContract.period.endDate != null} ? ${#dates.format(serverContract.period.endDate, '__#{date.format.list}__')}">30.6.2001</td>
 							<td th:text="${serverContract.contract.name}">Kontrakt 1</td>
 							<td>
 								<a class="btn btn-primary btn-circle" href="serverContractEdit.html" th:href="@{/servers/contracts/edit(contractServerId=${serverContract.id})}" th:title="#{button.title.server.contract.edit}">

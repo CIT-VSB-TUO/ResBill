@@ -71,9 +71,9 @@
 					<li>
 						<a href="contractServerList.html" th:href="@{/contracts/servers(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.servers}">Servery</a>
 					</li>
-          <li>
-            <a href="contractTransactionList.html" th:href="@{/contracts/transactions(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.transactions}">Účetní položky</a>
-          </li>          
+					<li>
+						<a href="contractTransactionList.html" th:href="@{/contracts/transactions(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.transactions}">Účetní položky</a>
+					</li>
 				</ul>
 				<div class="voffset2 tab-content"></div>
 			</div>
@@ -83,6 +83,17 @@
 			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contractTariffs}')}" th:errors="${contractTariffs}">Global error</div>
 		</div>
 		
+		<div class="row" th:if="${contractTariffs == null}">
+			<div class="col-lg-12">
+				<p>
+					<a href="contractEdit.html" class="btn btn-default" th:href="@{/contracts/edit(contractId=${contractEditDTO.contract.id})}" >
+						<i class="fa fa-reply"></i>
+						<span th:text="#{button.back}">Back</span>
+					</a>
+				</p>				
+			</div>
+		</div>
+
 		<div class="row" th:if="${contractTariffs != null}">
 			<div class="col-lg-12">
 
@@ -101,8 +112,8 @@
 					</thead>
 					<tbody th:remove="all-but-first">
 						<tr th:each="contractTariff : ${contractTariffs}">
-							<td th:text="${contractTariff.period.beginDate}">1.1.2000</td>
-							<td th:text="${contractTariff.period.endDate}">30.6.2001</td>
+							<td th:text="${#dates.format(contractTariff.period.beginDate, '__#{date.format.list}__')}">1.1.2000</td>
+							<td th:text="${contractTariff.period.endDate != null} ? ${#dates.format(contractTariff.period.endDate, '__#{date.format.list}__')}">30.6.2001</td>
 							<td th:text="${contractTariff.tariff.name}">Tarif 1</td>
 							<td>
 								<a class="btn btn-primary btn-circle" href="contractTariffEdit.html" th:href="@{/contracts/tariffs/edit(contractTariffId=${contractTariff.id})}" th:title="#{button.title.contract.tariff.edit}">

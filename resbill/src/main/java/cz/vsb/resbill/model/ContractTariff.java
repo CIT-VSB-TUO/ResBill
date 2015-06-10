@@ -23,13 +23,11 @@ public class ContractTariff extends BaseVersionedEntity implements PeriodLimited
 	private Period period;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "contract_id", foreignKey = @ForeignKey(name = "FK_contract_tariff__contract"))
-	@NotNull
+	@JoinColumn(name = "contract_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_tariff__contract"))
 	private Contract contract;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "tariff_id", foreignKey = @ForeignKey(name = "FK_contract_tariff__tariff"))
-	@NotNull
+	@JoinColumn(name = "tariff_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_tariff__tariff"))
 	private Tariff tariff;
 
 	@Override

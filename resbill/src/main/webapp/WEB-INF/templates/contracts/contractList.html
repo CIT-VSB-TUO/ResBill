@@ -1,40 +1,39 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorator="layout">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorator="layout">
 
 <head>
 
 <th:block th:remove="all">
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="" />
+	<meta name="author" content="" />
 </th:block>
 
 <title th:text="#{head.title.contracts}">Kontrakty</title>
 <th:block th:remove="all">
-  <!-- remove all duplicated template css due to auto-merge -->
+	<!-- remove all duplicated template css due to auto-merge -->
 
-  <!-- ResBill Custom CSS -->
-  <link href="../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
+	<!-- ResBill Custom CSS -->
+	<link href="../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
 
-  <!-- Bootstrap Core CSS -->
-  <link href="../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"
-    th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+	<!-- Bootstrap Core CSS -->
+	<link href="../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
 
-  <!-- Custom Fonts -->
-  <link href="../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"
-    th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+	<!-- Custom Fonts -->
+	<link href="../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
 
-  <!-- SB Admin 2 CSS -->
-  <link href="../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css"
-    th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
+	<!-- SB Admin 2 CSS -->
+	<link href="../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
 
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
 		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->
@@ -44,70 +43,73 @@
 </head>
 
 <body>
-  <div layout:fragment="content">
-    <div class="row">
-      <div class="col-lg-12">
-        <h1 class="page-header" th:text="#{page.header.contracts}">Kontrakty</h1>
-      </div>
-    </div>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header" th:text="#{page.header.contracts}">Kontrakty</h1>
+			</div>
+		</div>
 
 
-    <!-- Zobrazeni chyb -->
-    <div class="row">
-      <div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contracts}')}" th:errors="${contracts}">Global error</div>
-    </div>
+		<!-- Zobrazeni chyb -->
+		<div class="row">
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contracts}')}" th:errors="${contracts}">Global error</div>
+		</div>
 
-    <!-- Zobrazeni vypisu kontraktu -->
-    <div class="row" th:if="${contracts != null}">
-      <div class="col-lg-12">
-        <table class="table" id="contracts">
-          <thead>
-            <tr>
-              <th th:text="#{column.contract.evidenceNumber}">Evidenční číslo</th>
-              <th th:text="#{column.contract.name}">Název</th>
-              <th th:text="#{column.contract.balance}">Zůstatek</th>
-              <th th:text="#{column.contract.beginDate}">Platnost od</th>
-              <th th:text="#{column.contract.endDate}">Platnost do</th>
-              <th><a class="btn btn-primary btn-circle" href="contractEdit.html" th:href="@{/contracts/edit}" th:title="#{button.title.contract.add}">
-                  <i class="fa fa-plus-square"></i>
-              </a></th>
-            </tr>
-          </thead>
+		<!-- Zobrazeni vypisu kontraktu -->
+		<div class="row" th:if="${contracts != null}">
+			<div class="col-lg-12">
+				<table class="table" id="contracts">
+					<thead>
+						<tr>
+							<th th:text="#{column.contract.evidenceNumber}">Evidenční číslo</th>
+							<th th:text="#{column.contract.name}">Název</th>
+							<th th:text="#{column.contract.balance}">Zůstatek</th>
+							<th th:text="#{column.contract.beginDate}">Platnost od</th>
+							<th th:text="#{column.contract.endDate}">Platnost do</th>
+							<th>
+								<a class="btn btn-primary btn-circle" href="contractEdit.html" th:href="@{/contracts/edit}" th:title="#{button.title.contract.add}">
+									<i class="fa fa-plus-square"></i>
+								</a>
+							</th>
+						</tr>
+					</thead>
 
-          <tbody th:remove="all-but-first">
-            <tr th:each="contract: ${contracts}">
-              <td th:text="${contract.evidenceNumber}">1</td>
-              <td th:text="${contract.name}">P.FS</td>
-              <td th:text="${#numbers.formatDecimal(contract.balance,1,'DEFAULT',2,'DEFAULT')}">-1 000,0</td>
-              <td th:text="${{contract.period.beginDate}}">1.1.2014</td>
-              <td th:text="${{contract.period.endDate}}">31.12.2015</td>
+					<tbody th:remove="all-but-first">
+						<tr th:each="contract: ${contracts}">
+							<td th:text="${contract.evidenceNumber}">1</td>
+							<td th:text="${contract.name}">P.FS</td>
+							<td th:text="${#numbers.formatDecimal(contract.balance,1,'DEFAULT',2,'DEFAULT')}">-1 000,0</td>
+							<td th:text="${#dates.format(contract.period.beginDate, '__#{date.format.list}__')}">1.1.2014</td>
+							<td th:text="${contract.period.endDate != null} ? ${#dates.format(contract.period.endDate, '__#{date.format.list}__')}">31.12.2015</td>
 
-              <td><a class="btn btn-primary btn-circle" href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contract.id})}"
-                th:title="#{button.title.contract.edit}"> <i class="fa fa-edit"></i>
-              </a></td>
-              <!-- 
-              <td>
+							<td>
+								<a class="btn btn-primary btn-circle" href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contract.id})}" th:title="#{button.title.contract.edit}">
+									<i class="fa fa-edit"></i>
+								</a>
+							</td>
+							<!-- 
+							<td>
 								<a class="btn btn-primary btn-circle" href="contractEdit.html" th:href="@{/contracts/transactions(contractId=${contract.id})}" th:title="#{button.title.contract.edit}">
 									<i class="fa fa-bars"></i>
 								</a>
 							</td>
-               -->
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+							 -->
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 
-  <!-- jQuery -->
-  <script src="../../bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+	<!-- jQuery -->
+	<script src="../../bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
 
-  <!-- Bootstrap Core JavaScript -->
-  <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+	<!-- Bootstrap Core JavaScript -->
+	<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
 
-  <!-- Custom Theme JavaScript -->
-  <script src="../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"
-    th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+	<!-- Custom Theme JavaScript -->
+	<script src="../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
 
 </body>
 </html>

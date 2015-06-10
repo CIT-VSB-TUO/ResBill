@@ -56,13 +56,28 @@ public class ContractTariffServiceImpl implements ContractTariffService {
 
 	@Override
 	public ContractTariff saveContractTariff(ContractTariff contractTariff) throws ContractTariffServiceException, ResBillException {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO doplnit kontroly
+		try {
+			return contractTariffDAO.saveContractTariff(contractTariff);
+			// } catch (ContractTariffServiceException e) {
+			// throw e;
+		} catch (Exception e) {
+			log.error("An unexpected error occured while saving ContractTariff entity: " + contractTariff, e);
+			throw new ResBillException(e);
+		}
 	}
 
 	@Override
 	public ContractTariff deleteContractTariff(Integer contractTariffId) throws ContractTariffServiceException, ResBillException {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO doplnit kontroly
+		try {
+			ContractTariff contractTariff = contractTariffDAO.findContractTariff(contractTariffId);
+			return contractTariffDAO.deleteContractTariff(contractTariff);
+			// } catch (ContractTariffServiceException e) {
+			// throw e;
+		} catch (Exception e) {
+			log.error("An unexpected error occured while deleting ContractTariff with id=" + contractTariffId, e);
+			throw new ResBillException(e);
+		}
 	}
 }

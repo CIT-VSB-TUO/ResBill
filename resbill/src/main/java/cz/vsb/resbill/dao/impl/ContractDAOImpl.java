@@ -22,6 +22,7 @@ import org.springframework.stereotype.Repository;
 import cz.vsb.resbill.criteria.ContractCriteria;
 import cz.vsb.resbill.dao.ContractDAO;
 import cz.vsb.resbill.model.Contract;
+import cz.vsb.resbill.util.NumberUtils;
 
 /**
  * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
@@ -222,7 +223,7 @@ public class ContractDAOImpl implements ContractDAO {
 	@Override
 	public Contract saveContract(Contract contract) {
 		if (contract.getId() == null) {
-
+			contract.setBalance(NumberUtils.STANDARD_ZERO);
 			em.persist(contract);
 		} else {
 			contract = em.merge(contract);

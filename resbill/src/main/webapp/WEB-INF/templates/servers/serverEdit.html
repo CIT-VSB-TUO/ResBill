@@ -65,7 +65,7 @@
 						<a href="serverEdit.html" th:href="@{/servers/edit(serverId=${serverEditDTO.server.id})}" th:text="#{tab.server.edit}">Editace</a>
 					</li>
 					<li>
-						<a href="serverContractList.html" th:href="@{/servers/contracts(serverId=${serverEditDTO.server.id})}" th:text="#{tab.server.contracs}">Kontrakty</a>
+						<a href="serverContractList.html" th:href="@{/servers/contracts(serverId=${serverEditDTO.server.id})}" th:text="#{tab.server.contracts}">Kontrakty</a>
 					</li>
 				</ul>
 				<div class="voffset2 tab-content"></div>
@@ -169,12 +169,12 @@
 
 							<div class="form-group">
 								<label class="control-label" th:text="#{label.server.contract.from}">Prirazeno od</label>
-								<div class="form-control-static" th:text="${serverEditDTO.currentContractServer.period.beginDate}">1.1.2015</div>
+								<div class="form-control-static" th:text="${{serverEditDTO.currentContractServer.period.beginDate}}">1.1.2015</div>
 							</div>
 
 							<div class="form-group">
 								<label class="control-label" th:text="#{label.server.contract.to}">Prirazeno do</label>
-								<div class="form-control-static" th:text="${serverEditDTO.currentContractServer.period.endDate}">31.12.2015</div>
+								<div class="form-control-static" th:text="${{serverEditDTO.currentContractServer.period.endDate}}">31.12.2015</div>
 							</div>
 						</div>
 					</div>

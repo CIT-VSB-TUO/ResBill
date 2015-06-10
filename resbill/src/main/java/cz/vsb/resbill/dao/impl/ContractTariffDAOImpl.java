@@ -111,4 +111,24 @@ public class ContractTariffDAOImpl implements ContractTariffDAO {
 		}
 		return query.getResultList();
 	}
+
+	@Override
+	public ContractTariff saveContractTariff(ContractTariff contractTariff) {
+		if (contractTariff.getId() == null) {
+			em.persist(contractTariff);
+		} else {
+			contractTariff = em.merge(contractTariff);
+		}
+		em.flush();
+
+		return contractTariff;
+	}
+
+	@Override
+	public ContractTariff deleteContractTariff(ContractTariff contractTariff) {
+		em.remove(contractTariff);
+		em.flush();
+
+		return contractTariff;
+	}
 }

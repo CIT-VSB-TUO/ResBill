@@ -33,4 +33,22 @@ public interface ContractTariffDAO {
 	 * @return list of {@link ContractTariff} entities
 	 */
 	List<ContractTariff> findContractTariffs(ContractTariffCriteria criteria, Integer offset, Integer limit);
+
+	/**
+	 * Saves current state of given {@link ContractTariff} entity.
+	 * 
+	 * @param contractTariff
+	 *          entity to save
+	 * @return saved entity
+	 */
+	ContractTariff saveContractTariff(ContractTariff contractTariff);
+
+	/**
+	 * Deletes given {@link ContractTariff} entity.
+	 * 
+	 * @param contractTariff
+	 *          entity to delete
+	 * @return deleted entity
+	 */
+	ContractTariff deleteContractTariff(ContractTariff contractTariff);
 }

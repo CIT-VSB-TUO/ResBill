@@ -17,6 +17,8 @@ public class NumberUtils {
 
 	public static final RoundingMode STANDARD_ROUNDING_MODE = RoundingMode.HALF_UP;
 
+	public static final BigDecimal STANDARD_ZERO = normalize(BigDecimal.ZERO);
+
 	/**
 	 * Nastavi standardni zaokrouhlovani.
 	 * 

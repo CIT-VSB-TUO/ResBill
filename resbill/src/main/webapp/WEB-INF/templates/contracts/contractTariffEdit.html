@@ -15,7 +15,7 @@
 		<meta name="author" content="" />
 	</th:block>
 
-	<title th:text="#{head.title.contract.server.edit}">Kontrakt - servery</title>
+	<title th:text="#{head.title.contract.tariff.edit}">Kontrakt - tarif</title>
 	
 	<th:block th:remove="all">
 	<!-- remove all duplicated template css due to auto-merge -->
@@ -47,7 +47,7 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header" th:text="#{page.header.contract.server.edit}">Server</h1>
+				<h1 class="page-header" th:text="#{page.header.contract.tariff.edit}">Tarif</h1>
 			</div>
 		</div>
 		
@@ -70,22 +70,22 @@
 					<li>
 						<a href="contractServerList.html" th:href="@{/contracts/servers(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.servers}">Servery</a>
 					</li>
-          <li>
-            <a href="contractTransactionList.html" th:href="@{/contracts/transactions(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.transactions}">Účetní položky</a>
-          </li>          
+					<li>
+						<a href="contractTransactionList.html" th:href="@{/contracts/transactions(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.transactions}">Účetní položky</a>
+					</li>
 				</ul>
 				<div class="voffset2 tab-content"></div>
 			</div>
 		</div>
 		
 		<div class="row">
-			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contractServerEditDTO}')}" th:errors="${contractServerEditDTO}">Global error</div>
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contractTariffEditDTO}')}" th:errors="${contractTariffEditDTO}">Global error</div>
 		</div>
 		
-		<div class="row" th:if="${contractServerEditDTO == null}">
+		<div class="row" th:if="${contractTariffEditDTO == null}">
 			<div class="col-lg-12">
 				<p>
-					<a href="contractServerList.html" class="btn btn-default" th:href="@{/contracts/servers(serverId=${serverEditDTO.server.id})}" >
+					<a href="contractTariffList.html" class="btn btn-default" th:href="@{/contracts/tariffs(contractId=${contractEditDTO.contract.id})}" >
 						<i class="fa fa-reply"></i>
 						<span th:text="#{button.back}">Back</span>
 					</a>
@@ -93,44 +93,44 @@
 			</div>
 		</div>
 
-		<div class="row" th:if="${contractServerEditDTO != null}">
+		<div class="row" th:if="${contractTariffEditDTO != null}">
 			<div class="col-lg-12">
 
-				<form role="form" method="post" action="#" th:object="${contractServerEditDTO}">
+				<form role="form" method="post" action="#" th:object="${contractTariffEditDTO}">
 					
 					<div class="row">
 					
 						<div class="col-lg-6">
 
-							<div class="form-group required" th:classappend="${#fields.hasErrors('serverId')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.contract.server}" for="serverId">Server</label>
-								<select class="form-control" th:field="*{serverId}" th:disabled="*{not serverEditable}">
+							<div class="form-group required" th:classappend="${#fields.hasErrors('tariffId')} ? 'has-error'">
+								<label class="control-label" th:text="#{label.contract.tariff}" for="tariffId">Tarif</label>
+								<select class="form-control" th:field="*{tariffId}" th:disabled="*{not tariffEditable}">
 									<option value="" th:text="#{option.choose}">Vyberte</option>
-			  						<option th:each="server : ${servers}" th:value="${server.id}" th:text="${server.name} + ' (' + ${server.serverId} + ')'">server</option>
+			  						<option th:each="tariff : ${tariffs}" th:value="${tariff.id}" th:text="${tariff.name}">tarif 1</option>
 								</select>
-								<p class="help-block" th:if="${#fields.hasErrors('serverId')}" th:errors="*{serverId}">Error</p>					
+								<p class="help-block" th:if="${#fields.hasErrors('tariffId')}" th:errors="*{tariffId}">Error</p>					
 							</div>
 				
-							<div class="form-group required" th:classappend="${#fields.hasErrors('contractServer.period.beginDate')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.contract.server.from}" th:for="contractServer.period.beginDate">Platnost od</label>
+							<div class="form-group required" th:classappend="${#fields.hasErrors('contractTariff.period.beginDate')} ? 'has-error'">
+								<label class="control-label" th:text="#{label.contract.tariff.from}" th:for="contractTariff.period.beginDate">Platnost od</label>
 								<div class="input-group date" data-provide="datepicker" data-date-language="cs" data-date-format="d.m.yyyy" 
 									data-date-week-start="1" data-date-autoclose="true" data-date-today-highlight="true" data-date-today-btn="linked" 
 									th:attr="data-date-language=${#locale.language},data-date-format=#{datepicker.date.format}">
-									<input type="text" class="form-control" th:field="*{contractServer.period.beginDate}"/>
+									<input type="text" class="form-control" th:field="*{contractTariff.period.beginDate}"/>
 									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 								</div>
-								<p class="help-block" th:if="${#fields.hasErrors('contractServer.period.beginDate')}" th:errors="*{contractServer.period.beginDate}"/>
+								<p class="help-block" th:if="${#fields.hasErrors('contractTariff.period.beginDate')}" th:errors="*{contractTariff.period.beginDate}"/>
 							</div>
 						
-							<div class="form-group" th:classappend="${#fields.hasErrors('contractServer.period.endDate')} ? 'has-error'">
-								<label class="control-label" th:text="#{label.contract.server.from}" th:for="contractServer.period.endDate">Platnost od</label>
+							<div class="form-group" th:classappend="${#fields.hasErrors('contractTariff.period.endDate')} ? 'has-error'">
+								<label class="control-label" th:text="#{label.contract.tariff.from}" th:for="contractTariff.period.endDate">Platnost do</label>
 								<div class="input-group date" data-provide="datepicker" data-date-language="cs" data-date-format="d.m.yyyy" 
 									data-date-week-start="1" data-date-autoclose="true" data-date-today-highlight="true" data-date-today-btn="linked" 
 									th:attr="data-date-language=${#locale.language},data-date-format=#{datepicker.date.format}">
-									<input type="text" class="form-control" th:field="*{contractServer.period.endDate}"/>
+									<input type="text" class="form-control" th:field="*{contractTariff.period.endDate}"/>
 									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 								</div>
-								<p class="help-block" th:if="${#fields.hasErrors('contractServer.period.endDate')}" th:errors="*{contractServer.period.endDate}"/>
+								<p class="help-block" th:if="${#fields.hasErrors('contractTariff.period.endDate')}" th:errors="*{contractTariff.period.endDate}"/>
 							</div>
 						
 						</div>
@@ -143,7 +143,7 @@
 									<i class="fa fa-save"></i>
 									<span th:text="#{button.save}">Save</span>
 								</button>
-								<a href="serverList.html" class="btn btn-default" th:href="@{/contracts/servers(contractId=${contractEditDTO.contract.id})}" >
+								<a href="contractTariffList.html" class="btn btn-default" th:href="@{/contracts/tariffs(contractId=${contractEditDTO.contract.id})}" >
 									<i class="fa fa-reply"></i>
 									<span th:text="#{button.back}">Back</span>
 								</a>
@@ -151,7 +151,7 @@
 						</div>
 					</div>
 					
-					<div class="row" th:if="*{contractServer.id != null}">
+					<div class="row" th:if="*{contractTariff.id != null}">
 						<div class="col-lg-12">
 							<p>
 								<button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete" >
