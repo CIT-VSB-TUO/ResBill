@@ -41,7 +41,7 @@ public interface DailyImportService {
 
   DailyImportAllReportsResultDTO importAllReports() throws ResBillException;
 
-  DailyImport importDailyReport(File file) throws DailyImportException;
+  DailyImport importDailyReport(File file, File dstDir) throws DailyImportException;
 
   DailyImport beginDailyImport(DailyImport dailyImport);
 

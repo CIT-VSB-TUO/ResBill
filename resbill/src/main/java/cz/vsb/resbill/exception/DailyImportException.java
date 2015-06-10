@@ -80,6 +80,11 @@ public class DailyImportException extends ResBillException {
 		 */
 		IMPORT_REPORT_DATA_UNREADABLE,
 		
+    /**
+     * Nepodarilo se presunout soubor reportu do ciloveho adresare.
+     */
+    IMPORT_REPORT_UNMOVABLE,
+		
 		/**
 		 * Denni import (resp. nektere z jeho dennich vyuziti zdroju) je pouzito na fakture
 		 */

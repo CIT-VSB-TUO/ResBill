@@ -11,6 +11,9 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -293,12 +296,18 @@ public class DailyImportServiceImpl implements DailyImportService {
 
     try {
       ResourceBundle rb = ResourceBundle.getBundle(ResourceBundleUtils.CONFIG_BUNDLE);
-      String dirName = rb.getString("dir.import.reports");
-      log.info("Jmeno adresare: " + dirName);
+      String dirSrcName = rb.getString("dir.import.reports");
+      String dirDstName = rb.getString("dir.import.reports.imported");
+      log.info("Jmeno zdrojoveho adresare: " + dirSrcName);
+      log.info("Jmeno ciloveho adresare: " + dirDstName);
 
-      // Ziskani adresare
-      Resource dirRes = appContext.getResource("file:///" + dirName);
-      File dir = dirRes.getFile();
+      // Ziskani zdrojoveho adresare
+      Resource dirSrcRes = appContext.getResource("file:///" + dirSrcName);
+      File dirSrc = dirSrcRes.getFile();
+
+      // Ziskani adresare, kam budou presunuty naimportovane soubory
+      Resource dirDstRes = appContext.getResource("file:///" + dirDstName);
+      File dirDst = dirDstRes.getFile();
 
       // Filtruji jen soubory, jejichz nazev zacina na "report_"
       FilenameFilter filter = new FilenameFilter() {
@@ -310,11 +319,11 @@ public class DailyImportServiceImpl implements DailyImportService {
       };
 
       // Postupne budu zpracovavat vsechny nalezene soubory
-      File[] files = dir.listFiles(filter);
+      File[] files = dirSrc.listFiles(filter);
       resultDTO.setAllReports(files.length);
       for (File file : files) {
         try {
-          DailyImport dailyImport = dailyImportService.importDailyReport(file);
+          DailyImport dailyImport = dailyImportService.importDailyReport(file, dirDst);
 
           if (dailyImport.getErrorLines() > 0) {
             resultDTO.setErrorReports(resultDTO.getErrorReports() + 1);
@@ -331,6 +340,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 
           case IMPORT_REPORT_DATE_PARSE_ERROR:
           case IMPORT_REPORT_DATA_UNREADABLE:
+          case IMPORT_REPORT_UNMOVABLE:
           default:
             resultDTO.setCriticalErrorReports(resultDTO.getCriticalErrorReports() + 1);
             log.error(exc.getMessage(), exc);
@@ -359,7 +369,7 @@ public class DailyImportServiceImpl implements DailyImportService {
    */
   @Override
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public DailyImport importDailyReport(File file) throws DailyImportException {
+  public DailyImport importDailyReport(File file, File dstDir) throws DailyImportException {
     String fileName = file.getName();
     log.info("Zacinam importovat soubor: " + fileName);
     DailyImport dailyImport = null;
@@ -416,6 +426,15 @@ public class DailyImportServiceImpl implements DailyImportService {
 
           lineImportDatas.add(lineImportData);
         }
+      }
+
+      // Presunuti naimportovaneho souboru do ciloveho adresare
+      try {
+        Path filePath = file.toPath();
+        Path dirPath = dstDir.toPath();
+        Files.move(filePath, dirPath.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+      } catch (IOException exc) {
+        throw new DailyImportException(DailyImportException.Reason.IMPORT_REPORT_UNMOVABLE, "An unexpected error occured while importDailyReport() for file: " + fileName + " - file move error.", exc);
       }
 
       // Zaznamenani ukonceni denniho importu
