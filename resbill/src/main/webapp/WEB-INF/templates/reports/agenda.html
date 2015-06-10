@@ -154,7 +154,6 @@
                   class="fa fa-edit"></i>
               </a></td>
 
-
             </tr>
           </tbody>
         </table>
@@ -196,11 +195,11 @@
               <td class="text-center rotated-col"><i th:if="${server.noContract}" class="fa fa-exclamation-circle text-warning"></i></td>
               <td class="text-center rotated-col"><i th:if="${server.noDailyUsage}" class="fa fa-exclamation-circle text-warning"></i></td>
 
-              <!-- 
-              <td><a class="btn btn-primary btn-circle" href="invoiceDetail.html" th:href="@{/invoice/detail(invoiceId=${invoice.transactionId})}"
-                th:title="#{button.title.invoice.detail}"> <i class="fa fa-edit"></i>
+             <td class="text-center rotated-col"><a class=" " href="../servers/serverEdit.html"
+                th:href="@{/servers/edit(serverId=${server.id})}" th:title="#{button.title.server.edit}"> <i
+                  class="fa fa-edit"></i>
               </a></td>
-               -->
+
             </tr>
           </tbody>
         </table>
