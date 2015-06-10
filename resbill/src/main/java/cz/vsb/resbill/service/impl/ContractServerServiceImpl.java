@@ -103,26 +103,10 @@ public class ContractServerServiceImpl implements ContractServerService {
 				}
 
 				// kontrola, zda obdobi stale pokryva jiz fakturovane importy
-				StringBuilder jpql = new StringBuilder();
-				jpql.append("SELECT DISTINCT dailyUsage.id");
-				jpql.append(" FROM InvoiceDailyUsage AS idu");
-				jpql.append(" JOIN idu.dailyUsage AS dailyUsage");
-				jpql.append(" JOIN dailyUsage.dailyImport AS dailyImport");
-				jpql.append(" WHERE dailyUsage.server.id = :serverId");
-				jpql.append(" AND dailyImport.date >= :from");
-				jpql.append(" AND dailyImport.date <= COALESCE(:to, dailyImport.date)");
-				TypedQuery<Integer> query = em.createQuery(jpql.toString(), Integer.class);
 				// puvodni sada dennich vyuziti
-				query.setParameter("serverId", origCS.getServer().getId());
-				query.setParameter("from", origCS.getPeriod().getBeginDate());
-				query.setParameter("to", origCS.getPeriod().getEndDate());
-				List<Integer> origDUIds = query.getResultList();
-
+				List<Integer> origDUIds = getInvoicedDailyUsageIds(origCS);
 				// sada po editaci
-				query.setParameter("serverId", contractServer.getServer().getId());
-				query.setParameter("from", contractServer.getPeriod().getBeginDate());
-				query.setParameter("to", contractServer.getPeriod().getEndDate());
-				List<Integer> newDUIds = query.getResultList();
+				List<Integer> newDUIds = getInvoicedDailyUsageIds(contractServer);
 
 				if (!CollectionUtils.isEqualCollection(origDUIds, newDUIds)) {
 					throw new ContractServerServiceException(Reason.INVOICE_DAILY_USAGE_UNCOVERED);
@@ -142,21 +126,8 @@ public class ContractServerServiceImpl implements ContractServerService {
 	public ContractServer deleteContractServer(Integer contractServerId) throws ContractServerServiceException, ResBillException {
 		try {
 			ContractServer cs = contractServerDAO.findContractServer(contractServerId);
-			// konrola, zda nebylo jiz fakturovano
-			StringBuilder jpql = new StringBuilder();
-			jpql.append("SELECT DISTINCT dailyUsage.id");
-			jpql.append(" FROM InvoiceDailyUsage AS idu");
-			jpql.append(" JOIN idu.dailyUsage AS dailyUsage");
-			jpql.append(" JOIN dailyUsage.dailyImport AS dailyImport");
-			jpql.append(" WHERE dailyUsage.server.id = :serverId");
-			jpql.append(" AND dailyImport.date >= :from");
-			jpql.append(" AND dailyImport.date <= COALESCE(:to, dailyImport.date)");
-			TypedQuery<Integer> query = em.createQuery(jpql.toString(), Integer.class);
-			// puvodni sada dennich vyuziti
-			query.setParameter("serverId", cs.getServer().getId());
-			query.setParameter("from", cs.getPeriod().getBeginDate());
-			query.setParameter("to", cs.getPeriod().getEndDate());
-			List<Integer> duIds = query.getResultList();
+			// kontrola, zda nebylo jiz fakturovano
+			List<Integer> duIds = getInvoicedDailyUsageIds(cs);
 			if (!duIds.isEmpty()) {
 				throw new ContractServerServiceException(Reason.DAILY_USAGE_INVOICED);
 			}
@@ -169,4 +140,26 @@ public class ContractServerServiceImpl implements ContractServerService {
 			throw new ResBillException(e);
 		}
 	}
+
+	/* Vraci seznam ID DailyUsage patrici serveru prirazovanemu kontraktu. */
+	private List<Integer> getInvoicedDailyUsageIds(ContractServer cs) {
+		StringBuilder jpql = new StringBuilder();
+		jpql.append("SELECT DISTINCT dailyUsage.id");
+		jpql.append(" FROM InvoiceDailyUsage AS idu");
+		jpql.append(" JOIN idu.dailyUsage AS dailyUsage");
+		jpql.append(" JOIN dailyUsage.dailyImport AS dailyImport");
+		jpql.append(" WHERE dailyUsage.server.id = :serverId");
+		jpql.append(" AND dailyImport.date >= :from");
+		if (cs.getPeriod().getEndDate() != null) {
+			jpql.append(" AND dailyImport.date <= :to");
+		}
+		TypedQuery<Integer> query = em.createQuery(jpql.toString(), Integer.class);
+		query.setParameter("serverId", cs.getServer().getId());
+		query.setParameter("from", cs.getPeriod().getBeginDate());
+		if (cs.getPeriod().getEndDate() != null) {
+			query.setParameter("to", cs.getPeriod().getEndDate());
+		}
+		return query.getResultList();
+	}
+
 }
