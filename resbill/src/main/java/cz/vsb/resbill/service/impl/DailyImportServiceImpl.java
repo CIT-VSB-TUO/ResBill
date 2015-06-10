@@ -462,6 +462,8 @@ public class DailyImportServiceImpl implements DailyImportService {
       protocol.append(":");
       protocol.append(lineImportData.serverId);
       protocol.append(":");
+      protocol.append(lineImportData.serverName);
+      protocol.append(":");
       protocol.append(lineImportData.resultCode);
       if (lineImportData.exception != null) {
         protocol.append("\n");
@@ -549,6 +551,7 @@ public class DailyImportServiceImpl implements DailyImportService {
       String backupGb = StringUtils.stripToNull(lineElements[8]);
 
       lineImportData.serverId = serverId;
+      lineImportData.serverName = name;
 
       // Najit server dle serverId. Pokud neexistuje, zalozit.
       Server server = serverDAO.findServer(serverId);

@@ -72,6 +72,11 @@ public interface DailyImportService {
     public String               serverId;
 
     /**
+     * Jmeno serveru, tak jak bylo precteno z radku
+     */
+    public String               serverName;
+
+    /**
      * Priznak vysledku zpracovani
      */
     public LineImportResultCode resultCode;
