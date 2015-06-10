@@ -24,13 +24,11 @@ public class ContractInvoiceType extends BaseVersionedEntity implements PeriodLi
 	private Period period;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "contract_id", foreignKey = @ForeignKey(name = "FK_contract_invoice_type__contract"))
-	@NotNull
+	@JoinColumn(name = "contract_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_invoice_type__contract"))
 	private Contract contract;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "invoice_type_id", foreignKey = @ForeignKey(name = "FK_contract_invoice_type__invoice_type"))
-	@NotNull
+	@JoinColumn(name = "invoice_type_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_invoice_type__invoice_type"))
 	private InvoiceType invoiceType;
 
 	@Override
