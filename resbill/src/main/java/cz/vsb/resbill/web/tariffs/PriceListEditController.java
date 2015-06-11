@@ -138,6 +138,9 @@ public class PriceListEditController {
 				case INVALID_PERIOD:
 					bindingResult.reject("error.save.priceList.period");
 					break;
+				case TARIFF_MODIFICATION:
+					bindingResult.reject("error.save.priceList.tariff.modification");
+					break;
 				default:
 					log.warn("Unsupported reason: " + e);
 					bindingResult.reject("error.save.priceList");
@@ -176,6 +179,9 @@ public class PriceListEditController {
 			return "redirect:/tariffs/edit";
 		} catch (PriceListServiceException e) {
 			switch (e.getReason()) {
+			case NOT_LAST_PRICE_LIST:
+				bindingResult.reject("error.delete.priceList.not.last");
+				break;
 			case FIRST_PRICE_LIST:
 				bindingResult.reject("error.delete.priceList.first");
 				break;

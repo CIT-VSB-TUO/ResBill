@@ -98,7 +98,7 @@ public class ContractServerServiceImpl implements ContractServerService {
 			} else {
 				// kontrola pokusu o zmenu prirazeni
 				ContractServer origCS = contractServerDAO.findContractServer(contractServer.getId());
-				if (!origCS.getContract().getId().equals(contractServer.getContract().getId()) || !origCS.getServer().getId().equals(contractServer.getServer().getId())) {
+				if (!origCS.getContract().equals(contractServer.getContract()) || !origCS.getServer().equals(contractServer.getServer())) {
 					throw new ContractServerServiceException(Reason.CONTRACT_SERVER_MODIFICATION);
 				}
 

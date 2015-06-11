@@ -6,6 +6,16 @@ public class ContractInvoiceTypeServiceException extends ResBillException {
 
 	public static enum Reason {
 		// TODO doplnit duvody
+		/** nejedna se o posledni prirazeni typu uctovani */
+		NOT_LAST_CONTRACT_INVOICE_TYPE,
+		/** prirazeni mimo platnost kontraktu */
+		OUT_OF_CONTRACT_DURATION,
+		/** Obdobi platnosti prirazeni je nespravne (konec predchazi pocatku) */
+		INVALID_PERIOD,
+		/** nelze menit prirazeni kontrakt-typ uctovani */
+		CONTRACT_INVOICE_TYPE_MODIFICATION,
+		/** nelze menit pocatek prvniho prirazeni */
+		FIRST_CONTRACT_INVOICE_TYPE_BEGIN_DATE_MODIFICATION
 	}
 
 	private Reason reason;

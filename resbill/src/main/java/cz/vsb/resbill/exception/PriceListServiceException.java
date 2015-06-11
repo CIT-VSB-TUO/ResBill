@@ -16,7 +16,9 @@ public class PriceListServiceException extends ResBillException {
 		/** Platnost ceniku nepokryva obdobi prirazeni tarifu ke kontraktu */
 		CONTRACT_PERIOD_UNCOVERED,
 		/** Obdobi platnosti ceniku je nespravne (konec predchazi pocatku) */
-		INVALID_PERIOD
+		INVALID_PERIOD,
+		/** pokus zmenit tarif ceniku */
+		TARIFF_MODIFICATION
 	}
 
 	private Reason reason;

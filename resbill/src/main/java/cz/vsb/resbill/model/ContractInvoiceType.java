@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.Valid;
@@ -30,6 +31,10 @@ public class ContractInvoiceType extends BaseVersionedEntity implements PeriodLi
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "invoice_type_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_invoice_type__invoice_type"))
 	private InvoiceType invoiceType;
+
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "previous_id", foreignKey = @ForeignKey(name = "FK_contract_invoice_type__previous"))
+	private ContractInvoiceType previous;
 
 	@Override
 	public Period getPeriod() {
@@ -57,6 +62,14 @@ public class ContractInvoiceType extends BaseVersionedEntity implements PeriodLi
 		this.invoiceType = invoiceType;
 	}
 
+	public ContractInvoiceType getPrevious() {
+		return previous;
+	}
+
+	public void setPrevious(ContractInvoiceType previous) {
+		this.previous = previous;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -68,6 +81,8 @@ public class ContractInvoiceType extends BaseVersionedEntity implements PeriodLi
 		builder.append(contract != null ? contract.getId() : null);
 		builder.append(", invoiceType.id=");
 		builder.append(invoiceType != null ? invoiceType.getId() : null);
+		builder.append(", previous.id=");
+		builder.append(previous != null ? previous.getId() : null);
 		builder.append("]");
 		return builder.toString();
 	}
