@@ -16,11 +16,14 @@ import cz.vsb.resbill.criteria.InvoicePriceListCriteria;
 import cz.vsb.resbill.criteria.PriceListCriteria;
 import cz.vsb.resbill.dao.InvoicePriceListDAO;
 import cz.vsb.resbill.dao.PriceListDAO;
+import cz.vsb.resbill.dao.TariffDAO;
 import cz.vsb.resbill.exception.PriceListServiceException;
 import cz.vsb.resbill.exception.PriceListServiceException.Reason;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.InvoicePriceList;
+import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.model.PriceList;
+import cz.vsb.resbill.model.Tariff;
 import cz.vsb.resbill.service.PriceListService;
 import cz.vsb.resbill.service.ResBillService;
 
@@ -43,6 +46,9 @@ public class PriceListServiceImpl implements PriceListService {
 
 	@Inject
 	private InvoicePriceListDAO invoicePriceListDAO;
+
+	@Inject
+	private TariffDAO tariffDAO;
 
 	@Override
 	public PriceList findPriceList(Integer priceListId) throws ResBillException {
@@ -88,6 +94,12 @@ public class PriceListServiceImpl implements PriceListService {
 					terminatePriceList(priceList.getPrevious(), terminationDate);
 				}
 			} else { // existujici cenik - editace
+				// kontrola zmeny tarifu
+				Tariff origTariff = tariffDAO.findTariff(priceList.getTariff().getId());
+				if (!origTariff.equals(priceList.getTariff())) {
+					throw new PriceListServiceException(Reason.TARIFF_MODIFICATION);
+				}
+
 				// kontrola fakturace podle ceniku
 				checkInvoiceExistence(priceList);
 
@@ -129,7 +141,7 @@ public class PriceListServiceImpl implements PriceListService {
 
 		Date minDate = (Date) query.getSingleResult();
 
-		if (minDate != null && priceList.getPeriod().getBeginDate().compareTo(minDate) > 0) {
+		if (minDate != null && !Period.isDateInPeriod(minDate, priceList.getPeriod())) {
 			throw new PriceListServiceException(Reason.CONTRACT_PERIOD_UNCOVERED);
 		}
 	}
@@ -168,7 +180,7 @@ public class PriceListServiceImpl implements PriceListService {
 
 		Date maxDate = (Date) query.getSingleResult();
 
-		if (maxDate != null && priceList.getPeriod().getBeginDate().compareTo(maxDate) <= 0) {
+		if (maxDate != null && Period.isDateInPeriod(maxDate, priceList.getPeriod())) {
 			throw new PriceListServiceException(Reason.INVOICE_DATE_COLLISION);
 		}
 	}
@@ -183,7 +195,7 @@ public class PriceListServiceImpl implements PriceListService {
 	 */
 	private void terminatePriceList(PriceList priceList, Date terminationDate) throws PriceListServiceException {
 		// kontrola: nevznikl by ukoncenim platnosti predchoziho ceniku spatny interval?
-		if (priceList.getPeriod().getBeginDate().compareTo(terminationDate) > 0) {
+		if (!Period.isDateInPeriod(terminationDate, priceList.getPeriod())) {
 			throw new PriceListServiceException(Reason.INVALID_PERIOD);
 		}
 		priceList.getPeriod().setEndDate(terminationDate);
@@ -208,6 +220,10 @@ public class PriceListServiceImpl implements PriceListService {
 		try {
 			PriceList priceList = priceListDAO.findPriceList(priceListId);
 
+			// nelze smazat neposledni cenik
+			if (priceList.getPeriod().getEndDate() != null) {
+				throw new PriceListServiceException(Reason.NOT_LAST_PRICE_LIST);
+			}
 			// nelze smazat prvni cenik
 			if (priceList.getPrevious() == null) {
 				throw new PriceListServiceException(Reason.FIRST_PRICE_LIST);
