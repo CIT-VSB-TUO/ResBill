@@ -9,6 +9,9 @@
     alter table if exists CONTRACT_INVOICE_TYPE 
         drop constraint if exists FK_contract_invoice_type__invoice_type;
 
+    alter table if exists CONTRACT_INVOICE_TYPE 
+        drop constraint if exists FK_contract_invoice_type__previous;
+
     alter table if exists CONTRACT_PERSON 
         drop constraint if exists FK_contract_person__contract;
 
@@ -129,6 +132,7 @@
         end_date date,
         contract_id int4 not null,
         invoice_type_id int4 not null,
+        previous_id int4,
         primary key (id)
     );
 
@@ -378,6 +382,11 @@
         foreign key (invoice_type_id) 
         references INVOICE_TYPE;
 
+    alter table if exists CONTRACT_INVOICE_TYPE 
+        add constraint FK_contract_invoice_type__previous 
+        foreign key (previous_id) 
+        references CONTRACT_INVOICE_TYPE;
+
     alter table if exists CONTRACT_PERSON 
         add constraint FK_contract_person__contract 
         foreign key (contract_id) 
@@ -489,9 +498,9 @@
     insert into invoice_type (id, title, divisor) values(4, 'roční', 12);
 
     -- TRANSACTION_TYPE --
-    insert into transaction_type (id, title) values(1, 'faktura', true);
-    insert into transaction_type (id, title) values(2, 'příchozí platba', false);
-    insert into transaction_type (id, title) values(3, 'extra položka', false);
+    insert into transaction_type (id, title, system_managed) values(1, 'faktura', true);
+    insert into transaction_type (id, title, system_managed) values(2, 'příchozí platba', false);
+    insert into transaction_type (id, title, system_managed) values(3, 'extra položka', false);
     
     -- PRODUCTION_LEVEL --
     insert into production_level (id, code, title) values(1, 'init', null);

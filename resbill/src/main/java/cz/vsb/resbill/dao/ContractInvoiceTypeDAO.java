@@ -3,6 +3,7 @@ package cz.vsb.resbill.dao;
 import java.util.List;
 
 import cz.vsb.resbill.criteria.ContractInvoiceTypeCriteria;
+import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.model.ContractInvoiceType;
 
 /**
@@ -20,6 +21,22 @@ public interface ContractInvoiceTypeDAO {
 	 * @return found {@link ContractInvoiceType} entity
 	 */
 	ContractInvoiceType findContractInvoiceType(Integer contractInvoiceTypeId);
+
+	/**
+	 * Finds the first {@link ContractInvoiceType} of {@link Contract} specified by the given key.
+	 * 
+	 * @param contractId
+	 * @return
+	 */
+	ContractInvoiceType findFirstContractInvoiceType(Integer contractId);
+
+	/**
+	 * Finds the last (current) {@link ContractInvoiceType} of {@link Contract} specified by the given key.
+	 * 
+	 * @param contractId
+	 * @return
+	 */
+	ContractInvoiceType findLastContractInvoiceType(Integer contractId);
 
 	/**
 	 * Finds {@link ContractInvoiceType} entities by specified criteria

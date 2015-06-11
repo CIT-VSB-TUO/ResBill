@@ -10,7 +10,9 @@ public class ContractServiceException extends ResBillException {
 		/** pokus o zmenu zakaznika */
 		CUSTOMER_MODIFICATION,
 		/** platnost kontraktu nezahrnuje vsechna existujici prirazeni serveru */
-		SERVER_ASSOCIATION_EXCLUSION
+		SERVER_ASSOCIATION_EXCLUSION,
+		/** zmena platnosti kontraktu zpusobi nespravnost prirazeni typu uct. */
+		CONTRACT_INVOICE_TYPE_INVALID_PERIOD,
 	}
 
 	private Reason reason;

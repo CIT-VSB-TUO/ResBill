@@ -18,8 +18,8 @@ INSERT INTO "contract" VALUES (2, 0, 0.00, DEFAULT, 'Fakulta strojní', NULL, '2
 INSERT INTO "contract" VALUES (3, 0, 0.00, DEFAULT, 'Bez tarifu', NULL, '2015-04-01', NULL, 2);
 INSERT INTO "contract" VALUES (4, 0, 0.00, DEFAULT, 'Spotřeba po ukončení', NULL, '2014-01-01', '2014-01-31', 2);
 
-INSERT INTO "contract_invoice_type" VALUES (1, 0, '2014-01-01', NULL, 1, 1);
-INSERT INTO "contract_invoice_type" VALUES (2, 0, '2014-01-01', NULL, 2, 1);
+INSERT INTO "contract_invoice_type" VALUES (1, 0, '2014-01-01', NULL, 1, 1, NULL);
+INSERT INTO "contract_invoice_type" VALUES (2, 0, '2014-01-01', NULL, 2, 1, NULL);
 
 INSERT INTO "contract_tariff" VALUES (1, 0, '2014-01-01', NULL, 1, 1);
 INSERT INTO "contract_tariff" VALUES (2, 0, '2014-01-01', NULL, 2, 1);

@@ -12,6 +12,7 @@ import javax.persistence.TypedQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 
 import cz.vsb.resbill.criteria.ContractInvoiceTypeCriteria;
@@ -38,6 +39,24 @@ public class ContractInvoiceTypeDAOImpl implements ContractInvoiceTypeDAO {
 	}
 
 	@Override
+	public ContractInvoiceType findFirstContractInvoiceType(Integer contractId) {
+		ContractInvoiceTypeCriteria criteria = new ContractInvoiceTypeCriteria();
+		criteria.setContractId(contractId);
+		criteria.setFirst(Boolean.TRUE);
+		List<ContractInvoiceType> results = findContractInvoiceTypes(criteria, null, null);
+		return DataAccessUtils.singleResult(results);
+	}
+
+	@Override
+	public ContractInvoiceType findLastContractInvoiceType(Integer contractId) {
+		ContractInvoiceTypeCriteria criteria = new ContractInvoiceTypeCriteria();
+		criteria.setContractId(contractId);
+		criteria.setLast(Boolean.TRUE);
+		List<ContractInvoiceType> results = findContractInvoiceTypes(criteria, null, null);
+		return DataAccessUtils.singleResult(results);
+	}
+
+	@Override
 	public List<ContractInvoiceType> findContractInvoiceTypes(ContractInvoiceTypeCriteria criteria, Integer offset, Integer limit) {
 		StringBuilder jpql = new StringBuilder("SELECT cit FROM ContractInvoiceType AS cit");
 		// building query
@@ -57,6 +76,20 @@ public class ContractInvoiceTypeDAOImpl implements ContractInvoiceTypeDAO {
 			}
 			if (criteria.getInvoiceTypeId() != null) {
 				where.add("cit.invoiceType.id = :invoiceTypeId");
+			}
+			if (criteria.getFirst() != null) {
+				if (criteria.getFirst()) {
+					where.add("cit.previous IS NULL");
+				} else {
+					where.add("cit.previous IS NOT NULL");
+				}
+			}
+			if (criteria.getLast() != null) {
+				if (criteria.getLast()) {
+					where.add("cit.period.endDate IS NULL");
+				} else {
+					where.add("cit.period.endDate IS NOT NULL");
+				}
 			}
 			// order by
 			List<String> order = new ArrayList<String>();

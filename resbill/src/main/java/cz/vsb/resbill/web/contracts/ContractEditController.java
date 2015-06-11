@@ -142,6 +142,9 @@ public class ContractEditController {
 				case SERVER_ASSOCIATION_EXCLUSION:
 					bindingResult.reject("error.save.contract.server.exclusion");
 					break;
+				case CONTRACT_INVOICE_TYPE_INVALID_PERIOD:
+					bindingResult.reject("error.save.contract.invoiceType.invalid.period");
+					break;
 				default:
 					log.warn("Unsupported reason: " + e);
 					bindingResult.reject("error.save.contract");

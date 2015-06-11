@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import cz.vsb.resbill.criteria.ContractCriteria;
 import cz.vsb.resbill.criteria.TransactionCriteria;
 import cz.vsb.resbill.dao.ContractDAO;
+import cz.vsb.resbill.dao.ContractInvoiceTypeDAO;
 import cz.vsb.resbill.dao.TransactionDAO;
 import cz.vsb.resbill.dto.ContractAgendaDTO;
 import cz.vsb.resbill.dto.ContractDTO;
@@ -29,6 +31,7 @@ import cz.vsb.resbill.exception.ContractServiceException;
 import cz.vsb.resbill.exception.ContractServiceException.Reason;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Contract;
+import cz.vsb.resbill.model.ContractInvoiceType;
 import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.model.Transaction;
 import cz.vsb.resbill.service.ContractService;
@@ -52,6 +55,9 @@ public class ContractServiceImpl implements ContractService {
 
 	@Inject
 	private TransactionDAO transactionDAO;
+
+	@Inject
+	private ContractInvoiceTypeDAO contractInvoiceTypeDAO;
 
 	@Override
 	public Contract findContract(Integer contractId) throws ResBillException {
@@ -239,8 +245,33 @@ public class ContractServiceImpl implements ContractService {
 			if (contract.getId() != null) {
 				// kontrola pokusu o zmenu zakaznika
 				Contract origContract = contractDAO.findContract(contract.getId());
-				if (!origContract.getCustomer().getId().equals(contract.getCustomer().getId())) {
+				if (!origContract.getCustomer().equals(contract.getCustomer())) {
 					throw new ContractServiceException(Reason.CUSTOMER_MODIFICATION);
+				}
+
+				// byl zmenen pocatek platnosti kontraktu
+				if (!origContract.getPeriod().getBeginDate().equals(contract.getPeriod().getBeginDate())) {
+					ContractInvoiceType firstCIT = contractInvoiceTypeDAO.findFirstContractInvoiceType(contract.getId());
+					if (firstCIT != null) {
+						// kontrola naruseni platnosti prvniho prirazeni typu uctovani
+						if (!contract.getPeriod().getBeginDate().before(firstCIT.getPeriod().getBeginDate()) && !Period.isDateInPeriod(contract.getPeriod().getBeginDate(), firstCIT.getPeriod())) {
+							throw new ContractServiceException(Reason.CONTRACT_INVOICE_TYPE_INVALID_PERIOD);
+						}
+
+						// zmena pocatku platnosti prirazeni prvniho typu uctovani
+						firstCIT.getPeriod().setBeginDate(contract.getPeriod().getBeginDate());
+						contractInvoiceTypeDAO.saveContractInvoiceType(firstCIT);
+					}
+				}
+				// zmenen konkretni (konecny) konec platnosti kontraktu
+				if (contract.getPeriod().getEndDate() != null && !Objects.equals(origContract.getPeriod().getEndDate(), contract.getPeriod().getEndDate())) {
+					ContractInvoiceType lastCIT = contractInvoiceTypeDAO.findLastContractInvoiceType(contract.getId());
+					if (lastCIT != null) {
+						// kontrola naruseni platnosti posledniho prirazeni typu uctovani
+						if (!Period.isDateInPeriod(contract.getPeriod().getEndDate(), lastCIT.getPeriod())) {
+							throw new ContractServiceException(Reason.CONTRACT_INVOICE_TYPE_INVALID_PERIOD);
+						}
+					}
 				}
 
 				// kontrola, zda neni narusena platnost prirazeni serveru
