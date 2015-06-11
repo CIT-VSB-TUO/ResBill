@@ -28,6 +28,9 @@
         drop constraint if exists FK_contract_tariff__contract;
 
     alter table if exists CONTRACT_TARIFF 
+        drop constraint if exists FK_contract_tariff__previous;
+
+    alter table if exists CONTRACT_TARIFF 
         drop constraint if exists FK_contract_tariff__tariff;
 
     alter table if exists CUSTOMER 
@@ -160,6 +163,7 @@
         begin_date date not null,
         end_date date,
         contract_id int4 not null,
+        previous_id int4,
         tariff_id int4 not null,
         primary key (id)
     );
@@ -411,6 +415,11 @@
         add constraint FK_contract_tariff__contract 
         foreign key (contract_id) 
         references CONTRACT;
+
+    alter table if exists CONTRACT_TARIFF 
+        add constraint FK_contract_tariff__previous 
+        foreign key (previous_id) 
+        references CONTRACT_TARIFF;
 
     alter table if exists CONTRACT_TARIFF 
         add constraint FK_contract_tariff__tariff 
