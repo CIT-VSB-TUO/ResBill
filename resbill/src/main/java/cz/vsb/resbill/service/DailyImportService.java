@@ -6,6 +6,7 @@ package cz.vsb.resbill.service;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import cz.vsb.resbill.criteria.DailyImportCriteria;
 import cz.vsb.resbill.dto.DailyImportAgendaDTO;
@@ -47,7 +48,7 @@ public interface DailyImportService {
 
   void endDailyImport(DailyImport dailyImport, List<LineImportData> lineImportDatas);
 
-  void importLine(DailyImport dailyImport, LineImportData lineImportData);
+  void importLine(DailyImport dailyImport, LineImportData lineImportData, Map<ReportItemName, Integer> lineItemIndices);
 
   /**
    * 
@@ -85,6 +86,74 @@ public interface DailyImportService {
      * Pokud dojde k vyjimce, zde je zaznamenana
      */
     public Exception            exception;
+  }
+
+  /**
+   * 
+   * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
+   *
+   */
+  public enum ReportItemName {
+    /**
+     * 
+     */
+    SERVER_ID("serverId"),
+
+    /**
+     * 
+     */
+    NAME("Name"),
+
+    /**
+     * 
+     */
+    PRODUCTION("Production"),
+
+    /**
+     * 
+     */
+    POWER_STATE("PowerState"),
+
+    /**
+     * 
+     */
+    CPU("CPU"),
+
+    /**
+     * 
+     */
+    MEMORY_GB("MemoryGB"),
+
+    /**
+     * 
+     */
+    PROV_SPACE_GB("ProvisionedSpaceGB"),
+
+    /**
+     * 
+     */
+    USED_SPACE_GB("UsedSpaceGB"),
+
+    /**
+     * 
+     */
+    BACKUP_GB("BackupGB"),
+
+    ;
+
+    private String name;
+
+    private ReportItemName(String name) {
+      this.name = name;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+      return name;
+    }
+
   }
 
   /**

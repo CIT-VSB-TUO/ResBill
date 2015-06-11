@@ -117,12 +117,12 @@
 
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.dailyImport.importBegin}">Začátek importu</label>
-									<p class="form-control-static" th:text="${#dates.format(dailyImport.importBeginTimestamp,'__#{timestamp.format.detail}__')}">1.5.2015 08:05:30.123</p>
+									<p class="form-control-static" th:if="${dailyImport.importBeginTimestamp!=null}" th:text="${#dates.format(dailyImport.importBeginTimestamp,'__#{timestamp.format.detail}__')}">1.5.2015 08:05:30.123</p>
 								</div>
 
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.dailyImport.importEnd}">Konec importu</label>
-									<p class="form-control-static" th:text="${#dates.format(dailyImport.importEndTimestamp,'__#{timestamp.format.detail}__')}">1.5.2015 08:05:31.456</p>
+									<p class="form-control-static" th:if="${dailyImport.importEndTimestamp!=null}" th:text="${#dates.format(dailyImport.importEndTimestamp,'__#{timestamp.format.detail}__')}">1.5.2015 08:05:31.456</p>
 								</div>
 							</div>
 

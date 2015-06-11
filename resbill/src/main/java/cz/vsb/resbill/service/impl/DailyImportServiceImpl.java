@@ -17,9 +17,12 @@ import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -412,7 +415,22 @@ public class DailyImportServiceImpl implements DailyImportService {
       // Prochazeni jednotlivych radku
       List<LineImportData> lineImportDatas = new ArrayList<LineImportData>();
       String[] lines = report.split("\n");
-      for (int lineNumber = 0; lineNumber < lines.length; lineNumber++) {
+
+      String headerLine = lines[0];
+      String[] headerLineNames = headerLine.split(";");
+      Map<ReportItemName, Integer> lineItemIndices = new EnumMap<ReportItemName, Integer>(ReportItemName.class);
+      for (int i = 0; i < headerLineNames.length; i++) {
+        String itemName = headerLineNames[i];
+
+        ReportItemName[] itemNameEnums = ReportItemName.values();
+        for (ReportItemName reportItemName : itemNameEnums) {
+          if (reportItemName.getName().equals(itemName)) {
+            lineItemIndices.put(reportItemName, i);
+          }
+        }
+      }
+
+      for (int lineNumber = 1; lineNumber < lines.length; lineNumber++) {
         String line = lines[lineNumber];
 
         line = StringUtils.stripToNull(line);
@@ -422,7 +440,7 @@ public class DailyImportServiceImpl implements DailyImportService {
           lineImportData.line = line;
           lineImportData.lineNumber = lineNumber + 1; // v poli se pocita od 0, ale radky v souboru jsou od 1
 
-          dailyImportService.importLine(dailyImport, lineImportData);
+          dailyImportService.importLine(dailyImport, lineImportData, lineItemIndices);
 
           lineImportDatas.add(lineImportData);
         }
@@ -549,7 +567,7 @@ public class DailyImportServiceImpl implements DailyImportService {
    */
   @Override
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void importLine(DailyImport dailyImport, LineImportData lineImportData) {
+  public void importLine(DailyImport dailyImport, LineImportData lineImportData, Map<DailyImportService.ReportItemName, Integer> lineItemIndices) {
     try {
       log.info(lineImportData.lineNumber + ": " + lineImportData.line);
 
@@ -559,15 +577,15 @@ public class DailyImportServiceImpl implements DailyImportService {
       // Nacteni dat radku
       String[] lineElements = lineImportData.line.split(";");
 
-      String serverId = StringUtils.stripToNull(lineElements[0]);
-      String name = StringUtils.stripToNull(lineElements[1]);
-      String production = StringUtils.stripToNull(lineElements[2]);
-      String powerState = StringUtils.stripToNull(lineElements[3]);
-      String cpu = StringUtils.stripToNull(lineElements[4]);
-      String memoryGb = StringUtils.stripToNull(lineElements[5]);
-      String provSpaceGb = StringUtils.stripToNull(lineElements[6]);
-      String usedSpaceGb = StringUtils.stripToNull(lineElements[7]);
-      String backupGb = StringUtils.stripToNull(lineElements[8]);
+      String serverId = StringUtils.stripToNull(lineElements[lineItemIndices.get(DailyImportService.ReportItemName.SERVER_ID)]);
+      String name = StringUtils.stripToNull(lineElements[lineItemIndices.get(DailyImportService.ReportItemName.NAME)]);
+      String production = StringUtils.stripToNull(lineElements[lineItemIndices.get(DailyImportService.ReportItemName.PRODUCTION)]);
+      String powerState = StringUtils.stripToNull(lineElements[lineItemIndices.get(DailyImportService.ReportItemName.POWER_STATE)]);
+      String cpu = StringUtils.stripToNull(lineElements[lineItemIndices.get(DailyImportService.ReportItemName.CPU)]);
+      String memoryGb = StringUtils.stripToNull(lineElements[lineItemIndices.get(DailyImportService.ReportItemName.MEMORY_GB)]);
+      String provSpaceGb = StringUtils.stripToNull(lineElements[lineItemIndices.get(DailyImportService.ReportItemName.PROV_SPACE_GB)]);
+      String usedSpaceGb = StringUtils.stripToNull(lineElements[lineItemIndices.get(DailyImportService.ReportItemName.USED_SPACE_GB)]);
+      String backupGb = StringUtils.stripToNull(lineElements[lineItemIndices.get(DailyImportService.ReportItemName.BACKUP_GB)]);
 
       lineImportData.serverId = serverId;
       lineImportData.serverName = name;
