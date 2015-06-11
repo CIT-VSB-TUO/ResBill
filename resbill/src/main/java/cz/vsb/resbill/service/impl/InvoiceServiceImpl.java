@@ -4,23 +4,39 @@
  */
 package cz.vsb.resbill.service.impl;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import net.sf.jasperreports.engine.JRAbstractExporter;
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -238,7 +254,34 @@ public class InvoiceServiceImpl implements InvoiceService {
           out.print(invoice.getSummary());
           resultDTO.setInvoicesNumberOk(resultDTO.getInvoicesNumberOk() + 1);
         } catch (IOException exc) {
-          log.error("An unexpected error occured while exporting invoice with ID: " + invoice.getId(), exc);
+          log.error("An unexpected error occured while exporting to TXT invoice with ID: " + invoice.getId(), exc);
+          resultDTO.setInvoicesNumberError(resultDTO.getInvoicesNumberError() + 1);
+        }
+
+        // Nasledujici kod demonstruje, jak vytvaret PDF. Nacisto se bude dodelavat, az bude znama presna podoba vystupniho PDF.
+        try (OutputStream out = new FileOutputStream(new java.io.File(dirRes.getFile(), fileName.toString() + ".pdf"))) {
+
+          JRDataSource datasource = new JREmptyDataSource();
+          // JRDataSource datasource = getDataSource(request, parameters);
+
+          InputStream is = getClass().getResourceAsStream("/reports/Invoice.jasper");
+          JasperReport jasperReport = (JasperReport) JRLoader.loadObject(is);
+
+          Map<String, Object> parameters = new HashMap<String, Object>();
+          parameters.put("invoiceText", invoice.getSummary());
+          JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, datasource);
+
+          JRAbstractExporter exporter = new JRPdfExporter();
+          // exporter.setParameter(JRPdfExporterParameter.METADATA_TITLE, getExportDisplayName());
+          // exporter.setParameter(JRPdfExporterParameter.METADATA_AUTHOR, getLoggedPersonLogin(parameters));
+          // exporter.setParameter(JRPdfExporterParameter.METADATA_CREATOR, getSystemDisplayName());
+          exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+          exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
+
+          exporter.exportReport();
+
+        } catch (IOException exc) {
+          log.error("An unexpected error occured while exporting to TXT.PDF invoice with ID: " + invoice.getId(), exc);
           resultDTO.setInvoicesNumberError(resultDTO.getInvoicesNumberError() + 1);
         }
       }

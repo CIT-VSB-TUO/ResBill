@@ -52,6 +52,10 @@
 		<jstl.version>1.2</jstl.version>
 		<javax.mail.version>1.5.3</javax.mail.version>
 		
+		<!-- Jasper Reports -->
+		<jasper.reports.version>5.5.0</jasper.reports.version>
+		<!-- <groovy-all.version>2.0.1</groovy-all.version>  -->
+		
   </properties>
 	
 	<dependencies>
@@ -122,6 +126,21 @@
 			<version>${javax.mail.version}</version>
 			<scope>runtime</scope>
 		</dependency>		
+		
+		<!-- Jasper Reports -->
+		<dependency>
+		  <groupId>net.sf.jasperreports</groupId>
+		  <artifactId>jasperreports</artifactId>
+		  <version>${jasper.reports.version}</version>
+		</dependency>
+		<!-- 
+		<dependency>
+		  <groupId>org.codehaus.groovy</groupId>
+		  <artifactId>groovy-all</artifactId>
+		  <version>${groovy-all.version}</version>
+		  <scope>runtime</scope>
+		</dependency>
+		 -->
 
 		<!-- Logging -->
 		<dependency>
