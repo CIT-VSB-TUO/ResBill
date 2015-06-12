@@ -69,15 +69,16 @@
         <ul class="nav nav-tabs">
           <li><a href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.edit}">Editace</a>
           </li>
-					<li>
-						<a href="contractInvoiceTypeList.html" th:href="@{/contracts/invoiceTypes(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.invoiceTypes}">Typy uctovani</a>
-					</li>
+          <li><a href="contractInvoiceTypeList.html" th:href="@{/contracts/invoiceTypes(contractId=${contractEditDTO.contract.id})}"
+            th:text="#{tab.contract.invoiceTypes}">Typy uctovani</a></li>
           <li><a href="contractTariffList.html" th:href="@{/contracts/tariffs(contractId=${contractEditDTO.contract.id})}"
             th:text="#{tab.contract.tariffs}">Tarify</a></li>
           <li><a href="contractServerList.html" th:href="@{/contracts/servers(contractId=${contractEditDTO.contract.id})}"
             th:text="#{tab.contract.servers}">Servery</a></li>
           <li class="active"><a href="contractTransactionList.html" th:href="@{/contracts/transactions(contractId=${contractEditDTO.contract.id})}"
             th:text="#{tab.contract.transactions}">Účetní položky</a></li>
+          <li><a href="contractInvoiceList.html" th:href="@{/contracts/invoices(contractId=${contractEditDTO.contract.id})}"
+            th:text="#{tab.contract.invoices}">Faktury</a></li>
         </ul>
         <div class="voffset2 tab-content"></div>
       </div>

@@ -9,6 +9,7 @@ import java.util.List;
 
 import cz.vsb.resbill.criteria.InvoiceCreateCriteria;
 import cz.vsb.resbill.criteria.InvoiceCriteria;
+import cz.vsb.resbill.criteria.InvoiceExportCriteria;
 import cz.vsb.resbill.dto.InvoiceCreateResultDTO;
 import cz.vsb.resbill.dto.InvoiceDTO;
 import cz.vsb.resbill.dto.InvoiceExportResultDTO;
@@ -43,5 +44,5 @@ public interface InvoiceService {
    * @param month
    * @return
    */
-  InvoiceExportResultDTO exportInvoices(Date month) throws ResBillException;
+  InvoiceExportResultDTO exportInvoices(InvoiceExportCriteria criteria) throws ResBillException;
 }

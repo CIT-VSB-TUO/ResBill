@@ -10,12 +10,10 @@ import java.util.Date;
 import cz.vsb.resbill.util.ToStringBuilder;
 
 /**
- * Kriteria, ktera definuji parametry pro vytvoreni faktur.
- * 
  * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
  *
  */
-public class InvoiceCreateCriteria implements Serializable {
+public class InvoiceExportCriteria implements Serializable {
 
   /**
    * 
@@ -25,7 +23,7 @@ public class InvoiceCreateCriteria implements Serializable {
   private Integer           contractId       = null;
 
   /**
-   * Fakturace ma byt spustena za tento mesic.
+   * Export faktur ma byt proveden za tento mesic.
    * 
    * Objekt je tridy Date, ale zajima nas pouze mesic. Tj. nezalezi na konkretnim dni v tomto mesici.
    */

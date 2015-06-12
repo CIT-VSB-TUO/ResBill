@@ -11,7 +11,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,6 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cz.vsb.resbill.criteria.InvoiceCreateCriteria;
 import cz.vsb.resbill.criteria.InvoiceCriteria;
+import cz.vsb.resbill.criteria.InvoiceExportCriteria;
 import cz.vsb.resbill.criteria.InvoiceTypeCriteria;
 import cz.vsb.resbill.dao.ContractDAO;
 import cz.vsb.resbill.dao.DailyUsageDAO;
@@ -215,18 +215,20 @@ public class InvoiceServiceImpl implements InvoiceService {
    * @return
    */
   @Override
-  public InvoiceExportResultDTO exportInvoices(Date month) throws ResBillException {
+  public InvoiceExportResultDTO exportInvoices(InvoiceExportCriteria exportCriteria) throws ResBillException {
     log.info("Zacinam export faktur.");
     try {
       InvoiceExportResultDTO resultDTO = new InvoiceExportResultDTO();
       resultDTO.setBeginTimestamp(new Date());
 
+      Date month = exportCriteria.getMonth();
       Date firstDay = DateUtils.truncate(month, Calendar.MONTH);
       Date lastDay = DateUtils.addDays(DateUtils.addMonths(firstDay, 1), -1);
 
       InvoiceCriteria criteria = new InvoiceCriteria();
       criteria.setBeginEndDate(firstDay);
       criteria.setEndEndDate(lastDay);
+      criteria.setContractId(exportCriteria.getContractId());
 
       List<Invoice> invoices = findInvoices(criteria, null, null);
 
@@ -330,7 +332,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     // Ziskat vsechny kontrakty, jejichz servery maji alespon jedno nevyfakturovane DailyUsage v pozadovanem mesici NEBO DRIVE
     // Server musi byt kontraktu prirazen take nektery den v pozadovanem mesici NEBO DRIVE
-    List<Object[]> contractsWithInvTypes = contractDAO.findUninvoicedContracts(lastDay, invoiceTypeIds);
+    List<Object[]> contractsWithInvTypes = contractDAO.findUninvoicedContracts(criteria, lastDay, invoiceTypeIds);
     resultDTO.setContractsNumberAll(contractsWithInvTypes.size());
 
     // Vytvareni faktur pro jednotlive kontrakty

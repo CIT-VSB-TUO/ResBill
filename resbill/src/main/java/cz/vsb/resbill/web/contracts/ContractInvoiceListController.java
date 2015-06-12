@@ -2,7 +2,7 @@
  * Copyright (c) 2015 CIT, VŠB-TU Ostrava
  * 
  */
-package cz.vsb.resbill.web.invoice;
+package cz.vsb.resbill.web.contracts;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import cz.vsb.resbill.criteria.InvoiceCreateCriteria;
 import cz.vsb.resbill.criteria.InvoiceCriteria;
 import cz.vsb.resbill.criteria.InvoiceExportCriteria;
+import cz.vsb.resbill.dto.ContractEditDTO;
 import cz.vsb.resbill.dto.InvoiceCreateResultDTO;
 import cz.vsb.resbill.dto.InvoiceDTO;
 import cz.vsb.resbill.dto.InvoiceExportResultDTO;
@@ -37,11 +39,13 @@ import cz.vsb.resbill.util.WebUtils;
  * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
  *
  */
-@Controller
-@RequestMapping("/invoice")
-public class InvoiceListController {
 
-  private static final Logger log                                           = LoggerFactory.getLogger(InvoiceListController.class);
+@Controller
+@RequestMapping("/contracts/invoices")
+@SessionAttributes("contractEditDTO")
+public class ContractInvoiceListController {
+
+  private static final Logger log                                           = LoggerFactory.getLogger(ContractInvoiceListController.class);
 
   public static final String  MODEL_OBJECT_KEY_INVOICES                     = "invoices";
 
@@ -76,27 +80,26 @@ public class InvoiceListController {
    * @return
    */
   @RequestMapping(method = RequestMethod.GET)
-  public String view(ModelMap model) {
-    loadInvoiceDTOs(model);
+  public String view(@RequestParam(value = "contractId", required = true) Integer contractId, ModelMap model) {
+    loadInvoiceDTOs(contractId, model);
 
-    return "invoice/invoiceList";
+    return "contracts/contractInvoiceList";
   }
 
   /**
    * 
    * @return
    */
-  protected List<InvoiceDTO> loadInvoiceDTOs(ModelMap model) {
+  protected List<InvoiceDTO> loadInvoiceDTOs(Integer contractId, ModelMap model) {
 
     List<InvoiceDTO> dtos = null;
 
     try {
       List<InvoiceCriteria.OrderBy> orderBy = new ArrayList<InvoiceCriteria.OrderBy>();
-      orderBy.add(InvoiceCriteria.OrderBy.CUSTOMER_NAME_ASC);
-      orderBy.add(InvoiceCriteria.OrderBy.CONTRACT_NAME_ASC);
       orderBy.add(InvoiceCriteria.OrderBy.ORDER_DESC);
 
       InvoiceCriteria criteria = new InvoiceCriteria();
+      criteria.setContractId(contractId);
       criteria.setOrderBy(orderBy);
 
       dtos = invoiceService.findInvoiceDTOs(criteria, null, null);
@@ -121,12 +124,15 @@ public class InvoiceListController {
    */
   @RequestMapping(value = "", method = RequestMethod.POST, params = "createInvoices")
   public String createInvoices(@RequestParam(value = "month", required = true) Date month, ModelMap model) {
+    ContractEditDTO contractEditDTO = (ContractEditDTO) model.get("contractEditDTO");
+
     model.addAttribute(MODEL_OBJECT_KEY_INVOICES_CREATE_RESULTS_DTO, null);
     model.addAttribute(MODEL_OBJECT_KEY_INVOICES_CREATE_RESULTS_SHOW, false);
 
     try {
       if (month != null) {
         InvoiceCreateCriteria criteria = new InvoiceCreateCriteria();
+        criteria.setContractId(contractEditDTO.getContract().getId());
         criteria.setMonth(month);
 
         InvoiceCreateResultDTO resultDTO = invoiceService.createInvoices(criteria);
@@ -137,11 +143,12 @@ public class InvoiceListController {
         WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICES_CREATE_RESULTS_DTO, "error.save.invoice.create.noMonth");
       }
     } catch (Exception exc) {
-      log.error("Cannot createInvoices.", exc);
+      log.error("Cannot createInvoices for contract with ID: " + contractEditDTO.getContract().getId() + ".", exc);
       WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICES_CREATE_RESULTS_DTO, "error.save.invoice.create");
     }
 
-    return view(model);
+    return view(contractEditDTO.getContract().getId(), model);
+
   }
 
   /**
@@ -151,14 +158,17 @@ public class InvoiceListController {
    */
   @RequestMapping(value = "", method = RequestMethod.POST, params = "exportInvoices")
   public String exportInvoices(@RequestParam(value = "expMonth", required = true) Date expMonth, ModelMap model) {
+    ContractEditDTO contractEditDTO = (ContractEditDTO) model.get("contractEditDTO");
+
     model.addAttribute(MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_DTO, null);
     model.addAttribute(MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_SHOW, false);
 
     try {
       if (expMonth != null) {
         InvoiceExportCriteria criteria = new InvoiceExportCriteria();
+        criteria.setContractId(contractEditDTO.getContract().getId());
         criteria.setMonth(expMonth);
-        
+
         InvoiceExportResultDTO resultDTO = invoiceService.exportInvoices(criteria);
         model.addAttribute(MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_DTO, resultDTO);
 
@@ -167,10 +177,10 @@ public class InvoiceListController {
         WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_DTO, "error.save.invoice.export.noMonth");
       }
     } catch (Exception exc) {
-      log.error("Cannot exportInvoices.", exc);
+      log.error("Cannot exportInvoices for contract with ID: " + contractEditDTO.getContract().getId() + ".", exc);
       WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_DTO, "error.save.invoice.export");
     }
 
-    return view(model);
+    return view(contractEditDTO.getContract().getId(), model);
   }
 }

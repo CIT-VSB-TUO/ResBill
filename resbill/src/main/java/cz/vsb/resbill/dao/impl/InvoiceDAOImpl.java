@@ -56,6 +56,9 @@ public class InvoiceDAOImpl implements InvoiceDAO {
       jpql.append(" JOIN contract.customer AS customer ");
     }
     jpql.append(" WHERE 1 = 1 ");
+    if (criteria.getContractId() != null) {
+      jpql.append(" AND invoice.contract.id = :contractId ");
+    }
     if (criteria.getBeginEndDate() != null) {
       jpql.append(" AND invoice.period.endDate >= :beginEndDate ");
     }
@@ -113,6 +116,9 @@ public class InvoiceDAOImpl implements InvoiceDAO {
       query.setMaxResults(limit);
     }
 
+    if (criteria.getContractId() != null) {
+      query.setParameter("contractId", criteria.getContractId());
+    }
     if (criteria.getBeginEndDate() != null) {
       query.setParameter("beginEndDate", criteria.getBeginEndDate());
     }

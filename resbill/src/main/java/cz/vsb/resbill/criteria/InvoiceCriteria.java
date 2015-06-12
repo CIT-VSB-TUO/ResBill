@@ -24,9 +24,27 @@ public class InvoiceCriteria implements Serializable {
 
   private List<OrderBy>     orderBy          = Arrays.asList(new OrderBy[] { OrderBy.DECISIVE_DATE_DESC });
 
+  private Integer           contractId       = null;
+
   private Date              beginEndDate     = null;
 
   private Date              endEndDate       = null;
+
+  
+  /**
+   * @return the contractId
+   */
+  public Integer getContractId() {
+    return contractId;
+  }
+
+  
+  /**
+   * @param contractId the contractId to set
+   */
+  public void setContractId(Integer contractId) {
+    this.contractId = contractId;
+  }
 
   /**
    * @return the beginEndDate
@@ -89,15 +107,14 @@ public class InvoiceCriteria implements Serializable {
     this.orderBy = orderBy;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this);
     builder.append("orderBy", orderBy);
+    builder.append("contractId", contractId);
     builder.append("beginEndDate", beginEndDate);
     builder.append("endEndDate", endEndDate);
     builder.append("toString()", super.toString());

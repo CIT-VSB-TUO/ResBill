@@ -76,6 +76,9 @@
 					<li>
 						<a href="contractTransactionList.html" th:href="@{/contracts/transactions(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.transactions}">Účetní položky</a>
 					</li>
+          <li>
+            <a href="contractInvoiceList.html" th:href="@{/contracts/invoices(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.invoices}">Faktury</a>
+          </li>          
 				</ul>
 				<div class="voffset2 tab-content"></div>
 			</div>

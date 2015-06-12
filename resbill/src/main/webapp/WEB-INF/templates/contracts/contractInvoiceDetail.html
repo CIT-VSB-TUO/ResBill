@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorator="layout">
+
+<head>
+<th:block th:remove="all">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+</th:block>
+
+<title th:text="#{head.title.contract.invoice.detail}">Kontrakt - faktury - detail</title>
+
+<th:block th:remove="all">
+  <!-- remove all duplicated template css due to auto-merge -->
+
+  <!-- ResBill Custom CSS -->
+  <link href="../../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
+
+  <!-- Bootstrap Core CSS -->
+  <link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"
+    th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+
+  <!-- Custom Fonts -->
+  <link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"
+    th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+
+  <!-- SB Admin 2 CSS -->
+  <link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css"
+    th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+
+</th:block>
+</head>
+
+<body>
+  <div layout:fragment="content">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1 class="page-header" th:text="#{page.header.contract.invoice.detail}">Kontrakt</h1>
+      </div>
+    </div>
+
+    <!-- Zobrazeni chyb -->
+    <div class="row">
+      <div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${invoice}')}" th:errors="${invoice}">Global error</div>
+    </div>
+
+    <!-- Taby -->
+    <div class="row" th:if="${contractEditDTO != null and contractEditDTO.contract.id != null}">
+      <div class="col-lg-12">
+
+        <h4
+          th:text="${contractEditDTO.contract.evidenceNumber + ' - ' + contractEditDTO.contract.name + ' (' + #numbers.formatDecimal(contractEditDTO.contract.balance,1,'DEFAULT',2,'DEFAULT') + ')'}">Identifikace
+          kontraktu</h4>
+
+        <ul class="nav nav-tabs">
+          <li><a href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.edit}">Editace</a>
+          </li>
+          <li><a href="contractInvoiceTypeList.html" th:href="@{/contracts/invoiceTypes(contractId=${contractEditDTO.contract.id})}"
+            th:text="#{tab.contract.invoiceTypes}">Typy uctovani</a></li>
+          <li><a href="contractTariffList.html" th:href="@{/contracts/tariffs(contractId=${contractEditDTO.contract.id})}"
+            th:text="#{tab.contract.tariffs}">Tarify</a></li>
+          <li><a href="contractServerList.html" th:href="@{/contracts/servers(contractId=${contractEditDTO.contract.id})}"
+            th:text="#{tab.contract.servers}">Servery</a></li>
+          <li><a href="contractTransactionList.html" th:href="@{/contracts/transactions(contractId=${contractEditDTO.contract.id})}"
+            th:text="#{tab.contract.transactions}">Účetní položky</a></li>
+          <li class="active"><a href="contractInvoiceList.html" th:href="@{/contracts/invoices(contractId=${contractEditDTO.contract.id})}"
+            th:text="#{tab.contract.invoices}">Faktury</a></li>
+        </ul>
+        <div class="voffset2 tab-content"></div>
+      </div>
+    </div>
+
+
+    <!-- Pokud nemam data, tak zobrazuji pouze talcitko "Zpet" -->
+    <div class="row" th:if="${invoice == null}">
+      <div class="col-lg-12">
+        <p>
+          <a href="invoiceList.html" class="btn btn-default" th:href="@{/contracts/invoices(contractId=${contractEditDTO.contract.id})}"> <i
+            class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Pokud mam data, tak zobrazuji kompletni obsah -->
+    <div class="row" th:if="${invoice != null}">
+      <div class="col-lg-12">
+
+        <div class="row">
+          <div class="col-lg-12">
+            <form role="form" method="post" action="#" th:object="${invoice}">
+              <input type="hidden" name="invoiceId" th:value="*{id}" />
+
+              <div class="row">
+                <div class="col-lg-12">
+                  <p>
+                    <button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete">
+                      <i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
+                    </button>
+
+                    <a href="invoiceList.html" class="btn btn-default" th:href="@{/contracts/invoices(contractId=${contractEditDTO.contract.id})}"> <i
+                      class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+
+            <div class="row">
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.title}">Název</label>
+                  <p class="form-control-static" th:text="${invoice.title}">Vyúčtování služeb 1.1.2014 - 31.1.2014</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.order}">Pořadí</label>
+                  <p class="form-control-static" th:text="${invoice.order}">1</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.evidenceNumber}">Evidenční číslo/Variabilní symbol</label>
+                  <p class="form-control-static" th:text="${invoice.evidenceNumber}">2000000123</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.amount}">Částka</label>
+                  <p class="form-control-static" th:text="${#numbers.formatDecimal(invoice.amount,1,'DEFAULT',2,'DEFAULT')}">3 563,00</p>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.decisiveDate}">Rozhodné datum</label>
+                  <p class="form-control-static" th:text="${{invoice.decisiveDate}}">2.6.2015</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.beginDate}">První den účtovaného období</label>
+                  <p class="form-control-static" th:text="${{invoice.period.beginDate}}">1.5.2015</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.endDate}">Poslední den účtovaného období</label>
+                  <p class="form-control-static" th:text="${{invoice.period.endDate}}">31.5.2015</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <label class="control-label" th:text="#{label.invoice.note}">Poznámka</label>
+            <p class="form-control-static" th:text="${{invoice.note}}">Něco, co si správce poznamenal k této faktuře</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="form-group">
+              <label class="control-label" th:text="#{label.invoice.summary}">Shrnutí faktury</label>
+              <textarea class="form-control" rows="10" readonly="readonly" th:text="${invoice.summary}">Textový obsah faktury. Později zde bude odkaz na PDF</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="form-group">
+              <label class="control-label" th:text="#{label.invoice.detail}">Detailní přehled účtovaných položek</label>
+              <textarea class="form-control" rows="10" readonly="readonly" th:text="${invoice.detail}">Detailní přehled účtovaných položek.</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- jQuery -->
+  <script src="../../../bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+
+  <!-- Custom Theme JavaScript -->
+  <script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"
+    th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+</body>
+</html>

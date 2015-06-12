@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import cz.vsb.resbill.criteria.ContractCriteria;
+import cz.vsb.resbill.criteria.InvoiceCreateCriteria;
 import cz.vsb.resbill.model.Contract;
 
 /**
@@ -16,56 +17,56 @@ import cz.vsb.resbill.model.Contract;
  */
 public interface ContractDAO {
 
-	/**
-	 * Finds a {@link Contract} with given primary key.
-	 * 
-	 * @param contractId
-	 *          primary key
-	 * @return found {@link Contract} entity
-	 */
-	Contract findContract(Integer contractId);
+  /**
+   * Finds a {@link Contract} with given primary key.
+   * 
+   * @param contractId
+   *          primary key
+   * @return found {@link Contract} entity
+   */
+  Contract findContract(Integer contractId);
 
-	/**
-	 * Finds {@link Contract} entities by specified criteria
-	 * 
-	 * @param criteria
-	 *          filtering criteria
-	 * @param offset
-	 *          order number of first result to return
-	 * @param limit
-	 *          maximum number of results to return
-	 * @return list of {@link Contract} entities
-	 */
-	List<Contract> findContracts(ContractCriteria criteria, Integer offset, Integer limit);
+  /**
+   * Finds {@link Contract} entities by specified criteria
+   * 
+   * @param criteria
+   *          filtering criteria
+   * @param offset
+   *          order number of first result to return
+   * @param limit
+   *          maximum number of results to return
+   * @return list of {@link Contract} entities
+   */
+  List<Contract> findContracts(ContractCriteria criteria, Integer offset, Integer limit);
 
-	/**
-	 * Najde vsechny kontrakty, jejichz servery maji alespon jedno nevyfakturovane DailyUsage nejpozdeji v pozadovanem dni.
-	 * 
-	 * Server musi byt kontraktu prirazen take nejpozdeji v pozadovanem dni.
-	 * 
-	 * Pro kontrakt nesmi existovat faktura se stejnym pozadovanym dnem.
-	 * 
-	 * Vraceny budou pouze ty kontrakty, ktere maji typ fakturace (v pozadovanem dni) odpovidajici predanemu parametru invoiceTypeIds.
-	 * 
-	 * Ke kazdemu kontraktu pripoji Typ uctovani, ktery ma byt pouzit.
-	 */
-	List<Object[]> findUninvoicedContracts(Date lastDay, List<Integer> invoiceTypeIds);
+  /**
+   * Najde vsechny kontrakty, jejichz servery maji alespon jedno nevyfakturovane DailyUsage nejpozdeji v pozadovanem dni.
+   * 
+   * Server musi byt kontraktu prirazen take nejpozdeji v pozadovanem dni.
+   * 
+   * Pro kontrakt nesmi existovat faktura se stejnym pozadovanym dnem.
+   * 
+   * Vraceny budou pouze ty kontrakty, ktere maji typ fakturace (v pozadovanem dni) odpovidajici predanemu parametru invoiceTypeIds.
+   * 
+   * Ke kazdemu kontraktu pripoji Typ uctovani, ktery ma byt pouzit.
+   */
+  List<Object[]> findUninvoicedContracts(InvoiceCreateCriteria criteria, Date lastDay, List<Integer> invoiceTypeIds);
 
-	/**
-	 * Saves current state of given {@link Contract} entity.
-	 * 
-	 * @param contract
-	 *          entity to save
-	 * @return saved entity
-	 */
-	Contract saveContract(Contract contract);
+  /**
+   * Saves current state of given {@link Contract} entity.
+   * 
+   * @param contract
+   *          entity to save
+   * @return saved entity
+   */
+  Contract saveContract(Contract contract);
 
-	/**
-	 * Deletes given {@link Contract} entity.
-	 * 
-	 * @param contract
-	 *          entity to delete
-	 * @return deleted entity
-	 */
-	Contract deleteContract(Contract contract);
+  /**
+   * Deletes given {@link Contract} entity.
+   * 
+   * @param contract
+   *          entity to delete
+   * @return deleted entity
+   */
+  Contract deleteContract(Contract contract);
 }
