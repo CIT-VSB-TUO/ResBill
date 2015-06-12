@@ -89,6 +89,26 @@ public interface DailyImportService {
   }
 
   /**
+   * Vsechny textove hodnoty polozky vstupniho radku "PowerState", ktere vedou na "true", tj. server je zapnut
+   * 
+   * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
+   *
+   */
+  public enum PowerStateOn {
+    PoweredOn
+  }
+
+  /**
+   * Vsechny textove hodnoty polozky vstupniho radku "PowerState", ktere vedou na "false", tj. server je vypnut
+   * 
+   * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
+   *
+   */
+  public enum PowerStateOff {
+    PoweredOff, Suspended
+  }
+
+  /**
    * 
    * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
    *

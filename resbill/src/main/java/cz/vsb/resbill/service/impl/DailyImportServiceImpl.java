@@ -31,7 +31,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -662,7 +662,20 @@ public class DailyImportServiceImpl implements DailyImportService {
       dailyUsage.setProvisionedSpaceGB(NumberUtils.createBigDecimal(provSpaceGb, BigDecimal.ZERO));
       dailyUsage.setUsedSpaceGB(NumberUtils.createBigDecimal(usedSpaceGb, BigDecimal.ZERO));
       dailyUsage.setBackupGB(NumberUtils.createBigDecimal(backupGb, BigDecimal.ZERO));
-      dailyUsage.setPowerState(powerState != null ? BooleanUtils.toBooleanObject(powerState, "PoweredOn", "PoweredOff", null) : false);
+
+      if (powerState != null) {
+        if (EnumUtils.isValidEnum(PowerStateOn.class, powerState)) {
+          dailyUsage.setPowerState(true);
+        } else if (EnumUtils.isValidEnum(PowerStateOff.class, powerState)) {
+          dailyUsage.setPowerState(false);
+        } else {
+          throw new IllegalArgumentException("The String '" + powerState + "' did not match any specified value of PowerState.");
+        }
+
+        // dailyUsage.setPowerState(powerState != null ? BooleanUtils.toBooleanObject(powerState, "PoweredOn", "PoweredOff", null) : false);
+      } else {
+        dailyUsage.setPowerState(false);
+      }
 
       // Ulozeni noveho objektu
       dailyUsageDAO.saveDailyUsage(dailyUsage);
