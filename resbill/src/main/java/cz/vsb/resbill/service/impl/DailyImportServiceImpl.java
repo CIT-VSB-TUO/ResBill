@@ -670,6 +670,7 @@ public class DailyImportServiceImpl implements DailyImportService {
     } catch (Exception exc) {
       // Vyjimku pri zpracovani jednoho radku zaznamenam, ale nezastavuji zpracovani celeho souboru
       log.warn(exc.getMessage(), exc);
+      lineImportData.resultCode = DailyImportService.LineImportResultCode.ERROR_OTHER;
       lineImportData.exception = exc;
     }
   }
