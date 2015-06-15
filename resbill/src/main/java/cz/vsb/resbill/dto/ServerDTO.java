@@ -28,6 +28,23 @@ public class ServerDTO implements Serializable {
 
   /**
    * 
+   */
+  public ServerDTO() {
+    super();
+  }
+
+  /**
+   * 
+   * @param server
+   */
+  public ServerDTO(Server server) {
+    this();
+
+    fill(server);
+  }
+
+  /**
+   * 
    * @param server
    */
   public void fill(Server server) {

@@ -6,6 +6,8 @@ import cz.vsb.resbill.criteria.ServerCriteria;
 import cz.vsb.resbill.dto.ServerAgendaDTO;
 import cz.vsb.resbill.dto.ServerDTO;
 import cz.vsb.resbill.dto.ServerEditDTO;
+import cz.vsb.resbill.dto.ServerHeaderDTO;
+import cz.vsb.resbill.dto.ServerOverviewDTO;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.exception.ServerServiceException;
 import cz.vsb.resbill.model.Server;
@@ -28,6 +30,12 @@ public interface ServerService {
    *           if unexpected error occurs
    */
   Server findServer(Integer serverId) throws ResBillException;
+
+  ServerDTO findServerDTO(Integer serverId) throws ResBillException;
+
+  ServerHeaderDTO findServerHeaderDTO(Integer serverId) throws ResBillException;
+
+  ServerOverviewDTO findServerOverviewDTO(Integer serverId) throws ResBillException;
 
   /**
    * Finds a {@link ServerEditDTO} for given key.

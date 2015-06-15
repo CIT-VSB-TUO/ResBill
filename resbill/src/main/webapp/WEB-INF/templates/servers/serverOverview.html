@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorator="layout">
+
+<head>
+<th:block th:remove="all">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+</th:block>
+
+<title th:text="#{head.title.server.overview}">Server - prehled</title>
+
+<th:block th:remove="all">
+  <!-- remove all duplicated template css due to auto-merge -->
+
+  <!-- ResBill Custom CSS -->
+  <link href="../../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
+
+  <!-- Bootstrap Core CSS -->
+  <link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"
+    th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+
+  <!-- Custom Fonts -->
+  <link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"
+    th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+
+  <!-- SB Admin 2 CSS -->
+  <link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css"
+    th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+
+</th:block>
+</head>
+
+<body>
+  <div layout:fragment="content">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1 class="page-header" th:text="#{page.header.server.overview}">Server - prehled</h1>
+      </div>
+    </div>
+
+    <!-- Zobrazeni chyb -->
+    <div class="row">
+      <div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${serverHeaderDTO}')}" th:errors="${serverHeaderDTO}">Global error</div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${serverOverviewDTO}')}" th:errors="${serverOverviewDTO}">Global error</div>
+    </div>
+
+    <!-- Zobrazeni zalozek -->
+    <div class="row" th:if="${serverHeaderDTO != null}">
+      <div class="col-lg-12">
+
+        <div class="row">
+          <div class="col-lg-6">
+            <h4 th:text="${serverHeaderDTO.serverId + ' - ' + serverHeaderDTO.name}">jmeno serveru</h4>
+          </div>
+          <div class="col-lg-6 text-right">
+            <a href="serverList.html" class="btn btn-default" th:href="@{/servers}"> <i class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="serverOverview.html" th:href="@{/servers/overview(serverId=${serverHeaderDTO.id})}"
+                th:text="#{tab.server.overview}">Přehled</a></li>
+              <li><a href="serverEdit.html" th:href="@{/servers/edit(serverId=${serverHeaderDTO.id})}" th:text="#{tab.server.edit}">Editace</a></li>
+              <li><a href="serverContractList.html" th:href="@{/servers/contracts(serverId=${serverHeaderDTO.id})}" th:text="#{tab.server.contracts}">Kontrakty</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="voffset2 tab-content"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Zobrazeni prehledovych informaci -->
+    <div class="row" th:if="${serverOverviewDTO != null}">
+      <div class="col-lg-12">
+
+        <!-- Zakladni informace o serveru -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <span th:text="#{panel.server.server}">Server</span>
+              </div>
+
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-lg-2">
+                    <div class="form-group">
+                      <label class="control-label" th:text="#{label.server.serverId}">ID serveru</label>
+                      <p class="form-control-static" th:text="${serverOverviewDTO.serverId}">vm-1000</p>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-10">
+                    <div class="form-group">
+                      <label class="control-label" th:text="#{label.server.name}">Název</label>
+                      <p class="form-control-static" th:text="${serverOverviewDTO.name}">dcex22cit</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Aktualni spotreba -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <span th:text="#{panel.server.dailyUsage.current}">Aktuální spotřeba</span>
+              </div>
+
+              <div class="panel-body">
+                <div th:if="${serverOverviewDTO.lastDailyUsageDTO != null}">
+                  <div class="row">
+                    <div class="col-lg-2">
+                      <div class="form-group">
+                        <label class="control-label" th:text="#{label.server.dailyUsage.date}">Datum</label>
+                        <p class="form-control-static" th:text="${{serverOverviewDTO.lastDailyUsageDTO.date}}">1.6.2015</p>
+                      </div>
+                    </div>
+                    <div class="col-lg-2">
+                      <div class="form-group">
+                        <label class="control-label" th:text="#{label.server.dailyUsage.powerState}">State</label>
+                        <p class="form-control-static"
+                          th:text="${serverOverviewDTO.lastDailyUsageDTO.powerState}?#{label.server.dailyUsage.powerState.on}:#{label.server.dailyUsage.powerState.off}">Zapnut</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-2">
+                      <div class="form-group">
+                        <label class="control-label" th:text="#{label.server.dailyUsage.cpu}">CPU</label>
+                        <p class="form-control-static" th:text="${serverOverviewDTO.lastDailyUsageDTO.cpu}">2</p>
+                      </div>
+                    </div>
+                    <div class="col-lg-2">
+                      <div class="form-group">
+                        <label class="control-label" th:text="#{label.server.dailyUsage.provisionedSpaceGB}">HDD [GB]</label>
+                        <p class="form-control-static"
+                          th:text="${#numbers.formatDecimal(serverOverviewDTO.lastDailyUsageDTO.provisionedSpaceGB,1,'DEFAULT',1,'DEFAULT')}">100</p>
+                      </div>
+                    </div>
+                    <div class="col-lg-2">
+                      <div class="form-group">
+                        <label class="control-label" th:text="#{label.server.dailyUsage.usedSpaceGB}">HDD (využito) [GB]</label>
+                        <p class="form-control-static"
+                          th:text="${#numbers.formatDecimal(serverOverviewDTO.lastDailyUsageDTO.usedSpaceGB,1,'DEFAULT',1,'DEFAULT')}">51</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-2">
+                      <div class="form-group">
+                        <label class="control-label" th:text="#{label.server.dailyUsage.memoryGB}">RAM [GB]</label>
+                        <p class="form-control-static" th:text="${#numbers.formatDecimal(serverOverviewDTO.lastDailyUsageDTO.memoryGB,1,'DEFAULT',1,'DEFAULT')}">5</p>
+                      </div>
+                    </div>
+                    <div class="col-lg-2">
+                      <div class="form-group">
+                        <label class="control-label" th:text="#{label.server.dailyUsage.backupGB}">Zálohování [GB]</label>
+                        <p class="form-control-static"
+                          th:text="${#numbers.formatDecimal(serverOverviewDTO.lastDailyUsageDTO.backupSpaceGB,1,'DEFAULT',1,'DEFAULT')}">0</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aktualni prirazeni ke kontraktu -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <!-- 
+                <span th:text="#{panel.server.contract.current}">Prirazeni ke kontraktu</span> <a th:if="${serverEditDTO.currentContractServer != null}"
+                  class="btn btn-default" href="serverContractEdit.html"
+                  th:href="@{/servers/contracts/edit(contractServerId=${serverEditDTO.currentContractServer.id})}"
+                  th:title="#{button.title.server.contract.edit}"> <i class="fa fa-edit"></i> <span th:text="#{button.title.server.contract.edit}">Upravit</span>
+                </a>
+                 -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- jQuery -->
+  <script src="../../../bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+
+  <!-- Custom Theme JavaScript -->
+  <script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"
+    th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+</body>
+</html>
