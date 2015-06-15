@@ -382,7 +382,7 @@ public class DailyImportServiceImpl implements DailyImportService {
       try {
         String dateString = StringUtils.remove(fileName, REPORT_FILE_NAME_PREFIX);
         dateString = StringUtils.remove(dateString, REPORT_FILE_NAME_SUFIX);
-        date = DateUtils.parseDateStrictly(dateString, REPORT_FILE_NAME_DATE_PATERN);
+        date = DateUtils.parseDateStrictly(dateString, REPORT_FILE_NAME_DATE_PATERNS);
       } catch (ParseException exc) {
         throw new DailyImportException(DailyImportException.Reason.IMPORT_REPORT_DATE_PARSE_ERROR, "An unexpected error occured while importDailyReport() for file: " + fileName
             + " - file date parse error.", exc);

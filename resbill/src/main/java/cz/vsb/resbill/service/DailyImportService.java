@@ -22,11 +22,11 @@ import cz.vsb.resbill.model.DailyImport;
  */
 public interface DailyImportService {
 
-  public static final String REPORT_FILE_NAME_PREFIX      = "report_";
+  public static final String   REPORT_FILE_NAME_PREFIX       = "report_";
 
-  public static final String REPORT_FILE_NAME_SUFIX       = ".csv";
+  public static final String   REPORT_FILE_NAME_SUFIX        = ".csv";
 
-  public static final String REPORT_FILE_NAME_DATE_PATERN = "yyyyMMdd";
+  public static final String[] REPORT_FILE_NAME_DATE_PATERNS = { "yyyyMMdd", "yyyyMMddHHmmss" };
 
   DailyImport findDailyImport(Integer dailyImportId) throws ResBillException;
 
