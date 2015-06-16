@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 
 import cz.vsb.resbill.criteria.ContractCriteria;
 import cz.vsb.resbill.criteria.InvoiceCreateCriteria;
+import cz.vsb.resbill.criteria.statistics.StatisticContractCriteria;
 import cz.vsb.resbill.dao.ContractDAO;
 import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.util.NumberUtils;
@@ -296,4 +297,38 @@ public class ContractDAOImpl implements ContractDAO {
     return query.getResultList();
   }
 
+  /**
+   * 
+   * @param criteria
+   * @return
+   */
+  public List<Object[]> findContractStatistics(StatisticContractCriteria criteria) {
+    StringBuilder jpql = new StringBuilder();
+    jpql.append(" SELECT contract, SUM(dailyUsage.cpu), SUM(dailyUsage.memoryGB), SUM(dailyUsage.provisionedSpaceGB), SUM(dailyUsage.usedSpaceGB), SUM(dailyUsage.backupGB) ");
+    jpql.append(" FROM Contract AS contract ");
+    jpql.append(" JOIN contract.contractServers AS contractServer ");
+    jpql.append(" JOIN contractServer.server AS server ");
+    jpql.append(" JOIN server.dailyUsages AS dailyUsage ");
+    jpql.append(" JOIN dailyUsage.dailyImport AS dailyImport ");
+    jpql.append(" WHERE contractServer.period.beginDate <= dailyImport.date ");
+    jpql.append(" AND (contractServer.period.endDate IS NULL OR contractServer.period.endDate >= dailyImport.date) ");
+    if (criteria.getBeginDate() != null) {
+      jpql.append(" AND dailyImport.date >= :beginDate ");
+    }
+    if (criteria.getEndDate() != null) {
+      jpql.append(" AND contractServer.period.beginDate <= :endDate ");
+    }
+    jpql.append(" GROUP BY contract.id ");
+    jpql.append(" ORDER BY contract.name ");
+
+    TypedQuery<Object[]> query = em.createQuery(jpql.toString(), Object[].class);
+    if (criteria.getBeginDate() != null) {
+      query.setParameter("beginDate", criteria.getBeginDate());
+    }
+    if (criteria.getEndDate() != null) {
+      query.setParameter("endDate", criteria.getEndDate());
+    }
+
+    return query.getResultList();
+  }
 }

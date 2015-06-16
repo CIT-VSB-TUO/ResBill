@@ -31,6 +31,8 @@ public class ContractDTO implements Serializable {
 
   private Date              endDate          = null;
 
+  private String            customerName     = null;
+
   /**
    * 
    */
@@ -57,6 +59,8 @@ public class ContractDTO implements Serializable {
     name = contract.getName();
     beginDate = contract.getPeriod().getBeginDate();
     endDate = contract.getPeriod().getEndDate();
+
+    customerName = contract.getCustomer().getName();
   }
 
   /**
@@ -134,6 +138,21 @@ public class ContractDTO implements Serializable {
     this.endDate = endDate;
   }
 
+  /**
+   * @return the customerName
+   */
+  public String getCustomerName() {
+    return customerName;
+  }
+
+  /**
+   * @param customerName
+   *          the customerName to set
+   */
+  public void setCustomerName(String customerName) {
+    this.customerName = customerName;
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -147,6 +166,7 @@ public class ContractDTO implements Serializable {
     builder.append("name", name);
     builder.append("beginDate", beginDate);
     builder.append("endDate", endDate);
+    builder.append("customerName", customerName);
     builder.append("toString()", super.toString());
     return builder.toString();
   }

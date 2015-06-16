@@ -29,7 +29,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import cz.vsb.resbill.criteria.TransactionTypeCriteria;
 import cz.vsb.resbill.dto.TransactionEditDTO;
 import cz.vsb.resbill.exception.TransactionServiceException;
-import cz.vsb.resbill.model.Invoice;
 import cz.vsb.resbill.model.Transaction;
 import cz.vsb.resbill.model.TransactionType;
 import cz.vsb.resbill.service.ContractService;

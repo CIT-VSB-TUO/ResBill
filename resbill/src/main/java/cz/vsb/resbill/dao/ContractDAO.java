@@ -9,6 +9,7 @@ import java.util.List;
 
 import cz.vsb.resbill.criteria.ContractCriteria;
 import cz.vsb.resbill.criteria.InvoiceCreateCriteria;
+import cz.vsb.resbill.criteria.statistics.StatisticContractCriteria;
 import cz.vsb.resbill.model.Contract;
 
 /**
@@ -51,6 +52,8 @@ public interface ContractDAO {
    * Ke kazdemu kontraktu pripoji Typ uctovani, ktery ma byt pouzit.
    */
   List<Object[]> findUninvoicedContracts(InvoiceCreateCriteria criteria, Date lastDay, List<Integer> invoiceTypeIds);
+
+  List<Object[]> findContractStatistics(StatisticContractCriteria criteria);
 
   /**
    * Saves current state of given {@link Contract} entity.
