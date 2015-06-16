@@ -60,13 +60,13 @@ public class Contract extends BaseVersionedEntity implements PeriodLimitedEntity
 	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ContractPerson> responsiblePersons = new HashSet<>();
 
-	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private Set<ContractInvoiceType> contractInvoiceTypes = new HashSet<>();
 
-	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private Set<ContractServer> contractServers = new HashSet<>();
 
-	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private Set<ContractTariff> contractTariffs = new HashSet<>();
 
 	public Long getEvidenceNumber() {

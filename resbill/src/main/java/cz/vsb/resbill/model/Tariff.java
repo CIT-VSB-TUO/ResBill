@@ -3,6 +3,7 @@ package cz.vsb.resbill.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,7 +29,7 @@ public class Tariff extends BaseVersionedEntity {
 	@NotNull
 	private Boolean valid;
 
-	@OneToMany(mappedBy = "tariff", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "tariff", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private Set<PriceList> prices = new HashSet<>();
 
 	@OneToMany(mappedBy = "tariff", fetch = FetchType.LAZY)
