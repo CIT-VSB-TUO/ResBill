@@ -86,13 +86,15 @@ public class ContractInvoiceTypeEditController {
 			if (contractInvoiceTypeId != null) {
 				citEditDTO = new ContractInvoiceTypeEditDTO(contractInvoiceTypeService.findContractInvoiceType(contractInvoiceTypeId));
 			} else {
-				ContractInvoiceType cs = new ContractInvoiceType();
-				cs.setPeriod(new Period());
-				cs.getPeriod().setBeginDate(DateUtils.truncate(new Date(), Calendar.DATE));
+				ContractInvoiceType cit = new ContractInvoiceType();
+				cit.setPeriod(new Period());
 				if (contractId != null) {
-					cs.setContract(contractService.findContract(contractId));
+					cit.setContract(contractService.findContract(contractId));
+					cit.getPeriod().setBeginDate(cit.getContract().getPeriod().getBeginDate());
+				} else {
+					cit.getPeriod().setBeginDate(DateUtils.truncate(new Date(), Calendar.DATE));
 				}
-				citEditDTO = new ContractInvoiceTypeEditDTO(cs);
+				citEditDTO = new ContractInvoiceTypeEditDTO(cit);
 			}
 			model.addAttribute(CONTRACT_INVOICE_TYPE_EDIT_DTO_MODEL_KEY, citEditDTO);
 		} catch (Exception e) {
@@ -149,7 +151,21 @@ public class ContractInvoiceTypeEditController {
 				return "redirect:/contracts/invoiceTypes";
 			} catch (ContractInvoiceTypeServiceException e) {
 				switch (e.getReason()) {
-				// TODO osetreni vyjimek
+				case NOT_LAST_CONTRACT_INVOICE_TYPE:
+					bindingResult.reject("error.save.contract.invoiceType.not.last");
+					break;
+				case OUT_OF_CONTRACT_DURATION:
+					bindingResult.reject("error.save.contract.invoiceType.out.of.duration");
+					break;
+				case INVALID_PERIOD:
+					bindingResult.reject("error.save.contract.invoiceType.period");
+					break;
+				case CONTRACT_INVOICE_TYPE_MODIFICATION:
+					bindingResult.reject("error.save.contract.invoiceType.modified");
+					break;
+				case FIRST_CONTRACT_INVOICE_TYPE_BEGIN_DATE_MODIFICATION:
+					bindingResult.reject("error.save.contract.invoiceType.first.beginDate.modified");
+					break;
 				default:
 					log.warn("Unsupported reason: " + e);
 					bindingResult.reject("error.save.contract.invoiceType");
@@ -187,7 +203,9 @@ public class ContractInvoiceTypeEditController {
 			return "redirect:/contracts/invoiceTypes";
 		} catch (ContractInvoiceTypeServiceException e) {
 			switch (e.getReason()) {
-			// TODO osetreni vyjimek
+			case NOT_LAST_CONTRACT_INVOICE_TYPE:
+				bindingResult.reject("error.delete.contract.invoiceType.not.last");
+				break;
 			default:
 				log.warn("Unsupported reason: " + e);
 				bindingResult.reject("error.delete.contract.invoiceType");

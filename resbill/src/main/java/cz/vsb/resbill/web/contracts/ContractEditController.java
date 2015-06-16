@@ -149,7 +149,7 @@ public class ContractEditController {
 					bindingResult.reject("error.save.contract.tariff.invalid.period");
 					break;
 				case CONTRACT_TARIFF_INVOICE_DAILY_USAGE_UNCOVERED:
-					bindingResult.reject("error.save.contract.tariff.invoice.dailyUsage");
+					bindingResult.reject("error.save.contract.tariff.invoiced");
 					break;
 				default:
 					log.warn("Unsupported reason: " + e);
