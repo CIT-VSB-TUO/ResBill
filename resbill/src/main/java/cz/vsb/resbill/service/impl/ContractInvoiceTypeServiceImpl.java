@@ -12,10 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.vsb.resbill.criteria.ContractInvoiceTypeCriteria;
+import cz.vsb.resbill.dao.ContractDAO;
 import cz.vsb.resbill.dao.ContractInvoiceTypeDAO;
 import cz.vsb.resbill.exception.ContractInvoiceTypeServiceException;
 import cz.vsb.resbill.exception.ContractInvoiceTypeServiceException.Reason;
 import cz.vsb.resbill.exception.ResBillException;
+import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.model.ContractInvoiceType;
 import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.service.ContractInvoiceTypeService;
@@ -37,6 +39,9 @@ public class ContractInvoiceTypeServiceImpl implements ContractInvoiceTypeServic
 
 	@Inject
 	private ContractInvoiceTypeDAO contractInvoiceTypeDAO;
+
+	@Inject
+	private ContractDAO contractDAO;
 
 	@Override
 	public ContractInvoiceType findContractInvoiceType(Integer contractInvoiceTypeId) throws ResBillException {
@@ -61,47 +66,47 @@ public class ContractInvoiceTypeServiceImpl implements ContractInvoiceTypeServic
 	@Override
 	public ContractInvoiceType saveContractInvoiceType(ContractInvoiceType contractInvoiceType) throws ContractInvoiceTypeServiceException, ResBillException {
 		try {
+			// editovat lze pouze posledni prirazeni
 			if (contractInvoiceType.getPeriod().getEndDate() != null) {
 				throw new ContractInvoiceTypeServiceException(Reason.NOT_LAST_CONTRACT_INVOICE_TYPE);
 			}
 			// zjisteni kontraktu
+			Contract contract = contractDAO.findContract(contractInvoiceType.getContract().getId());
+
 			if (contractInvoiceType.getId() == null) { // nove prirazeni
 				// zjisteni posledniho (aktualniho) prirazeni
-				ContractInvoiceType lastValid = contractInvoiceTypeDAO.findLastContractInvoiceType(contractInvoiceType.getContract().getId());
-				if (lastValid == null) {
+				ContractInvoiceType lastCIT = contractInvoiceTypeDAO.findLastContractInvoiceType(contract.getId());
+				if (lastCIT == null) {
 					contractInvoiceType.setPrevious(null);
 					// prvni prirazeni ma platnost od pocatku kontraktu
-					contractInvoiceType.getPeriod().setBeginDate(contractInvoiceType.getContract().getPeriod().getBeginDate());
+					contractInvoiceType.getPeriod().setBeginDate(contract.getPeriod().getBeginDate());
 				} else {
-					contractInvoiceType.setPrevious(lastValid);
-
-					// kontrola zda pocatek spada do platnosti kontraktu
-					checkContractBelonging(contractInvoiceType);
-
-					// ukonceni platnosti predchoziho prirazeni
-					Date terminationDate = DateUtils.addDays(contractInvoiceType.getPeriod().getBeginDate(), -1);
-					terminateContractInvoiceType(contractInvoiceType.getPrevious(), terminationDate);
+					contractInvoiceType.setPrevious(lastCIT);
 				}
 			} else { // editace existujiciho prirazeni
 				// kontrola modifikace prirazeni
 				ContractInvoiceType origCIT = contractInvoiceTypeDAO.findContractInvoiceType(contractInvoiceType.getId());
-				if (!origCIT.getContract().equals(contractInvoiceType.getContract()) || !origCIT.getInvoiceType().equals(contractInvoiceType.getInvoiceType())) {
+				if (!origCIT.getContract().equals(contract) || !origCIT.getInvoiceType().equals(contractInvoiceType.getInvoiceType())) {
 					throw new ContractInvoiceTypeServiceException(Reason.CONTRACT_INVOICE_TYPE_MODIFICATION);
 				}
 				if (contractInvoiceType.getPrevious() == null) {// prvni prirazeni
 					// kontrola zmeny pocatecniho data
-					if (!contractInvoiceType.getPeriod().getBeginDate().equals(contractInvoiceType.getContract().getPeriod().getBeginDate())) {
+					if (!contractInvoiceType.getPeriod().getBeginDate().equals(contract.getPeriod().getBeginDate())) {
 						throw new ContractInvoiceTypeServiceException(Reason.FIRST_CONTRACT_INVOICE_TYPE_BEGIN_DATE_MODIFICATION);
 					}
-				} else {
-					// kontrola zda pocatek spada do platnosti kontraktu
-					checkContractBelonging(contractInvoiceType);
+				}
+			}
+			if (contractInvoiceType.getPrevious() != null) {
+				// kontrola zda pocatek spada do platnosti kontraktu
+				checkContractBelonging(contractInvoiceType);
 
-					// ukonceni platnosti predchoziho prirazeni
-					Date terminationDate = DateUtils.addDays(contractInvoiceType.getPeriod().getBeginDate(), -1);
+				// ukonceni platnosti predchoziho prirazeni, je-li treba
+				Date terminationDate = DateUtils.addDays(contractInvoiceType.getPeriod().getBeginDate(), -1);
+				if (!terminationDate.equals(contractInvoiceType.getPrevious().getPeriod().getEndDate())) {
 					terminateContractInvoiceType(contractInvoiceType.getPrevious(), terminationDate);
 				}
 			}
+
 			return contractInvoiceTypeDAO.saveContractInvoiceType(contractInvoiceType);
 		} catch (ContractInvoiceTypeServiceException e) {
 			throw e;
@@ -118,7 +123,7 @@ public class ContractInvoiceTypeServiceImpl implements ContractInvoiceTypeServic
 	}
 
 	private void terminateContractInvoiceType(ContractInvoiceType cit, Date terminationDate) throws ContractInvoiceTypeServiceException {
-		if (!Period.isDateInPeriod(terminationDate, cit.getPeriod())) {
+		if (!Period.isValid(cit.getPeriod().getBeginDate(), terminationDate)) {
 			throw new ContractInvoiceTypeServiceException(Reason.INVALID_PERIOD);
 		}
 		// provedeni ukonceni

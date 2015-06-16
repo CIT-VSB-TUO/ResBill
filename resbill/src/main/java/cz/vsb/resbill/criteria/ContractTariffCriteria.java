@@ -22,6 +22,10 @@ public class ContractTariffCriteria implements Serializable {
 
 	private Integer tariffId;
 
+	private Boolean first;
+
+	private Boolean last;
+
 	private OrderBy orderBy;
 
 	private boolean fetchContract;
@@ -42,6 +46,22 @@ public class ContractTariffCriteria implements Serializable {
 
 	public void setTariffId(Integer tariffId) {
 		this.tariffId = tariffId;
+	}
+
+	public Boolean getFirst() {
+		return first;
+	}
+
+	public void setFirst(Boolean first) {
+		this.first = first;
+	}
+
+	public Boolean getLast() {
+		return last;
+	}
+
+	public void setLast(Boolean last) {
+		this.last = last;
 	}
 
 	public OrderBy getOrderBy() {
@@ -77,6 +97,10 @@ public class ContractTariffCriteria implements Serializable {
 		builder.append(contractId);
 		builder.append(", tariffId=");
 		builder.append(tariffId);
+		builder.append(", first=");
+		builder.append(first);
+		builder.append(", last=");
+		builder.append(last);
 		builder.append(", orderBy=");
 		builder.append(orderBy);
 		builder.append(", fetchContract=");

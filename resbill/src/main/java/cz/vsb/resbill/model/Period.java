@@ -86,6 +86,31 @@ public class Period implements Comparable<Period>, Serializable {
 	}
 
 	/**
+	 * Checks if the specified period is valid - from is not null and to is null or not before from.
+	 * 
+	 * @param from
+	 * @param to
+	 * @return
+	 */
+	public static boolean isValid(Date from, Date to) {
+		Period p = new Period();
+		p.setBeginDate(from);
+		p.setEndDate(to);
+		return isValid(p);
+	}
+
+	/**
+	 * Checks if the specified period is valid - beginning is not null and end is null or not before beginning.
+	 * 
+	 * @param p
+	 * @return
+	 */
+	public static boolean isValid(Period p) {
+		if (p == null) throw new IllegalArgumentException("Given parameter cannot be null.");
+		return p.getBeginDate() != null && (p.getEndDate() == null || p.getBeginDate().compareTo(p.getEndDate()) <= 0);
+	}
+
+	/**
 	 * Checks if the specified date is between bounds of the specified period (inclusively).
 	 * 
 	 * @param date

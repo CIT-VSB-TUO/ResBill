@@ -40,9 +40,18 @@ public class PriceListDAOImpl implements PriceListDAO {
 	}
 
 	@Override
+	public PriceList findFirstPriceList(Integer tariffId) {
+		PriceListCriteria criteria = new PriceListCriteria();
+		criteria.setFirst(Boolean.TRUE);
+		criteria.setTariffId(tariffId);
+		List<PriceList> results = findPriceLists(criteria, null, null);
+		return DataAccessUtils.singleResult(results);
+	}
+
+	@Override
 	public PriceList findLastPriceList(Integer tariffId) {
 		PriceListCriteria criteria = new PriceListCriteria();
-		criteria.setLastValid(Boolean.TRUE);
+		criteria.setLast(Boolean.TRUE);
 		criteria.setTariffId(tariffId);
 		List<PriceList> results = findPriceLists(criteria, null, null);
 		return DataAccessUtils.singleResult(results);
@@ -57,8 +66,15 @@ public class PriceListDAOImpl implements PriceListDAO {
 			if (criteria.getTariffId() != null) {
 				where.add("pl.tariff.id = :tariffId");
 			}
-			if (criteria.getLastValid() != null) {
-				if (criteria.getLastValid()) {
+			if (criteria.getFirst() != null) {
+				if (criteria.getFirst()) {
+					where.add("pl.previous IS NULL");
+				} else {
+					where.add("pl.previous IS NOT NULL");
+				}
+			}
+			if (criteria.getLast() != null) {
+				if (criteria.getLast()) {
 					where.add("pl.period.endDate IS NULL");
 				} else {
 					where.add("pl.period.endDate IS NOT NULL");

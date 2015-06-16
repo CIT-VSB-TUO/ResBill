@@ -24,6 +24,14 @@ public interface PriceListDAO {
 	PriceList findPriceList(Integer id);
 
 	/**
+	 * Finds a {@link PriceList} of the {@link Tariff} specified by the given key that is its first.
+	 * 
+	 * @param tariffId
+	 * @return
+	 */
+	PriceList findFirstPriceList(Integer tariffId);
+
+	/**
 	 * Finds a {@link PriceList} of the {@link Tariff} specified by the given key that is its last.
 	 * 
 	 * @param tariffId

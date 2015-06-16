@@ -3,6 +3,7 @@ package cz.vsb.resbill.dao;
 import java.util.List;
 
 import cz.vsb.resbill.criteria.ContractTariffCriteria;
+import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.model.ContractTariff;
 
 /**
@@ -20,6 +21,22 @@ public interface ContractTariffDAO {
 	 * @return found {@link ContractTariff} entity
 	 */
 	ContractTariff findContractTariff(Integer contractTariffId);
+
+	/**
+	 * Finds the first {@link ContractTariff} of {@link Contract} specified by the given key.
+	 * 
+	 * @param contractId
+	 * @return
+	 */
+	ContractTariff findFirstContractTariff(Integer contractId);
+
+	/**
+	 * Finds the last (current) {@link ContractTariff} of {@link Contract} specified by the given key.
+	 * 
+	 * @param contractId
+	 * @return
+	 */
+	ContractTariff findLastContractTariff(Integer contractId);
 
 	/**
 	 * Finds {@link ContractTariff} entities by specified criteria

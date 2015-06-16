@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.Valid;
@@ -29,6 +30,10 @@ public class ContractTariff extends BaseVersionedEntity implements PeriodLimited
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "tariff_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_tariff__tariff"))
 	private Tariff tariff;
+
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "previous_id", foreignKey = @ForeignKey(name = "FK_contract_tariff__previous"))
+	private ContractTariff previous;
 
 	@Override
 	public Period getPeriod() {
@@ -56,6 +61,14 @@ public class ContractTariff extends BaseVersionedEntity implements PeriodLimited
 		this.tariff = tariff;
 	}
 
+	public ContractTariff getPrevious() {
+		return previous;
+	}
+
+	public void setPrevious(ContractTariff previous) {
+		this.previous = previous;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -67,6 +80,8 @@ public class ContractTariff extends BaseVersionedEntity implements PeriodLimited
 		builder.append(contract != null ? contract.getId() : null);
 		builder.append(", tariff.id=");
 		builder.append(tariff != null ? tariff.getId() : null);
+		builder.append(", previous.id=");
+		builder.append(previous != null ? previous.getId() : null);
 		builder.append("]");
 		return builder.toString();
 	}

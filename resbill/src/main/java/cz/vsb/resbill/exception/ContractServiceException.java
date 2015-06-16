@@ -13,6 +13,10 @@ public class ContractServiceException extends ResBillException {
 		SERVER_ASSOCIATION_EXCLUSION,
 		/** zmena platnosti kontraktu zpusobi nespravnost prirazeni typu uct. */
 		CONTRACT_INVOICE_TYPE_INVALID_PERIOD,
+		/** zmena platnosti kontraktu zpusobi nespravnost prirazeni tarifu */
+		CONTRACT_TARIFF_INVALID_PERIOD,
+		/** nepokryva fakturovana denni vyuziti zdroju prirazeni tarifu */
+		CONTRACT_TARIFF_INVOICE_DAILY_USAGE_UNCOVERED
 	}
 
 	private Reason reason;
