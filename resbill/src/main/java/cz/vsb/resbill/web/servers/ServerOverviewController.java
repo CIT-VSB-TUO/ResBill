@@ -5,18 +5,23 @@
 package cz.vsb.resbill.web.servers;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import cz.vsb.resbill.dto.ServerEditDTO;
 import cz.vsb.resbill.dto.ServerHeaderDTO;
 import cz.vsb.resbill.dto.ServerOverviewDTO;
+import cz.vsb.resbill.exception.ServerServiceException;
 import cz.vsb.resbill.service.ServerService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -27,7 +32,7 @@ import cz.vsb.resbill.util.WebUtils;
 
 @Controller
 @RequestMapping("/servers/overview")
-@SessionAttributes("serverHeaderDTO")
+@SessionAttributes({"serverHeaderDTO", "serverOverviewDTO"})
 public class ServerOverviewController {
 
   private static final Logger log                                  = LoggerFactory.getLogger(ServerOverviewController.class);
@@ -99,6 +104,39 @@ public class ServerOverviewController {
       model.addAttribute(MODEL_OBJECT_KEY_SERVER_HEADER_DTO, serverHeaderDTO);
       WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_SERVER_HEADER_DTO, "error.load.server");
     }
+  }
+  
+  /**
+   * Handle POST requests for deleting {@link ServerEditDTO} instance.
+   * 
+   * @param server
+   * @param bindingResult
+   * @return
+   */
+  @RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
+  public String delete(@Valid @ModelAttribute(MODEL_OBJECT_KEY_SERVER_HEADER_DTO) ServerHeaderDTO serverHeaderDTO, BindingResult bindingResult) {
 
+    try {
+      serverService.deleteServer(serverHeaderDTO.getId());
+
+      return "redirect:/servers";
+    } catch (ServerServiceException e) {
+      switch (e.getReason()) {
+      case CONTRACT_ASSOCIATED:
+        bindingResult.reject("error.delete.server.contract.associated");
+        break;
+      case DAILY_USAGE_EXISTENCE:
+        bindingResult.reject("error.delete.server.dailyUsage.exists");
+        break;
+      default:
+        log.warn("Unsupported reason: " + e);
+        bindingResult.reject("error.delete.server");
+        break;
+      }
+    } catch (Exception e) {
+      log.error("Cannot delete ServerHeaderDTO: " + serverHeaderDTO, e);
+      bindingResult.reject("error.delete.server");
+    }
+    return "servers/serverOverview";
   }
 }

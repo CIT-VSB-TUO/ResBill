@@ -5,6 +5,7 @@
 package cz.vsb.resbill.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.util.ToStringBuilder;
@@ -26,6 +27,26 @@ public class ContractDTO implements Serializable {
 
   private String            name             = null;
 
+  private Date              beginDate        = null;
+
+  private Date              endDate          = null;
+
+  /**
+   * 
+   */
+  public ContractDTO() {
+    super();
+  }
+
+  /**
+   * 
+   */
+  public ContractDTO(Contract contract) {
+    this();
+
+    fill(contract);
+  }
+
   /**
    * 
    * @param contract
@@ -34,6 +55,8 @@ public class ContractDTO implements Serializable {
     contractId = contract.getId();
     evidenceNumber = contract.getEvidenceNumber();
     name = contract.getName();
+    beginDate = contract.getPeriod().getBeginDate();
+    endDate = contract.getPeriod().getEndDate();
   }
 
   /**
@@ -81,6 +104,36 @@ public class ContractDTO implements Serializable {
     this.name = name;
   }
 
+  /**
+   * @return the beginDate
+   */
+  public Date getBeginDate() {
+    return beginDate;
+  }
+
+  /**
+   * @param beginDate
+   *          the beginDate to set
+   */
+  public void setBeginDate(Date beginDate) {
+    this.beginDate = beginDate;
+  }
+
+  /**
+   * @return the endDate
+   */
+  public Date getEndDate() {
+    return endDate;
+  }
+
+  /**
+   * @param endDate
+   *          the endDate to set
+   */
+  public void setEndDate(Date endDate) {
+    this.endDate = endDate;
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -92,6 +145,8 @@ public class ContractDTO implements Serializable {
     builder.append("contractId", contractId);
     builder.append("evidenceNumber", evidenceNumber);
     builder.append("name", name);
+    builder.append("beginDate", beginDate);
+    builder.append("endDate", endDate);
     builder.append("toString()", super.toString());
     return builder.toString();
   }

@@ -101,9 +101,11 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="panel panel-default">
+              <!--
               <div class="panel-heading">
                 <span th:text="#{panel.server.server}">Server</span>
               </div>
+                -->
 
               <div class="panel-body">
                 <div class="row">
@@ -114,11 +116,19 @@
                     </div>
                   </div>
 
-                  <div class="col-lg-10">
+                  <div class="col-lg-8">
                     <div class="form-group">
                       <label class="control-label" th:text="#{label.server.name}">Název</label>
                       <p class="form-control-static" th:text="${serverOverviewDTO.name}">dcex22cit</p>
                     </div>
+                  </div>
+
+                  <div class="col-lg-2 text-right">
+                    <form role="form" method="post" action="#">
+                      <button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete">
+                        <i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
+                      </button>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -202,14 +212,49 @@
           <div class="col-lg-12">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <!-- 
-                <span th:text="#{panel.server.contract.current}">Prirazeni ke kontraktu</span> <a th:if="${serverEditDTO.currentContractServer != null}"
+                <span th:text="#{panel.server.contract.current}">Prirazeni ke kontraktu</span> <a th:if="${serverOverviewDTO.currentContractServerId != null}"
                   class="btn btn-default" href="serverContractEdit.html"
-                  th:href="@{/servers/contracts/edit(contractServerId=${serverEditDTO.currentContractServer.id})}"
+                  th:href="@{/servers/contracts/edit(contractServerId=${serverOverviewDTO.currentContractServerId})}"
                   th:title="#{button.title.server.contract.edit}"> <i class="fa fa-edit"></i> <span th:text="#{button.title.server.contract.edit}">Upravit</span>
                 </a>
-                 -->
               </div>
+
+              <div class="panel-body">
+                <p th:if="${serverOverviewDTO.currentContractServerId == null}">
+                  <a class="btn btn-primary" href="serverContractEdit.html" th:href="@{/servers/contracts/edit(serverId=${serverOverviewDTO.id})}"
+                    th:title="#{button.title.server.contract.add}"> <i class="fa fa-plus-square"></i> <span th:text="#{button.title.server.contract.add}">Pridat
+                      novy</span>
+                  </a>
+                </p>
+
+                <div th:if="${serverOverviewDTO.currentContractDTO != null}">
+                  <div class="row">
+                    <div class="col-lg-2">
+                      <div class="form-group">
+                        <label class="control-label" th:text="#{label.server.contract.name}">Kontrakt</label>
+                        <div class="form-control-static" th:text="${serverOverviewDTO.currentContractDTO.name}">Kontrakt 1</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-2">
+                      <div class="form-group">
+                        <label class="control-label" th:text="#{label.server.contract.from}">Prirazeno od</label>
+                        <div class="form-control-static" th:text="${{serverOverviewDTO.currentContractServerBeginDate}}">1.1.2015</div>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-2">
+                      <div class="form-group">
+                        <label class="control-label" th:text="#{label.server.contract.to}">Prirazeno do</label>
+                        <div class="form-control-static" th:text="${{serverOverviewDTO.currentContractServerEndDate}}">31.12.2015</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
