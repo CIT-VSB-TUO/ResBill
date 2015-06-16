@@ -17,6 +17,7 @@ import cz.vsb.resbill.criteria.ServerCriteria;
 import cz.vsb.resbill.dao.ContractServerDAO;
 import cz.vsb.resbill.dao.DailyUsageDAO;
 import cz.vsb.resbill.dao.ServerDAO;
+import cz.vsb.resbill.dto.ContractDTO;
 import cz.vsb.resbill.dto.DailyUsageDTO;
 import cz.vsb.resbill.dto.ServerAgendaDTO;
 import cz.vsb.resbill.dto.ServerDTO;
@@ -110,6 +111,13 @@ public class ServerServiceImpl implements ServerService {
       if (lastDailyUsage != null) {
         DailyUsageDTO lastDailyUsageDTO = new DailyUsageDTO(lastDailyUsage);
         dto.setLastDailyUsageDTO(lastDailyUsageDTO);
+      }
+
+      ContractServer currentContractServer = contractServerDAO.findCurrentContractServer(serverId);
+      if (currentContractServer != null) {
+        dto.fill(currentContractServer);
+        ContractDTO currentContractDTO = new ContractDTO(currentContractServer.getContract());
+        dto.setCurrentContractDTO(currentContractDTO);
       }
 
       return dto;
