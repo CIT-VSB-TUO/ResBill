@@ -12,7 +12,7 @@ import cz.vsb.resbill.util.ToStringBuilder;
  * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
  *
  */
-public class StatisticDTO implements Serializable {
+public abstract class StatisticDTO implements Serializable {
 
   /**
    * 
@@ -20,6 +20,13 @@ public class StatisticDTO implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private StatisticUsageDTO usageDTO         = null;
+  
+  /**
+   * Vrati retezec identifikujici textove tento objekt (napr. pro pouziti v kolacovych grafech)
+   * 
+   * @return
+   */
+  public abstract String getTitle();
 
   /**
    * @return the usageDTO

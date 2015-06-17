@@ -62,8 +62,9 @@
 				<table class="table" id="contracts">
 					<thead>
 						<tr>
-							<th th:text="#{column.contract.evidenceNumber}">Evidenční číslo</th>
+							<th th:text="#{column.contract.evidenceNumber}">Číslo</th>
 							<th th:text="#{column.contract.name}">Název</th>
+              <th th:text="#{column.contract.customer}">Zákazník</th>
 							<th th:text="#{column.contract.balance}">Zůstatek</th>
 							<th th:text="#{column.contract.beginDate}">Platnost od</th>
 							<th th:text="#{column.contract.endDate}">Platnost do</th>
@@ -79,22 +80,15 @@
 						<tr th:each="contract: ${contracts}">
 							<td th:text="${contract.evidenceNumber}">1</td>
 							<td th:text="${contract.name}">P.FS</td>
+              <td th:text="${contract.customerName}">Fakulta strojní</td>
 							<td th:text="${#numbers.formatDecimal(contract.balance,1,'DEFAULT',2,'DEFAULT')}">-1 000,0</td>
-							<td th:text="${#dates.format(contract.period.beginDate, '__#{date.format.list}__')}">1.1.2014</td>
-							<td th:text="${contract.period.endDate != null} ? ${#dates.format(contract.period.endDate, '__#{date.format.list}__')}">31.12.2015</td>
-
+							<td th:text="${#dates.format(contract.beginDate, '__#{date.format.list}__')}">1.1.2014</td>
+							<td th:text="${contract.endDate != null} ? ${#dates.format(contract.endDate, '__#{date.format.list}__')}">31.12.2015</td>
 							<td>
-								<a class="btn btn-primary btn-circle" href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contract.id})}" th:title="#{button.title.contract.edit}">
+								<a class="btn btn-primary btn-circle" href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contract.contractId})}" th:title="#{button.title.contract.edit}">
 									<i class="fa fa-edit"></i>
 								</a>
 							</td>
-							<!-- 
-							<td>
-								<a class="btn btn-primary btn-circle" href="contractEdit.html" th:href="@{/contracts/transactions(contractId=${contract.id})}" th:title="#{button.title.contract.edit}">
-									<i class="fa fa-bars"></i>
-								</a>
-							</td>
-							 -->
 						</tr>
 					</tbody>
 				</table>

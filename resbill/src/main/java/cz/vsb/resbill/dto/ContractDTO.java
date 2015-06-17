@@ -5,6 +5,7 @@
 package cz.vsb.resbill.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import cz.vsb.resbill.model.Contract;
@@ -26,6 +27,8 @@ public class ContractDTO implements Serializable {
   private Long              evidenceNumber   = null;
 
   private String            name             = null;
+
+  private BigDecimal        balance          = null;
 
   private Date              beginDate        = null;
 
@@ -57,6 +60,7 @@ public class ContractDTO implements Serializable {
     contractId = contract.getId();
     evidenceNumber = contract.getEvidenceNumber();
     name = contract.getName();
+    balance = contract.getBalance();
     beginDate = contract.getPeriod().getBeginDate();
     endDate = contract.getPeriod().getEndDate();
 
@@ -153,6 +157,21 @@ public class ContractDTO implements Serializable {
     this.customerName = customerName;
   }
 
+  /**
+   * @return the balance
+   */
+  public BigDecimal getBalance() {
+    return balance;
+  }
+
+  /**
+   * @param balance
+   *          the balance to set
+   */
+  public void setBalance(BigDecimal balance) {
+    this.balance = balance;
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -164,6 +183,7 @@ public class ContractDTO implements Serializable {
     builder.append("contractId", contractId);
     builder.append("evidenceNumber", evidenceNumber);
     builder.append("name", name);
+    builder.append("balance", balance);
     builder.append("beginDate", beginDate);
     builder.append("endDate", endDate);
     builder.append("customerName", customerName);
