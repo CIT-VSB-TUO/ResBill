@@ -41,6 +41,16 @@
   padding: 5px 10px;
 }
 
+/* Podbarveni pozadi bunky - pouziti napr. pro prouzkovani sloupcu  */
+th.striped, td.striped {
+  background-color: #eee;
+  
+  /*
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  */
+}
+
 /* Flot Charts */
 .flot-chart-container {
   box-sizing: border-box;
