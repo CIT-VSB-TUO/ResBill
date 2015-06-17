@@ -21,6 +21,16 @@ public class StatisticUsageDTO implements Serializable {
   private static final long serialVersionUID = 1L;
 
   /**
+   * Pocet serveru (absolutni)
+   */
+  private Integer           server;
+
+  /**
+   * Pocet serveru relativne k celku
+   */
+  private float             serverPercentage;
+
+  /**
    * Soucet CPU (absolutni)
    */
   private Integer           cpu;
@@ -220,6 +230,36 @@ public class StatisticUsageDTO implements Serializable {
     this.backupGbPercentage = backupGbPercentage;
   }
 
+  /**
+   * @return the server
+   */
+  public Integer getServer() {
+    return server;
+  }
+
+  /**
+   * @param server
+   *          the server to set
+   */
+  public void setServer(Integer server) {
+    this.server = server;
+  }
+
+  /**
+   * @return the serverPercentage
+   */
+  public float getServerPercentage() {
+    return serverPercentage;
+  }
+
+  /**
+   * @param serverPercentage
+   *          the serverPercentage to set
+   */
+  public void setServerPercentage(float serverPercentage) {
+    this.serverPercentage = serverPercentage;
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -228,6 +268,8 @@ public class StatisticUsageDTO implements Serializable {
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this);
+    builder.append("server", server);
+    builder.append("serverPercentage", serverPercentage);
     builder.append("cpu", cpu);
     builder.append("cpuPercentage", cpuPercentage);
     builder.append("memoryGB", memoryGB);

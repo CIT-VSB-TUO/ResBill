@@ -304,7 +304,7 @@ public class ContractDAOImpl implements ContractDAO {
    */
   public List<Object[]> findContractStatistics(StatisticContractCriteria criteria) {
     StringBuilder jpql = new StringBuilder();
-    jpql.append(" SELECT contract, SUM(dailyUsage.cpu), SUM(dailyUsage.memoryGB), SUM(dailyUsage.provisionedSpaceGB), SUM(dailyUsage.usedSpaceGB), SUM(dailyUsage.backupGB) ");
+    jpql.append(" SELECT contract, COUNT(server.id), SUM(dailyUsage.cpu), SUM(dailyUsage.memoryGB), SUM(dailyUsage.provisionedSpaceGB), SUM(dailyUsage.usedSpaceGB), SUM(dailyUsage.backupGB) ");
     jpql.append(" FROM Contract AS contract ");
     jpql.append(" JOIN contract.contractServers AS contractServer ");
     jpql.append(" JOIN contractServer.server AS server ");

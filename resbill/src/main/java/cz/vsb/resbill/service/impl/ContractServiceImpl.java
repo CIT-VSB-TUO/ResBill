@@ -263,6 +263,7 @@ public class ContractServiceImpl implements ContractService {
       statisticReportDTO.setBeginDate(criteria.getBeginDate());
       statisticReportDTO.setEndDate(criteria.getEndDate());
 
+      Integer overallServer = 0;
       Integer overallCpu = 0;
       BigDecimal overallMemoryGB = BigDecimal.ZERO;
       BigDecimal overallProvisionedSpaceGB = BigDecimal.ZERO;
@@ -276,13 +277,15 @@ public class ContractServiceImpl implements ContractService {
       List<Object[]> usages = contractDAO.findContractStatistics(criteria);
       for (Object[] usage : usages) {
         Contract contract = (Contract) usage[0];
-        Integer cpu = ((Long) usage[1]).intValue();
-        BigDecimal memoryGB = (BigDecimal) usage[2];
-        BigDecimal provisionedSpaceGB = (BigDecimal) usage[3];
-        BigDecimal usedSpaceGB = (BigDecimal) usage[4];
-        BigDecimal backupGB = (BigDecimal) usage[5];
+        Integer server = ((Number) usage[1]).intValue();
+        Integer cpu = ((Number) usage[2]).intValue();
+        BigDecimal memoryGB = (BigDecimal) usage[3];
+        BigDecimal provisionedSpaceGB = (BigDecimal) usage[4];
+        BigDecimal usedSpaceGB = (BigDecimal) usage[5];
+        BigDecimal backupGB = (BigDecimal) usage[6];
 
         StatisticUsageDTO usageDTO = new StatisticUsageDTO();
+        usageDTO.setServer(server);
         usageDTO.setCpu(cpu);
         usageDTO.setMemoryGB(memoryGB);
         usageDTO.setProvisionedSpaceGB(provisionedSpaceGB);
@@ -294,6 +297,7 @@ public class ContractServiceImpl implements ContractService {
         componentDTO.setContractDTO(new ContractDTO(contract));
         componentDTO.setUsageDTO(usageDTO);
 
+        overallServer = overallServer + server;
         overallCpu = overallCpu + cpu;
         overallMemoryGB = overallMemoryGB.add(memoryGB);
         overallProvisionedSpaceGB = overallProvisionedSpaceGB.add(provisionedSpaceGB);
@@ -303,6 +307,7 @@ public class ContractServiceImpl implements ContractService {
 
       // Zaznamenat celkove hodnoty
       StatisticUsageDTO overallUsageDTO = new StatisticUsageDTO();
+      overallUsageDTO.setServer(overallServer);
       overallUsageDTO.setCpu(overallCpu);
       overallUsageDTO.setMemoryGB(overallMemoryGB);
       overallUsageDTO.setProvisionedSpaceGB(overallProvisionedSpaceGB);
@@ -313,6 +318,12 @@ public class ContractServiceImpl implements ContractService {
       // Dopocitat procenta
       for (StatisticContractDTO componentDTO : componentDTOs) {
         StatisticUsageDTO usageDTO = componentDTO.getUsageDTO();
+
+        if (overallServer != 0) {
+          usageDTO.setServerPercentage(usageDTO.getServer().floatValue() / overallServer * 100);
+        } else {
+          usageDTO.setServerPercentage(0);
+        }
 
         if (overallCpu != 0) {
           usageDTO.setCpuPercentage(usageDTO.getCpu().floatValue() / overallCpu * 100);
@@ -485,7 +496,7 @@ public class ContractServiceImpl implements ContractService {
         throw new ContractServiceException(Reason.TRANSACTION_EXISTENCE);
       }
 
-			// kontrakt smazan i s vazbami (kaskada)
+      // kontrakt smazan i s vazbami (kaskada)
       return contractDAO.deleteContract(contract);
     } catch (ContractServiceException e) {
       throw e;

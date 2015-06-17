@@ -110,6 +110,7 @@
               <tr>
                 <th rowspan="2" th:text="#{column.statistics.contracts.customer}">Zákazník</th>
                 <th rowspan="2" th:text="#{column.statistics.contracts.contract}">Kontrakt</th>
+                <th colspan="2" th:text="#{column.statistics.contracts.vm}">VM</th>
                 <th colspan="2" th:text="#{column.statistics.contracts.cpu}">CPU</th>
                 <th colspan="2" th:text="#{column.statistics.contracts.ram}">RAM</th>
                 <th colspan="2" th:text="#{column.statistics.contracts.hdd}">HDD</th>
@@ -117,6 +118,8 @@
                 <th colspan="2" th:text="#{column.statistics.contracts.backup}">Zálohování</th>
               </tr>
               <tr>
+                <th th:text="#{column.statistics.contracts.vm.value}">[-]</th>
+                <th th:text="#{column.statistics.contracts.vm.percentage}">[%]</th>
                 <th th:text="#{column.statistics.contracts.cpu.value}">[-]</th>
                 <th th:text="#{column.statistics.contracts.cpu.percentage}">[%]</th>
                 <th th:text="#{column.statistics.contracts.ram.value}">[GB]</th>
@@ -134,6 +137,11 @@
               <tr th:each="componentDTO : ${contractStatistic.componentDTOs}">
                 <td th:text="${componentDTO.contractDTO.customerName}">Fakulta strojní</td>
                 <td th:text="${componentDTO.contractDTO.name}">P.FS</td>
+
+                <td th:text="${componentDTO.usageDTO.server}">1</td>
+                <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.serverPercentage,1,'DEFAULT',2,'DEFAULT')}">35</td>
+
+
                 <td th:text="${componentDTO.usageDTO.cpu}">3</td>
                 <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.cpuPercentage,1,'DEFAULT',2,'DEFAULT')}">45</td>
                 <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.memoryGB,1,'DEFAULT',2,'DEFAULT')}">6</td>
