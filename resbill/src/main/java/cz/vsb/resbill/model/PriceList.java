@@ -50,8 +50,7 @@ public class PriceList extends BaseVersionedEntity implements PeriodLimitedEntit
 	private Period period;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "tariff_id", foreignKey = @ForeignKey(name = "FK_price_list__tariff"))
-	@NotNull
+	@JoinColumn(name = "tariff_id", nullable = false, foreignKey = @ForeignKey(name = "FK_price_list__tariff"))
 	private Tariff tariff;
 
 	@OneToMany(mappedBy = "priceList", fetch = FetchType.LAZY)

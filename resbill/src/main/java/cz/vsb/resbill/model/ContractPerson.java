@@ -7,7 +7,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "CONTRACT_PERSON", uniqueConstraints = @UniqueConstraint(name = "UK_contract_person__contract_id__person_id", columnNames = { "contract_id", "person_id" }))
@@ -16,13 +15,11 @@ public class ContractPerson extends BaseVersionedEntity {
 	private static final long serialVersionUID = 6372466046222089422L;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "contract_id", foreignKey = @ForeignKey(name = "FK_contract_person__contract"))
-	@NotNull
+	@JoinColumn(name = "contract_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_person__contract"))
 	private Contract contract;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "person_id", foreignKey = @ForeignKey(name = "FK_contract_person__person"))
-	@NotNull
+	@JoinColumn(name = "person_id", nullable = false, foreignKey = @ForeignKey(name = "FK_contract_person__person"))
 	private Person person;
 
 	public Contract getContract() {
