@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import cz.vsb.resbill.criteria.ContractCriteria;
+import cz.vsb.resbill.dto.ContractDTO;
 import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.service.ContractService;
 import cz.vsb.resbill.util.WebUtils;
@@ -51,7 +52,7 @@ public class ContractListController {
    */
   @RequestMapping(method = RequestMethod.GET)
   public String view(ModelMap model) {
-    loadContracts(model);
+    loadContractDTOs(model);
 
     return "contracts/contractList";
   }
@@ -60,9 +61,9 @@ public class ContractListController {
    * 
    * @return
    */
-  protected List<Contract> loadContracts(ModelMap model) {
+  protected List<ContractDTO> loadContractDTOs(ModelMap model) {
 
-    List<Contract> contracts = null;
+    List<ContractDTO> contractDTOs = null;
 
     try {
       List<ContractCriteria.OrderBy> orderBy = new ArrayList<ContractCriteria.OrderBy>();
@@ -71,19 +72,19 @@ public class ContractListController {
       ContractCriteria criteria = new ContractCriteria();
       criteria.setOrderBy(orderBy);
 
-      contracts = contractService.findContracts(criteria, null, null);
+      contractDTOs = contractService.findContractDTOs(criteria, null, null);
 
-      model.addAttribute(MODEL_OBJECT_KEY_CONTRACTS, contracts);
+      model.addAttribute(MODEL_OBJECT_KEY_CONTRACTS, contractDTOs);
     } catch (Exception exc) {
       log.error("Cannot load Contracts.", exc);
 
-      contracts = null;
+      contractDTOs = null;
 
-      model.addAttribute(MODEL_OBJECT_KEY_CONTRACTS, contracts);
+      model.addAttribute(MODEL_OBJECT_KEY_CONTRACTS, contractDTOs);
       addGlobalError(model, "error.load.contracts");
     }
 
-    return contracts;
+    return contractDTOs;
   }
 
 }
