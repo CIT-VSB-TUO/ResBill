@@ -33,7 +33,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 	public boolean send(String from, String to, String subject, String text) {
 		boolean result = false;
 
-		ResourceBundle rb = ResourceBundle.getBundle(ResourceBundleUtils.CONFIG_BUNDLE);
+		ResourceBundle rb = ResourceBundleUtils.getConfigBundle();
 		String smtpServer = rb.getString("email.server.smtp");
 
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -65,7 +65,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 	 */
 	@Override
 	public boolean send(String to, String subject, String text) {
-		ResourceBundle rb = ResourceBundle.getBundle(ResourceBundleUtils.CONFIG_BUNDLE);
+		ResourceBundle rb = ResourceBundleUtils.getConfigBundle();
 		String from = rb.getString("email.sender.default");
 
 		return send(from, to, subject, text);

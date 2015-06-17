@@ -23,6 +23,8 @@
 
 	<context:component-scan base-package="cz.vsb.resbill"/>
 	
+	<context:property-placeholder location="classpath:config.properties,classpath:config-test.properties" ignore-resource-not-found="true"/>
+	
 	<task:annotation-driven />
 	
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
@@ -32,7 +34,6 @@
 	<bean id="dailyImportService" class="cz.vsb.resbill.service.impl.DailyImportServiceImpl"/>
 	<bean id="transactionService" class="cz.vsb.resbill.service.impl.TransactionServiceImpl"/>
 	<bean id="invoiceService" class="cz.vsb.resbill.service.impl.InvoiceServiceImpl"/>
-	<!-- <bean id="testService" class="cz.vsb.resbill.service.impl.TestServiceImpl"/>  -->
 	
 	<!-- Persistence layer -->
 	<jee:jndi-lookup id="resbillDS" jndi-name="java:comp/env/jdbc/ResBillDS"/>
@@ -80,7 +81,7 @@
 		<property name="prefix" value="/WEB-INF/templates/"/>
 		<property name="suffix" value=".html"/>
 		<property name="templateMode" value="HTML5"/>
-		<property name="cacheable" value="false"/>
+		<property name="cacheable" value="${templateResolver.cacheable}"/>
 	</bean>
 	
 	<bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
@@ -112,7 +113,7 @@
 	<security:authentication-manager>
 		<security:authentication-provider>
 			<security:user-service>
-				<security:user name="resbilladmin" password="tedvamtospocitame" authorities="ROLE_RESBILL_ADMIN"/>
+				<security:user name="resbilladmin" password="${resbilladmin.password}" authorities="ROLE_RESBILL_ADMIN"/>
 			</security:user-service>
 		</security:authentication-provider>
 	</security:authentication-manager>

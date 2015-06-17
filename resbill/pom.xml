@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>cz.vsb</groupId>
-  <artifactId>resbill</artifactId>
-  <packaging>war</packaging>
-  <version>1.0.0</version>
-  <name>Resource Billing System</name>
-  
-  <properties>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cz.vsb</groupId>
+	<artifactId>resbill</artifactId>
+	<packaging>war</packaging>
+	<version>1.0.0</version>
+	<name>Resource Billing System</name>
+
+	<properties>
 
 		<!-- Generic properties -->
 		<java.version>1.7</java.version>
@@ -56,7 +56,7 @@
 		<jasper.reports.version>5.5.0</jasper.reports.version>
 		<!-- <groovy-all.version>2.0.1</groovy-all.version>  -->
 		
-  </properties>
+	</properties>
 	
 	<dependencies>
 		<!-- Spring and Transactions -->
@@ -65,11 +65,11 @@
 			<artifactId>spring-context</artifactId>
 			<version>${spring-framework.version}</version>
 		</dependency>
-    <dependency>
-		  <groupId>org.springframework</groupId>
-		  <artifactId>spring-context-support</artifactId>
-      <version>${spring-framework.version}</version>
-    </dependency>		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
@@ -138,14 +138,6 @@
 		  <artifactId>jasperreports</artifactId>
 		  <version>${jasper.reports.version}</version>
 		</dependency>
-		<!-- 
-		<dependency>
-		  <groupId>org.codehaus.groovy</groupId>
-		  <artifactId>groovy-all</artifactId>
-		  <version>${groovy-all.version}</version>
-		  <scope>runtime</scope>
-		</dependency>
-		 -->
 
 		<!-- Logging -->
 		<dependency>

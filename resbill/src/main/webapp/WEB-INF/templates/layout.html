@@ -31,8 +31,8 @@
 	<link href="../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
 	
 	<!-- Datepicker -->
-    <link href="../../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}" />
-       
+	<link href="../../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}" />
+
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -84,25 +84,25 @@
 				<div class="sidebar-nav navbar-collapse">
 					<ul class="nav" id="side-menu">
 						<li>
-							<a>
-                <i class="fa fa-bars fa-fw"></i>
-                <span th:text="#{menu.reports}">Přehledy</span>
-                <span class="fa arrow" ></span>
+							<a th:href="@{/reports}">
+								<i class="fa fa-bars fa-fw"></i>
+								<span th:text="#{menu.reports}">Přehledy</span>
+								<span class="fa arrow" ></span>
 							</a>
-              <ul class="nav nav-second-level">
-                <li>
-                  <a href="reports/agenda.html" th:href="@{/reports/agenda}">
-                    <i class="fa fa-th fa-fw"></i>
-                    <span th:text="#{menu.reports.agenda}">Agenda</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="reports/statistics.html" th:href="@{/reports/statistics}">
-                    <i class="fa fa-bar-chart fa-fw"></i>
-                    <span th:text="#{menu.reports.statistics}">Statistika</span>
-                  </a>
-                </li>
-              </ul>              
+							<ul class="nav nav-second-level">
+								<li>
+									<a href="reports/agenda.html" th:href="@{/reports/agenda}">
+										<i class="fa fa-th fa-fw"></i>
+										<span th:text="#{menu.reports.agenda}">Agenda</span>
+									</a>
+								</li>
+								<li>
+									<a href="reports/statistics.html" th:href="@{/reports/statistics}">
+										<i class="fa fa-bar-chart fa-fw"></i>
+										<span th:text="#{menu.reports.statistics}">Statistika</span>
+									</a>
+								</li>
+							</ul>
 						</li>
 						<li>
 							<a href="customers/customerList.html" th:href="@{/customers}">
@@ -181,7 +181,7 @@
 
 	<!-- Datepicker -->
 	<script src="../../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js" th:src="@{/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
-    <script src="../../bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.cs.min.js" th:src="@{/bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.cs.min.js}"></script>
+	<script src="../../bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.cs.min.js" th:src="@{/bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.cs.min.js}"></script>
 
 	<th:block layout:fragment="footer">
 	</th:block>
