@@ -80,18 +80,11 @@ public class PriceListServiceImpl implements PriceListService {
 
 			if (priceList.getId() == null) { // novy cenik - pridani
 				// zjisteni dosud platneho ceniku pro ukonceni jeho platnosti
-				PriceList lastValid = priceListDAO.findLastPriceList(priceList.getTariff().getId());
-				if (lastValid == null) { // prvni cenik u tarifu - netreba provadet dalsi kontroly
+				PriceList lastPL = priceListDAO.findLastPriceList(priceList.getTariff().getId());
+				if (lastPL == null) { // prvni cenik u tarifu - netreba provadet dalsi kontroly
 					priceList.setPrevious(null);
 				} else { // nasledny cenik u tarifu - nutne kontroly
-					priceList.setPrevious(lastValid);
-
-					// kontrola pripadne kolize dat s fakturovanym predchozim cenikem
-					checkInvoiceDateCollision(priceList);
-
-					// ukonceni platnosti predchoziho ceniku
-					Date terminationDate = DateUtils.addDays(priceList.getPeriod().getBeginDate(), -1);
-					terminatePriceList(priceList.getPrevious(), terminationDate);
+					priceList.setPrevious(lastPL);
 				}
 			} else { // existujici cenik - editace
 				// kontrola zmeny tarifu
@@ -106,12 +99,15 @@ public class PriceListServiceImpl implements PriceListService {
 				if (priceList.getPrevious() == null) { // prvni cenik u tarifu
 					// kontrola pokryti kontraktu
 					checkContractPeriodCoverage(priceList);
-				} else { // nasledny cenik u tarifu
-					// kontrola pripadne kolize dat s fakturovanym predchozim cenikem
-					checkInvoiceDateCollision(priceList);
+				}
+			}
+			if (priceList.getPrevious() != null) {
+				// kontrola pripadne kolize dat s fakturovanym predchozim cenikem
+				checkInvoiceDateCollision(priceList);
 
-					// ukonceni platnosti predchoziho ceniku
-					Date terminationDate = DateUtils.addDays(priceList.getPeriod().getBeginDate(), -1);
+				// ukonceni platnosti predchoziho ceniku, je-li treba
+				Date terminationDate = DateUtils.addDays(priceList.getPeriod().getBeginDate(), -1);
+				if (!terminationDate.equals(priceList.getPrevious().getPeriod().getEndDate())) {
 					terminatePriceList(priceList.getPrevious(), terminationDate);
 				}
 			}
@@ -195,7 +191,7 @@ public class PriceListServiceImpl implements PriceListService {
 	 */
 	private void terminatePriceList(PriceList priceList, Date terminationDate) throws PriceListServiceException {
 		// kontrola: nevznikl by ukoncenim platnosti predchoziho ceniku spatny interval?
-		if (!Period.isDateInPeriod(terminationDate, priceList.getPeriod())) {
+		if (!Period.isValid(priceList.getPeriod().getBeginDate(), terminationDate)) {
 			throw new PriceListServiceException(Reason.INVALID_PERIOD);
 		}
 		priceList.getPeriod().setEndDate(terminationDate);

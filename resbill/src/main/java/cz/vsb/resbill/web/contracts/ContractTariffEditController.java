@@ -87,13 +87,15 @@ public class ContractTariffEditController {
 			if (contractTariffId != null) {
 				ctEditDTO = new ContractTariffEditDTO(contractTariffService.findContractTariff(contractTariffId));
 			} else {
-				ContractTariff cs = new ContractTariff();
-				cs.setPeriod(new Period());
-				cs.getPeriod().setBeginDate(DateUtils.truncate(new Date(), Calendar.DATE));
+				ContractTariff ct = new ContractTariff();
+				ct.setPeriod(new Period());
 				if (contractId != null) {
-					cs.setContract(contractService.findContract(contractId));
+					ct.setContract(contractService.findContract(contractId));
+					ct.getPeriod().setBeginDate(ct.getContract().getPeriod().getBeginDate());
+				} else {
+					ct.getPeriod().setBeginDate(DateUtils.truncate(new Date(), Calendar.DATE));
 				}
-				ctEditDTO = new ContractTariffEditDTO(cs);
+				ctEditDTO = new ContractTariffEditDTO(ct);
 			}
 			model.addAttribute(CONTRACT_TARIFF_EDIT_DTO_MODEL_KEY, ctEditDTO);
 		} catch (Exception e) {
@@ -148,7 +150,27 @@ public class ContractTariffEditController {
 				return "redirect:/contracts/tariffs";
 			} catch (ContractTariffServiceException e) {
 				switch (e.getReason()) {
-				// TODO osetreni vyjimek
+				case NOT_LAST_CONTRACT_TARIFF:
+					bindingResult.reject("error.save.contract.tariff.not.last");
+					break;
+				case OUT_OF_CONTRACT_DURATION:
+					bindingResult.reject("error.save.contract.tariff.out.of.duration");
+					break;
+				case INVALID_PERIOD:
+					bindingResult.reject("error.save.contract.tariff.period");
+					break;
+				case CONTRACT_TARIFF_MODIFICATION:
+					bindingResult.reject("error.save.contract.tariff.modified");
+					break;
+				case FIRST_CONTRACT_TARIFF_BEGIN_DATE_MODIFICATION:
+					bindingResult.reject("error.save.contract.tariff.first.beginDate.modified");
+					break;
+				case NOT_COVERED_BY_PRICE_LISTS:
+					bindingResult.reject("error.save.contract.tariff.priceList.coverage");
+					break;
+				case INVOICE_DAILY_USAGE_UNCOVERED:
+					bindingResult.reject("error.save.contract.tariff.invoice.dailyUsage.coverage");
+					break;
 				default:
 					log.warn("Unsupported reason: " + e);
 					bindingResult.reject("error.save.contract.tariff");
@@ -185,7 +207,18 @@ public class ContractTariffEditController {
 			return "redirect:/contracts/tariffs";
 		} catch (ContractTariffServiceException e) {
 			switch (e.getReason()) {
-			// TODO osetreni vyjimek
+			case NOT_LAST_CONTRACT_TARIFF:
+				bindingResult.reject("error.delete.contract.tariff.not.last");
+				break;
+			case CONTRACT_SERVER_ASSOCIATED:
+				bindingResult.reject("error.delete.contract.tariff.server.associated");
+				break;
+			case DAILY_USAGE_INVOICED:
+				bindingResult.reject("error.delete.contract.tariff.invoiced.dailyUsage");
+				break;
+			case INVOICE_DAILY_USAGE_UNCOVERED:
+				bindingResult.reject("error.delete.contract.tariff.invoice.dailyUsage.coverage");
+				break;
 			default:
 				log.warn("Unsupported reason: " + e);
 				bindingResult.reject("error.delete.contract.tariff");

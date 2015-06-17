@@ -17,7 +17,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +28,7 @@ import cz.vsb.resbill.criteria.TransactionCriteria;
 import cz.vsb.resbill.criteria.statistics.StatisticContractCriteria;
 import cz.vsb.resbill.dao.ContractDAO;
 import cz.vsb.resbill.dao.ContractInvoiceTypeDAO;
+import cz.vsb.resbill.dao.ContractTariffDAO;
 import cz.vsb.resbill.dao.TransactionDAO;
 import cz.vsb.resbill.dto.ContractAgendaDTO;
 import cz.vsb.resbill.dto.ContractDTO;
@@ -37,6 +40,7 @@ import cz.vsb.resbill.exception.ContractServiceException.Reason;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.model.ContractInvoiceType;
+import cz.vsb.resbill.model.ContractTariff;
 import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.model.Transaction;
 import cz.vsb.resbill.service.ContractService;
@@ -63,6 +67,9 @@ public class ContractServiceImpl implements ContractService {
 
   @Inject
   private ContractInvoiceTypeDAO contractInvoiceTypeDAO;
+
+  @Inject
+  private ContractTariffDAO      contractTariffDAO;
 
   @Override
   public Contract findContract(Integer contractId) throws ResBillException {
@@ -360,6 +367,7 @@ public class ContractServiceImpl implements ContractService {
 
         // byl zmenen pocatek platnosti kontraktu
         if (!origContract.getPeriod().getBeginDate().equals(contract.getPeriod().getBeginDate())) {
+          // kontroly prirazeni typu uctovani
           ContractInvoiceType firstCIT = contractInvoiceTypeDAO.findFirstContractInvoiceType(contract.getId());
           if (firstCIT != null) {
             // kontrola naruseni platnosti prvniho prirazeni typu uctovani
@@ -371,14 +379,46 @@ public class ContractServiceImpl implements ContractService {
             firstCIT.getPeriod().setBeginDate(contract.getPeriod().getBeginDate());
             contractInvoiceTypeDAO.saveContractInvoiceType(firstCIT);
           }
+
+          // kontroly prirazeni tarifu
+          ContractTariff firstCT = contractTariffDAO.findFirstContractTariff(contract.getId());
+          if (firstCT != null) {
+            // kontrola naruseni platnosti prvniho prirazeni tarifu
+            if (!contract.getPeriod().getBeginDate().before(firstCT.getPeriod().getBeginDate()) && !Period.isDateInPeriod(contract.getPeriod().getBeginDate(), firstCT.getPeriod())) {
+              throw new ContractServiceException(Reason.CONTRACT_TARIFF_INVALID_PERIOD);
+            }
+
+            // kontrola, zda obdobi stale pokryva stejne jiz fakturovane importy
+            // puvodni sada dennich vyuziti
+            List<Integer> origDUIds = getInvoicedDailyUsageIds(firstCT);
+            // zmena pocatku platnosti prirazeni prvniho tarifu
+            firstCT.getPeriod().setBeginDate(contract.getPeriod().getBeginDate());
+            // sada po editaci
+            List<Integer> newDUIds = getInvoicedDailyUsageIds(firstCT);
+            if (!CollectionUtils.isEqualCollection(origDUIds, newDUIds)) {
+              throw new ContractServiceException(Reason.CONTRACT_TARIFF_INVOICE_DAILY_USAGE_UNCOVERED);
+            }
+
+            contractTariffDAO.saveContractTariff(firstCT);
+          }
         }
         // zmenen konkretni (konecny) konec platnosti kontraktu
         if (contract.getPeriod().getEndDate() != null && !Objects.equals(origContract.getPeriod().getEndDate(), contract.getPeriod().getEndDate())) {
+          // kontroly prirazeni typu uctovani
           ContractInvoiceType lastCIT = contractInvoiceTypeDAO.findLastContractInvoiceType(contract.getId());
           if (lastCIT != null) {
             // kontrola naruseni platnosti posledniho prirazeni typu uctovani
             if (!Period.isDateInPeriod(contract.getPeriod().getEndDate(), lastCIT.getPeriod())) {
               throw new ContractServiceException(Reason.CONTRACT_INVOICE_TYPE_INVALID_PERIOD);
+            }
+          }
+
+          // kontroly prirazeni tarifu
+          ContractTariff lastCT = contractTariffDAO.findLastContractTariff(contract.getId());
+          if (lastCT != null) {
+            // kontrola naruseni platnosti posledniho prirazeni tarifu
+            if (!Period.isDateInPeriod(contract.getPeriod().getEndDate(), lastCT.getPeriod())) {
+              throw new ContractServiceException(Reason.CONTRACT_TARIFF_INVALID_PERIOD);
             }
           }
         }
@@ -407,6 +447,30 @@ public class ContractServiceImpl implements ContractService {
       log.error("An unexpected error occured while saving Contract entity: " + contract, e);
       throw new ResBillException(e);
     }
+  }
+
+  private List<Integer> getInvoicedDailyUsageIds(ContractTariff ct) {
+    StringBuilder jpql = new StringBuilder();
+    jpql.append("SELECT DISTINCT dailyUsage.id");
+    jpql.append(" FROM InvoiceDailyUsage AS idu");
+    jpql.append(" JOIN idu.dailyUsage AS dailyUsage");
+    jpql.append(" JOIN dailyUsage.dailyImport AS dailyImport");
+    jpql.append(" JOIN dailyUsage.server AS server");
+    jpql.append(" JOIN server.contractServers AS cs");
+    jpql.append(" WHERE cs.contract.id = :contractId");
+    jpql.append(" AND dailyImport.date >= cs.period.beginDate");
+    jpql.append(" AND (cs.period.endDate IS NULL OR dailyImport.date <= cs.period.endDate)");
+    jpql.append(" AND dailyImport.date >= :from");
+    if (ct.getPeriod().getEndDate() != null) {
+      jpql.append(" AND dailyImport.date <= :to");
+    }
+    TypedQuery<Integer> query = em.createQuery(jpql.toString(), Integer.class);
+    query.setParameter("contractId", ct.getContract().getId());
+    query.setParameter("from", ct.getPeriod().getBeginDate());
+    if (ct.getPeriod().getEndDate() != null) {
+      query.setParameter("to", ct.getPeriod().getEndDate());
+    }
+    return query.getResultList();
   }
 
   @Override

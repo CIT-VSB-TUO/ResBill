@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import cz.vsb.resbill.criteria.ContractTariffCriteria;
 import cz.vsb.resbill.criteria.TariffCriteria;
 import cz.vsb.resbill.dao.ContractTariffDAO;
-import cz.vsb.resbill.dao.PriceListDAO;
 import cz.vsb.resbill.dao.TariffDAO;
 import cz.vsb.resbill.dto.TariffPriceListDTO;
 import cz.vsb.resbill.exception.PriceListServiceException;
@@ -47,9 +46,6 @@ public class TariffServiceImpl implements TariffService {
 
 	@Inject
 	private ContractTariffDAO contractTariffDAO;
-
-	@Inject
-	private PriceListDAO priceListDAO;
 
 	@Inject
 	private PriceListService priceListService;
@@ -151,13 +147,7 @@ public class TariffServiceImpl implements TariffService {
 				throw new TariffServiceException(Reason.CONTRACT_ASSOCIATED);
 			}
 
-			// nutno nejprve smazat ceniky (od posledniho)
-			PriceList priceList = priceListDAO.findLastPriceList(tariffId);
-			while (priceList != null) {
-				priceListDAO.deletePriceList(priceList);
-				priceList = priceList.getPrevious();
-			}
-
+			// tarif smazan i s ceniky (kaskada)
 			return tariffDAO.deleteTariff(tariff);
 		} catch (TariffServiceException e) {
 			throw e;

@@ -5,7 +5,6 @@ public class ContractInvoiceTypeServiceException extends ResBillException {
 	private static final long serialVersionUID = -8537393080717676496L;
 
 	public static enum Reason {
-		// TODO doplnit duvody
 		/** nejedna se o posledni prirazeni typu uctovani */
 		NOT_LAST_CONTRACT_INVOICE_TYPE,
 		/** prirazeni mimo platnost kontraktu */
