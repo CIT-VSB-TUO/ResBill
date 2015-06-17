@@ -296,7 +296,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 		resultDTO.setBeginTimestamp(new Date());
 
 		try {
-			ResourceBundle rb = ResourceBundle.getBundle(ResourceBundleUtils.CONFIG_BUNDLE);
+			ResourceBundle rb = ResourceBundleUtils.getConfigBundle();
 			String dirSrcName = rb.getString("dir.import.reports");
 			String dirDstName = rb.getString("dir.import.reports.imported");
 			log.info("Jmeno zdrojoveho adresare: " + dirSrcName);
@@ -554,7 +554,7 @@ public class DailyImportServiceImpl implements DailyImportService {
 
 		dailyImportDAO.saveDailyImport(dailyImport);
 
-		ResourceBundle rb = ResourceBundle.getBundle(ResourceBundleUtils.CONFIG_BUNDLE);
+		ResourceBundle rb = ResourceBundleUtils.getConfigBundle();
 		mailSenderService.send(rb.getString("email.group.admins"), rb.getString("email.subject.dailyImport") + " - " + dailyImport.getReportName(), dailyImport.getProtocol());
 	}
 
