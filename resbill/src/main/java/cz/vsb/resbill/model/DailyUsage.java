@@ -20,180 +20,177 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Table(name = "DAILY_USAGE", uniqueConstraints = @UniqueConstraint(name = "UK_daily_usage__daily_import_id__server_id", columnNames = { "daily_import_id", "server_id" }))
 public class DailyUsage extends BaseVersionedEntity {
 
-  private static final long serialVersionUID   = 144836678591268182L;
+	private static final long serialVersionUID = 144836678591268182L;
 
-  @Column(name = "server_name")
-  @NotEmpty
-  @Size(max = 100)
-  private String            serverName;
+	@Column(name = "server_name")
+	@NotEmpty
+	@Size(max = 100)
+	private String serverName;
 
-  @Column(name = "cpu")
-  @NotNull
-  private Integer           cpu                = Integer.valueOf(0);
+	@Column(name = "cpu")
+	@NotNull
+	private Integer cpu;
 
-  @Column(name = "memory_gb")
-  @NotNull
-  @Digits(integer = 8, fraction = 2)
-  private BigDecimal        memoryGB           = BigDecimal.ZERO.setScale(2);
+	@Column(name = "memory_gb")
+	@NotNull
+	@Digits(integer = 8, fraction = 2)
+	private BigDecimal memoryGB;
 
-  @Column(name = "prov_space_gb")
-  @NotNull
-  @Digits(integer = 8, fraction = 2)
-  private BigDecimal        provisionedSpaceGB = BigDecimal.ZERO.setScale(2);
+	@Column(name = "prov_space_gb")
+	@NotNull
+	@Digits(integer = 8, fraction = 2)
+	private BigDecimal provisionedSpaceGB;
 
-  @Column(name = "used_space_gb")
-  @NotNull
-  @Digits(integer = 8, fraction = 2)
-  private BigDecimal        usedSpaceGB        = BigDecimal.ZERO.setScale(2);
+	@Column(name = "used_space_gb")
+	@NotNull
+	@Digits(integer = 8, fraction = 2)
+	private BigDecimal usedSpaceGB;
 
-  @Column(name = "backup_gb")
-  @NotNull
-  @Digits(integer = 8, fraction = 2)
-  private BigDecimal        backupGB           = BigDecimal.ZERO.setScale(2);
+	@Column(name = "backup_gb")
+	@NotNull
+	@Digits(integer = 8, fraction = 2)
+	private BigDecimal backupGB;
 
-  @Column(name = "power_state")
-  @NotNull
-  private Boolean           powerState         = Boolean.FALSE;
+	@Column(name = "power_state")
+	@NotNull
+	private Boolean powerState;
 
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
-  @JoinColumn(name = "prod_level_id", foreignKey = @ForeignKey(name = "FK_daily_usage__production_level"))
-  @NotNull
-  private ProductionLevel   productionLevel;
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "prod_level_id", foreignKey = @ForeignKey(name = "FK_daily_usage__production_level"))
+	@NotNull
+	private ProductionLevel productionLevel;
 
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
-  @JoinColumn(name = "server_id", foreignKey = @ForeignKey(name = "FK_daily_usage__server"))
-  @NotNull
-  private Server            server;
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "server_id", foreignKey = @ForeignKey(name = "FK_daily_usage__server"))
+	@NotNull
+	private Server server;
 
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
-  @JoinColumn(name = "daily_import_id", foreignKey = @ForeignKey(name = "FK_daily_usage__daily_import"))
-  @NotNull
-  private DailyImport       dailyImport;
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "daily_import_id", foreignKey = @ForeignKey(name = "FK_daily_usage__daily_import"))
+	@NotNull
+	private DailyImport dailyImport;
 
-  /**
-   * @return the dailyImport
-   */
-  public DailyImport getDailyImport() {
-    return dailyImport;
-  }
+	/**
+	 * @return the dailyImport
+	 */
+	public DailyImport getDailyImport() {
+		return dailyImport;
+	}
 
-  /**
-   * @param dailyImport
-   *          the dailyImport to set
-   */
-  public void setDailyImport(DailyImport dailyImport) {
-    this.dailyImport = dailyImport;
-  }
+	/**
+	 * @param dailyImport
+	 *          the dailyImport to set
+	 */
+	public void setDailyImport(DailyImport dailyImport) {
+		this.dailyImport = dailyImport;
+	}
 
-  public String getServerName() {
-    return serverName;
-  }
+	public String getServerName() {
+		return serverName;
+	}
 
-  public void setServerName(String serverName) {
-    this.serverName = serverName;
-  }
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
+	}
 
-  public Integer getCpu() {
-    return cpu;
-  }
+	public Integer getCpu() {
+		return cpu;
+	}
 
-  public void setCpu(Integer cpu) {
-    this.cpu = cpu;
-  }
+	public void setCpu(Integer cpu) {
+		this.cpu = cpu;
+	}
 
+	/**
+	 * @return the memoryGB
+	 */
+	public BigDecimal getMemoryGB() {
+		return memoryGB;
+	}
 
+	/**
+	 * @param memoryGB
+	 *          the memoryGB to set
+	 */
+	public void setMemoryGB(BigDecimal memoryGB) {
+		this.memoryGB = memoryGB;
+	}
 
-  
-  /**
-   * @return the memoryGB
-   */
-  public BigDecimal getMemoryGB() {
-    return memoryGB;
-  }
+	public BigDecimal getProvisionedSpaceGB() {
+		return provisionedSpaceGB;
+	}
 
-  
-  /**
-   * @param memoryGB the memoryGB to set
-   */
-  public void setMemoryGB(BigDecimal memoryGB) {
-    this.memoryGB = memoryGB;
-  }
+	public void setProvisionedSpaceGB(BigDecimal provisionedSpaceGB) {
+		this.provisionedSpaceGB = provisionedSpaceGB;
+	}
 
-  public BigDecimal getProvisionedSpaceGB() {
-    return provisionedSpaceGB;
-  }
+	public BigDecimal getUsedSpaceGB() {
+		return usedSpaceGB;
+	}
 
-  public void setProvisionedSpaceGB(BigDecimal provisionedSpaceGB) {
-    this.provisionedSpaceGB = provisionedSpaceGB;
-  }
+	public void setUsedSpaceGB(BigDecimal usedSpaceGB) {
+		this.usedSpaceGB = usedSpaceGB;
+	}
 
-  public BigDecimal getUsedSpaceGB() {
-    return usedSpaceGB;
-  }
+	public BigDecimal getBackupGB() {
+		return backupGB;
+	}
 
-  public void setUsedSpaceGB(BigDecimal usedSpaceGB) {
-    this.usedSpaceGB = usedSpaceGB;
-  }
+	public void setBackupGB(BigDecimal backupGB) {
+		this.backupGB = backupGB;
+	}
 
-  public BigDecimal getBackupGB() {
-    return backupGB;
-  }
+	public Boolean getPowerState() {
+		return powerState;
+	}
 
-  public void setBackupGB(BigDecimal backupGB) {
-    this.backupGB = backupGB;
-  }
+	public void setPowerState(Boolean powerState) {
+		this.powerState = powerState;
+	}
 
-  public Boolean getPowerState() {
-    return powerState;
-  }
+	public ProductionLevel getProductionLevel() {
+		return productionLevel;
+	}
 
-  public void setPowerState(Boolean powerState) {
-    this.powerState = powerState;
-  }
+	public void setProductionLevel(ProductionLevel productionLevel) {
+		this.productionLevel = productionLevel;
+	}
 
-  public ProductionLevel getProductionLevel() {
-    return productionLevel;
-  }
+	public Server getServer() {
+		return server;
+	}
 
-  public void setProductionLevel(ProductionLevel productionLevel) {
-    this.productionLevel = productionLevel;
-  }
+	public void setServer(Server server) {
+		this.server = server;
+	}
 
-  public Server getServer() {
-    return server;
-  }
-
-  public void setServer(Server server) {
-    this.server = server;
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("DailyUsage [");
-    builder.append(super.toString());
-    builder.append(", dailyImport.id=");
-    builder.append(dailyImport != null ? dailyImport.getId() : null);
-    builder.append(", serverName=");
-    builder.append(serverName);
-    builder.append(", cpu=");
-    builder.append(cpu);
-    builder.append(", memoryGB=");
-    builder.append(memoryGB);
-    builder.append(", provisionedSpaceGB=");
-    builder.append(provisionedSpaceGB);
-    builder.append(", usedSpaceGB=");
-    builder.append(usedSpaceGB);
-    builder.append(", backupGB=");
-    builder.append(backupGB);
-    builder.append(", powerState=");
-    builder.append(powerState);
-    builder.append(", productionLevel.id=");
-    builder.append(productionLevel != null ? productionLevel.getId() : null);
-    builder.append(", server.id=");
-    builder.append(server != null ? server.getId() : null);
-    builder.append("]");
-    return builder.toString();
-  }
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("DailyUsage [");
+		builder.append(super.toString());
+		builder.append(", dailyImport.id=");
+		builder.append(dailyImport != null ? dailyImport.getId() : null);
+		builder.append(", serverName=");
+		builder.append(serverName);
+		builder.append(", cpu=");
+		builder.append(cpu);
+		builder.append(", memoryGB=");
+		builder.append(memoryGB);
+		builder.append(", provisionedSpaceGB=");
+		builder.append(provisionedSpaceGB);
+		builder.append(", usedSpaceGB=");
+		builder.append(usedSpaceGB);
+		builder.append(", backupGB=");
+		builder.append(backupGB);
+		builder.append(", powerState=");
+		builder.append(powerState);
+		builder.append(", productionLevel.id=");
+		builder.append(productionLevel != null ? productionLevel.getId() : null);
+		builder.append(", server.id=");
+		builder.append(server != null ? server.getId() : null);
+		builder.append("]");
+		return builder.toString();
+	}
 
 }

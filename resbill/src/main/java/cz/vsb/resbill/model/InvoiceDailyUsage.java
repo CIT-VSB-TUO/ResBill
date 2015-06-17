@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
 
 import cz.vsb.resbill.util.ToStringBuilder;
 
@@ -26,13 +25,11 @@ public class InvoiceDailyUsage extends BaseVersionedEntity {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "invoice_id", foreignKey = @ForeignKey(name = "FK_invoice_daily_usage__invoice"))
-	@NotNull
+	@JoinColumn(name = "invoice_id", nullable = false, foreignKey = @ForeignKey(name = "FK_invoice_daily_usage__invoice"))
 	private Invoice invoice;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "daily_usage_id", foreignKey = @ForeignKey(name = "FK_invoice_daily_usage__daily_usage"))
-	@NotNull
+	@JoinColumn(name = "daily_usage_id", nullable = false, foreignKey = @ForeignKey(name = "FK_invoice_daily_usage__daily_usage"))
 	private DailyUsage dailyUsage;
 
 	/**

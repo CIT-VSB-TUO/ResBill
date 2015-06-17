@@ -485,6 +485,7 @@ public class ContractServiceImpl implements ContractService {
         throw new ContractServiceException(Reason.TRANSACTION_EXISTENCE);
       }
 
+			// kontrakt smazan i s vazbami (kaskada)
       return contractDAO.deleteContract(contract);
     } catch (ContractServiceException e) {
       throw e;
