@@ -316,7 +316,7 @@ public class ContractDAOImpl implements ContractDAO {
       jpql.append(" AND dailyImport.date >= :beginDate ");
     }
     if (criteria.getEndDate() != null) {
-      jpql.append(" AND contractServer.period.beginDate <= :endDate ");
+      jpql.append(" AND dailyImport.date <= :endDate ");
     }
     jpql.append(" GROUP BY contract.id ");
     jpql.append(" ORDER BY contract.name ");
