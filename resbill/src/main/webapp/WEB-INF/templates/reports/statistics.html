@@ -91,51 +91,103 @@
     </div>
 
     <!-- Statistika kontraktu -->
-    <div class="row" th:if="${contractStatistic!=null}">
-      <div class="col-lg-12">
-        <table class="table" id="invoices">
-          <thead>
-            <tr>
-              <th rowspan="2" th:text="#{column.statistics.contracts.customer}">Zákazník</th>
-              <th rowspan="2" th:text="#{column.statistics.contracts.contract}">Kontrakt</th>
-              <th colspan="2" th:text="#{column.statistics.contracts.cpu}">CPU</th>
-              <th colspan="2" th:text="#{column.statistics.contracts.ram}">RAM</th>
-              <th colspan="2" th:text="#{column.statistics.contracts.hdd}">HDD</th>
-              <th colspan="2" th:text="#{column.statistics.contracts.hddUsage}">HDD (využito)</th>
-              <th colspan="2" th:text="#{column.statistics.contracts.backup}">Zálohování</th>
-            </tr>
-            <tr>
-              <th th:text="#{column.statistics.contracts.cpu.value}">[-]</th>
-              <th th:text="#{column.statistics.contracts.cpu.percentage}">[%]</th>
-              <th th:text="#{column.statistics.contracts.ram.value}">[GB]</th>
-              <th th:text="#{column.statistics.contracts.ram.percentage}">[%]</th>
-              <th th:text="#{column.statistics.contracts.hdd.value}">[GB]</th>
-              <th th:text="#{column.statistics.contracts.hdd.percentage}">[%]</th>
-              <th th:text="#{column.statistics.contracts.hddUsage.value}">[GB]</th>
-              <th th:text="#{column.statistics.contracts.hddUsage.percentage}">[%]</th>
-              <th th:text="#{column.statistics.contracts.backup.value}">[GB]</th>
-              <th th:text="#{column.statistics.contracts.backup.percentage}">[%]</th>
-            </tr>
-          </thead>
-
-          <tbody th:remove="all-but-first">
-            <tr th:each="componentDTO : ${contractStatistic.componentDTOs}">
-              <td th:text="${componentDTO.contractDTO.customerName}">Fakulta strojní</td>
-              <td th:text="${componentDTO.contractDTO.name}">P.FS</td>
-              <td th:text="${componentDTO.usageDTO.cpu}">3</td>
-              <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.cpuPercentage,1,'DEFAULT',2,'DEFAULT')}">45</td>
-              <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.memoryGB,1,'DEFAULT',2,'DEFAULT')}">6</td>
-              <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.memoryGbPercentage,1,'DEFAULT',2,'DEFAULT')}">51</td>
-              <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.provisionedSpaceGB,1,'DEFAULT',2,'DEFAULT')}">6</td>
-              <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.provisionedSpaceGbPercentage,1,'DEFAULT',2,'DEFAULT')}">51</td>
-              <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.usedSpaceGB,1,'DEFAULT',2,'DEFAULT')}">6</td>
-              <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.usedSpaceGbPercentage,1,'DEFAULT',2,'DEFAULT')}">51</td>
-              <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.backupGB,1,'DEFAULT',2,'DEFAULT')}">6</td>
-              <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.backupGbPercentage,1,'DEFAULT',2,'DEFAULT')}">51</td>
-            </tr>
-          </tbody>
-        </table>
+    <div th:if="${contractStatistic!=null}">
+      <div class="row" th:if="${not #lists.isEmpty(contractStatistic.cpuPieChartDTOs)}">
+        <div class="col-lg-5">
+          <h3>CPU</h3>
+          <div class="flot-chart-container">
+            <div id="placeholder" class="demo-placeholder" style="width: 500px; height: 300px;"></div>
+          </div>
+        </div>
       </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+
+
+          <table class="table" id="invoices">
+            <thead>
+              <tr>
+                <th rowspan="2" th:text="#{column.statistics.contracts.customer}">Zákazník</th>
+                <th rowspan="2" th:text="#{column.statistics.contracts.contract}">Kontrakt</th>
+                <th colspan="2" th:text="#{column.statistics.contracts.cpu}">CPU</th>
+                <th colspan="2" th:text="#{column.statistics.contracts.ram}">RAM</th>
+                <th colspan="2" th:text="#{column.statistics.contracts.hdd}">HDD</th>
+                <th colspan="2" th:text="#{column.statistics.contracts.hddUsage}">HDD (využito)</th>
+                <th colspan="2" th:text="#{column.statistics.contracts.backup}">Zálohování</th>
+              </tr>
+              <tr>
+                <th th:text="#{column.statistics.contracts.cpu.value}">[-]</th>
+                <th th:text="#{column.statistics.contracts.cpu.percentage}">[%]</th>
+                <th th:text="#{column.statistics.contracts.ram.value}">[GB]</th>
+                <th th:text="#{column.statistics.contracts.ram.percentage}">[%]</th>
+                <th th:text="#{column.statistics.contracts.hdd.value}">[GB]</th>
+                <th th:text="#{column.statistics.contracts.hdd.percentage}">[%]</th>
+                <th th:text="#{column.statistics.contracts.hddUsage.value}">[GB]</th>
+                <th th:text="#{column.statistics.contracts.hddUsage.percentage}">[%]</th>
+                <th th:text="#{column.statistics.contracts.backup.value}">[GB]</th>
+                <th th:text="#{column.statistics.contracts.backup.percentage}">[%]</th>
+              </tr>
+            </thead>
+
+            <tbody th:remove="all-but-first">
+              <tr th:each="componentDTO : ${contractStatistic.componentDTOs}">
+                <td th:text="${componentDTO.contractDTO.customerName}">Fakulta strojní</td>
+                <td th:text="${componentDTO.contractDTO.name}">P.FS</td>
+                <td th:text="${componentDTO.usageDTO.cpu}">3</td>
+                <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.cpuPercentage,1,'DEFAULT',2,'DEFAULT')}">45</td>
+                <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.memoryGB,1,'DEFAULT',2,'DEFAULT')}">6</td>
+                <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.memoryGbPercentage,1,'DEFAULT',2,'DEFAULT')}">51</td>
+                <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.provisionedSpaceGB,1,'DEFAULT',2,'DEFAULT')}">6</td>
+                <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.provisionedSpaceGbPercentage,1,'DEFAULT',2,'DEFAULT')}">51</td>
+                <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.usedSpaceGB,1,'DEFAULT',2,'DEFAULT')}">6</td>
+                <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.usedSpaceGbPercentage,1,'DEFAULT',2,'DEFAULT')}">51</td>
+                <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.backupGB,1,'DEFAULT',2,'DEFAULT')}">6</td>
+                <td th:text="${#numbers.formatDecimal(componentDTO.usageDTO.backupGbPercentage,1,'DEFAULT',2,'DEFAULT')}">51</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <div layout:fragment="footer">
+
+    <!-- Flot Charts -->
+    <script src="../../../bower_components/flot/jquery.flot.js" th:src="@{/bower_components/flot/jquery.flot.js}"></script>
+    <!-- Flot Pie Chart -->
+    <script src="../../../bower_components/flot/jquery.flot.pie.js" th:src="@{/bower_components/flot/jquery.flot.pie.js}"></script>
+
+    <div th:if="${contractStatistic!=null}">
+      <script type="text/javascript" th:inline="javascript">
+							/*<![CDATA[*/
+
+							$(function() {
+								var data = /*[[${contractStatistic.cpuPieChartDTOs}]]*/null;
+
+								var placeholder = $("#placeholder");
+								placeholder.unbind();
+
+								$.plot(placeholder, data, {
+									series : {
+										pie : {
+											show : true
+										}
+									},
+									legend : {
+										show : true,
+										sorted : "descending"
+									}
+								});
+
+							});
+
+							/*]]>*/
+						</script>
     </div>
   </div>
 
@@ -148,5 +200,7 @@
   <!-- Custom Theme JavaScript -->
   <script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"
     th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+
+
 </body>
 </html>

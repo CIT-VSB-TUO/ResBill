@@ -21,6 +21,14 @@ public class StatisticContractDTO extends StatisticDTO {
   private ContractDTO       contractDTO      = null;
 
   /**
+   * 
+   */
+  @Override
+  public String getTitle() {
+    return contractDTO.getName();
+  }
+
+  /**
    * @return the contractDTO
    */
   public ContractDTO getContractDTO() {

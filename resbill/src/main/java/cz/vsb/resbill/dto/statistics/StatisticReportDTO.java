@@ -5,6 +5,9 @@
 package cz.vsb.resbill.dto.statistics;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,27 +22,44 @@ public class StatisticReportDTO<K extends StatisticDTO> implements Serializable 
   /**
    * 
    */
-  private static final long serialVersionUID = 1L;
+  private static final long        serialVersionUID                   = 1L;
+
+  public static final NumberFormat PIE_CHART_LEGEND_PERCENTAGE_FORMAT = new DecimalFormat("00.00");
 
   /**
    * Prvni den pocitani statistiky
    */
-  private Date              beginDate        = null;
+  private Date                     beginDate                          = null;
 
   /**
    * Posledni den pozitani statistiky
    */
-  private Date              endDate          = null;
+  private Date                     endDate                            = null;
 
   /**
    * Souhrne hodnoty za cely soubor
    */
-  private StatisticUsageDTO overallDTO       = null;
+  private StatisticUsageDTO        overallDTO                         = null;
 
   /**
    * Jednotlive dilci hodnoty za kazdou komponentu souboru
    */
-  private List<K>           componentDTOs    = null;
+  private List<K>                  componentDTOs                      = null;
+
+  /**
+   * 
+   * @return
+   */
+  public List<PieChartDTO> getCpuPieChartDTOs() {
+    List<PieChartDTO> dtos = new ArrayList<PieChartDTO>();
+
+    List<K> componentDTOs = getComponentDTOs();
+    for (K component : componentDTOs) {
+      dtos.add(new PieChartDTO(PIE_CHART_LEGEND_PERCENTAGE_FORMAT.format(component.getUsageDTO().getCpuPercentage()) + "% " + component.getTitle(), component.getUsageDTO().getCpuPercentage()));
+    }
+
+    return dtos;
+  }
 
   /**
    * @return the beginDate
