@@ -85,8 +85,8 @@
               <td th:text="${serverListDTO.contractDTO?.name}">Kontrakt xyz</td>
               <td th:text="${serverListDTO.dailyUsageDTO!=null}?${#dates.format(serverListDTO.dailyUsageDTO?.date,'__#{date.format.list}__')}">1.6.2015</td>
               <td th:text="${serverListDTO.dailyUsageDTO?.cpu}">2</td>
-              <td th:text="${serverListDTO.dailyUsageDTO?.memoryGB}">6</td>
-              <td th:text="${serverListDTO.dailyUsageDTO?.provisionedSpaceGB}">200</td>
+              <td th:text="${serverListDTO.dailyUsageDTO!=null}?${#numbers.formatDecimal(serverListDTO.dailyUsageDTO.memoryGB,1,'DEFAULT',2,'DEFAULT')}">6</td>
+              <td th:text="${serverListDTO.dailyUsageDTO!=null}?${#numbers.formatDecimal(serverListDTO.dailyUsageDTO.provisionedSpaceGB,1,'DEFAULT',2,'DEFAULT')}">200</td>
               <td><a class="btn btn-primary btn-circle" href="serverOverview.html" th:href="@{/servers/overview(serverId=${serverListDTO.id})}"
                 th:title="#{button.title.server.edit}"> <i class="fa fa-edit"></i>
               </a></td>
@@ -121,6 +121,27 @@
   <!-- Custom Theme JavaScript -->
   <script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"
     th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+
+  <!-- DataTables -->
+  <script src="../../../bower_components/datatables/media/js/jquery.dataTables.min.js" th:src="@{/bower_components/datatables/media/js/jquery.dataTables.min.js}"></script>
+  <script src="../../../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js" th:src="@{/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js}"></script>
+
+	<th:block layout:fragment="footer">
+
+		<script type="text/javascript" th:inline="javascript">
+			/*<![CDATA[*/
+			$(document).ready(function() {
+				$('#servers').dataTable({
+					"columnDefs" : [{
+						"targets" : -1,
+						"orderable" : false,
+						"searchable" : false
+					}]				
+				});
+			});
+			/*]]>*/
+		</script>
+	</th:block>
 
 </body>
 

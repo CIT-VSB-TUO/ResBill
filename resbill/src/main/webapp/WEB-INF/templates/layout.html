@@ -183,6 +183,34 @@
 	<script src="../../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js" th:src="@{/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
 	<script src="../../bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.cs.min.js" th:src="@{/bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.cs.min.js}"></script>
 
+	<!-- DataTables -->
+	<script src="../../bower_components/datatables/media/js/jquery.dataTables.min.js" th:src="@{/bower_components/datatables/media/js/jquery.dataTables.min.js}"></script>
+	<script src="../../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js" th:src="@{/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js}"></script>
+
+	<script type="text/javascript" th:inline="javascript">
+		/*<![CDATA[*/
+		var optAll = /*[[#{option.all}]]*/ "vsechno";
+		var langUrl = /*[[@{/bower_components/datatables-plugins/i18n/Czech.lang}]]*/ "../../bower_components/datatables-plugins/i18n/Czech.lang";
+		$.extend($.fn.dataTable.defaults, {
+			"language" : {
+				"url" : langUrl
+			},
+			"info" : true,
+			"lengthChange" : true,
+			"lengthMenu" : [ [ 10, 25, 50, 100, -1 ], [ 10, 25, 50, 100, optAll ] ],
+			"ordering" : true,
+			"paging" : true,
+			"pagingType" : "simple_numbers",
+			"processing" : true,
+			"searching" : true,
+			"stateSave" : false,
+			"decimal" : ",",
+			"thousands" : " ",
+			"dom" : '<"row"<"col-lg-6"f><"col-lg-6 text-right"l>><"row"<"col-lg-12"tr>><"row"<"col-lg-6"p><"col-lg-6 text-right"i>>',
+		});
+		/*]]>*/
+	</script>
+
 	<th:block layout:fragment="footer">
 	</th:block>
 
