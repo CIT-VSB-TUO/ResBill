@@ -7,6 +7,7 @@ import cz.vsb.resbill.dto.ServerAgendaDTO;
 import cz.vsb.resbill.dto.ServerDTO;
 import cz.vsb.resbill.dto.ServerEditDTO;
 import cz.vsb.resbill.dto.ServerHeaderDTO;
+import cz.vsb.resbill.dto.ServerListDTO;
 import cz.vsb.resbill.dto.ServerOverviewDTO;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.exception.ServerServiceException;
@@ -62,6 +63,8 @@ public interface ServerService {
   List<Server> findServers(ServerCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
   List<ServerDTO> findServerDTOs(ServerCriteria criteria, Integer offset, Integer limit) throws ResBillException;
+
+  List<ServerListDTO> findServerListDTOs(ServerCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
   List<ServerAgendaDTO> findServerAgendaDTOs(ServerCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 

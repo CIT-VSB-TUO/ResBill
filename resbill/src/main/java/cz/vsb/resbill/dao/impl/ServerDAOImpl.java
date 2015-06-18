@@ -53,11 +53,20 @@ public class ServerDAOImpl implements ServerDAO {
   }
 
   /**
-	 * 
-	 */
-  @Override
-  public List<Server> findServers(ServerCriteria criteria, Integer offset, Integer limit) {
-    StringBuilder jpql = new StringBuilder("SELECT server FROM Server AS server");
+   * 
+   * @param criteria
+   * @param select
+   * @param additionalRelations
+   * @param additionalConditions
+   * @return
+   */
+  protected <T> TypedQuery<T> createServerCriteriaQuery(Class<T> resultClass, ServerCriteria criteria, String select, String additionalRelations, String additionalConditions) {
+
+    StringBuilder jpql = new StringBuilder();
+
+    jpql.append(" SELECT ").append(select);
+    jpql.append(" FROM Server AS server ");
+
     // building query
     if (criteria != null) {
       // where
@@ -72,7 +81,7 @@ public class ServerDAOImpl implements ServerDAO {
         where.add("server.name LIKE :namePrefix");
       }
 
-      // "Vlastnosti" kontraktu
+      // "Vlastnosti" serveru
       if (criteria.getFeatures() != null) {
         // Servery odebírající zdroje mimo období prirazeni ke kontraktu
         if (criteria.getFeatures().contains(ServerCriteria.Feature.DAILY_USAGE_OUT_OF_CONTRACT)) {
@@ -104,6 +113,14 @@ public class ServerDAOImpl implements ServerDAO {
         if (criteria.getFeatures().contains(ServerCriteria.Feature.NO_DAILY_USAGE)) {
           where.add("server.dailyUsages IS EMPTY");
         }
+      }
+
+      if (additionalRelations != null) {
+        jpql.append(" ").append(additionalRelations);
+      }
+
+      if (additionalConditions != null) {
+        where.add(additionalConditions);
       }
 
       if (!where.isEmpty()) {
@@ -140,13 +157,7 @@ public class ServerDAOImpl implements ServerDAO {
         }
       }
     }
-    TypedQuery<Server> query = em.createQuery(jpql.toString(), Server.class);
-    if (offset != null) {
-      query.setFirstResult(offset.intValue());
-    }
-    if (limit != null) {
-      query.setMaxResults(limit.intValue());
-    }
+    TypedQuery<T> query = em.createQuery(jpql.toString(), resultClass);
 
     // parameters
     if (criteria != null) {
@@ -159,6 +170,80 @@ public class ServerDAOImpl implements ServerDAO {
       if (StringUtils.isNotEmpty(criteria.getNamePrefix())) {
         query.setParameter("namePrefix", criteria.getNamePrefix() + "%");
       }
+    }
+
+    return query;
+  }
+
+  /**
+	 * 
+	 */
+  @Override
+  public List<Server> findServers(ServerCriteria criteria, Integer offset, Integer limit) {
+    TypedQuery<Server> query = createServerCriteriaQuery(Server.class, criteria, "server", null, null);
+    if (offset != null) {
+      query.setFirstResult(offset.intValue());
+    }
+    if (limit != null) {
+      query.setMaxResults(limit.intValue());
+    }
+
+    return query.getResultList();
+  }
+
+  /**
+   * 
+   */
+  @Override
+  public List<Object[]> findServersForList(ServerCriteria criteria, Integer offset, Integer limit) {
+    StringBuilder select = new StringBuilder();
+    select.append(" server ");
+    
+    // posledni znama spotreba
+    select.append(" , ( ");
+    select.append(" SELECT lastDailyUsage ");
+    select.append(" FROM DailyUsage AS lastDailyUsage ");
+    select.append(" JOIN lastDailyUsage.dailyImport AS lastDailyImport ");
+    select.append(" WHERE lastDailyUsage.server = server ");
+    select.append(" AND NOT EXISTS ( ");
+    select.append("   SELECT otherDailyUsage ");
+    select.append("   FROM DailyUsage AS otherDailyUsage ");
+    select.append("   JOIN otherDailyUsage.dailyImport AS otherDailyImport ");
+    select.append("   WHERE otherDailyUsage.server = server ");
+    select.append("   AND otherDailyUsage <> lastDailyUsage ");
+    select.append("   AND otherDailyImport.date > lastDailyImport.date ");
+    select.append("   ) ");
+    select.append(" ) ");
+    
+    // aktualne prirazeny kontrakt (pokud existuje), jinak kontrak s nejvyssim endDate
+    select.append(" ,  ");
+    select.append(" COALESCE ( ");
+    select.append("   ( ");
+    select.append("   SELECT currContractServer.contract ");
+    select.append("   FROM ContractServer AS currContractServer ");
+    select.append("   WHERE currContractServer.server = server ");
+    select.append("   AND currContractServer.period.beginDate <= CURRENT_DATE ");
+    select.append("   AND (currContractServer.period.endDate IS NULL OR currContractServer.period.endDate >= CURRENT_DATE) ");
+    select.append("   ), ( ");
+    select.append("   SELECT lastContractServer.contract ");
+    select.append("   FROM ContractServer AS lastContractServer ");
+    select.append("   WHERE lastContractServer.server = server ");
+    select.append("   AND NOT EXISTS ( ");
+    select.append("     SELECT otherContractServer ");
+    select.append("     FROM ContractServer AS otherContractServer ");
+    select.append("     WHERE otherContractServer.server = server ");
+    select.append("     AND lastContractServer <> otherContractServer ");
+    select.append("     AND (otherContractServer.period.endDate IS NULL OR otherContractServer.period.endDate > lastContractServer.period.endDate) ");
+    select.append("     ) ");
+    select.append("   ) ");
+    select.append(" ) ");
+    
+    TypedQuery<Object[]> query = createServerCriteriaQuery(Object[].class, criteria, select.toString(), null, null);
+    if (offset != null) {
+      query.setFirstResult(offset.intValue());
+    }
+    if (limit != null) {
+      query.setMaxResults(limit.intValue());
     }
 
     return query.getResultList();

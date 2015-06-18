@@ -44,6 +44,15 @@ public interface ServerDAO {
 	List<Server> findServers(ServerCriteria criteria, Integer offset, Integer limit);
 
 	/**
+	 * 
+	 * @param criteria
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	List<Object[]> findServersForList(ServerCriteria criteria, Integer offset, Integer limit);
+	
+	/**
 	 * Saves current state of given {@link Server} entity.
 	 * 
 	 * @param server

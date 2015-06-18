@@ -23,6 +23,7 @@ import cz.vsb.resbill.dto.ServerAgendaDTO;
 import cz.vsb.resbill.dto.ServerDTO;
 import cz.vsb.resbill.dto.ServerEditDTO;
 import cz.vsb.resbill.dto.ServerHeaderDTO;
+import cz.vsb.resbill.dto.ServerListDTO;
 import cz.vsb.resbill.dto.ServerOverviewDTO;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.exception.ServerServiceException;
@@ -178,6 +179,27 @@ public class ServerServiceImpl implements ServerService {
       return dtos;
     } catch (Exception exc) {
       log.error("An unexpected error occured while finding ServerDTOs.", exc);
+      throw new ResBillException(exc);
+    }
+  }
+
+  /**
+   * 
+   */
+  @Override
+  public List<ServerListDTO> findServerListDTOs(ServerCriteria criteria, Integer offset, Integer limit) throws ResBillException {
+    try {
+      List<Object[]> fieldsList = serverDAO.findServersForList(criteria, offset, limit);
+      List<ServerListDTO> dtos = new ArrayList<ServerListDTO>();
+
+      for (Object[] fields : fieldsList) {
+        ServerListDTO dto = new ServerListDTO(fields);
+        dtos.add(dto);
+      }
+
+      return dtos;
+    } catch (Exception exc) {
+      log.error("An unexpected error occured while finding ServerListDTOs.", exc);
       throw new ResBillException(exc);
     }
   }

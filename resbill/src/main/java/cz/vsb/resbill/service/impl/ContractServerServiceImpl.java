@@ -76,7 +76,7 @@ public class ContractServerServiceImpl implements ContractServerService {
 			ContractServerCriteria csCriteria = new ContractServerCriteria();
 			csCriteria.setServerId(contractServer.getServer().getId());
 			csCriteria.setAssociatedFrom(contractServer.getPeriod().getBeginDate());
-			csCriteria.setAssociatedFrom(contractServer.getPeriod().getEndDate());
+			csCriteria.setAssociatedTo(contractServer.getPeriod().getEndDate());
 			List<ContractServer> css = contractServerDAO.findContractServers(csCriteria, null, null);
 			if (!css.isEmpty() && (contractServer.getId() == null || css.size() > 1 || !contractServer.getId().equals(css.get(0).getId()))) {
 				throw new ContractServerServiceException(Reason.SERVER_ASSOCIATION_PERIOD_COLLISION);

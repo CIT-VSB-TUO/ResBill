@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import cz.vsb.resbill.criteria.ServerCriteria;
 import cz.vsb.resbill.criteria.ServerCriteria.OrderBy;
+import cz.vsb.resbill.dto.ServerListDTO;
 import cz.vsb.resbill.model.Server;
 import cz.vsb.resbill.service.ServerService;
 import cz.vsb.resbill.util.WebUtils;
@@ -30,23 +31,23 @@ public class ServerListController {
 
 	private static final Logger log = LoggerFactory.getLogger(ServerListController.class);
 
-	private static final String SERVERS_MODEL_KEY = "servers";
+	private static final String SERVER_LIST_DTOS_MODEL_KEY = "serverListDTOs";
 
 	@Inject
 	private ServerService serverService;
 
-	private void loadServers(ModelMap model) {
-		List<Server> servers = null;
+	private void loadServerListDTOs(ModelMap model) {
+		List<ServerListDTO> servers = null;
 		try {
 			ServerCriteria criteria = new ServerCriteria();
 			criteria.setOrderBy(Arrays.asList(new OrderBy[] { OrderBy.SERVER_ID_ASC }));
-			servers = serverService.findServers(criteria, null, null);
-			model.addAttribute(SERVERS_MODEL_KEY, servers);
+			servers = serverService.findServerListDTOs(criteria, null, null);
+			model.addAttribute(SERVER_LIST_DTOS_MODEL_KEY, servers);
 		} catch (Exception e) {
 			log.error("Cannot load list of servers.", e);
 
-			model.addAttribute(SERVERS_MODEL_KEY, servers);
-			WebUtils.addGlobalError(model, SERVERS_MODEL_KEY, "error.load.servers");
+			model.addAttribute(SERVER_LIST_DTOS_MODEL_KEY, servers);
+			WebUtils.addGlobalError(model, SERVER_LIST_DTOS_MODEL_KEY, "error.load.servers");
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Loaded list of servers size: " + (servers != null ? servers.size() : null));
@@ -61,7 +62,7 @@ public class ServerListController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String view(ModelMap model) {
-		loadServers(model);
+	  loadServerListDTOs(model);
 
 		return "servers/serverList";
 	}
