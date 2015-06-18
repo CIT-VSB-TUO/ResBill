@@ -75,6 +75,16 @@ th.striped, td.striped {
   padding-left: 5px;
 }
 
+/*
+#menu {
+  position: absolute;
+  top: 20px;
+  left: 625px;
+  bottom: 20px;
+  right: 20px;
+  width: 200px;
+}*/
+
 .pagination {
 	margin-top: 0 !important;
 }

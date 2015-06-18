@@ -208,6 +208,11 @@ public interface DailyImportService {
     ERROR_LINE_EXISTS(LineImportResultCodeGroup.ERROR),
 
     /**
+     * Chyba - Na radku se vyskytuje spotreba se zapornou hodnotu
+     */
+    ERROR_USAGE_NEGATIVE_VALUE(LineImportResultCodeGroup.ERROR),
+    
+    /**
      * Uvedeny kod urovne produkce nebyla nalezena v ciselniku
      */
     ERROR_PRODUCTION_LEVEL_NOT_EXISTS(LineImportResultCodeGroup.ERROR),
