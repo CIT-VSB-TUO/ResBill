@@ -93,10 +93,18 @@
     <!-- Statistika kontraktu -->
     <div th:if="${contractStatistic!=null}">
       <div class="row" th:if="${not #lists.isEmpty(contractStatistic.cpuPieChartDTOs)}">
-        <div class="col-lg-5">
-          <h3>CPU</h3>
+        <div class="col-lg-6">
+          <h3 id="chart-title">VM</h3>
           <div class="flot-chart-container">
-            <div id="placeholder" class="demo-placeholder" style="width: 500px; height: 300px;"></div>
+            <div>
+              <button id="chart-vm" class="btn btn-outline btn-primary" th:text="#{button.title.statistics.contracts.vm}">VM</button>
+              <button id="chart-cpu" class="btn btn-outline btn-primary" th:text="#{button.title.statistics.contracts.cpu}">CPU</button>
+              <button id="chart-ram" class="btn btn-outline btn-primary" th:text="#{button.title.statistics.contracts.ram}">RAM</button>
+              <button id="chart-hdd" class="btn btn-outline btn-primary" th:text="#{button.title.statistics.contracts.hdd}">HDD</button>
+              <button id="chart-hddUsage" class="btn btn-outline btn-primary" th:text="#{button.title.statistics.contracts.hddUsage}">HDD (využito)</button>
+              <button id="chart-backup" class="btn btn-outline btn-primary" th:text="#{button.title.statistics.contracts.backup}">CPU</button>
+            </div>
+            <div class="voffset3" id="chart-placeholder" style="width: 500px; height: 300px;"></div>
           </div>
         </div>
       </div>
@@ -171,23 +179,214 @@
       <script type="text/javascript" th:inline="javascript">
 							/*<![CDATA[*/
 
+							function deactiveChartButtons() {
+								$("#chart-cpu").removeClass("active");
+								$("#chart-vm").removeClass("active");
+								$("#chart-ram").removeClass("active");
+								$("#chart-hdd").removeClass("active");
+								$("#chart-hddUsage").removeClass("active");
+								$("#chart-backup").removeClass("active");
+							}
+
 							$(function() {
-								var data = /*[[${contractStatistic.cpuPieChartDTOs}]]*/null;
 
-								var placeholder = $("#placeholder");
-								placeholder.unbind();
+								var placeholder = $("#chart-placeholder");
 
-								$.plot(placeholder, data, {
-									series : {
-										pie : {
-											show : true
-										}
-									},
-									legend : {
-										show : true,
-										sorted : "descending"
-									}
-								});
+								$("#chart-vm")
+										.click(
+												function() {
+													var data = /*[[${contractStatistic.serverPieChartDTOs}]]*/null;
+
+													deactiveChartButtons();
+													placeholder.unbind();
+
+													$("#chart-title").text(
+															$("#chart-vm")
+																	.text());
+													$("#chart-vm").addClass(
+															"active");
+
+													$
+															.plot(
+																	placeholder,
+																	data,
+																	{
+																		series : {
+																			pie : {
+																				show : true
+																			}
+																		},
+																		legend : {
+																			show : true,
+																			sorted : "descending"
+																		}
+																	});
+												});
+
+								$("#chart-cpu")
+										.click(
+												function() {
+													var data = /*[[${contractStatistic.cpuPieChartDTOs}]]*/null;
+
+													deactiveChartButtons();
+													placeholder.unbind();
+
+													$("#chart-title").text(
+															$("#chart-cpu")
+																	.text());
+													$("#chart-cpu").addClass(
+															"active");
+
+													$
+															.plot(
+																	placeholder,
+																	data,
+																	{
+																		series : {
+																			pie : {
+																				show : true
+																			}
+																		},
+																		legend : {
+																			show : true,
+																			sorted : "descending"
+																		}
+																	});
+
+												});
+
+								$("#chart-ram")
+										.click(
+												function() {
+													var data = /*[[${contractStatistic.memoryPieChartDTOs}]]*/null;
+
+													deactiveChartButtons();
+													placeholder.unbind();
+
+													$("#chart-title").text(
+															$("#chart-ram")
+																	.text());
+													$("#chart-ram").addClass(
+															"active");
+
+													$
+															.plot(
+																	placeholder,
+																	data,
+																	{
+																		series : {
+																			pie : {
+																				show : true
+																			}
+																		},
+																		legend : {
+																			show : true,
+																			sorted : "descending"
+																		}
+																	});
+
+												});
+
+								$("#chart-hdd")
+										.click(
+												function() {
+													var data = /*[[${contractStatistic.provisionedSpacePieChartDTOs}]]*/null;
+
+													deactiveChartButtons();
+													placeholder.unbind();
+
+													$("#chart-title").text(
+															$("#chart-hdd")
+																	.text());
+													$("#chart-hdd").addClass(
+															"active");
+
+													$
+															.plot(
+																	placeholder,
+																	data,
+																	{
+																		series : {
+																			pie : {
+																				show : true
+																			}
+																		},
+																		legend : {
+																			show : true,
+																			sorted : "descending"
+																		}
+																	});
+
+												});
+
+								$("#chart-hddUsage")
+										.click(
+												function() {
+													var data = /*[[${contractStatistic.usedSpacePieChartDTOs}]]*/null;
+
+													deactiveChartButtons();
+													placeholder.unbind();
+
+													$("#chart-title")
+															.text(
+																	$(
+																			"#chart-hddUsage")
+																			.text());
+													$("#chart-hddUsage")
+															.addClass("active");
+
+													$
+															.plot(
+																	placeholder,
+																	data,
+																	{
+																		series : {
+																			pie : {
+																				show : true
+																			}
+																		},
+																		legend : {
+																			show : true,
+																			sorted : "descending"
+																		}
+																	});
+
+												});
+
+								$("#chart-backup")
+										.click(
+												function() {
+													var data = /*[[${contractStatistic.backupPieChartDTOs}]]*/null;
+
+													deactiveChartButtons();
+													placeholder.unbind();
+
+													$("#chart-title").text(
+															$("#chart-backup")
+																	.text());
+													$("#chart-backup")
+															.addClass("active");
+
+													$
+															.plot(
+																	placeholder,
+																	data,
+																	{
+																		series : {
+																			pie : {
+																				show : true
+																			}
+																		},
+																		legend : {
+																			show : true,
+																			sorted : "descending"
+																		}
+																	});
+
+												});
+
+								// Zobrazeni prvniho grafu
+								$("#chart-vm").click();
 
 							});
 

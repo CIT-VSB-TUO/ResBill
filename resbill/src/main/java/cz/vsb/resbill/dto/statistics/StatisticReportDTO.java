@@ -50,12 +50,91 @@ public class StatisticReportDTO<K extends StatisticDTO> implements Serializable 
    * 
    * @return
    */
+  public List<PieChartDTO> getServerPieChartDTOs() {
+    List<PieChartDTO> dtos = new ArrayList<PieChartDTO>();
+
+    List<K> componentDTOs = getComponentDTOs();
+    for (K component : componentDTOs) {
+      dtos.add(new PieChartDTO(PIE_CHART_LEGEND_PERCENTAGE_FORMAT.format(component.getUsageDTO().getServerPercentage()) + "% " + component.getTitle(), component.getUsageDTO().getServerPercentage()));
+    }
+
+    return dtos;
+  }
+
+  /**
+   * 
+   * @return
+   */
   public List<PieChartDTO> getCpuPieChartDTOs() {
     List<PieChartDTO> dtos = new ArrayList<PieChartDTO>();
 
     List<K> componentDTOs = getComponentDTOs();
     for (K component : componentDTOs) {
       dtos.add(new PieChartDTO(PIE_CHART_LEGEND_PERCENTAGE_FORMAT.format(component.getUsageDTO().getCpuPercentage()) + "% " + component.getTitle(), component.getUsageDTO().getCpuPercentage()));
+    }
+
+    return dtos;
+  }
+
+  /**
+   * 
+   * @return
+   */
+  public List<PieChartDTO> getMemoryPieChartDTOs() {
+    List<PieChartDTO> dtos = new ArrayList<PieChartDTO>();
+
+    List<K> componentDTOs = getComponentDTOs();
+    for (K component : componentDTOs) {
+      dtos.add(new PieChartDTO(PIE_CHART_LEGEND_PERCENTAGE_FORMAT.format(component.getUsageDTO().getMemoryGbPercentage()) + "% " + component.getTitle(), component.getUsageDTO()
+          .getMemoryGbPercentage()));
+    }
+
+    return dtos;
+  }
+
+  /**
+   * 
+   * @return
+   */
+  public List<PieChartDTO> getProvisionedSpacePieChartDTOs() {
+    List<PieChartDTO> dtos = new ArrayList<PieChartDTO>();
+
+    List<K> componentDTOs = getComponentDTOs();
+    for (K component : componentDTOs) {
+      dtos.add(new PieChartDTO(PIE_CHART_LEGEND_PERCENTAGE_FORMAT.format(component.getUsageDTO().getProvisionedSpaceGbPercentage()) + "% " + component.getTitle(), component.getUsageDTO()
+          .getProvisionedSpaceGbPercentage()));
+    }
+
+    return dtos;
+  }
+
+  /**
+   * 
+   * @return
+   */
+  public List<PieChartDTO> getUsedSpacePieChartDTOs() {
+    List<PieChartDTO> dtos = new ArrayList<PieChartDTO>();
+
+    List<K> componentDTOs = getComponentDTOs();
+    for (K component : componentDTOs) {
+      dtos.add(new PieChartDTO(PIE_CHART_LEGEND_PERCENTAGE_FORMAT.format(component.getUsageDTO().getUsedSpaceGbPercentage()) + "% " + component.getTitle(), component.getUsageDTO()
+          .getUsedSpaceGbPercentage()));
+    }
+
+    return dtos;
+  }
+
+  /**
+   * 
+   * @return
+   */
+  public List<PieChartDTO> getBackupPieChartDTOs() {
+    List<PieChartDTO> dtos = new ArrayList<PieChartDTO>();
+
+    List<K> componentDTOs = getComponentDTOs();
+    for (K component : componentDTOs) {
+      dtos.add(new PieChartDTO(PIE_CHART_LEGEND_PERCENTAGE_FORMAT.format(component.getUsageDTO().getBackupGbPercentage()) + "% " + component.getTitle(), component.getUsageDTO()
+          .getBackupGbPercentage()));
     }
 
     return dtos;
