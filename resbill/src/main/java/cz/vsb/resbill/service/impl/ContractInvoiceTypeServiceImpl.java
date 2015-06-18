@@ -73,15 +73,16 @@ public class ContractInvoiceTypeServiceImpl implements ContractInvoiceTypeServic
 			// zjisteni kontraktu
 			Contract contract = contractDAO.findContract(contractInvoiceType.getContract().getId());
 
+			ContractInvoiceType previous = null;
 			if (contractInvoiceType.getId() == null) { // nove prirazeni
 				// zjisteni posledniho (aktualniho) prirazeni
-				ContractInvoiceType lastCIT = contractInvoiceTypeDAO.findLastContractInvoiceType(contract.getId());
-				if (lastCIT == null) {
+				previous = contractInvoiceTypeDAO.findLastContractInvoiceType(contract.getId());
+				if (previous == null) {
 					contractInvoiceType.setPrevious(null);
 					// prvni prirazeni ma platnost od pocatku kontraktu
 					contractInvoiceType.getPeriod().setBeginDate(contract.getPeriod().getBeginDate());
 				} else {
-					contractInvoiceType.setPrevious(lastCIT);
+					contractInvoiceType.setPrevious(previous);
 				}
 			} else { // editace existujiciho prirazeni
 				// kontrola modifikace prirazeni
@@ -94,16 +95,19 @@ public class ContractInvoiceTypeServiceImpl implements ContractInvoiceTypeServic
 					if (!contractInvoiceType.getPeriod().getBeginDate().equals(contract.getPeriod().getBeginDate())) {
 						throw new ContractInvoiceTypeServiceException(Reason.FIRST_CONTRACT_INVOICE_TYPE_BEGIN_DATE_MODIFICATION);
 					}
+				} else {
+					previous = contractInvoiceTypeDAO.findContractInvoiceType(contractInvoiceType.getPrevious().getId());
 				}
 			}
-			if (contractInvoiceType.getPrevious() != null) {
+			if (previous != null) {
+
 				// kontrola zda pocatek spada do platnosti kontraktu
-				checkContractBelonging(contractInvoiceType);
+				checkContractBelonging(contractInvoiceType, contract);
 
 				// ukonceni platnosti predchoziho prirazeni, je-li treba
 				Date terminationDate = DateUtils.addDays(contractInvoiceType.getPeriod().getBeginDate(), -1);
-				if (!terminationDate.equals(contractInvoiceType.getPrevious().getPeriod().getEndDate())) {
-					terminateContractInvoiceType(contractInvoiceType.getPrevious(), terminationDate);
+				if (!terminationDate.equals(previous.getPeriod().getEndDate())) {
+					terminateContractInvoiceType(previous, terminationDate);
 				}
 			}
 
@@ -116,8 +120,8 @@ public class ContractInvoiceTypeServiceImpl implements ContractInvoiceTypeServic
 		}
 	}
 
-	private void checkContractBelonging(ContractInvoiceType cit) throws ContractInvoiceTypeServiceException {
-		if (!Period.isDateInPeriod(cit.getPeriod().getBeginDate(), cit.getContract().getPeriod())) {
+	private void checkContractBelonging(ContractInvoiceType cit, Contract contract) throws ContractInvoiceTypeServiceException {
+		if (!Period.isDateInPeriod(cit.getPeriod().getBeginDate(), contract.getPeriod())) {
 			throw new ContractInvoiceTypeServiceException(Reason.OUT_OF_CONTRACT_DURATION);
 		}
 	}

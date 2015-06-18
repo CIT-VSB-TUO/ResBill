@@ -86,15 +86,16 @@ public class ContractTariffServiceImpl implements ContractTariffService {
 			// zjisteni kontraktu
 			Contract contract = contractDAO.findContract(contractTariff.getContract().getId());
 
+			ContractTariff previous = null;
 			if (contractTariff.getId() == null) { // nove prirazeni
 				// zjisteni posledniho (aktualniho) prirazeni
-				ContractTariff lastCT = contractTariffDAO.findLastContractTariff(contract.getId());
-				if (lastCT == null) {
+				previous = contractTariffDAO.findLastContractTariff(contract.getId());
+				if (previous == null) {
 					contractTariff.setPrevious(null);
 					// prvni prirazeni ma platnost od pocatku kontraktu
 					contractTariff.getPeriod().setBeginDate(contract.getPeriod().getBeginDate());
 				} else {
-					contractTariff.setPrevious(lastCT);
+					contractTariff.setPrevious(previous);
 				}
 			} else { // editace existujiciho prirazeni
 				// kontrola modifikace prirazeni
@@ -116,6 +117,8 @@ public class ContractTariffServiceImpl implements ContractTariffService {
 					if (!contractTariff.getPeriod().getBeginDate().equals(contract.getPeriod().getBeginDate())) {
 						throw new ContractTariffServiceException(Reason.FIRST_CONTRACT_TARIFF_BEGIN_DATE_MODIFICATION);
 					}
+				} else {
+					previous = contractTariffDAO.findContractTariff(contractTariff.getPrevious().getId());
 				}
 			}
 			// kontrola ze ceniky prirazovaneho tarifu pokryvaji dane obdobi
@@ -123,14 +126,14 @@ public class ContractTariffServiceImpl implements ContractTariffService {
 			if (firstPL.getPeriod().getBeginDate().after(contractTariff.getPeriod().getBeginDate())) {
 				throw new ContractTariffServiceException(Reason.NOT_COVERED_BY_PRICE_LISTS);
 			}
-			if (contractTariff.getPrevious() != null) {
+			if (previous != null) {
 				// kontrola zda pocatek spada do platnosti kontraktu
-				checkContractBelonging(contractTariff);
+				checkContractBelonging(contractTariff, contract);
 
 				// ukonceni platnosti predchoziho prirazeni, je-li treba
 				Date terminationDate = DateUtils.addDays(contractTariff.getPeriod().getBeginDate(), -1);
-				if (!terminationDate.equals(contractTariff.getPrevious().getPeriod().getEndDate())) {
-					terminateContractTariff(contractTariff.getPrevious(), terminationDate);
+				if (!terminationDate.equals(previous.getPeriod().getEndDate())) {
+					terminateContractTariff(previous, terminationDate);
 				}
 			}
 
@@ -143,8 +146,8 @@ public class ContractTariffServiceImpl implements ContractTariffService {
 		}
 	}
 
-	private void checkContractBelonging(ContractTariff ct) throws ContractTariffServiceException {
-		if (!Period.isDateInPeriod(ct.getPeriod().getBeginDate(), ct.getContract().getPeriod())) {
+	private void checkContractBelonging(ContractTariff ct, Contract contract) throws ContractTariffServiceException {
+		if (!Period.isDateInPeriod(ct.getPeriod().getBeginDate(), contract.getPeriod())) {
 			throw new ContractTariffServiceException(Reason.OUT_OF_CONTRACT_DURATION);
 		}
 	}

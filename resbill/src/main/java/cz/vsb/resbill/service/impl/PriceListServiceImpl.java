@@ -78,13 +78,14 @@ public class PriceListServiceImpl implements PriceListService {
 				throw new PriceListServiceException(Reason.NOT_LAST_PRICE_LIST);
 			}
 
+			PriceList previous = null;
 			if (priceList.getId() == null) { // novy cenik - pridani
 				// zjisteni dosud platneho ceniku pro ukonceni jeho platnosti
-				PriceList lastPL = priceListDAO.findLastPriceList(priceList.getTariff().getId());
-				if (lastPL == null) { // prvni cenik u tarifu - netreba provadet dalsi kontroly
+				previous = priceListDAO.findLastPriceList(priceList.getTariff().getId());
+				if (previous == null) { // prvni cenik u tarifu - netreba provadet dalsi kontroly
 					priceList.setPrevious(null);
 				} else { // nasledny cenik u tarifu - nutne kontroly
-					priceList.setPrevious(lastPL);
+					priceList.setPrevious(previous);
 				}
 			} else { // existujici cenik - editace
 				// kontrola zmeny tarifu
@@ -99,16 +100,18 @@ public class PriceListServiceImpl implements PriceListService {
 				if (priceList.getPrevious() == null) { // prvni cenik u tarifu
 					// kontrola pokryti kontraktu
 					checkContractPeriodCoverage(priceList);
+				} else {
+					previous = priceListDAO.findPriceList(priceList.getPrevious().getId());
 				}
 			}
-			if (priceList.getPrevious() != null) {
+			if (previous != null) {
 				// kontrola pripadne kolize dat s fakturovanym predchozim cenikem
 				checkInvoiceDateCollision(priceList);
 
 				// ukonceni platnosti predchoziho ceniku, je-li treba
 				Date terminationDate = DateUtils.addDays(priceList.getPeriod().getBeginDate(), -1);
-				if (!terminationDate.equals(priceList.getPrevious().getPeriod().getEndDate())) {
-					terminatePriceList(priceList.getPrevious(), terminationDate);
+				if (!terminationDate.equals(previous.getPeriod().getEndDate())) {
+					terminatePriceList(previous, terminationDate);
 				}
 			}
 			return priceListDAO.savePriceList(priceList);

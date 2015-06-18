@@ -90,7 +90,7 @@ public class ContractServerServiceImpl implements ContractServerService {
 			if (contractServer.getId() == null) {
 				// kontrola, zda ma kontrakt prirazen tarif
 				ContractTariffCriteria ctCriteria = new ContractTariffCriteria();
-				ctCriteria.setContractId(contractServer.getContract().getId());
+				ctCriteria.setContractId(contract.getId());
 				List<ContractTariff> cts = contractTariffDAO.findContractTariffs(ctCriteria, null, null);
 				if (cts.isEmpty()) {
 					throw new ContractServerServiceException(Reason.CONTRACT_WITHOUT_TARIFF);
@@ -98,7 +98,7 @@ public class ContractServerServiceImpl implements ContractServerService {
 			} else {
 				// kontrola pokusu o zmenu prirazeni
 				ContractServer origCS = contractServerDAO.findContractServer(contractServer.getId());
-				if (!origCS.getContract().equals(contractServer.getContract()) || !origCS.getServer().equals(contractServer.getServer())) {
+				if (!origCS.getContract().equals(contract) || !origCS.getServer().equals(contractServer.getServer())) {
 					throw new ContractServerServiceException(Reason.CONTRACT_SERVER_MODIFICATION);
 				}
 
