@@ -1,4 +1,5 @@
 {
+	"sEmptyTable":     "Žádné záznamy nejsou k dispozici",
 	"sProcessing":     "Zpracovávám...",
 	"sLoadingRecords": "Načítám...",
 	"sLengthMenu":     "Zobraz _MENU_ záznamů",
@@ -7,6 +8,7 @@
 	"sInfoEmpty":      "Zobrazeno 0 až 0 z 0 záznamů",
 	"sInfoFiltered":   "(filtrováno z celkem _MAX_ záznamů)",
 	"sInfoPostFix":    "",
+	"sInfoThousands":  " ",
 	"sSearch":         "Hledat: ",
 	"sUrl":            "",
 	"oPaginate": {

@@ -64,11 +64,11 @@
 						<tr>
 							<th th:text="#{column.contract.evidenceNumber}">Číslo</th>
 							<th th:text="#{column.contract.name}">Název</th>
-              <th th:text="#{column.contract.customer}">Zákazník</th>
+							<th th:text="#{column.contract.customer}">Zákazník</th>
 							<th th:text="#{column.contract.balance}">Zůstatek</th>
 							<th th:text="#{column.contract.beginDate}">Platnost od</th>
 							<th th:text="#{column.contract.endDate}">Platnost do</th>
-							<th>
+							<th data-orderable="false" data-searchable="false">
 								<a class="btn btn-primary btn-circle" href="contractEdit.html" th:href="@{/contracts/edit}" th:title="#{button.title.contract.add}">
 									<i class="fa fa-plus-square"></i>
 								</a>
@@ -78,12 +78,13 @@
 
 					<tbody th:remove="all-but-first">
 						<tr th:each="contract: ${contracts}">
-							<td th:text="${contract.evidenceNumber}">1</td>
+							<td th:text="${contract.evidenceNumber}" data-type="num">1</td>
 							<td th:text="${contract.name}">P.FS</td>
-              <td th:text="${contract.customerName}">Fakulta strojní</td>
-							<td th:text="${#numbers.formatDecimal(contract.balance,1,'DEFAULT',2,'DEFAULT')}">-1 000,0</td>
-							<td th:text="${#dates.format(contract.beginDate, '__#{date.format.list}__')}">1.1.2014</td>
-							<td th:text="${contract.endDate != null} ? ${#dates.format(contract.endDate, '__#{date.format.list}__')}">31.12.2015</td>
+							<td th:text="${contract.customerName}">Fakulta strojní</td>
+							<td th:text="${#numbers.formatDecimal(contract.balance,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${contract.balance}">-1 000,0</td>
+							<td th:text="${#dates.format(contract.beginDate, '__#{date.format.list}__')}" th:attr="data-order=${#dates.format(contract.beginDate, '__#{date.format.order}__')}">1.1.2014</td>
+							<td th:text="${contract.endDate != null} ? ${#dates.format(contract.endDate, '__#{date.format.list}__')}" 
+								th:attr="data-order=${contract.endDate != null} ? ${#dates.format(contract.endDate, '__#{date.format.order}__')}">31.12.2015</td>
 							<td>
 								<a class="btn btn-primary btn-circle" href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contract.contractId})}" th:title="#{button.title.contract.edit}">
 									<i class="fa fa-edit"></i>
@@ -104,6 +105,21 @@
 
 	<!-- Custom Theme JavaScript -->
 	<script src="../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+
+	<!-- DataTables -->
+	<script src="../../../bower_components/datatables/media/js/jquery.dataTables.min.js" th:src="@{/bower_components/datatables/media/js/jquery.dataTables.min.js}"></script>
+	<script src="../../../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js" th:src="@{/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js}"></script>
+
+	<th:block layout:fragment="footer">
+
+		<script type="text/javascript" th:inline="javascript">
+			/*<![CDATA[*/
+			$(document).ready(function() {
+				$('#contracts').dataTable();
+			});
+			/*]]>*/
+		</script>
+	</th:block>
 
 </body>
 </html>
