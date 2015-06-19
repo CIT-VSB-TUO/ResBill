@@ -84,3 +84,7 @@ th.striped, td.striped {
   right: 20px;
   width: 200px;
 }*/
+
+.pagination {
+	margin-top: 0 !important;
+}

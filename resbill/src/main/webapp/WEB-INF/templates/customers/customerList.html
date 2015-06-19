@@ -67,7 +67,7 @@
 							<th th:text="#{column.customer.contact.email}">E-mail</th>
 							<th th:text="#{column.customer.contact.phone}">Telefon</th>
 							<th th:text="#{column.customer.contact.address}">Adresa</th>
-							<th>
+							<th data-orderable="false" data-searchable="false">
 								<a class="btn btn-primary btn-circle" href="customerEdit.html" th:href="@{/customers/edit}" th:title="#{button.title.customer.add}">
 									<i class="fa fa-plus-square"></i>
 								</a>
@@ -128,6 +128,21 @@
 
 	<!-- Custom Theme JavaScript -->
 	<script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+
+	<!-- DataTables -->
+	<script src="../../../bower_components/datatables/media/js/jquery.dataTables.min.js" th:src="@{/bower_components/datatables/media/js/jquery.dataTables.min.js}"></script>
+	<script src="../../../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js" th:src="@{/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js}"></script>
+
+	<th:block layout:fragment="footer">
+
+		<script type="text/javascript" th:inline="javascript">
+			/*<![CDATA[*/
+			$(document).ready(function() {
+				$('#customers').dataTable();
+			});
+			/*]]>*/
+		</script>
+	</th:block>
 
 </body>
 

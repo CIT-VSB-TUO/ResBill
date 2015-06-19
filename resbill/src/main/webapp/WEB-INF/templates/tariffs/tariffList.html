@@ -63,9 +63,9 @@
 					<thead>
 						<tr>
 							<th rowspan="2" th:text="#{column.tariff.name}">Nazev</th>
-							<th rowspan="2" th:text="#{column.tariff.validity}">Platnost</th>
+							<th rowspan="2" th:text="#{column.tariff.validity}" data-searchable="false">Platnost</th>
 							<th colspan="5" th:text="#{column.tariff.priceList.last}">Ceník</th>
-							<th rowspan="2">
+							<th rowspan="2" data-orderable="false" data-searchable="false">
 								<a class="btn btn-primary btn-circle" href="tariffEdit.html" th:href="@{/tariffs/edit}" th:title="#{button.title.tariff.add}">
 									<i class="fa fa-plus-square"></i>
 								</a>
@@ -82,14 +82,14 @@
 					<tbody th:remove="all-but-first">
 						<tr th:each="dto : ${tariffPriceListDTOs}">
 							<td th:text="${dto.tariff.name}">tarif 1</td>
-							<td>
+							<td th:attr="data-order=${dto.tariff.valid}">
 								<i class="fa fa-check" th:if="${dto.tariff.valid}"></i>
 							</td>
-							<td th:text="${#dates.format(dto.lastPriceList.period.beginDate, '__#{date.format.list}__')}">1.1.0001</td>
-							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.cpuPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
-							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.memoryGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
-							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.spaceGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
-							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.backupGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
+							<td th:text="${#dates.format(dto.lastPriceList.period.beginDate, '__#{date.format.list}__')}" th:attr="data-order=${#dates.format(dto.lastPriceList.period.beginDate, '__#{date.format.order}__')}">1.1.0001</td>
+							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.cpuPrice,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${dto.lastPriceList.cpuPrice}">10,25</td>
+							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.memoryGBPrice,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${dto.lastPriceList.memoryGBPrice}">10,25</td>
+							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.spaceGBPrice,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${dto.lastPriceList.spaceGBPrice}">10,25</td>
+							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.backupGBPrice,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${dto.lastPriceList.backupGBPrice}">10,25</td>
 							<td>
 								<a class="btn btn-primary btn-circle" href="tariffEdit.html" th:href="@{/tariffs/edit(tariffId=${dto.tariff.id})}" th:title="#{button.title.tariff.edit}">
 									<i class="fa fa-edit"></i>
@@ -145,6 +145,21 @@
 
 	<!-- Custom Theme JavaScript -->
 	<script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+
+	<!-- DataTables -->
+	<script src="../../../bower_components/datatables/media/js/jquery.dataTables.min.js" th:src="@{/bower_components/datatables/media/js/jquery.dataTables.min.js}"></script>
+	<script src="../../../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js" th:src="@{/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js}"></script>
+
+	<th:block layout:fragment="footer">
+
+		<script type="text/javascript" th:inline="javascript">
+			/*<![CDATA[*/
+			$(document).ready(function() {
+				$('#tariffs').dataTable();
+			});
+			/*]]>*/
+		</script>
+	</th:block>
 
 </body>
 
