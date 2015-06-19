@@ -415,7 +415,7 @@ public class DailyImportServiceImpl implements DailyImportService {
       List<LineImportData> lineImportDatas = new ArrayList<LineImportData>();
       String[] lines = report.split("\n");
 
-      String headerLine = lines[0];
+      String headerLine = StringUtils.stripToNull(lines[0]);
       String[] headerLineNames = headerLine.split(";");
       Map<ReportItemName, Integer> lineItemIndices = new EnumMap<ReportItemName, Integer>(ReportItemName.class);
       for (int i = 0; i < headerLineNames.length; i++) {
