@@ -127,6 +127,9 @@ public class StatisticsController {
   public String createContractStatistics(@Valid @ModelAttribute(MODEL_OBJECT_KEY_STATISTIC_CRITERIA) StatisticCriteria statisticCriteria, BindingResult bindingResult, ModelMap model) {
 
     if (!bindingResult.hasErrors()) {
+      // Zadavatel momentalne nechce pouzivat rozsah, ale pouze jedno datum. Pokud se rozmysli, pak tento radek odkomentujeme a poupravime uzivatelske rozhrani 
+      statisticCriteria.setEndDate(statisticCriteria.getBeginDate());
+      
       loadContractStatistic(statisticCriteria, model);
     } else {
       bindingResult.reject("error.load.statistics.contracts.validation");

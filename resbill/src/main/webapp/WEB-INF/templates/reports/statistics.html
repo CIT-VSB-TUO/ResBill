@@ -71,6 +71,8 @@
             </div>
           </div>
 
+          <!-- Zadavatel momentalne nechce pouzivat rozsah, ale pouze jedno datum. -->
+          <!-- 
           <div class="form-group">
             <div class="form-group required" th:classappend="${#fields.hasErrors('endDate')} ? 'has-error'">
               <label class="control-label" th:text="#{label.statistics.till}" th:for="endDate">Do</label>
@@ -82,6 +84,7 @@
               <p class="help-block" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}" />
             </div>
           </div>
+           -->
 
           <button class="btn btn-primary" type="submit" name="contractStatistic">
             <i class="fa fa-paw"></i> <span th:text="#{button.title.statistics.contracts}">Kontrakty</span>
