@@ -222,6 +222,7 @@
               <th th:text="#{column.invoice.amount}">Částka</th>
               <th th:text="#{column.invoice.priceListMissing}" data-searchable="false">Chybí ceník</th>
               <th data-orderable="false" data-searchable="false"></th>
+              <th data-orderable="false" data-searchable="false"></th>
             </tr>
           </thead>
 
@@ -239,6 +240,9 @@
               <td><a class="btn btn-primary btn-circle" href="invoiceDetail.html" th:href="@{/invoice/detail(invoiceId=${invoice.transactionId})}"
                 th:title="#{button.title.invoice.detail}"> <i class="fa fa-edit"></i>
               </a></td>
+              <td><a class="btn btn-primary btn-circle" href="invoiceDetail.html#download" th:href="@{/invoice/detail/download(invoiceId=${invoice.transactionId})}"
+                th:title="#{button.title.invoice.download}"> <i class="fa fa-cloud-download"></i>
+              </a></td>              
             </tr>
           </tbody>
         </table>

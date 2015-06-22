@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="InvoiceServerSubreport" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="df3b9bef-cbb9-4886-b16f-aa188ab240d3">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="dateFormat" class="java.text.DateFormat"/>
+	<parameter name="templateDir" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="price" class="java.lang.Float"/>
+	<field name="cpuUsages" class="java.util.List"/>
+	<field name="memoryGbUsages" class="java.util.List"/>
+	<field name="provisionedSpaceGbUsages" class="java.util.List"/>
+	<field name="backupGbUsages" class="java.util.List"/>
+	<field name="backupWithPrice" class="java.lang.Boolean"/>
+	<field name="usageTerminationDate" class="java.util.Date"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="115" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="16" width="300" height="16" uuid="a121ab5b-691b-406f-9a56-e7be1ac2f708"/>
+				<textElement>
+					<font size="12" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="510" y="16" width="45" height="16" uuid="015877fc-f53e-45b7-af75-f8e44d4e89fc"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font size="12" pdfEncoding="Cp1250"/>
+				</textElement>
+				<text><![CDATA[Kč]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement positionType="Float" x="300" y="16" width="210" height="16" uuid="9931acb5-e709-4874-a03d-fa754c0819d6"/>
+				<textElement textAlignment="Right">
+					<font size="12" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="45" width="60" height="13" uuid="ee9b2196-cee2-410a-9e11-abd1ecf7b8a2"/>
+				<box leftPadding="0" rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="10" pdfEncoding="Cp1250"/>
+				</textElement>
+				<text><![CDATA[CPU:]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="60" y="45" width="495" height="13" uuid="f5202457-88f4-46c3-a8bd-6d3be40eb99e"/>
+				<subreportParameter name="unit">
+					<subreportParameterExpression><![CDATA["x"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="templateDir">
+					<subreportParameterExpression><![CDATA[$P{templateDir}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="dateFormat">
+					<subreportParameterExpression><![CDATA[$P{dateFormat}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="amountNumberFormat">
+					<subreportParameterExpression><![CDATA[new DecimalFormat("#,##0")]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="resourceName">
+					<subreportParameterExpression><![CDATA["vCPU"]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new JRBeanCollectionDataSource($F{cpuUsages})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{templateDir} + "InvoiceResourceSubreport.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="64" width="60" height="13" uuid="56f9be8b-431d-4602-ad8b-80022459219d"/>
+				<box leftPadding="0" rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="10" pdfEncoding="Cp1250"/>
+				</textElement>
+				<text><![CDATA[RAM:]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="60" y="64" width="495" height="13" uuid="e9fc902e-0af7-402c-a234-c6253507f93e"/>
+				<subreportParameter name="unit">
+					<subreportParameterExpression><![CDATA[" GB"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="templateDir">
+					<subreportParameterExpression><![CDATA[$P{templateDir}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="dateFormat">
+					<subreportParameterExpression><![CDATA[$P{dateFormat}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="resourceName">
+					<subreportParameterExpression><![CDATA["RAM"]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new JRBeanCollectionDataSource($F{memoryGbUsages})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{templateDir} + "InvoiceResourceSubreport.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="58" width="555" height="6" uuid="9dc7361a-0e26-414a-acf5-16945455101f"/>
+				<text><![CDATA[Static text]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="60" y="83" width="495" height="13" uuid="61213b44-ee9f-4f7b-8f66-e712350a7c15"/>
+				<subreportParameter name="unit">
+					<subreportParameterExpression><![CDATA[" GB"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="templateDir">
+					<subreportParameterExpression><![CDATA[$P{templateDir}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="dateFormat">
+					<subreportParameterExpression><![CDATA[$P{dateFormat}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="resourceName">
+					<subreportParameterExpression><![CDATA["RAM"]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new JRBeanCollectionDataSource($F{provisionedSpaceGbUsages})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{templateDir} + "InvoiceResourceSubreport.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="83" width="60" height="13" uuid="02f9c5f2-7136-421c-a48a-9292f35edb9a"/>
+				<box leftPadding="0" rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="10" pdfEncoding="Cp1250"/>
+				</textElement>
+				<text><![CDATA[HDD:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="77" width="555" height="6" uuid="1f54eca9-f542-4c25-b290-3a764f9233b0"/>
+				<text><![CDATA[Static text]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="102" width="60" height="13" isRemoveLineWhenBlank="true" uuid="d94d00e9-b842-4bca-b228-f7adf82e7594">
+					<printWhenExpression><![CDATA[$F{backupWithPrice}]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="0" rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="10" pdfEncoding="Cp1250"/>
+				</textElement>
+				<text><![CDATA[Zálohování:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="96" width="555" height="6" uuid="e4c1e024-d6b0-4640-85f6-a8401de580c4"/>
+				<text><![CDATA[Static text]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="60" y="102" width="495" height="13" isRemoveLineWhenBlank="true" uuid="c20e8688-a591-424b-9ef7-2ad69cfc0de5">
+					<printWhenExpression><![CDATA[$F{backupWithPrice}]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="unit">
+					<subreportParameterExpression><![CDATA[" GB"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="templateDir">
+					<subreportParameterExpression><![CDATA[$P{templateDir}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="dateFormat">
+					<subreportParameterExpression><![CDATA[$P{dateFormat}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="resourceName">
+					<subreportParameterExpression><![CDATA["RAM"]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new JRBeanCollectionDataSource($F{backupGbUsages})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{templateDir} + "InvoiceResourceSubreport.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="32" width="555" height="13" isRemoveLineWhenBlank="true" forecolor="#FF0000" uuid="86d9e2b7-cd3e-4cbd-b050-29ed0f36d243">
+					<printWhenExpression><![CDATA[$F{usageTerminationDate}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="10" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Zrušeno " + $P{dateFormat}.format($F{usageTerminationDate})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

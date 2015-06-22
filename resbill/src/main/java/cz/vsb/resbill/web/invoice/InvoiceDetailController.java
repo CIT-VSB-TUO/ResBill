@@ -4,8 +4,15 @@
  */
 package cz.vsb.resbill.web.invoice;
 
-import javax.inject.Inject;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -14,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import cz.vsb.resbill.model.File;
 import cz.vsb.resbill.model.Invoice;
 import cz.vsb.resbill.service.InvoiceService;
 import cz.vsb.resbill.util.WebUtils;
@@ -27,84 +35,120 @@ import cz.vsb.resbill.util.WebUtils;
 @RequestMapping("/invoice/detail")
 public class InvoiceDetailController {
 
-	private static final Logger log = LoggerFactory.getLogger(InvoiceDetailController.class);
+  private static final Logger log                      = LoggerFactory.getLogger(InvoiceDetailController.class);
 
-	public static final String MODEL_OBJECT_KEY_INVOICE = "invoice";
+  public static final String  MODEL_OBJECT_KEY_INVOICE = "invoice";
 
-	@Inject
-	private InvoiceService invoiceService;
+  @Inject
+  private InvoiceService      invoiceService;
 
-	/**
-	 * 
-	 * @param model
-	 * @param msgKey
-	 */
-	protected static void addGlobalError(ModelMap model, String msgKey) {
-		WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICE, msgKey);
-	}
+  /**
+   * 
+   * @param model
+   * @param msgKey
+   */
+  protected static void addGlobalError(ModelMap model, String msgKey) {
+    WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICE, msgKey);
+  }
 
-	/**
-	 * 
-	 * @param invoiceId
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model) {
-		loadInvoice(invoiceId, model);
+  /**
+   * 
+   * @param invoiceId
+   * @param model
+   * @return
+   */
+  @RequestMapping(value = "", method = RequestMethod.GET)
+  public String view(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model) {
+    loadInvoice(invoiceId, model);
 
-		return "invoice/invoiceDetail";
-	}
+    return "invoice/invoiceDetail";
+  }
 
-	/**
-	 * 
-	 * @param invoiceId
-	 * @param model
-	 * @return
-	 */
-	protected Invoice loadInvoice(Integer invoiceId, ModelMap model) {
+  /**
+   * 
+   * @param invoiceId
+   * @param model
+   * @return
+   */
+  protected Invoice loadInvoice(Integer invoiceId, ModelMap model) {
 
-		Invoice invoice = null;
+    Invoice invoice = null;
 
-		try {
-			invoice = invoiceService.findInvoice(invoiceId, true, true);
-			model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoice);
-		} catch (Exception exc) {
-			log.error("Cannot load Invoice with id: " + invoiceId, exc);
+    try {
+      invoice = invoiceService.findInvoice(invoiceId, true, true);
+      model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoice);
+    } catch (Exception exc) {
+      log.error("Cannot load Invoice with id: " + invoiceId, exc);
 
-			invoice = null;
+      invoice = null;
 
-			model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoice);
-			addGlobalError(model, "error.load.invoice");
-		}
+      model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoice);
+      addGlobalError(model, "error.load.invoice");
+    }
 
-		return invoice;
-	}
-	
-	/**
-	 * 
-	 * @param dailyImportId
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-	public String delete(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model) {
+    return invoice;
+  }
 
-		Invoice invoice = loadInvoice(invoiceId, model);
+  /**
+   * 
+   * @param dailyImportId
+   * @param model
+   * @return
+   */
+  @RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
+  public String delete(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model) {
 
-		if (invoice != null) {
-			try {
+    Invoice invoice = loadInvoice(invoiceId, model);
 
-				invoice = invoiceService.deleteInvoice(invoice.getId());
-				return "redirect:/invoice";
+    if (invoice != null) {
+      try {
 
+        invoice = invoiceService.deleteInvoice(invoice.getId());
+        return "redirect:/invoice";
 
-			} catch (Exception exc) {
-				log.error("Cannot delete invoice: " + invoice, exc);
-				addGlobalError(model, "error.delete.invoice");
-			}
-		}
+      } catch (Exception exc) {
+        log.error("Cannot delete invoice: " + invoice, exc);
+        addGlobalError(model, "error.delete.invoice");
+      }
+    }
 
-		return "invoice/invoiceDetail";
-	}	
+    return "invoice/invoiceDetail";
+  }
+
+  /**
+   * 
+   * @param invoiceId
+   * @param model
+   * @return
+   */
+  @RequestMapping(value = "download", method = RequestMethod.GET)
+  public void download(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, HttpServletRequest request, HttpServletResponse response) {
+
+    try {
+      File attachment = invoiceService.findInvoiceAttachment(invoiceId);
+
+      if (attachment != null) {
+        try (InputStream in = new ByteArrayInputStream(attachment.getContent()); OutputStream out = response.getOutputStream()) {
+
+          response.setContentLength(attachment.getSize().intValue());
+          response.setContentType(attachment.getContentType());
+
+          // response header
+          String headerKey = "Content-Disposition";
+          String headerValue = String.format("attachment; filename=\"%s\"", attachment.getName());
+          response.setHeader(headerKey, headerValue);
+
+          // Write response
+          IOUtils.copy(in, out);
+
+        } catch (Exception exc) {
+          log.error("Cannot download invoice with ID: " + invoiceId, exc);
+        }
+      }
+
+    } catch (Exception exc) {
+      log.error("Cannot download invoice with ID: " + invoiceId, exc);
+    }
+
+  }
 }

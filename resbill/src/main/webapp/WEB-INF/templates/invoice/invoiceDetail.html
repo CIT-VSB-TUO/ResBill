@@ -77,6 +77,10 @@
               <div class="row">
                 <div class="col-lg-12">
                   <p>
+                    <a href="invoiceDetail.html#download" class="btn btn-primary" th:href="@{/invoice/detail/download(invoiceId=${param.invoiceId})}"> <i
+                      class="fa fa-cloud-download"></i> <span th:title="#{button.title.invoice.download}" th:text="#{button.download}">Stahnout</span>
+                    </a>
+
                     <button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete">
                       <i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
                     </button>

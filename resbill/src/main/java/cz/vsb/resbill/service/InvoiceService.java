@@ -15,6 +15,7 @@ import cz.vsb.resbill.dto.InvoiceDTO;
 import cz.vsb.resbill.dto.InvoiceExportResultDTO;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Contract;
+import cz.vsb.resbill.model.File;
 import cz.vsb.resbill.model.Invoice;
 import cz.vsb.resbill.model.InvoiceType;
 
@@ -27,6 +28,8 @@ public interface InvoiceService {
   Invoice findInvoice(Integer invoiceId) throws ResBillException;
 
   Invoice findInvoice(Integer invoiceId, boolean initializeSummary, boolean initializeDetail) throws ResBillException;
+
+  File findInvoiceAttachment(Integer invoiceId) throws ResBillException;
 
   List<Invoice> findInvoices(InvoiceCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
