@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import cz.vsb.resbill.criteria.PersonCriteria;
 import cz.vsb.resbill.criteria.PersonCriteria.OrderBy;
-import cz.vsb.resbill.model.Person;
+import cz.vsb.resbill.dto.person.PersonDTO;
 import cz.vsb.resbill.service.PersonService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -29,38 +29,38 @@ public class PersonListController {
 
 	private static final Logger log = LoggerFactory.getLogger(PersonListController.class);
 
-	private static final String PERSONS_MODEL_KEY = "persons";
+	private static final String PERSONS_MODEL_KEY = "personDTOs";
 
 	@Inject
 	private PersonService personService;
 
-	private void loadPersons(ModelMap model) {
-		List<Person> persons = null;
+	private void loadPersonDTOs(ModelMap model) {
+		List<PersonDTO> personDTOs = null;
 		try {
 			PersonCriteria criteria = new PersonCriteria();
 			criteria.setOrderBy(OrderBy.EMAIL);
-			persons = personService.findPersons(criteria, null, null);
-			model.addAttribute(PERSONS_MODEL_KEY, persons);
+			personDTOs = personService.findPersonDTOs(criteria, null, null);
+			model.addAttribute(PERSONS_MODEL_KEY, personDTOs);
 		} catch (Exception e) {
 			log.error("Cannot load list of persons.", e);
 
-			model.addAttribute(PERSONS_MODEL_KEY, persons);
+			model.addAttribute(PERSONS_MODEL_KEY, personDTOs);
 			WebUtils.addGlobalError(model, PERSONS_MODEL_KEY, "error.load.persons");
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Loaded list of persons size: " + (persons != null ? persons.size() : null));
+			log.debug("Loaded list of persons size: " + (personDTOs != null ? personDTOs.size() : null));
 		}
 	}
 
 	/**
-	 * Handles all GET requests. Loads a list of all persons and binds it with the key "persons" into a model.
+	 * Handles all GET requests. Loads a list of all persons and binds it with the key "personDTOs" into a model.
 	 * 
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String view(ModelMap model) {
-		loadPersons(model);
+		loadPersonDTOs(model);
 
 		return "persons/personList";
 	}

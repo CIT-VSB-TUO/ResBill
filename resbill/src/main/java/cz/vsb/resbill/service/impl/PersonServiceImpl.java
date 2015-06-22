@@ -1,5 +1,6 @@
 package cz.vsb.resbill.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -14,6 +15,7 @@ import cz.vsb.resbill.criteria.PersonCriteria;
 import cz.vsb.resbill.dao.ContractPersonDAO;
 import cz.vsb.resbill.dao.CustomerDAO;
 import cz.vsb.resbill.dao.PersonDAO;
+import cz.vsb.resbill.dto.person.PersonDTO;
 import cz.vsb.resbill.exception.PersonServiceException;
 import cz.vsb.resbill.exception.PersonServiceException.Reason;
 import cz.vsb.resbill.exception.ResBillException;
@@ -59,6 +61,21 @@ public class PersonServiceImpl implements PersonService {
 			return personDAO.findPersons(criteria, offset, limit);
 		} catch (Exception e) {
 			log.error("An unexpected error occured while searching for Person entities by criteria: " + criteria, e);
+			throw new ResBillException(e);
+		}
+	}
+
+	@Override
+	public List<PersonDTO> findPersonDTOs(PersonCriteria criteria, Integer offset, Integer limit) throws ResBillException {
+		try {
+			List<Person> persons = personDAO.findPersons(criteria, offset, limit);
+			List<PersonDTO> dtos = new ArrayList<PersonDTO>(persons.size());
+			for (Person person : persons) {
+				dtos.add(new PersonDTO(person));
+			}
+			return dtos;
+		} catch (Exception e) {
+			log.error("An unexpected error occured while searching for PersonDTOs by criteria: " + criteria, e);
 			throw new ResBillException(e);
 		}
 	}
