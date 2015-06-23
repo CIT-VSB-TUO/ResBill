@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Invoice" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bec215f0-714b-49f3-aab8-00b3775a611b">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Invoice" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="495" leftMargin="50" rightMargin="50" topMargin="50" bottomMargin="50" uuid="bec215f0-714b-49f3-aab8-00b3775a611b">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -35,25 +35,36 @@
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="200" splitType="Stretch">
+		<band height="198" splitType="Stretch">
+			<subreport>
+				<reportElement positionType="Float" x="0" y="179" width="495" height="19" uuid="e7622a5d-f40c-4b44-ba58-5f9fa1c91ca4"/>
+				<subreportParameter name="templateDir">
+					<subreportParameterExpression><![CDATA[$P{templateDir}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="dateFormat">
+					<subreportParameterExpression><![CDATA[$P{dateFormat}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new JRBeanCollectionDataSource($F{servers})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{templateDir} + "InvoiceServerSubreport.jasper"]]></subreportExpression>
+			</subreport>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="0" y="0" width="555" height="23" uuid="e9304561-4be8-4b14-b5a2-b886e321c786"/>
+				<reportElement positionType="Float" x="0" y="0" width="495" height="23" uuid="e9304561-4be8-4b14-b5a2-b886e321c786"/>
 				<textElement>
 					<font size="18" pdfEncoding="Cp1250"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{customerName}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="0" y="23" width="555" height="32" uuid="e5a84411-041b-40b7-9324-e8daac5950e7"/>
+				<reportElement positionType="Float" x="0" y="23" width="495" height="32" uuid="e5a84411-041b-40b7-9324-e8daac5950e7"/>
 				<textElement>
 					<font size="24" isBold="true" pdfEncoding="Cp1250"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{contractName}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="0" y="55" width="555" height="23" uuid="335cf116-4f05-4458-b38c-9df3f371f9d0"/>
+				<reportElement positionType="Float" x="0" y="55" width="495" height="18" uuid="335cf116-4f05-4458-b38c-9df3f371f9d0"/>
 				<textElement>
-					<font size="18" pdfEncoding="Cp1250"/>
+					<font size="14" pdfEncoding="Cp1250"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Výpis čerpaných zdrojů za období: " + $P{dateFormat}.format($F{beginDate}) + "-" + $P{dateFormat}.format($F{endDate})]]></textFieldExpression>
 			</textField>
@@ -62,7 +73,7 @@
 				<textElement>
 					<font size="14" pdfEncoding="Cp1250"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Kontakt"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Kontaktní osoba"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="0" y="110" width="275" height="13" isRemoveLineWhenBlank="true" uuid="3c6c00f5-a69a-44cb-9b46-46076c6484a0"/>
@@ -90,7 +101,7 @@
 				<textElement textAlignment="Right">
 					<font size="10" pdfEncoding="Cp1250"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Nový:"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Konečný:"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="275" y="92" width="100" height="18" uuid="b7286234-4797-46e4-a789-2a0496370d49"/>
@@ -135,7 +146,7 @@
 				<textFieldExpression><![CDATA[$F{beginBalance}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="425" y="123" width="130" height="13" isRemoveLineWhenBlank="true" uuid="96de0b42-b5fb-4469-b5f3-2b0a4ba7b077"/>
+				<reportElement positionType="Float" x="425" y="123" width="70" height="13" isRemoveLineWhenBlank="true" uuid="96de0b42-b5fb-4469-b5f3-2b0a4ba7b077"/>
 				<box leftPadding="5"/>
 				<textElement textAlignment="Left">
 					<font size="10" pdfEncoding="Cp1250"/>
@@ -143,7 +154,7 @@
 				<textFieldExpression><![CDATA["Kč"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="425" y="136" width="130" height="13" isRemoveLineWhenBlank="true" uuid="63be8d85-0d45-47e6-bf64-389fdd844598"/>
+				<reportElement positionType="Float" x="425" y="136" width="70" height="13" isRemoveLineWhenBlank="true" uuid="63be8d85-0d45-47e6-bf64-389fdd844598"/>
 				<box leftPadding="5"/>
 				<textElement textAlignment="Left">
 					<font size="10" pdfEncoding="Cp1250"/>
@@ -151,7 +162,7 @@
 				<textFieldExpression><![CDATA["Kč"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="425" y="110" width="130" height="13" isRemoveLineWhenBlank="true" uuid="9d89f96c-69d7-4e33-a667-58d2b9f2fe2c"/>
+				<reportElement positionType="Float" x="425" y="110" width="70" height="13" isRemoveLineWhenBlank="true" uuid="9d89f96c-69d7-4e33-a667-58d2b9f2fe2c"/>
 				<box leftPadding="5"/>
 				<textElement textAlignment="Left">
 					<font size="10" pdfEncoding="Cp1250"/>
@@ -159,23 +170,12 @@
 				<textFieldExpression><![CDATA["Kč"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="0" y="163" width="555" height="18" uuid="a823a6f2-5833-4948-a810-7f221c5bdcfd"/>
+				<reportElement positionType="Float" x="0" y="163" width="495" height="16" uuid="a823a6f2-5833-4948-a810-7f221c5bdcfd"/>
 				<textElement>
-					<font size="14" pdfEncoding="Cp1250"/>
+					<font size="12" pdfEncoding="Cp1250"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Soupis čerpání zdrojů v datovém centru:"]]></textFieldExpression>
 			</textField>
-			<subreport>
-				<reportElement positionType="Float" x="0" y="181" width="555" height="19" uuid="e7622a5d-f40c-4b44-ba58-5f9fa1c91ca4"/>
-				<subreportParameter name="templateDir">
-					<subreportParameterExpression><![CDATA[$P{templateDir}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="dateFormat">
-					<subreportParameterExpression><![CDATA[$P{dateFormat}]]></subreportParameterExpression>
-				</subreportParameter>
-				<dataSourceExpression><![CDATA[new JRBeanCollectionDataSource($F{servers})]]></dataSourceExpression>
-				<subreportExpression><![CDATA[$P{templateDir} + "InvoiceServerSubreport.jasper"]]></subreportExpression>
-			</subreport>
 		</band>
 	</detail>
 	<columnFooter>
