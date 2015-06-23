@@ -10,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -84,19 +82,19 @@ public class ServerOverviewController extends AbstractServerController {
 	}
 
 	/**
-	 * Handle POST requests for deleting {@link ServerEditDTO} instance.
+	 * Handle GET requests for deleting {@link ServerEditDTO} instance.
 	 * 
 	 * @param server
 	 * @param bindingResult
 	 * @return
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-	public String delete(@ModelAttribute(MODEL_OBJECT_KEY_SERVER_OVERVIEW_DTO) ServerOverviewDTO serverOverviewDTO, BindingResult bindingResult) {
+	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	public String delete(@RequestParam(value = "serverId", required = true) Integer serverId, ModelMap model) {
 		if (log.isDebugEnabled()) {
-			log.debug("ServerOverviewDTO to delete: " + serverOverviewDTO);
+			log.debug("Server.id to delete: " + serverId);
 		}
 		try {
-			Server server = serverService.deleteServer(serverOverviewDTO.getId());
+			Server server = serverService.deleteServer(serverId);
 			if (log.isDebugEnabled()) {
 				log.debug("Deleted server: " + server);
 			}
@@ -104,19 +102,19 @@ public class ServerOverviewController extends AbstractServerController {
 		} catch (ServerServiceException e) {
 			switch (e.getReason()) {
 			case CONTRACT_ASSOCIATED:
-				bindingResult.reject("error.delete.server.contract.associated");
+				addGlobalError(model, "error.delete.server.contract.associated");
 				break;
 			case DAILY_USAGE_EXISTENCE:
-				bindingResult.reject("error.delete.server.dailyUsage.exists");
+				addGlobalError(model, "error.delete.server.dailyUsage.exists");
 				break;
 			default:
 				log.warn("Unsupported reason: " + e);
-				bindingResult.reject("error.delete.server");
+				addGlobalError(model, "error.delete.server");
 				break;
 			}
 		} catch (Exception e) {
-			log.error("Cannot delete serverOverviewDTO: " + serverOverviewDTO, e);
-			bindingResult.reject("error.delete.server");
+			log.error("Cannot delete server with id: " + serverId, e);
+			addGlobalError(model, "error.delete.server");
 		}
 		return "servers/serverOverview";
 	}
