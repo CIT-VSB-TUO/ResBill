@@ -73,45 +73,52 @@
 			<div class="col-lg-12">
 			
 				<div class="panel panel-default">
+					<div class="panel-heading">
+						<span class="pull-left" th:text="#{panel.person.data}">Osoba</span>
+						<span class="pull-right">
+							<a class="btn btn-danger" href="personOverview.html" th:href="@{/persons/overview/delete(personId=${personOverviewDTO.personId})}" 
+								th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
+								<i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
+							</a>
+						</span>
+						<div class="clearfix"></div>
+					</div>
+
 					<div class="panel-body">
 						
 						<div class="row">
-							<div class="col-lg-2">
+							<div class="col-lg-3">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.person.email}">E-mail</label>
 									<p class="form-control-static" th:text="${personOverviewDTO.email}">a@b.c</p>
 								</div>
 							</div>
 							
-							<div class="col-lg-2">
-								<div class="form-group">
-									<label class="control-label" th:text="#{label.person.fullName}">Jmeno</label>
-									<p class="form-control-static" th:text="${personOverviewDTO.fullName}">Ing. Albert Einstein, CSc.</p>
-								</div>
-							</div>
-
-							<div class="col-lg-2">
-								<div class="form-group">
-									<label class="control-label" th:text="#{label.person.titles}">Jmeno</label>
-									<p class="form-control-static" th:text="${personOverviewDTO.titles}">Ing. Albert Einstein, CSc.</p>
-								</div>
-							</div>
-
-							<div class="col-lg-2">
+							<div class="col-lg-3">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.person.phone}">Telefon</label>
 									<p class="form-control-static" th:text="${personOverviewDTO.phone}">987 456 321</p>
 								</div>
 							</div>
 							
-							<div class="col-lg-4 text-right">
-								<a class="btn btn-danger" href="personOverview.html" th:href="@{/persons/overview/delete(personId=${personOverviewDTO.personId})}" th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
-									<i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
-								</a>
+						</div>
+						<div class="row">
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.person.fullName}">Jmeno</label>
+									<p class="form-control-static" th:text="${personOverviewDTO.fullName}">Ing. Albert Einstein, CSc.</p>
+								</div>
+							</div>
+
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.person.titles}">Tituly</label>
+									<p class="form-control-static" th:text="${personOverviewDTO.titles}">Ing. Albert Einstein, CSc.</p>
+								</div>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-lg-10">
+							<div class="col-lg-6">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.person.note}">Poznamka</label>
 									<p class="form-control-static" th:text="${personOverviewDTO.note}">nejaky text</p>
@@ -127,37 +134,41 @@
 					<div class="panel-body">
 							
 						<div class="row">
-							<div class="col-lg-2">
+							<div class="col-lg-3">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.address.street}">Ulice</label>
 									<p class="form-control-static" th:text="${personOverviewDTO.address.street}">Siroka</p>
 								</div>
 							</div>
-							<div class="col-lg-2">
+							<div class="col-lg-3">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.address.houseNumbers}">Cisla</label>
 									<p class="form-control-static" th:text="${personOverviewDTO.address.houseNumbers}">123/5</p>
 								</div>
 							</div>
-							<div class="col-lg-2">
+						</div>
+						<div class="row">
+							<div class="col-lg-3">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.address.city}">Obec</label>
 									<p class="form-control-static" th:text="${personOverviewDTO.address.city}">Praha</p>
 								</div>
 							</div>
-							<div class="col-lg-2">
+							<div class="col-lg-3">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.address.cityPart}">Obec</label>
 									<p class="form-control-static" th:text="${personOverviewDTO.address.cityPart}">Bohnice</p>
 								</div>
 							</div>
-							<div class="col-lg-2">
+						</div>
+						<div class="row">
+							<div class="col-lg-3">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.address.zip}">PSC</label>
 									<p class="form-control-static" th:text="${personOverviewDTO.address.zip}">456 321</p>
 								</div>
 							</div>
-							<div class="col-lg-2">
+							<div class="col-lg-3">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.address.country}">Stat</label>
 									<p class="form-control-static" th:text="${personOverviewDTO.address.country}">CR</p>

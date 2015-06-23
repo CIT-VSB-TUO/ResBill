@@ -41,7 +41,7 @@
 
 </head>
 <body>
-	<div th:fragment="personHeader">
+	<div th:fragment="personHeader" th:if="${#vars.containsKey('personHeaderDTO')}">
 	
 		<!-- Chyby -->
 		<div class="row">

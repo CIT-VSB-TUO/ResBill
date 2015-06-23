@@ -2,7 +2,6 @@ package cz.vsb.resbill.web.persons;
 
 import java.util.Locale;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import cz.vsb.resbill.exception.PersonServiceException;
 import cz.vsb.resbill.model.Person;
-import cz.vsb.resbill.service.PersonService;
 import cz.vsb.resbill.util.WebUtils;
 
 /**
@@ -38,9 +36,6 @@ public class PersonEditController extends AbstractPersonController {
 	private static final Logger log = LoggerFactory.getLogger(PersonEditController.class);
 
 	private static final String PERSON_MODEL_KEY = "person";
-
-	@Inject
-	private PersonService personService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder, Locale locale) {

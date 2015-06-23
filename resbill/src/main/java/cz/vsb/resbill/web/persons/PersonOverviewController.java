@@ -1,7 +1,5 @@
 package cz.vsb.resbill.web.persons;
 
-import javax.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import cz.vsb.resbill.dto.person.PersonOverviewDTO;
 import cz.vsb.resbill.exception.PersonServiceException;
 import cz.vsb.resbill.model.Person;
-import cz.vsb.resbill.service.PersonService;
 import cz.vsb.resbill.util.WebUtils;
 
 @Controller
@@ -25,9 +22,6 @@ public class PersonOverviewController extends AbstractPersonController {
 	private static final Logger log = LoggerFactory.getLogger(PersonOverviewController.class);
 
 	private static final String PERSON_OVERVIEW_DTO_MODEL_KEY = "personOverviewDTO";
-
-	@Inject
-	private PersonService personService;
 
 	private void loadPersonOverviewDTO(Integer personId, ModelMap model) {
 		if (log.isDebugEnabled()) {

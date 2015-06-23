@@ -14,10 +14,10 @@ public abstract class AbstractPersonController {
 
 	private static final Logger log = LoggerFactory.getLogger(AbstractPersonController.class);
 
-	private static final String PERSON_HEADER_DTO_MODEL_KEY = "personHeaderDTO";
+	protected static final String PERSON_HEADER_DTO_MODEL_KEY = "personHeaderDTO";
 
 	@Inject
-	private PersonService personService;
+	protected PersonService personService;
 
 	@ModelAttribute(PERSON_HEADER_DTO_MODEL_KEY)
 	public PersonHeaderDTO getPersonHeaderDTO(@RequestParam(value = "personId", required = false) Integer personId) {
