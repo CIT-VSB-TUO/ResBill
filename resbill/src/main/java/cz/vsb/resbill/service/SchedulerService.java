@@ -13,4 +13,6 @@ package cz.vsb.resbill.service;
 public interface SchedulerService {
 
   void importAllReports();
+
+  void createAllInvoices();
 }
