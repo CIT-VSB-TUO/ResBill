@@ -88,11 +88,9 @@
                   </div>
 
                   <div class="col-lg-2 text-right">
-                    <form role="form" method="post" action="#">
-                      <button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete">
-                        <i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
-                      </button>
-                    </form>
+                    <a class="btn btn-danger" href="serverOverview.html" th:href="@{/servers/overview/delete(serverId=${serverOverviewDTO.id})}" th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
+                      <i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
+                    </a>
                   </div>
                 </div>
               </div>

@@ -3,6 +3,9 @@ package cz.vsb.resbill.service;
 import java.util.List;
 
 import cz.vsb.resbill.criteria.PersonCriteria;
+import cz.vsb.resbill.dto.person.PersonDTO;
+import cz.vsb.resbill.dto.person.PersonHeaderDTO;
+import cz.vsb.resbill.dto.person.PersonOverviewDTO;
 import cz.vsb.resbill.exception.PersonServiceException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Person;
@@ -27,6 +30,24 @@ public interface PersonService {
 	Person findPerson(Integer personId) throws ResBillException;
 
 	/**
+	 * Finds {@link PersonHeaderDTO}
+	 * 
+	 * @param personId
+	 * @return
+	 * @throws ResBillException
+	 */
+	PersonHeaderDTO findPersonHeaderDTO(Integer personId) throws ResBillException;
+
+	/**
+	 * Finds {@link PersonOverviewDTO}
+	 * 
+	 * @param personId
+	 * @return
+	 * @throws ResBillException
+	 */
+	PersonOverviewDTO findPersonOverviewDTO(Integer personId) throws ResBillException;
+
+	/**
 	 * Finds a list of {@link Person} entities according to given criteria.
 	 * 
 	 * @param criteria
@@ -38,6 +59,19 @@ public interface PersonService {
 	 *           if unexpected error occurs
 	 */
 	List<Person> findPersons(PersonCriteria criteria, Integer offset, Integer limit) throws ResBillException;
+
+	/**
+	 * Finds a list of {@link PersonDTO} instances according to given criteria.
+	 * 
+	 * @param criteria
+	 *          filtering criteria
+	 * @param offset
+	 * @param limit
+	 * @return list of found {@link PersonDTO} instances
+	 * @throws ResBillException
+	 *           if unexpected error occurs
+	 */
+	List<PersonDTO> findPersonDTOs(PersonCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
 	/**
 	 * Persists given {@link Person} entity.

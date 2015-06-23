@@ -33,7 +33,7 @@ import cz.vsb.resbill.util.WebUtils;
 @Controller
 @RequestMapping("/persons/edit")
 @SessionAttributes("person")
-public class PersonEditController {
+public class PersonEditController extends AbstractPersonController {
 
 	private static final Logger log = LoggerFactory.getLogger(PersonEditController.class);
 
@@ -124,41 +124,4 @@ public class PersonEditController {
 		return "persons/personEdit";
 	}
 
-	/**
-	 * Handle POST requests for deleting {@link Person} entity.
-	 * 
-	 * @param person
-	 * @param bindingResult
-	 * @return
-	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-	public String delete(@ModelAttribute(PERSON_MODEL_KEY) Person person, BindingResult bindingResult) {
-		if (log.isDebugEnabled()) {
-			log.debug("Person to delete: " + person);
-		}
-		try {
-			person = personService.deletePerson(person.getId());
-			if (log.isDebugEnabled()) {
-				log.debug("Deleted person: " + person);
-			}
-			return "redirect:/persons";
-		} catch (PersonServiceException e) {
-			switch (e.getReason()) {
-			case CUSTOMERS_CONTACT_PERSON:
-				bindingResult.reject("error.delete.person.customers.contact");
-				break;
-			case CONTRACT_RESPONSIBILITY:
-				bindingResult.reject("error.delete.person.contract.responsibility");
-				break;
-			default:
-				log.warn("Unsupported reason: " + e);
-				bindingResult.reject("error.delete.person");
-				break;
-			}
-		} catch (Exception e) {
-			log.error("Cannot delete person: " + person, e);
-			bindingResult.reject("error.delete.person");
-		}
-		return "persons/personEdit";
-	}
 }

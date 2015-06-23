@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+
+<head>
+
+	<th:block th:remove="all">
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+	</th:block>
+
+	<title th:text="#{head.title.person.overview}">Osoba</title>
+	
+	<th:block th:remove="all">
+	<!-- remove all duplicated template css due to auto-merge -->
+	
+		<!-- ResBill Custom CSS -->
+		<link href="../../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
+	
+		<!-- Bootstrap Core CSS -->
+		<link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+	
+		<!-- Custom Fonts -->
+		<link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+	
+		<!-- SB Admin 2 CSS -->
+		<link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
+	
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+	        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	
+	</th:block>
+
+</head>
+<body>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header" th:text="#{page.header.person.overview}">Osoba - prehled</h1>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${personOverviewDTO}')}" th:errors="${personOverviewDTO}">Global error</div>
+		</div>
+		
+		<div th:replace="persons/personFragments :: personHeader">Hlavicka</div>
+		
+		<div class="row" th:if="${personOverviewDTO == null}">
+			<div class="col-lg-12">
+				<p>
+					<a href="personList.html" class="btn btn-default" th:href="@{/persons}" >
+						<i class="fa fa-reply"></i>
+						<span th:text="#{button.back}">Back</span>
+					</a>
+				</p>				
+			</div>
+		</div>
+		
+		<!-- Zobrazeni prehledovych informaci -->
+		<div class="row" th:if="${personOverviewDTO != null}">
+			<div class="col-lg-12">
+			
+				<div class="panel panel-default">
+					<div class="panel-body">
+						
+						<div class="row">
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.person.email}">E-mail</label>
+									<p class="form-control-static" th:text="${personOverviewDTO.email}">a@b.c</p>
+								</div>
+							</div>
+							
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.person.fullName}">Jmeno</label>
+									<p class="form-control-static" th:text="${personOverviewDTO.fullName}">Ing. Albert Einstein, CSc.</p>
+								</div>
+							</div>
+
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.person.titles}">Jmeno</label>
+									<p class="form-control-static" th:text="${personOverviewDTO.titles}">Ing. Albert Einstein, CSc.</p>
+								</div>
+							</div>
+
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.person.phone}">Telefon</label>
+									<p class="form-control-static" th:text="${personOverviewDTO.phone}">987 456 321</p>
+								</div>
+							</div>
+							
+							<div class="col-lg-4 text-right">
+								<a class="btn btn-danger" href="personOverview.html" th:href="@{/persons/overview/delete(personId=${personOverviewDTO.personId})}" th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
+									<i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
+								</a>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-10">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.person.note}">Poznamka</label>
+									<p class="form-control-static" th:text="${personOverviewDTO.note}">nejaky text</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+				<div class="panel panel-default">
+					<div class="panel-heading" th:text="#{panel.person.address}">Adresa</div>
+							
+					<div class="panel-body">
+							
+						<div class="row">
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.address.street}">Ulice</label>
+									<p class="form-control-static" th:text="${personOverviewDTO.address.street}">Siroka</p>
+								</div>
+							</div>
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.address.houseNumbers}">Cisla</label>
+									<p class="form-control-static" th:text="${personOverviewDTO.address.houseNumbers}">123/5</p>
+								</div>
+							</div>
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.address.city}">Obec</label>
+									<p class="form-control-static" th:text="${personOverviewDTO.address.city}">Praha</p>
+								</div>
+							</div>
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.address.cityPart}">Obec</label>
+									<p class="form-control-static" th:text="${personOverviewDTO.address.cityPart}">Bohnice</p>
+								</div>
+							</div>
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.address.zip}">PSC</label>
+									<p class="form-control-static" th:text="${personOverviewDTO.address.zip}">456 321</p>
+								</div>
+							</div>
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.address.country}">Stat</label>
+									<p class="form-control-static" th:text="${personOverviewDTO.address.country}">CR</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+			</div>
+		</div>
+	</div>
+	
+	<!-- jQuery -->
+	<script src="../../../bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+
+	<!-- Bootstrap Core JavaScript -->
+	<script src="../../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+
+	<!-- Custom Theme JavaScript -->
+	<script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+
+</body>
+</html>
