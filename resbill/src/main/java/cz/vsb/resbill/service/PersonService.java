@@ -4,6 +4,8 @@ import java.util.List;
 
 import cz.vsb.resbill.criteria.PersonCriteria;
 import cz.vsb.resbill.dto.person.PersonDTO;
+import cz.vsb.resbill.dto.person.PersonHeaderDTO;
+import cz.vsb.resbill.dto.person.PersonOverviewDTO;
 import cz.vsb.resbill.exception.PersonServiceException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Person;
@@ -26,6 +28,24 @@ public interface PersonService {
 	 *           if unexpected error occurs
 	 */
 	Person findPerson(Integer personId) throws ResBillException;
+
+	/**
+	 * Finds {@link PersonHeaderDTO}
+	 * 
+	 * @param personId
+	 * @return
+	 * @throws ResBillException
+	 */
+	PersonHeaderDTO findPersonHeaderDTO(Integer personId) throws ResBillException;
+
+	/**
+	 * Finds {@link PersonOverviewDTO}
+	 * 
+	 * @param personId
+	 * @return
+	 * @throws ResBillException
+	 */
+	PersonOverviewDTO findPersonOverviewDTO(Integer personId) throws ResBillException;
 
 	/**
 	 * Finds a list of {@link Person} entities according to given criteria.

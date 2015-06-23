@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+	<th:block th:remove="all">
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+	</th:block>
+
+	<title>Osoba - fragmenty</title>
+
+	<th:block th:remove="all">
+		<!-- remove all duplicated template css due to auto-merge -->
+	
+		<!-- ResBill Custom CSS -->
+		<link href="../../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
+	
+		<!-- Bootstrap Core CSS -->
+		<link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+	
+		<!-- Custom Fonts -->
+		<link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+	
+		<!-- SB Admin 2 CSS -->
+		<link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css"
+			th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}"
+		/>
+	
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	
+	</th:block>
+
+</head>
+<body>
+	<div th:fragment="personHeader">
+	
+		<!-- Chyby -->
+		<div class="row">
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${personHeaderDTO}')}" th:errors="${personHeaderDTO}">Global error</div>
+		</div>
+	
+		<!-- Zalozky -->
+		<div class="row" th:if="${personHeaderDTO != null}">
+			<div class="col-lg-12">
+			
+				<div class="row">
+					<div class="col-lg-6">
+						<h4 th:text="${personHeaderDTO.email + ' - ' + personHeaderDTO.fullNameWithTitles}">jmeno osoby</h4>
+					</div>
+					<div class="col-lg-6 text-right">
+						<a href="personList.html" class="btn btn-default" th:href="@{/persons}">
+							<i class="fa fa-reply"></i>
+							<span th:text="#{button.back}">Back</span>
+						</a>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-lg-12">
+						<ul class="nav nav-tabs">
+							<li th:class="${#strings.startsWith(#httpServletRequest.pathInfo, '/persons/overview')} ? 'active'">
+								<a href="personOverview.html" th:href="@{/persons/overview(personId=${personHeaderDTO.personId})}" th:text="#{tab.person.overview}">Přehled</a>
+							</li>
+							<li th:class="${#strings.startsWith(#httpServletRequest.pathInfo, '/persons/edit')} ? 'active'">
+								<a href="personEdit.html" th:href="@{/persons/edit(personId=${personHeaderDTO.personId})}" th:text="#{tab.person.edit}">Editace</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="voffset2 tab-content"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<!-- jQuery -->
+	<script src="../../../bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+
+	<!-- Bootstrap Core JavaScript -->
+	<script src="../../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+
+	<!-- Custom Theme JavaScript -->
+	<script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+</body>
+</html>

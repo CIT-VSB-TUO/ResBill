@@ -2,6 +2,7 @@ package cz.vsb.resbill.dto.person;
 
 import java.io.Serializable;
 
+import cz.vsb.resbill.dto.AddressDTO;
 import cz.vsb.resbill.model.Person;
 
 public class PersonDTO implements Serializable {
@@ -14,22 +15,27 @@ public class PersonDTO implements Serializable {
 
 	private String fullName;
 
+	private String fullNameWithTitles;
+
 	private String titles;
 
 	private String phone;
 
-	private String address;
+	private AddressDTO address;
 
 	public PersonDTO(Person p) {
+		fill(p);
+	}
+
+	protected void fill(Person p) {
 		if (p != null) {
 			this.personId = p.getId();
 			this.email = p.getEmail();
 			this.fullName = p.getFullName();
+			this.fullNameWithTitles = p.getFullNameWithTitles();
 			this.titles = p.getTitles();
 			this.phone = p.getPhone();
-			if (p.getAddress() != null) {
-				this.address = p.getAddress().getInlineFormat();
-			}
+			this.address = new AddressDTO(p.getAddress());
 		}
 	}
 
@@ -37,48 +43,28 @@ public class PersonDTO implements Serializable {
 		return personId;
 	}
 
-	public void setPersonId(Integer personId) {
-		this.personId = personId;
-	}
-
 	public String getEmail() {
 		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public String getFullName() {
 		return fullName;
 	}
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
+	public String getFullNameWithTitles() {
+		return fullNameWithTitles;
 	}
 
 	public String getTitles() {
 		return titles;
 	}
 
-	public void setTitles(String titles) {
-		this.titles = titles;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public String getAddress() {
+	public AddressDTO getAddress() {
 		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 	@Override
@@ -92,6 +78,8 @@ public class PersonDTO implements Serializable {
 		builder.append(email);
 		builder.append(", fullName=");
 		builder.append(fullName);
+		builder.append(", fullNameWithTitles=");
+		builder.append(fullNameWithTitles);
 		builder.append(", titles=");
 		builder.append(titles);
 		builder.append(", phone=");

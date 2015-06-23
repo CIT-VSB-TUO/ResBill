@@ -16,6 +16,8 @@ import cz.vsb.resbill.dao.ContractPersonDAO;
 import cz.vsb.resbill.dao.CustomerDAO;
 import cz.vsb.resbill.dao.PersonDAO;
 import cz.vsb.resbill.dto.person.PersonDTO;
+import cz.vsb.resbill.dto.person.PersonHeaderDTO;
+import cz.vsb.resbill.dto.person.PersonOverviewDTO;
 import cz.vsb.resbill.exception.PersonServiceException;
 import cz.vsb.resbill.exception.PersonServiceException.Reason;
 import cz.vsb.resbill.exception.ResBillException;
@@ -51,6 +53,30 @@ public class PersonServiceImpl implements PersonService {
 			return personDAO.findPerson(personId);
 		} catch (Exception e) {
 			log.error("An unexpected error occured while finding Person by id=" + personId, e);
+			throw new ResBillException(e);
+		}
+	}
+
+	@Override
+	public PersonHeaderDTO findPersonHeaderDTO(Integer personId) throws ResBillException {
+		try {
+			return new PersonHeaderDTO(findPerson(personId));
+		} catch (ResBillException e) {
+			throw e;
+		} catch (Exception e) {
+			log.error("An unexpected error occured while finding PersonHeaderDTO by id=" + personId, e);
+			throw new ResBillException(e);
+		}
+	}
+
+	@Override
+	public PersonOverviewDTO findPersonOverviewDTO(Integer personId) throws ResBillException {
+		try {
+			return new PersonOverviewDTO(findPerson(personId));
+		} catch (ResBillException e) {
+			throw e;
+		} catch (Exception e) {
+			log.error("An unexpected error occured while finding PersonOverviewDTO by id=" + personId, e);
 			throw new ResBillException(e);
 		}
 	}

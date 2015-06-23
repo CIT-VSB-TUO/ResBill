@@ -111,7 +111,7 @@ public class Address implements Serializable {
 		return sb.toString();
 	}
 
-	public String getInlineFormat() {
+	public String getStreetWithNumbers() {
 		StringBuilder sb = new StringBuilder();
 
 		if (StringUtils.isNotEmpty(getStreet())) {
@@ -121,13 +121,33 @@ public class Address implements Serializable {
 			if (sb.length() > 0) sb.append(" ");
 			sb.append(getHouseNumbers());
 		}
+
+		return sb.toString();
+	}
+
+	public String getCityWithCityPart() {
+		StringBuilder sb = new StringBuilder();
+
 		if (StringUtils.isNotEmpty(getCity())) {
-			if (sb.length() > 0) sb.append(", ");
 			sb.append(getCity());
 		}
 		if (StringUtils.isNotEmpty(getCityPart())) {
 			if (sb.length() > 0) sb.append("-");
 			sb.append(getCityPart());
+		}
+
+		return sb.toString();
+	}
+
+	public String getInlineFormat() {
+		StringBuilder sb = new StringBuilder();
+
+		if (StringUtils.isNotEmpty(getStreetWithNumbers())) {
+			sb.append(getStreetWithNumbers());
+		}
+		if (StringUtils.isNotEmpty(getCityWithCityPart())) {
+			if (sb.length() > 0) sb.append(", ");
+			sb.append(getCityWithCityPart());
 		}
 		if (StringUtils.isNotEmpty(getZip())) {
 			if (sb.length() > 0) sb.append(", ");
