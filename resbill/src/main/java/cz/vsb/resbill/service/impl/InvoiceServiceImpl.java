@@ -66,6 +66,7 @@ import cz.vsb.resbill.dao.TransactionDAO;
 import cz.vsb.resbill.dao.TransactionTypeDAO;
 import cz.vsb.resbill.dto.InvoiceCreateResultDTO;
 import cz.vsb.resbill.dto.InvoiceDTO;
+import cz.vsb.resbill.dto.InvoiceDetailDTO;
 import cz.vsb.resbill.dto.InvoiceExportResultDTO;
 import cz.vsb.resbill.dto.invoice.InvoiceExportDTO;
 import cz.vsb.resbill.dto.invoice.InvoiceExportServerDTO;
@@ -140,30 +141,22 @@ public class InvoiceServiceImpl implements InvoiceService {
 	 */
   @Override
   public Invoice findInvoice(Integer invoiceId) throws ResBillException {
-    return findInvoice(invoiceId, false, false);
+    return findInvoice(invoiceId);
   }
 
   /**
 	 * 
 	 */
   @Override
-  public Invoice findInvoice(Integer invoiceId, boolean initializeSummary, boolean initializeDetail) throws ResBillException {
+  public InvoiceDetailDTO findInvoiceDetailDTO(Integer invoiceId) throws ResBillException {
     try {
       Invoice invoice = invoiceDAO.findInvoice(invoiceId);
 
-      if (invoice != null) {
-        if (initializeSummary) {
-          invoice.getSummary();
-        }
+      InvoiceDetailDTO dto = new InvoiceDetailDTO(invoice);
 
-        if (initializeDetail) {
-          invoice.getDetail();
-        }
-      }
-
-      return invoice;
+      return dto;
     } catch (Exception exc) {
-      log.error("An unexpected error occured while finding Invoice by id=" + invoiceId, exc);
+      log.error("An unexpected error occured while finding InvoiceDetailDTO by id=" + invoiceId, exc);
       throw new ResBillException(exc);
     }
   }

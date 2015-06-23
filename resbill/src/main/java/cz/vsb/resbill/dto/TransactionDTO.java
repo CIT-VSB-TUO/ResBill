@@ -8,6 +8,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import cz.vsb.resbill.model.Contract;
+import cz.vsb.resbill.model.Customer;
+import cz.vsb.resbill.model.Person;
 import cz.vsb.resbill.model.Transaction;
 import cz.vsb.resbill.util.ToStringBuilder;
 
@@ -34,11 +37,36 @@ public class TransactionDTO implements Serializable {
 
   private String            title                = null;
 
+  private String            note                 = null;
+
   private String            transactionTypeTitle = null;
 
   private String            contractName         = null;
 
   private String            customerName         = null;
+
+  private String            customerContactName  = null;
+
+  private String            customerContactPhone = null;
+
+  private String            customerContactEmail = null;
+
+  /**
+   * 
+   */
+  public TransactionDTO() {
+    super();
+  }
+
+  /**
+   * 
+   * @param transaction
+   */
+  public TransactionDTO(Transaction transaction) {
+    this();
+
+    fill(transaction);
+  }
 
   /**
    * 
@@ -51,9 +79,22 @@ public class TransactionDTO implements Serializable {
     decisiveDate = transaction.getDecisiveDate();
     amount = transaction.getAmount();
     title = transaction.getTitle();
+    note = transaction.getNote();
     transactionTypeTitle = transaction.getTransactionType().getTitle();
-    contractName = transaction.getContract().getName();
-    customerName = transaction.getContract().getCustomer().getName();
+
+    // Contract
+    Contract contract = transaction.getContract();
+    contractName = contract.getName();
+
+    // Customer
+    Customer customer = contract.getCustomer();
+    customerName = customer.getName();
+
+    // Contact Person
+    Person contact = customer.getContactPerson();
+    customerContactName = contact.getFullNameWithTitles();
+    customerContactPhone = contact.getPhone();
+    customerContactEmail = contact.getEmail();
   }
 
   /**
@@ -191,6 +232,66 @@ public class TransactionDTO implements Serializable {
     this.transactionTypeTitle = transactionTypeTitle;
   }
 
+  /**
+   * @return the customerContactName
+   */
+  public String getCustomerContactName() {
+    return customerContactName;
+  }
+
+  /**
+   * @param customerContactName
+   *          the customerContactName to set
+   */
+  public void setCustomerContactName(String customerContactName) {
+    this.customerContactName = customerContactName;
+  }
+
+  /**
+   * @return the customerContactPhone
+   */
+  public String getCustomerContactPhone() {
+    return customerContactPhone;
+  }
+
+  /**
+   * @param customerContactPhone
+   *          the customerContactPhone to set
+   */
+  public void setCustomerContactPhone(String customerContactPhone) {
+    this.customerContactPhone = customerContactPhone;
+  }
+
+  /**
+   * @return the customerContactEmail
+   */
+  public String getCustomerContactEmail() {
+    return customerContactEmail;
+  }
+
+  /**
+   * @param customerContactEmail
+   *          the customerContactEmail to set
+   */
+  public void setCustomerContactEmail(String customerContactEmail) {
+    this.customerContactEmail = customerContactEmail;
+  }
+
+  /**
+   * @return the note
+   */
+  public String getNote() {
+    return note;
+  }
+
+  /**
+   * @param note
+   *          the note to set
+   */
+  public void setNote(String note) {
+    this.note = note;
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -205,9 +306,13 @@ public class TransactionDTO implements Serializable {
     builder.append("decisiveDate", decisiveDate);
     builder.append("amount", amount);
     builder.append("title", title);
+    builder.append("note", note);
     builder.append("transactionTypeTitle", transactionTypeTitle);
     builder.append("contractName", contractName);
     builder.append("customerName", customerName);
+    builder.append("customerContactName", customerContactName);
+    builder.append("customerContactPhone", customerContactPhone);
+    builder.append("customerContactEmail", customerContactEmail);
     builder.append("toString()", super.toString());
     return builder.toString();
   }

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import cz.vsb.resbill.dto.InvoiceDetailDTO;
 import cz.vsb.resbill.model.File;
 import cz.vsb.resbill.model.Invoice;
 import cz.vsb.resbill.service.InvoiceService;
@@ -59,7 +60,7 @@ public class InvoiceDetailController {
    */
   @RequestMapping(value = "", method = RequestMethod.GET)
   public String view(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model) {
-    loadInvoice(invoiceId, model);
+    loadInvoiceDetailDTO(invoiceId, model);
 
     return "invoice/invoiceDetail";
   }
@@ -70,23 +71,24 @@ public class InvoiceDetailController {
    * @param model
    * @return
    */
-  protected Invoice loadInvoice(Integer invoiceId, ModelMap model) {
+  protected InvoiceDetailDTO loadInvoiceDetailDTO(Integer invoiceId, ModelMap model) {
 
-    Invoice invoice = null;
+    InvoiceDetailDTO invoiceDetailDTO = null;
 
     try {
-      invoice = invoiceService.findInvoice(invoiceId, true, true);
-      model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoice);
+      invoiceDetailDTO = invoiceService.findInvoiceDetailDTO(invoiceId);
+      model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoiceDetailDTO);
+
     } catch (Exception exc) {
-      log.error("Cannot load Invoice with id: " + invoiceId, exc);
+      log.error("Cannot load InvoiceDetailDTO with id: " + invoiceId, exc);
 
-      invoice = null;
+      invoiceDetailDTO = null;
 
-      model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoice);
+      model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoiceDetailDTO);
       addGlobalError(model, "error.load.invoice");
     }
 
-    return invoice;
+    return invoiceDetailDTO;
   }
 
   /**
@@ -98,16 +100,16 @@ public class InvoiceDetailController {
   @RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
   public String delete(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model) {
 
-    Invoice invoice = loadInvoice(invoiceId, model);
+    InvoiceDetailDTO invoiceDetailDTO = loadInvoiceDetailDTO(invoiceId, model);
 
-    if (invoice != null) {
+    if (invoiceDetailDTO != null) {
       try {
 
-        invoice = invoiceService.deleteInvoice(invoice.getId());
+        Invoice invoice = invoiceService.deleteInvoice(invoiceDetailDTO.getTransactionId());
         return "redirect:/invoice";
 
       } catch (Exception exc) {
-        log.error("Cannot delete invoice: " + invoice, exc);
+        log.error("Cannot delete invoice: " + invoiceDetailDTO, exc);
         addGlobalError(model, "error.delete.invoice");
       }
     }
