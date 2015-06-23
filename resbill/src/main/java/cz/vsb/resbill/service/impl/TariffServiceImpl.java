@@ -14,8 +14,11 @@ import org.slf4j.LoggerFactory;
 import cz.vsb.resbill.criteria.ContractTariffCriteria;
 import cz.vsb.resbill.criteria.TariffCriteria;
 import cz.vsb.resbill.dao.ContractTariffDAO;
+import cz.vsb.resbill.dao.PriceListDAO;
 import cz.vsb.resbill.dao.TariffDAO;
 import cz.vsb.resbill.dto.TariffPriceListDTO;
+import cz.vsb.resbill.dto.tariff.TariffHeaderDTO;
+import cz.vsb.resbill.dto.tariff.TariffOverviewDTO;
 import cz.vsb.resbill.exception.PriceListServiceException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.exception.TariffServiceException;
@@ -48,6 +51,9 @@ public class TariffServiceImpl implements TariffService {
 	private ContractTariffDAO contractTariffDAO;
 
 	@Inject
+	private PriceListDAO priceListDAO;
+
+	@Inject
 	private PriceListService priceListService;
 
 	@Override
@@ -56,6 +62,32 @@ public class TariffServiceImpl implements TariffService {
 			return tariffDAO.findTariff(tariffId);
 		} catch (Exception e) {
 			log.error("An unexpected error occured while finding Tariff by id=" + tariffId, e);
+			throw new ResBillException(e);
+		}
+	}
+
+	@Override
+	public TariffHeaderDTO findTariffHeaderDTO(Integer tariffId) throws ResBillException {
+		try {
+			return new TariffHeaderDTO(findTariff(tariffId));
+		} catch (ResBillException e) {
+			throw e;
+		} catch (Exception e) {
+			log.error("An unexpected error occured while finding TariffHeaderDTO by id=" + tariffId, e);
+			throw new ResBillException(e);
+		}
+	}
+
+	@Override
+	public TariffOverviewDTO findTariffOverviewDTO(Integer tariffId) throws ResBillException {
+		try {
+			TariffOverviewDTO tariffOverviewDTO = new TariffOverviewDTO(findTariff(tariffId));
+			tariffOverviewDTO.fillPriceList(priceListDAO.findLastPriceList(tariffId));
+			return tariffOverviewDTO;
+		} catch (ResBillException e) {
+			throw e;
+		} catch (Exception e) {
+			log.error("An unexpected error occured while finding TariffOverviewDTO by id=" + tariffId, e);
 			throw new ResBillException(e);
 		}
 	}

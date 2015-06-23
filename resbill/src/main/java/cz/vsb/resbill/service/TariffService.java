@@ -4,6 +4,8 @@ import java.util.List;
 
 import cz.vsb.resbill.criteria.TariffCriteria;
 import cz.vsb.resbill.dto.TariffPriceListDTO;
+import cz.vsb.resbill.dto.tariff.TariffHeaderDTO;
+import cz.vsb.resbill.dto.tariff.TariffOverviewDTO;
 import cz.vsb.resbill.exception.PriceListServiceException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.exception.TariffServiceException;
@@ -27,6 +29,24 @@ public interface TariffService {
 	 *           if unexpected error occurs
 	 */
 	Tariff findTariff(Integer tariffId) throws ResBillException;
+
+	/**
+	 * Finds {@link TariffHeaderDTO}
+	 * 
+	 * @param tariffId
+	 * @return
+	 * @throws ResBillException
+	 */
+	TariffHeaderDTO findTariffHeaderDTO(Integer tariffId) throws ResBillException;
+
+	/**
+	 * Finds {@link TariffOverviewDTO}
+	 * 
+	 * @param tariffId
+	 * @return
+	 * @throws ResBillException
+	 */
+	TariffOverviewDTO findTariffOverviewDTO(Integer tariffId) throws ResBillException;
 
 	/**
 	 * Finds a list of {@link Tariff} entities according to given criteria.

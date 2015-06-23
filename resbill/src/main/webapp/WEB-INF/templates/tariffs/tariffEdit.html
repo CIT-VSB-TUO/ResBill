@@ -55,10 +55,12 @@
 			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${tariffPriceListDTO}')}" th:errors="${tariffPriceListDTO}">Global error</div>
 		</div>
 		
+		<div th:replace="tariffs/tariffFragments :: tariffHeader">Hlavicka</div>
+		
 		<div class="row" th:if="${tariffPriceListDTO == null}">
 			<div class="col-lg-12">
 				<p>
-					<a href="personList.html" class="btn btn-default" th:href="@{/tariffs}" >
+					<a href="tariffList.html" class="btn btn-default" th:href="@{/tariffs}" >
 						<i class="fa fa-reply"></i>
 						<span th:text="#{button.back}">Back</span>
 					</a>
@@ -146,29 +148,13 @@
 									<i class="fa fa-save"></i>
 									<span th:text="#{button.save}">Save</span>
 								</button>
-								<a href="personList.html" class="btn btn-default" th:href="@{/tariffs}" >
+								<a href="tariffOverview.html" class="btn btn-default" th:href="${tariffPriceListDTO.tariff.id != null} ? @{/tariffs/overview(tariffId=${tariffPriceListDTO.tariff.id})} : @{/tariffs}" >
 									<i class="fa fa-reply"></i>
 									<span th:text="#{button.back}">Back</span>
 								</a>
 							</p>				
 						</div>
 					</div>
-					
-					<div class="row" th:if="*{tariff.id != null}">
-						<div class="col-lg-12">
-							<p>
-								<button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="deleteTariff" >
-									<i class="fa fa-trash-o"></i>
-									<span th:text="#{button.delete.tariff}">Delete</span>
-								</button>
-								<button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="deletePriceList" >
-									<i class="fa fa-trash-o"></i>
-									<span th:text="#{button.delete.lastPriceList}">Delete</span>
-								</button>
-							</p>
-						</div>
-					</div>
-					
 				</form>
 				
 			</div>

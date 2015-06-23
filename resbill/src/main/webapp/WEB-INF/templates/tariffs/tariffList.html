@@ -91,7 +91,7 @@
 							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.spaceGBPrice,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${dto.lastPriceList.spaceGBPrice}">10,25</td>
 							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.backupGBPrice,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${dto.lastPriceList.backupGBPrice}">10,25</td>
 							<td>
-								<a class="btn btn-primary btn-circle" href="tariffEdit.html" th:href="@{/tariffs/edit(tariffId=${dto.tariff.id})}" th:title="#{button.title.tariff.edit}">
+								<a class="btn btn-primary btn-circle" href="tariffOverview.html" th:href="@{/tariffs/overview(tariffId=${dto.tariff.id})}" th:title="#{button.title.tariff.edit}">
 									<i class="fa fa-edit"></i>
 								</a>
 							</td>
@@ -107,7 +107,7 @@
 							<td>10,25</td>
 							<td>10,25</td>
 							<td>
-								<a class="btn btn-primary btn-circle" href="tariffEdit.html">
+								<a class="btn btn-primary btn-circle" href="tariffOverview.html">
 									<i class="fa fa-edit"></i>
 								</a>
 							</td>
@@ -123,7 +123,7 @@
 							<td>10,25</td>
 							<td>10,25</td>
 							<td>
-								<a class="btn btn-primary btn-circle" href="tariffEdit.html">
+								<a class="btn btn-primary btn-circle" href="tariffOverview.html">
 									<i class="fa fa-edit"></i>
 								</a>
 							</td>
