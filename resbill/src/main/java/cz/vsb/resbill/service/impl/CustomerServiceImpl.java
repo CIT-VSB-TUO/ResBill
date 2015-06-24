@@ -1,5 +1,6 @@
 package cz.vsb.resbill.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -12,6 +13,7 @@ import cz.vsb.resbill.criteria.ContractCriteria;
 import cz.vsb.resbill.criteria.CustomerCriteria;
 import cz.vsb.resbill.dao.ContractDAO;
 import cz.vsb.resbill.dao.CustomerDAO;
+import cz.vsb.resbill.dto.customer.CustomerListDTO;
 import cz.vsb.resbill.exception.CustomerServiceException;
 import cz.vsb.resbill.exception.CustomerServiceException.Reason;
 import cz.vsb.resbill.exception.ResBillException;
@@ -51,6 +53,28 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<Customer> findCustomers(CustomerCriteria criteria, Integer offset, Integer limit) throws ResBillException {
 		try {
 			return customerDAO.findCustomers(criteria, offset, limit);
+		} catch (Exception e) {
+			log.error("An unexpected error occured while searching for Customer entities by criteria: " + criteria, e);
+			throw new ResBillException(e);
+		}
+	}
+
+	@Override
+	public List<CustomerListDTO> findCustomerListDTOs(CustomerCriteria criteria, Integer offset, Integer limit) throws ResBillException {
+		try {
+			if (criteria == null) {
+				criteria = new CustomerCriteria();
+			}
+			criteria.setFetchContactPerson(true);
+
+			List<Customer> customers = findCustomers(criteria, offset, limit);
+			List<CustomerListDTO> dtos = new ArrayList<CustomerListDTO>(customers.size());
+			for (Customer customer : customers) {
+				dtos.add(new CustomerListDTO(customer));
+			}
+			return dtos;
+		} catch (ResBillException e) {
+			throw e;
 		} catch (Exception e) {
 			log.error("An unexpected error occured while searching for Customer entities by criteria: " + criteria, e);
 			throw new ResBillException(e);

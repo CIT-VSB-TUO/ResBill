@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import cz.vsb.resbill.criteria.CustomerCriteria;
 import cz.vsb.resbill.criteria.CustomerCriteria.OrderBy;
-import cz.vsb.resbill.model.Customer;
+import cz.vsb.resbill.dto.customer.CustomerListDTO;
 import cz.vsb.resbill.service.CustomerService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -29,39 +29,38 @@ public class CustomerListController {
 
 	private static final Logger log = LoggerFactory.getLogger(CustomerListController.class);
 
-	private static final String CUSTOMERS_MODEL_KEY = "customers";
+	private static final String CUSTOMERS_MODEL_KEY = "customerListDTOs";
 
 	@Inject
 	private CustomerService customerService;
 
-	private void loadCustomers(ModelMap model) {
-		List<Customer> customers = null;
+	private void loadCustomerListDTOs(ModelMap model) {
+		List<CustomerListDTO> customerListDTOs = null;
 		try {
 			CustomerCriteria criteria = new CustomerCriteria();
-			criteria.setFetchContactPerson(true);
 			criteria.setOrderBy(OrderBy.NAME);
-			customers = customerService.findCustomers(criteria, null, null);
-			model.addAttribute(CUSTOMERS_MODEL_KEY, customers);
+			customerListDTOs = customerService.findCustomerListDTOs(criteria, null, null);
+			model.addAttribute(CUSTOMERS_MODEL_KEY, customerListDTOs);
 		} catch (Exception e) {
-			log.error("Cannot load list of customers.", e);
+			log.error("Cannot load list of customerListDTOs.", e);
 
-			model.addAttribute(CUSTOMERS_MODEL_KEY, customers);
+			model.addAttribute(CUSTOMERS_MODEL_KEY, customerListDTOs);
 			WebUtils.addGlobalError(model, CUSTOMERS_MODEL_KEY, "error.load.customers");
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Loaded list of customers size: " + (customers != null ? customers.size() : null));
+			log.debug("Loaded list of customerListDTOs size: " + (customerListDTOs != null ? customerListDTOs.size() : null));
 		}
 	}
 
 	/**
-	 * Handles all GET requests. Loads a list of all customers and binds it with the key "customers" into a model.
+	 * Handles all GET requests. Loads a list of all customers and binds it with the key "customerListDTOs" into a model.
 	 * 
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String view(ModelMap model) {
-		loadCustomers(model);
+		loadCustomerListDTOs(model);
 
 		return "customers/customerList";
 	}

@@ -3,6 +3,7 @@ package cz.vsb.resbill.service;
 import java.util.List;
 
 import cz.vsb.resbill.criteria.CustomerCriteria;
+import cz.vsb.resbill.dto.customer.CustomerListDTO;
 import cz.vsb.resbill.exception.CustomerServiceException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Customer;
@@ -38,6 +39,19 @@ public interface CustomerService {
 	 *           if unexpected error occurs
 	 */
 	List<Customer> findCustomers(CustomerCriteria criteria, Integer offset, Integer limit) throws ResBillException;
+
+	/**
+	 * Finds a list of {@link CustomerListDTO} instances according to given criteria.
+	 * 
+	 * @param criteria
+	 *          filtering criteria
+	 * @param offset
+	 * @param limit
+	 * @return list of found {@link CustomerListDTO} instances
+	 * @throws ResBillException
+	 *           if unexpected error occurs
+	 */
+	List<CustomerListDTO> findCustomerListDTOs(CustomerCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
 	/**
 	 * Persists given {@link Customer} entity.
