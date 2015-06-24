@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import cz.vsb.resbill.dto.TariffPriceListDTO;
+import cz.vsb.resbill.dto.tariff.TariffPriceListDTO;
 import cz.vsb.resbill.exception.PriceListServiceException;
 import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.model.PriceList;
@@ -57,11 +57,8 @@ public class TariffEditController extends AbstractTariffController {
 			if (tariffId != null) {
 				dto = tariffService.findTariffPriceListDTO(tariffId);
 			} else {
-				dto = new TariffPriceListDTO();
-				dto.setTariff(new Tariff());
-				dto.setLastPriceList(new PriceList());
+				dto = new TariffPriceListDTO(new Tariff(), new PriceList());
 				dto.getTariff().setValid(Boolean.TRUE);
-				dto.getTariff().getPrices().add(dto.getLastPriceList());
 				dto.getLastPriceList().setTariff(dto.getTariff());
 				dto.getLastPriceList().setPeriod(new Period());
 				dto.getLastPriceList().getPeriod().setBeginDate(DateUtils.truncate(new Date(), Calendar.DATE));

@@ -73,6 +73,9 @@
 							<li th:class="${#strings.startsWith(#httpServletRequest.pathInfo, '/tariffs/edit')} ? 'active'">
 								<a href="tariffEdit.html" th:href="@{/tariffs/edit(tariffId=${tariffHeaderDTO.tariffId})}" th:text="#{tab.tariff.edit}">Editace</a>
 							</li>
+							<li th:class="${#strings.startsWith(#httpServletRequest.pathInfo, '/tariffs/prices')} ? 'active'">
+								<a href="priceListList.html" th:href="@{/tariffs/prices(tariffId=${tariffHeaderDTO.tariffId})}" th:text="#{tab.tariff.priceLists}">Ceniky</a>
+							</li>
 						</ul>
 					</div>
 				</div>

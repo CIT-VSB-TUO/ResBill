@@ -1,5 +1,6 @@
 package cz.vsb.resbill.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import cz.vsb.resbill.criteria.PriceListCriteria;
 import cz.vsb.resbill.dao.InvoicePriceListDAO;
 import cz.vsb.resbill.dao.PriceListDAO;
 import cz.vsb.resbill.dao.TariffDAO;
+import cz.vsb.resbill.dto.tariff.PriceListDTO;
 import cz.vsb.resbill.exception.PriceListServiceException;
 import cz.vsb.resbill.exception.PriceListServiceException.Reason;
 import cz.vsb.resbill.exception.ResBillException;
@@ -66,6 +68,21 @@ public class PriceListServiceImpl implements PriceListService {
 			return priceListDAO.findPriceLists(criteria, offset, limit);
 		} catch (Exception e) {
 			log.error("An unexpected error occured while searching for PriceList entities by criteria: " + criteria, e);
+			throw new ResBillException(e);
+		}
+	}
+
+	@Override
+	public List<PriceListDTO> findPriceListDTOs(PriceListCriteria criteria, Integer offset, Integer limit) throws ResBillException {
+		try {
+			List<PriceList> priceLists = findPriceLists(criteria, offset, limit);
+			List<PriceListDTO> dtos = new ArrayList<PriceListDTO>(priceLists.size());
+			for (PriceList pl : priceLists) {
+				dtos.add(new PriceListDTO(pl));
+			}
+			return dtos;
+		} catch (Exception e) {
+			log.error("An unexpected error occured while searching for PriceListDTOs by criteria: " + criteria, e);
 			throw new ResBillException(e);
 		}
 	}

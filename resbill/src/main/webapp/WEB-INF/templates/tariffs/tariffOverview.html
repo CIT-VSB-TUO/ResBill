@@ -108,6 +108,10 @@
 					<div class="panel-heading">
 						<span class="pull-left" th:text="#{panel.lastPriceList.data}">Cenik</span>
 						<span class="pull-right">
+							<a class="btn btn-primary" href="priceListEdit.html" th:href="@{/tariffs/prices/edit(priceListId=${tariffOverviewDTO.lastPriceList.priceListId},tariffId=${tariffOverviewDTO.tariffId})}">
+								<i class="fa fa-edit"></i>
+								<span th:text="#{button.title.priceList.edit}">Upravit</span>
+							</a>
 							<a class="btn btn-danger" href="tariffOverview.html" th:href="@{/tariffs/overview/delete(priceListId=${tariffOverviewDTO.lastPriceList.priceListId},tariffId=${tariffOverviewDTO.tariffId},priceList=true)}" 
 								th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
 								<i class="fa fa-trash-o"></i>
@@ -123,13 +127,13 @@
 							<div class="col-lg-3">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.priceList.period.beginDate}">Platnost od</label>
-									<p class="form-control-static" th:text="${tariffOverviewDTO.lastPriceList.beginDate}">1.1.2001</p>
+									<p class="form-control-static" th:text="${{tariffOverviewDTO.lastPriceList.beginDate}}">1.1.2001</p>
 								</div>
 							</div>
 							<div class="col-lg-3">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.priceList.period.endDate}">Platnost do</label>
-									<p class="form-control-static" th:text="${tariffOverviewDTO.lastPriceList.endDate}">12.3.2015</p>
+									<p class="form-control-static" th:text="${{tariffOverviewDTO.lastPriceList.endDate}}">12.3.2015</p>
 								</div>
 							</div>
 						</div>
@@ -137,13 +141,13 @@
 							<div class="col-lg-3">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.priceList.price.cpu}">CPU</label>
-									<p class="form-control-static" th:text="${tariffOverviewDTO.lastPriceList.cpuPrice}">1</p>
+									<p class="form-control-static" th:text="${{tariffOverviewDTO.lastPriceList.cpuPrice}}">1</p>
 								</div>
 							</div>
 							<div class="col-lg-3">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.priceList.price.memory}">RAM</label>
-									<p class="form-control-static" th:text="${tariffOverviewDTO.lastPriceList.memoryGBPrice}">2</p>
+									<p class="form-control-static" th:text="${{tariffOverviewDTO.lastPriceList.memoryGBPrice}}">2</p>
 								</div>
 							</div>
 						</div>
@@ -151,13 +155,13 @@
 							<div class="col-lg-3">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.priceList.price.space}">HDD</label>
-									<p class="form-control-static" th:text="${tariffOverviewDTO.lastPriceList.spaceGBPrice}">321</p>
+									<p class="form-control-static" th:text="${{tariffOverviewDTO.lastPriceList.spaceGBPrice}}">321</p>
 								</div>
 							</div>
 							<div class="col-lg-3">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.priceList.price.backup}">Backup</label>
-									<p class="form-control-static" th:text="${tariffOverviewDTO.lastPriceList.backupGBPrice}">4</p>
+									<p class="form-control-static" th:text="${{tariffOverviewDTO.lastPriceList.backupGBPrice}}">4</p>
 								</div>
 							</div>
 						</div>

@@ -55,10 +55,12 @@
 			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${priceList}')}" th:errors="${priceList}">Global error</div>
 		</div>
 		
+		<div th:replace="tariffs/tariffFragments :: tariffHeader">Hlavicka</div>
+		
 		<div class="row" th:if="${priceList == null}">
 			<div class="col-lg-12">
 				<p>
-					<a href="personList.html" class="btn btn-default" th:href="@{/tariffs/edit(tariffId=${priceList.tariff.id})}" >
+					<a href="personList.html" class="btn btn-default" th:href="@{/tariffs/prices(tariffId=${priceList.tariff.id})}" >
 						<i class="fa fa-reply"></i>
 						<span th:text="#{button.back}">Back</span>
 					</a>
@@ -119,7 +121,7 @@
 									<i class="fa fa-save"></i>
 									<span th:text="#{button.save}">Save</span>
 								</button>
-								<a href="personList.html" class="btn btn-default" th:href="@{/tariffs/edit(tariffId=${priceList.tariff.id})}" >
+								<a href="priceListList.html" class="btn btn-default" th:href="@{/tariffs/prices(tariffId=${priceList.tariff.id})}" >
 									<i class="fa fa-reply"></i>
 									<span th:text="#{button.back}">Back</span>
 								</a>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+
+<head>
+
+	<th:block th:remove="all">
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+	</th:block>
+
+	<title th:text="#{head.title.tariff.priceLists}">Tarif - ceniky</title>
+	
+	<th:block th:remove="all">
+	<!-- remove all duplicated template css due to auto-merge -->
+	
+		<!-- ResBill Custom CSS -->
+		<link href="../../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
+	
+		<!-- Bootstrap Core CSS -->
+		<link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+	
+		<!-- Custom Fonts -->
+		<link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+	
+		<!-- SB Admin 2 CSS -->
+		<link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
+	
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+	        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	
+	</th:block>
+
+</head>
+<body>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header" th:text="#{page.header.tariff.priceLists}">Ceniky</h1>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${priceListDTOs}')}" th:errors="${priceListDTOs}">Global error</div>
+		</div>
+		
+		<div th:replace="tariffs/tariffFragments :: tariffHeader">Hlavicka</div>
+		
+		<div class="row" th:if="${priceListDTOs != null}">
+			<div class="col-lg-12">
+
+				<table class="table" id="priceLists">
+					<thead>
+						<tr>
+							<th th:text="#{column.priceList.period.beginDate}">Platnost od</th>
+							<th th:text="#{column.priceList.period.endDate}">Platnost do</th>
+							<th th:text="#{column.priceList.price.cpu}">Cena CPU</th>
+							<th th:text="#{column.priceList.price.memory}">Cena pamet</th>
+							<th th:text="#{column.priceList.price.space}">Cena data</th>
+							<th th:text="#{column.priceList.price.backup}">Cena zaloha</th>
+							<th>
+								<a class="btn btn-primary btn-circle" href="priceListEdit.html" th:href="@{/tariffs/prices/edit(tariffId=${tariffHeaderDTO.tariffId})}" 
+									th:title="#{button.title.priceList.add}">
+									<i class="fa fa-plus-square"></i>
+								</a>
+							</th>
+						</tr>
+					</thead>
+					<tbody th:remove="all-but-first">
+						<tr th:each="priceListDTO : ${priceListDTOs}">
+							<td th:text="${#dates.format(priceListDTO.beginDate, '__#{date.format.list}__')}">1.1.0001</td>
+							<td th:text="${priceListDTO.endDate != null} ? ${#dates.format(priceListDTO.endDate, '__#{date.format.list}__')}">31.12.9999</td>
+							<td th:text="${#numbers.formatDecimal(priceListDTO.cpuPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
+							<td th:text="${#numbers.formatDecimal(priceListDTO.memoryGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
+							<td th:text="${#numbers.formatDecimal(priceListDTO.spaceGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
+							<td th:text="${#numbers.formatDecimal(priceListDTO.backupGBPrice,1,'DEFAULT',2,'DEFAULT')}">10,25</td>
+							<td>
+								<a class="btn btn-primary btn-circle" href="priceListEdit.html" th:href="@{/tariffs/prices/edit(priceListId=${priceListDTO.priceListId}, tariffId=${tariffHeaderDTO.tariffId})}" 
+									th:title="#{button.title.priceList.edit}" th:classappend="${not priceListDTO.last} ? 'disabled'">
+									<i class="fa fa-edit"></i>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>1.1.0001</td>
+							<td>31.12.9999</td>
+							<td>10,25</td>
+							<td>10,25</td>
+							<td>10,25</td>
+							<td>10,25</td>
+						</tr>
+						<tr>
+							<td>1.1.0001</td>
+							<td>31.12.9999</td>
+							<td>10,25</td>
+							<td>10,25</td>
+							<td>10,25</td>
+							<td>10,25</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+			
+		</div>
+		
+	</div>
+</body>
+</html>

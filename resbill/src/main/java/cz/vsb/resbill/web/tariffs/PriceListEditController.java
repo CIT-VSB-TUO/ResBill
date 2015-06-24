@@ -27,7 +27,6 @@ import cz.vsb.resbill.exception.PriceListServiceException;
 import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.model.PriceList;
 import cz.vsb.resbill.service.PriceListService;
-import cz.vsb.resbill.service.TariffService;
 import cz.vsb.resbill.util.WebUtils;
 
 /**
@@ -37,9 +36,9 @@ import cz.vsb.resbill.util.WebUtils;
  *
  */
 @Controller
-@RequestMapping("/tariffs/priceList")
+@RequestMapping("/tariffs/prices/edit")
 @SessionAttributes("priceList")
-public class PriceListEditController {
+public class PriceListEditController extends AbstractTariffController {
 
 	private static final Logger log = LoggerFactory.getLogger(PriceListEditController.class);
 
@@ -47,9 +46,6 @@ public class PriceListEditController {
 
 	@Inject
 	private PriceListService priceListService;
-
-	@Inject
-	private TariffService tariffService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder, Locale locale) {
@@ -120,7 +116,7 @@ public class PriceListEditController {
 					log.debug("Saved priceList: " + priceList);
 				}
 				redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
-				return "redirect:/tariffs/edit";
+				return "redirect:/tariffs/prices";
 			} catch (PriceListServiceException e) {
 				switch (e.getReason()) {
 				case NOT_LAST_PRICE_LIST:
@@ -176,7 +172,7 @@ public class PriceListEditController {
 				log.debug("Deleted priceList: " + priceList);
 			}
 			redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
-			return "redirect:/tariffs/edit";
+			return "redirect:/tariffs/prices";
 		} catch (PriceListServiceException e) {
 			switch (e.getReason()) {
 			case NOT_LAST_PRICE_LIST:

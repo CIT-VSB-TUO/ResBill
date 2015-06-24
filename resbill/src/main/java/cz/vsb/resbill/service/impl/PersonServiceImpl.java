@@ -94,12 +94,14 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public List<PersonDTO> findPersonDTOs(PersonCriteria criteria, Integer offset, Integer limit) throws ResBillException {
 		try {
-			List<Person> persons = personDAO.findPersons(criteria, offset, limit);
+			List<Person> persons = findPersons(criteria, offset, limit);
 			List<PersonDTO> dtos = new ArrayList<PersonDTO>(persons.size());
 			for (Person person : persons) {
 				dtos.add(new PersonDTO(person));
 			}
 			return dtos;
+		} catch (ResBillException e) {
+			throw e;
 		} catch (Exception e) {
 			log.error("An unexpected error occured while searching for PersonDTOs by criteria: " + criteria, e);
 			throw new ResBillException(e);

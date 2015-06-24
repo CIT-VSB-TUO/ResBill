@@ -3,9 +3,10 @@ package cz.vsb.resbill.service;
 import java.util.List;
 
 import cz.vsb.resbill.criteria.TariffCriteria;
-import cz.vsb.resbill.dto.TariffPriceListDTO;
 import cz.vsb.resbill.dto.tariff.TariffHeaderDTO;
+import cz.vsb.resbill.dto.tariff.TariffListDTO;
 import cz.vsb.resbill.dto.tariff.TariffOverviewDTO;
+import cz.vsb.resbill.dto.tariff.TariffPriceListDTO;
 import cz.vsb.resbill.exception.PriceListServiceException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.exception.TariffServiceException;
@@ -60,13 +61,13 @@ public interface TariffService {
 	List<Tariff> findTariffs(TariffCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
 	/**
-	 * Finds a list of {@link TariffPriceListDTO} instances according to given criteria.
+	 * Finds a list of all {@link TariffListDTO} instances.
 	 * 
 	 * @return
 	 * @throws ResBillException
 	 *           if an error occurs
 	 */
-	List<TariffPriceListDTO> findTariffPriceListDTOs() throws ResBillException;
+	List<TariffListDTO> findTariffListDTOs() throws ResBillException;
 
 	/**
 	 * Finds a {@link TariffPriceListDTO} for given key.

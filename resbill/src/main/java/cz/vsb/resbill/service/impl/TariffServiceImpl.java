@@ -16,9 +16,10 @@ import cz.vsb.resbill.criteria.TariffCriteria;
 import cz.vsb.resbill.dao.ContractTariffDAO;
 import cz.vsb.resbill.dao.PriceListDAO;
 import cz.vsb.resbill.dao.TariffDAO;
-import cz.vsb.resbill.dto.TariffPriceListDTO;
 import cz.vsb.resbill.dto.tariff.TariffHeaderDTO;
+import cz.vsb.resbill.dto.tariff.TariffListDTO;
 import cz.vsb.resbill.dto.tariff.TariffOverviewDTO;
+import cz.vsb.resbill.dto.tariff.TariffPriceListDTO;
 import cz.vsb.resbill.exception.PriceListServiceException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.exception.TariffServiceException;
@@ -81,9 +82,9 @@ public class TariffServiceImpl implements TariffService {
 	@Override
 	public TariffOverviewDTO findTariffOverviewDTO(Integer tariffId) throws ResBillException {
 		try {
-			TariffOverviewDTO tariffOverviewDTO = new TariffOverviewDTO(findTariff(tariffId));
-			tariffOverviewDTO.fillPriceList(priceListDAO.findLastPriceList(tariffId));
-			return tariffOverviewDTO;
+			Tariff tariff = findTariff(tariffId);
+			PriceList pl = priceListDAO.findLastPriceList(tariffId);
+			return new TariffOverviewDTO(tariff, pl);
 		} catch (ResBillException e) {
 			throw e;
 		} catch (Exception e) {
@@ -103,7 +104,7 @@ public class TariffServiceImpl implements TariffService {
 	}
 
 	@Override
-	public List<TariffPriceListDTO> findTariffPriceListDTOs() throws ResBillException {
+	public List<TariffListDTO> findTariffListDTOs() throws ResBillException {
 		try {
 			StringBuilder jpql = new StringBuilder();
 			jpql.append("SELECT tariff, pl FROM Tariff AS tariff");
@@ -114,13 +115,10 @@ public class TariffServiceImpl implements TariffService {
 			Query query = em.createQuery(jpql.toString());
 			List<?> results = query.getResultList();
 
-			List<TariffPriceListDTO> dtos = new ArrayList<TariffPriceListDTO>(results.size());
+			List<TariffListDTO> dtos = new ArrayList<TariffListDTO>(results.size());
 			for (Object result : results) {
 				Object[] row = (Object[]) result;
-				TariffPriceListDTO dto = new TariffPriceListDTO();
-				dto.setTariff((Tariff) row[0]);
-				dto.setLastPriceList((PriceList) row[1]);
-				dtos.add(dto);
+				dtos.add(new TariffListDTO((Tariff) row[0], (PriceList) row[1]));
 			}
 
 			return dtos;
@@ -134,11 +132,9 @@ public class TariffServiceImpl implements TariffService {
 	public TariffPriceListDTO findTariffPriceListDTO(Integer tariffId) throws ResBillException {
 		try {
 			Tariff tariff = findTariff(tariffId);
+			PriceList priceList = priceListDAO.findLastPriceList(tariffId);
 
-			TariffPriceListDTO dto = new TariffPriceListDTO();
-			dto.fill(tariff);
-
-			return dto;
+			return new TariffPriceListDTO(tariff, priceList);
 		} catch (ResBillException e) {
 			throw e;
 		} catch (Exception e) {

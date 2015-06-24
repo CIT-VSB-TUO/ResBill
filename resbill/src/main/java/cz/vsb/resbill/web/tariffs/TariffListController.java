@@ -11,7 +11,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import cz.vsb.resbill.dto.TariffPriceListDTO;
+import cz.vsb.resbill.dto.tariff.TariffListDTO;
 import cz.vsb.resbill.service.TariffService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -27,15 +27,15 @@ public class TariffListController {
 
 	private static final Logger log = LoggerFactory.getLogger(TariffListController.class);
 
-	private static final String DTOS_MODEL_KEY = "tariffPriceListDTOs";
+	private static final String DTOS_MODEL_KEY = "tariffListDTOs";
 
 	@Inject
 	private TariffService tariffService;
 
 	private void loadTariffPriceListDTOs(ModelMap model) {
-		List<TariffPriceListDTO> dtos = null;
+		List<TariffListDTO> dtos = null;
 		try {
-			dtos = tariffService.findTariffPriceListDTOs();
+			dtos = tariffService.findTariffListDTOs();
 			model.addAttribute(DTOS_MODEL_KEY, dtos);
 		} catch (Exception e) {
 			log.error("Cannot load list of tariffDTOs.", e);

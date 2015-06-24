@@ -53,10 +53,10 @@
 		</div>
 		
 		<div class="row">
-			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${tariffPriceListDTOs}')}" th:errors="${tariffPriceListDTOs}">Global error</div>
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${tariffListDTOs}')}" th:errors="${tariffListDTOs}">Global error</div>
 		</div>
 		
-		<div class="row" th:if="${tariffPriceListDTOs != null}">
+		<div class="row" th:if="${tariffListDTOs != null}">
 			<div class="col-lg-12">
 
 				<table class="table" id="tariffs">
@@ -80,18 +80,18 @@
 						</tr>
 					</thead>
 					<tbody th:remove="all-but-first">
-						<tr th:each="dto : ${tariffPriceListDTOs}">
-							<td th:text="${dto.tariff.name}">tarif 1</td>
-							<td th:attr="data-order=${dto.tariff.valid}">
-								<i class="fa fa-check" th:if="${dto.tariff.valid}"></i>
+						<tr th:each="dto : ${tariffListDTOs}">
+							<td th:text="${dto.name}">tarif 1</td>
+							<td th:attr="data-order=${dto.valid}">
+								<i class="fa fa-check" th:if="${dto.valid}"></i>
 							</td>
-							<td th:text="${#dates.format(dto.lastPriceList.period.beginDate, '__#{date.format.list}__')}" th:attr="data-order=${#dates.format(dto.lastPriceList.period.beginDate, '__#{date.format.order}__')}">1.1.0001</td>
+							<td th:text="${#dates.format(dto.lastPriceList.beginDate, '__#{date.format.list}__')}" th:attr="data-order=${#dates.format(dto.lastPriceList.beginDate, '__#{date.format.order}__')}">1.1.0001</td>
 							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.cpuPrice,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${dto.lastPriceList.cpuPrice}">10,25</td>
 							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.memoryGBPrice,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${dto.lastPriceList.memoryGBPrice}">10,25</td>
 							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.spaceGBPrice,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${dto.lastPriceList.spaceGBPrice}">10,25</td>
 							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.backupGBPrice,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${dto.lastPriceList.backupGBPrice}">10,25</td>
 							<td>
-								<a class="btn btn-primary btn-circle" href="tariffOverview.html" th:href="@{/tariffs/overview(tariffId=${dto.tariff.id})}" th:title="#{button.title.tariff.edit}">
+								<a class="btn btn-primary btn-circle" href="tariffOverview.html" th:href="@{/tariffs/overview(tariffId=${dto.tariffId})}" th:title="#{button.title.tariff.edit}">
 									<i class="fa fa-edit"></i>
 								</a>
 							</td>

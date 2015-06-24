@@ -3,6 +3,7 @@ package cz.vsb.resbill.service;
 import java.util.List;
 
 import cz.vsb.resbill.criteria.PriceListCriteria;
+import cz.vsb.resbill.dto.tariff.PriceListDTO;
 import cz.vsb.resbill.exception.PriceListServiceException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.PriceList;
@@ -38,6 +39,19 @@ public interface PriceListService {
 	 *           if unexpected error occurs
 	 */
 	List<PriceList> findPriceLists(PriceListCriteria criteria, Integer offset, Integer limit) throws ResBillException;
+
+	/**
+	 * Finds a list of {@link PriceListDTO} instances according to given criteria.
+	 * 
+	 * @param criteria
+	 *          filtering criteria
+	 * @param offset
+	 * @param limit
+	 * @return list of found {@link PriceListDTO} instances
+	 * @throws ResBillException
+	 *           if unexpected error occurs
+	 */
+	List<PriceListDTO> findPriceListDTOs(PriceListCriteria criteria, Integer offset, Integer limit) throws ResBillException;
 
 	/**
 	 * Persists given {@link PriceList} entity.
