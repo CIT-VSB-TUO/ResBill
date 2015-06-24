@@ -99,7 +99,7 @@
 
             <div class="row">
 
-              <div class="col-lg-6">
+              <div class="col-lg-4">
                 <div class="form-group">
                   <label class="control-label" th:text="#{label.invoice.title}">Název</label>
                   <p class="form-control-static" th:text="${invoice.title}">Vyúčtování služeb 1.1.2014 - 31.1.2014</p>
@@ -121,7 +121,30 @@
                 </div>
               </div>
 
-              <div class="col-lg-6">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.customer}">Zákazník</label>
+                  <p class="form-control-static" th:text="${invoice.customerName}">Projekt X</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.contract}">Kontrakt</label>
+                  <p class="form-control-static" th:text="${invoice.contractName}">Kontrakt pokusný</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label" th:text="#{label.invoice.contactPerson}">Kontaktní osoba</label>
+                  <p class="form-control-static">
+                    <span th:text="${invoice.customerContactName}">Ing. Pepa Vonásek</span>
+                    <br />
+                    <span th:text="${invoice.customerContactPhone}">123456789</span>
+                    <br />
+                    <span th:text="${invoice.customerContactEmail}">petr.pokus@test.cz</span>
+                  </p>
+                </div>
+              </div>
+
+              <div class="col-lg-4">
                 <div class="form-group">
                   <label class="control-label" th:text="#{label.invoice.decisiveDate}">Rozhodné datum</label>
                   <p class="form-control-static" th:text="${{invoice.decisiveDate}}">2.6.2015</p>
