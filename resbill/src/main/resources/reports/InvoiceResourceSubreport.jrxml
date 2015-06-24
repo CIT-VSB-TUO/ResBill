@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="InvoiceServerSubreport" pageWidth="435" pageHeight="842" columnWidth="435" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="df3b9bef-cbb9-4886-b16f-aa188ab240d3">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="unit" class="java.lang.String"/>
+	<parameter name="resourceName" class="java.lang.String"/>
+	<parameter name="dateFormat" class="java.text.DateFormat"/>
+	<parameter name="templateDir" class="java.lang.String"/>
+	<parameter name="unitPriceNumberFormat" class="java.text.DecimalFormat">
+		<defaultValueExpression><![CDATA[new DecimalFormat("#,##0.00")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="amountNumberFormat" class="java.text.DecimalFormat">
+		<defaultValueExpression><![CDATA[new DecimalFormat("#,##0.00")]]></defaultValueExpression>
+	</parameter>
+	<field name="amount" class="java.lang.Float"/>
+	<field name="price" class="java.lang.Float"/>
+	<field name="beginDate" class="java.util.Date"/>
+	<field name="endDate" class="java.util.Date"/>
+	<field name="pieces" class="java.lang.Long"/>
+	<field name="unitPrice" class="java.lang.Float"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Prevent">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="0" width="110" height="13" uuid="a121ab5b-691b-406f-9a56-e7be1ac2f708"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font size="10" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dateFormat}.format($F{beginDate}) + "-" + $P{dateFormat}.format($F{endDate})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="415" y="0" width="20" height="13" uuid="015877fc-f53e-45b7-af75-f8e44d4e89fc"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font size="10" pdfEncoding="Cp1250"/>
+				</textElement>
+				<text><![CDATA[Kč]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement positionType="Float" x="360" y="0" width="55" height="13" uuid="9931acb5-e709-4874-a03d-fa754c0819d6"/>
+				<textElement textAlignment="Right">
+					<font size="10" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement positionType="Float" x="110" y="0" width="50" height="13" uuid="1c3b868e-9ac4-42d4-91ae-89b43c91ca97"/>
+				<textElement textAlignment="Right">
+					<font size="10" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pieces} + " dnů x"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement positionType="Float" x="160" y="0" width="100" height="13" uuid="b714ac60-0f56-4ee0-bff0-e4db99c56ce7"/>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Left">
+					<font size="10" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{amountNumberFormat}.format($F{amount}) + $P{unit} + " " + $P{resourceName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement positionType="Float" x="260" y="0" width="50" height="13" uuid="d38009c5-e27e-4f33-a41b-3637da791bd5"/>
+				<textElement textAlignment="Right">
+					<font size="10" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression><![CDATA["á " + $P{unitPriceNumberFormat}.format($F{unitPrice})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement positionType="Float" x="310" y="0" width="50" height="13" uuid="ff480440-f61c-4b6d-8cfd-7ab842dbaa44"/>
+				<textElement textAlignment="Left">
+					<font size="10" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" Kč/měsíc"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

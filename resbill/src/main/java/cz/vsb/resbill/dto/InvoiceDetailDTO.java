@@ -5,28 +5,27 @@
 package cz.vsb.resbill.dto;
 
 import cz.vsb.resbill.model.Invoice;
-import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.util.ToStringBuilder;
 
 /**
  * @author Ing. Radek Liebzeit <radek.liebzeit@vsb.cz>
  *
  */
-public class InvoiceDTO extends TransactionDTO {
+public class InvoiceDetailDTO extends InvoiceDTO {
 
   /**
    * 
    */
   private static final long serialVersionUID = 1L;
 
-  private boolean           noPriceList;
+  private String            detail           = null;
 
-  private Period            period;
+  private String            summary          = null;
 
   /**
    * 
    */
-  public InvoiceDTO() {
+  public InvoiceDetailDTO() {
     super();
   }
 
@@ -34,7 +33,7 @@ public class InvoiceDTO extends TransactionDTO {
    * 
    * @param invoice
    */
-  public InvoiceDTO(Invoice invoice) {
+  public InvoiceDetailDTO(Invoice invoice) {
     this();
 
     fill(invoice);
@@ -42,43 +41,43 @@ public class InvoiceDTO extends TransactionDTO {
 
   /**
    * 
-   * @param invoice
    */
+  @Override
   public void fill(Invoice invoice) {
     super.fill(invoice);
 
-    noPriceList = invoice.getNoPriceList();
-    period = invoice.getPeriod();
+    detail = invoice.getDetail();
+    summary = invoice.getSummary();
   }
 
   /**
-   * @return the noPriceList
+   * @return the detail
    */
-  public boolean isNoPriceList() {
-    return noPriceList;
+  public String getDetail() {
+    return detail;
   }
 
   /**
-   * @param noPriceList
-   *          the noPriceList to set
+   * @param detail
+   *          the detail to set
    */
-  public void setNoPriceList(boolean noPriceList) {
-    this.noPriceList = noPriceList;
+  public void setDetail(String detail) {
+    this.detail = detail;
   }
 
   /**
-   * @return the period
+   * @return the summary
    */
-  public Period getPeriod() {
-    return period;
+  public String getSummary() {
+    return summary;
   }
 
   /**
-   * @param period
-   *          the period to set
+   * @param summary
+   *          the summary to set
    */
-  public void setPeriod(Period period) {
-    this.period = period;
+  public void setSummary(String summary) {
+    this.summary = summary;
   }
 
   /*
@@ -89,8 +88,8 @@ public class InvoiceDTO extends TransactionDTO {
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this);
-    builder.append("noPriceList", noPriceList);
-    builder.append("period", period);
+    builder.append("detail", detail);
+    builder.append("summary", summary);
     builder.append("toString()", super.toString());
     return builder.toString();
   }
