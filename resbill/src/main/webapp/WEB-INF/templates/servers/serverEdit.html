@@ -98,7 +98,7 @@
                   <i class="fa fa-save"></i> <span th:text="#{button.save}">Save</span>
                 </button>
                 <a href="serverList.html" class="btn btn-default" 
-                  th:href="${serverEditDTO.server.id != null} ? @{/servers/overview(serverId=${serverEditDTO.server.id})} : @{/servers}">
+                  th:href="*{server.id != null} ? @{/servers/overview(serverId=*{server.id})} : @{/servers}">
                   <i class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
                 </a>
               </p>

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cz.vsb.resbill.criteria.PersonCriteria;
 import cz.vsb.resbill.criteria.PersonCriteria.OrderBy;
@@ -110,7 +111,7 @@ public class CustomerEditController extends AbstractCustomerController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
-	public String save(@Valid @ModelAttribute(CUSTOMER_EDIT_DTO_MODEL_KEY) CustomerEditDTO customerEditDTO, BindingResult bindingResult) {
+	public String save(@Valid @ModelAttribute(CUSTOMER_EDIT_DTO_MODEL_KEY) CustomerEditDTO customerEditDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (log.isDebugEnabled()) {
 			log.debug("CustomerEditDTO to save: " + customerEditDTO);
 		}
@@ -122,7 +123,8 @@ public class CustomerEditController extends AbstractCustomerController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved customer: " + customer);
 				}
-				return "redirect:/customers";
+				redirectAttributes.addAttribute("customerId", customer.getId());
+				return "redirect:/customers/overview";
 			} catch (CustomerServiceException e) {
 				switch (e.getReason()) {
 				case NONUNIQUE_NAME:
@@ -143,38 +145,4 @@ public class CustomerEditController extends AbstractCustomerController {
 		return "customers/customerEdit";
 	}
 
-	/**
-	 * Handle POST requests for deleting {@link CustomerEditDTO} instance.
-	 * 
-	 * @param customer
-	 * @param bindingResult
-	 * @return
-	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-	public String delete(@ModelAttribute(CUSTOMER_EDIT_DTO_MODEL_KEY) CustomerEditDTO customerEditDTO, BindingResult bindingResult) {
-		if (log.isDebugEnabled()) {
-			log.debug("CustomerEditDTO to delete: " + customerEditDTO);
-		}
-		try {
-			Customer customer = customerService.deleteCustomer(customerEditDTO.getCustomer().getId());
-			if (log.isDebugEnabled()) {
-				log.debug("Deleted customer: " + customer);
-			}
-			return "redirect:/customers";
-		} catch (CustomerServiceException e) {
-			switch (e.getReason()) {
-			case CONTRACT_EXISTENCE:
-				bindingResult.reject("error.delete.customer.contracts.exist");
-				break;
-			default:
-				log.warn("Unsupported reason: " + e);
-				bindingResult.reject("error.delete.customer");
-				break;
-			}
-		} catch (Exception e) {
-			log.error("Cannot delete CustomerEditDTO: " + customerEditDTO, e);
-			bindingResult.reject("error.delete.customer");
-		}
-		return "customers/customerEdit";
-	}
 }

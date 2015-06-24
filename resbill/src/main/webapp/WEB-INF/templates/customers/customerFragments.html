@@ -67,6 +67,9 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<ul class="nav nav-tabs">
+							<li th:class="${#strings.startsWith(#httpServletRequest.pathInfo, '/customers/overview')} ? 'active'">
+								<a href="customerOverview.html" th:href="@{/customers/overview(customerId=${customerHeaderDTO.customerId})}" th:text="#{tab.customer.overview}">Přehled</a>
+							</li>
 							<li th:class="${#strings.startsWith(#httpServletRequest.pathInfo, '/customers/edit')} ? 'active'">
 								<a href="customerEdit.html" th:href="@{/customers/edit(customerId=${customerHeaderDTO.customerId})}" th:text="#{tab.customer.edit}">Editace</a>
 							</li>

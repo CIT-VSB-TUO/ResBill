@@ -83,7 +83,7 @@
 							<td th:text="${customerListDTO.contactPerson.email}">email@email.cz</td>
 							<td th:text="${customerListDTO.contactPerson.phone}">123 456 789</td>
 							<td>
-								<a class="btn btn-primary btn-circle" href="customerEdit.html" th:href="@{/customers/edit(customerId=${customerListDTO.customerId})}" th:title="#{button.title.customer.edit}">
+								<a class="btn btn-primary btn-circle" href="customerOverview.html" th:href="@{/customers/overview(customerId=${customerListDTO.customerId})}" th:title="#{button.title.customer.edit}">
 									<i class="fa fa-edit"></i>
 								</a>
 							</td>
@@ -95,7 +95,7 @@
 							<td>123 456 789</td>
 							<td>17. listopadu 15/2172, Ostrava-Poruba, 708 33</td>
 							<td>
-								<a class="btn btn-primary btn-circle" href="customerEdit.html">
+								<a class="btn btn-primary btn-circle" href="customerOverview.html">
 									<i class="fa fa-edit"></i>
 								</a>
 							</td>
@@ -107,7 +107,7 @@
 							<td>123 456 789</td>
 							<td>17. listopadu 15/2172, Ostrava-Poruba, 708 33</td>
 							<td>
-								<a class="btn btn-primary btn-circle" href="customerEdit.html">
+								<a class="btn btn-primary btn-circle" href="customerOverview.html">
 									<i class="fa fa-edit"></i>
 								</a>
 							</td>

@@ -15,7 +15,7 @@
 		<meta name="author" content="" />
 	</th:block>
 
-	<title th:text="#{head.title.tariff.overview}">Tarif</title>
+	<title th:text="#{head.title.customer.overview}">Tarif</title>
 	
 	<th:block th:remove="all">
 	<!-- remove all duplicated template css due to auto-merge -->
@@ -47,20 +47,20 @@
 	<div layout:fragment="content">
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header" th:text="#{page.header.tariff.overview}">Tariff - prehled</h1>
+				<h1 class="page-header" th:text="#{page.header.customer.overview}">Zakaznik - prehled</h1>
 			</div>
 		</div>
 
 		<div class="row">
-			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${tariffOverviewDTO}')}" th:errors="${tariffOverviewDTO}">Global error</div>
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${customerOverviewDTO}')}" th:errors="${customerOverviewDTO}">Global error</div>
 		</div>
 		
-		<div th:replace="tariffs/tariffFragments :: tariffHeader">Hlavicka</div>
+		<div th:replace="customers/customerFragments :: customerHeader">Hlavicka</div>
 		
-		<div class="row" th:if="${tariffOverviewDTO == null}">
+		<div class="row" th:if="${customerOverviewDTO == null}">
 			<div class="col-lg-12">
 				<p>
-					<a href="tariffList.html" class="btn btn-default" th:href="@{/tariffs}" >
+					<a href="customerList.html" class="btn btn-default" th:href="@{/customers}" >
 						<i class="fa fa-reply"></i>
 						<span th:text="#{button.back}">Back</span>
 					</a>
@@ -69,14 +69,14 @@
 		</div>
 		
 		<!-- Zobrazeni prehledovych informaci -->
-		<div class="row" th:if="${tariffOverviewDTO != null}">
+		<div class="row" th:if="${customerOverviewDTO != null}">
 			<div class="col-lg-12">
 			
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<span class="pull-left" th:text="#{panel.tariff.data}">Tarif</span>
+						<span class="pull-left" th:text="#{panel.customer.data}">Zakaznik</span>
 						<span class="pull-right">
-							<a class="btn btn-danger" href="tariffOverview.html" th:href="@{/tariffs/overview/delete(tariffId=${tariffOverviewDTO.tariffId})}" 
+							<a class="btn btn-danger" href="customerOverview.html" th:href="@{/customers/overview/delete(customerId=${customerOverviewDTO.customerId})}" 
 								th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
 								<i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
 							</a>
@@ -86,39 +86,35 @@
 					<div class="panel-body">
 						
 						<div class="row">
-							<div class="col-lg-3">
+							<div class="col-lg-6">
 								<div class="form-group">
-									<label class="control-label" th:text="#{label.tariff.name}">Jmeno</label>
-									<p class="form-control-static" th:text="${tariffOverviewDTO.name}">tarif x</p>
+									<label class="control-label" th:text="#{label.customer.name}">Jmeno</label>
+									<p class="form-control-static" th:text="${customerOverviewDTO.name}">zakaznik x</p>
 								</div>
 							</div>
-							
-							<div class="col-lg-3">
+						</div>
+						<div class="row">
+							<div class="col-lg-6">
 								<div class="form-group">
-									<label class="control-label" th:text="#{label.tariff.valid}">Platny</label>
-									<p class="form-control-static" th:text="${tariffOverviewDTO.valid} ? #{text.yes} : #{text.no}">ano</p>
+									<label class="control-label" th:text="#{label.customer.note}">Poznamka</label>
+									<p class="form-control-static" th:text="${customerOverviewDTO.note}">lorem ipsum</p>
 								</div>
 							</div>
-
+						</div>
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.customer.billingNote}">Poznamka pro vyuctovani</label>
+									<p class="form-control-static" th:text="${customerOverviewDTO.billingNote}">lorem ipsum</p>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<span class="pull-left" th:text="#{panel.tariff.lastPriceList.data}">Cenik</span>
-						<span class="pull-right">
-							<a class="btn btn-primary" href="priceListEdit.html" th:href="@{/tariffs/prices/edit(priceListId=${tariffOverviewDTO.lastPriceList.priceListId},tariffId=${tariffOverviewDTO.tariffId})}">
-								<i class="fa fa-edit"></i>
-								<span th:text="#{button.title.priceList.edit}">Upravit</span>
-							</a>
-							<a class="btn btn-danger" href="tariffOverview.html" th:href="@{/tariffs/overview/delete(priceListId=${tariffOverviewDTO.lastPriceList.priceListId},tariffId=${tariffOverviewDTO.tariffId})}" 
-								th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
-								<i class="fa fa-trash-o"></i>
-								<span th:text="#{button.delete}">Delete</span>
-							</a>
-						</span>
-						<div class="clearfix"></div>
+						<span th:text="#{panel.customer.contact}">kontakt</span>
 					</div>
 							
 					<div class="panel-body">
@@ -126,42 +122,31 @@
 						<div class="row">
 							<div class="col-lg-3">
 								<div class="form-group">
-									<label class="control-label" th:text="#{label.priceList.period.beginDate}">Platnost od</label>
-									<p class="form-control-static" th:text="${{tariffOverviewDTO.lastPriceList.beginDate}}">1.1.2001</p>
+									<label class="control-label" th:text="#{label.person.email}">E-mail</label>
+									<p class="form-control-static" th:text="${customerOverviewDTO.contactPerson.email}">a@b.c</p>
 								</div>
 							</div>
+							
 							<div class="col-lg-3">
 								<div class="form-group">
-									<label class="control-label" th:text="#{label.priceList.period.endDate}">Platnost do</label>
-									<p class="form-control-static" th:text="${{tariffOverviewDTO.lastPriceList.endDate}}">12.3.2015</p>
+									<label class="control-label" th:text="#{label.person.phone}">Telefon</label>
+									<p class="form-control-static" th:text="${customerOverviewDTO.contactPerson.phone}">987 456 321</p>
 								</div>
 							</div>
+							
 						</div>
 						<div class="row">
 							<div class="col-lg-3">
 								<div class="form-group">
-									<label class="control-label" th:text="#{label.priceList.price.cpu}">CPU</label>
-									<p class="form-control-static" th:text="${{tariffOverviewDTO.lastPriceList.cpuPrice}}">1</p>
+									<label class="control-label" th:text="#{label.person.fullName}">Jmeno</label>
+									<p class="form-control-static" th:text="${customerOverviewDTO.contactPerson.fullName}">Ing. Albert Einstein, CSc.</p>
 								</div>
 							</div>
+
 							<div class="col-lg-3">
 								<div class="form-group">
-									<label class="control-label" th:text="#{label.priceList.price.memory}">RAM</label>
-									<p class="form-control-static" th:text="${{tariffOverviewDTO.lastPriceList.memoryGBPrice}}">2</p>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-lg-3">
-								<div class="form-group">
-									<label class="control-label" th:text="#{label.priceList.price.space}">HDD</label>
-									<p class="form-control-static" th:text="${{tariffOverviewDTO.lastPriceList.spaceGBPrice}}">321</p>
-								</div>
-							</div>
-							<div class="col-lg-3">
-								<div class="form-group">
-									<label class="control-label" th:text="#{label.priceList.price.backup}">Backup</label>
-									<p class="form-control-static" th:text="${{tariffOverviewDTO.lastPriceList.backupGBPrice}}">4</p>
+									<label class="control-label" th:text="#{label.person.titles}">Tituly</label>
+									<p class="form-control-static" th:text="${customerOverviewDTO.contactPerson.titles}">Ing. Albert Einstein, CSc.</p>
 								</div>
 							</div>
 						</div>

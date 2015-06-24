@@ -15,6 +15,7 @@ import cz.vsb.resbill.dao.ContractDAO;
 import cz.vsb.resbill.dao.CustomerDAO;
 import cz.vsb.resbill.dto.customer.CustomerHeaderDTO;
 import cz.vsb.resbill.dto.customer.CustomerListDTO;
+import cz.vsb.resbill.dto.customer.CustomerOverviewDTO;
 import cz.vsb.resbill.exception.CustomerServiceException;
 import cz.vsb.resbill.exception.CustomerServiceException.Reason;
 import cz.vsb.resbill.exception.ResBillException;
@@ -58,6 +59,18 @@ public class CustomerServiceImpl implements CustomerService {
 			throw e;
 		} catch (Exception e) {
 			log.error("An unexpected error occured while finding CustomerHeaderDTO by id=" + customerId, e);
+			throw new ResBillException(e);
+		}
+	}
+
+	@Override
+	public CustomerOverviewDTO findCustomerOverviewDTO(Integer customerId) throws ResBillException {
+		try {
+			return new CustomerOverviewDTO(findCustomer(customerId));
+		} catch (ResBillException e) {
+			throw e;
+		} catch (Exception e) {
+			log.error("An unexpected error occured while finding CustomerOverviewDTO by id=" + customerId, e);
 			throw new ResBillException(e);
 		}
 	}

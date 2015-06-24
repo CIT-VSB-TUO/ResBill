@@ -114,22 +114,11 @@
 									<i class="fa fa-save"></i>
 									<span th:text="#{button.save}">Save</span>
 								</button>
-								<a href="personList.html" class="btn btn-default" th:href="@{/customers}" >
+								<a href="customerList.html" class="btn btn-default" th:href="*{customer.id != null} ? @{/customers/overview(customerId=*{customer.id})} : @{/customers}" >
 									<i class="fa fa-reply"></i>
 									<span th:text="#{button.back}">Back</span>
 								</a>
 							</p>				
-						</div>
-					</div>
-					
-					<div class="row" th:if="*{customer.id != null}">
-						<div class="col-lg-12">
-							<p>
-								<button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete" >
-									<i class="fa fa-trash-o"></i>
-									<span th:text="#{button.delete}">Delete</span>
-								</button>
-							</p>
 						</div>
 					</div>
 					

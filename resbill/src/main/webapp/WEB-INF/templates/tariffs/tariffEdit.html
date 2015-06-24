@@ -94,7 +94,7 @@
 							</div>
 							
 							<div class="panel panel-default">
-								<div class="panel-heading" th:text="#{panel.lastPriceList.data}">Platny cenik</div>
+								<div class="panel-heading" th:text="#{panel.tariff.lastPriceList.data}">Platny cenik</div>
 								
 								<div class="panel-body">
 								
@@ -148,7 +148,7 @@
 									<i class="fa fa-save"></i>
 									<span th:text="#{button.save}">Save</span>
 								</button>
-								<a href="tariffOverview.html" class="btn btn-default" th:href="${tariffPriceListDTO.tariff.id != null} ? @{/tariffs/overview(tariffId=${tariffPriceListDTO.tariff.id})} : @{/tariffs}" >
+								<a href="tariffList.html" class="btn btn-default" th:href="*{tariff.id != null} ? @{/tariffs/overview(tariffId=*{tariff.id})} : @{/tariffs}" >
 									<i class="fa fa-reply"></i>
 									<span th:text="#{button.back}">Back</span>
 								</a>

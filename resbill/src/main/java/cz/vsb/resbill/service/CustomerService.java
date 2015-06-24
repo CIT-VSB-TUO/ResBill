@@ -5,6 +5,7 @@ import java.util.List;
 import cz.vsb.resbill.criteria.CustomerCriteria;
 import cz.vsb.resbill.dto.customer.CustomerHeaderDTO;
 import cz.vsb.resbill.dto.customer.CustomerListDTO;
+import cz.vsb.resbill.dto.customer.CustomerOverviewDTO;
 import cz.vsb.resbill.exception.CustomerServiceException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Customer;
@@ -36,6 +37,15 @@ public interface CustomerService {
 	 * @throws ResBillException
 	 */
 	CustomerHeaderDTO findCustomerHeaderDTO(Integer customerId) throws ResBillException;
+
+	/**
+	 * Finds {@link CustomerOverviewDTO}
+	 * 
+	 * @param customerId
+	 * @return
+	 * @throws ResBillException
+	 */
+	CustomerOverviewDTO findCustomerOverviewDTO(Integer customerId) throws ResBillException;
 
 	/**
 	 * Finds a list of {@link Customer} entities according to given criteria.
