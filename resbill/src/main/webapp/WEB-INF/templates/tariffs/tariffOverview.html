@@ -76,7 +76,7 @@
 					<div class="panel-heading">
 						<span class="pull-left" th:text="#{panel.tariff.data}">Tarif</span>
 						<span class="pull-right">
-							<a class="btn btn-danger" href="tariffOverview.html" th:href="@{/tariffs/overview/delete(tariffId=${tariffOverviewDTO.tariffId},tariff=true)}" 
+							<a class="btn btn-danger" href="tariffOverview.html" th:href="@{/tariffs/overview/delete(tariffId=${tariffOverviewDTO.tariffId})}" 
 								th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
 								<i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
 							</a>
@@ -112,7 +112,7 @@
 								<i class="fa fa-edit"></i>
 								<span th:text="#{button.title.priceList.edit}">Upravit</span>
 							</a>
-							<a class="btn btn-danger" href="tariffOverview.html" th:href="@{/tariffs/overview/delete(priceListId=${tariffOverviewDTO.lastPriceList.priceListId},tariffId=${tariffOverviewDTO.tariffId},priceList=true)}" 
+							<a class="btn btn-danger" href="tariffOverview.html" th:href="@{/tariffs/overview/delete(priceListId=${tariffOverviewDTO.lastPriceList.priceListId},tariffId=${tariffOverviewDTO.tariffId})}" 
 								th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
 								<i class="fa fa-trash-o"></i>
 								<span th:text="#{button.delete}">Delete</span>

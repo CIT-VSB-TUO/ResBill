@@ -62,7 +62,7 @@ public class TariffOverviewController extends AbstractTariffController {
 	 * Handle GET requests for deleting {@link Tariff} instance.
 	 * 
 	 */
-	@RequestMapping(value = "/delete", method = RequestMethod.GET, params = "tariff")
+	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public String deleteTariff(@RequestParam(value = "tariffId", required = true) Integer tariffId, ModelMap model) {
 		if (log.isDebugEnabled()) {
 			log.debug("Tariff.id to delete: " + tariffId);
@@ -95,7 +95,7 @@ public class TariffOverviewController extends AbstractTariffController {
 	 * Handle GET requests for deleting last {@link PriceList} instance.
 	 * 
 	 */
-	@RequestMapping(value = "/delete", method = RequestMethod.GET, params = "priceList")
+	@RequestMapping(value = "/delete", method = RequestMethod.GET, params = "priceListId")
 	public String deletePriceList(@RequestParam(value = "priceListId", required = true) Integer priceListId, ModelMap model, RedirectAttributes redirectAttributes) {
 		if (log.isDebugEnabled()) {
 			log.debug("PriceList.id to delete: " + priceListId);
