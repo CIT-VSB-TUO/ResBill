@@ -8,8 +8,8 @@ import java.util.List;
 
 import cz.vsb.resbill.criteria.ContractCriteria;
 import cz.vsb.resbill.criteria.statistics.StatisticContractCriteria;
-import cz.vsb.resbill.dto.ContractAgendaDTO;
 import cz.vsb.resbill.dto.ContractDTO;
+import cz.vsb.resbill.dto.agenda.ContractAgendaDTO;
 import cz.vsb.resbill.dto.statistics.StatisticContractDTO;
 import cz.vsb.resbill.dto.statistics.StatisticReportDTO;
 import cz.vsb.resbill.exception.ContractServiceException;

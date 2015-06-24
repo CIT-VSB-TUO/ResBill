@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import cz.vsb.resbill.dto.ServerEditDTO;
-import cz.vsb.resbill.dto.ServerOverviewDTO;
+import cz.vsb.resbill.dto.server.ServerEditDTO;
+import cz.vsb.resbill.dto.server.ServerOverviewDTO;
 import cz.vsb.resbill.exception.ServerServiceException;
 import cz.vsb.resbill.model.Server;
 import cz.vsb.resbill.service.ServerService;

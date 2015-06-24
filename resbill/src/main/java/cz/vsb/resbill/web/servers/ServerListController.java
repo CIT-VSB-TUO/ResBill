@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import cz.vsb.resbill.criteria.ServerCriteria;
 import cz.vsb.resbill.criteria.ServerCriteria.OrderBy;
-import cz.vsb.resbill.dto.ServerListDTO;
+import cz.vsb.resbill.dto.server.ServerListDTO;
 import cz.vsb.resbill.model.Server;
 import cz.vsb.resbill.service.ServerService;
 import cz.vsb.resbill.util.WebUtils;

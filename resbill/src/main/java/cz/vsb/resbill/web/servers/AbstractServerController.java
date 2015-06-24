@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import cz.vsb.resbill.dto.ServerHeaderDTO;
+import cz.vsb.resbill.dto.server.ServerHeaderDTO;
 import cz.vsb.resbill.service.ServerService;
 
 public abstract class AbstractServerController {

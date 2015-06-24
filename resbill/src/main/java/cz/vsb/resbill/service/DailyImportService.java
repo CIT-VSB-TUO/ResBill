@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import cz.vsb.resbill.criteria.DailyImportCriteria;
-import cz.vsb.resbill.dto.DailyImportAgendaDTO;
 import cz.vsb.resbill.dto.DailyImportAllReportsResultDTO;
 import cz.vsb.resbill.dto.DailyImportDTO;
+import cz.vsb.resbill.dto.agenda.DailyImportAgendaDTO;
 import cz.vsb.resbill.exception.DailyImportException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.DailyImport;

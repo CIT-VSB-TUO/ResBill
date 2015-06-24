@@ -3,12 +3,12 @@ package cz.vsb.resbill.service;
 import java.util.List;
 
 import cz.vsb.resbill.criteria.ServerCriteria;
-import cz.vsb.resbill.dto.ServerAgendaDTO;
-import cz.vsb.resbill.dto.ServerDTO;
-import cz.vsb.resbill.dto.ServerEditDTO;
-import cz.vsb.resbill.dto.ServerHeaderDTO;
-import cz.vsb.resbill.dto.ServerListDTO;
-import cz.vsb.resbill.dto.ServerOverviewDTO;
+import cz.vsb.resbill.dto.agenda.ServerAgendaDTO;
+import cz.vsb.resbill.dto.server.ServerDTO;
+import cz.vsb.resbill.dto.server.ServerEditDTO;
+import cz.vsb.resbill.dto.server.ServerHeaderDTO;
+import cz.vsb.resbill.dto.server.ServerListDTO;
+import cz.vsb.resbill.dto.server.ServerOverviewDTO;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.exception.ServerServiceException;
 import cz.vsb.resbill.model.Server;
