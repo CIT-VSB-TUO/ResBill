@@ -26,7 +26,6 @@ import cz.vsb.resbill.dto.CustomerEditDTO;
 import cz.vsb.resbill.exception.CustomerServiceException;
 import cz.vsb.resbill.model.Customer;
 import cz.vsb.resbill.model.Person;
-import cz.vsb.resbill.service.CustomerService;
 import cz.vsb.resbill.service.PersonService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -39,14 +38,11 @@ import cz.vsb.resbill.util.WebUtils;
 @Controller
 @RequestMapping("/customers/edit")
 @SessionAttributes("customerEditDTO")
-public class CustomerEditController {
+public class CustomerEditController extends AbstractCustomerController {
 
 	private static final Logger log = LoggerFactory.getLogger(CustomerEditController.class);
 
 	private static final String CUSTOMER_EDIT_DTO_MODEL_KEY = "customerEditDTO";
-
-	@Inject
-	private CustomerService customerService;
 
 	@Inject
 	private PersonService personService;

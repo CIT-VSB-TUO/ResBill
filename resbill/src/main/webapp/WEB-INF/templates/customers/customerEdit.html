@@ -55,6 +55,8 @@
 			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${customerEditDTO}')}" th:errors="${customerEditDTO}">Global error</div>
 		</div>
 		
+		<div th:replace="customers/customerFragments :: customerHeader">Hlavicka</div>
+		
 		<div class="row" th:if="${customerEditDTO == null}">
 			<div class="col-lg-12">
 				<p>
