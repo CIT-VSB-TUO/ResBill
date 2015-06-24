@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cz.vsb.resbill.exception.PersonServiceException;
 import cz.vsb.resbill.model.Person;
@@ -88,7 +89,7 @@ public class PersonEditController extends AbstractPersonController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
-	public String save(@Valid @ModelAttribute(PERSON_MODEL_KEY) Person person, BindingResult bindingResult) {
+	public String save(@Valid @ModelAttribute(PERSON_MODEL_KEY) Person person, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (log.isDebugEnabled()) {
 			log.debug("Person to save: " + person);
 		}
@@ -98,7 +99,8 @@ public class PersonEditController extends AbstractPersonController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved person: " + person);
 				}
-				return "redirect:/persons";
+				redirectAttributes.addAttribute("personId", person.getId());
+				return "redirect:/persons/overview";
 			} catch (PersonServiceException e) {
 				switch (e.getReason()) {
 				case NONUNIQUE_EMAIL:

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cz.vsb.resbill.dto.tariff.TariffPriceListDTO;
 import cz.vsb.resbill.exception.PriceListServiceException;
@@ -99,18 +100,19 @@ public class TariffEditController extends AbstractTariffController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
-	public String save(@Valid @ModelAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, ModelMap model) {
+	public String save(@Valid @ModelAttribute(TARIFF_PRICE_LIST_DTO_MODEL_KEY) TariffPriceListDTO dto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (log.isDebugEnabled()) {
 			log.debug("Tariff to save: " + dto.getTariff());
 			log.debug("PriceList to save: " + dto.getLastPriceList());
 		}
 		if (!bindingResult.hasErrors()) {
 			try {
-				tariffService.saveTariffPriceListDTO(dto);
+				Tariff tariff = tariffService.saveTariffPriceListDTO(dto);
 				if (log.isDebugEnabled()) {
 					log.debug("Saved tariffPriceListDTO: " + dto);
 				}
-				return "redirect:/tariffs";
+				redirectAttributes.addAttribute("tariffId", tariff.getId());
+				return "redirect:/tariffs/overview";
 			} catch (PriceListServiceException e) {
 				switch (e.getReason()) {
 				case NOT_LAST_PRICE_LIST:
