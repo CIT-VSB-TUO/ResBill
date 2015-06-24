@@ -43,7 +43,7 @@
 
 <body>
 
-	<div th:fragment="serverHeader">
+	<div th:fragment="serverHeader" th:if="${#vars.containsKey('serverHeaderDTO')}">
 	
 		<!-- Chyby -->
 		<div class="row">
