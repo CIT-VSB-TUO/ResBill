@@ -89,7 +89,7 @@ public class PriceListEditController extends AbstractTariffController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "priceListId", required = false) Integer priceListId, @RequestParam(value = "tariffId", required = false) Integer tariffId, ModelMap model) {
+	public String view(@RequestParam(value = "priceListId", required = false) Integer priceListId, @RequestParam(value = TARIFF_ID_PARAM_KEY, required = false) Integer tariffId, ModelMap model) {
 		loadPriceList(priceListId, tariffId, model);
 
 		return "tariffs/priceListEdit";
@@ -115,7 +115,7 @@ public class PriceListEditController extends AbstractTariffController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved priceList: " + priceList);
 				}
-				redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
+				redirectAttributes.addAttribute(TARIFF_ID_PARAM_KEY, priceList.getTariff().getId());
 				return "redirect:/tariffs/prices";
 			} catch (PriceListServiceException e) {
 				switch (e.getReason()) {
@@ -171,7 +171,7 @@ public class PriceListEditController extends AbstractTariffController {
 			if (log.isDebugEnabled()) {
 				log.debug("Deleted priceList: " + priceList);
 			}
-			redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
+			redirectAttributes.addAttribute(TARIFF_ID_PARAM_KEY, priceList.getTariff().getId());
 			return "redirect:/tariffs/prices";
 		} catch (PriceListServiceException e) {
 			switch (e.getReason()) {

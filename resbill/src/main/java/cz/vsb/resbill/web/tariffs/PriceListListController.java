@@ -61,7 +61,7 @@ public class PriceListListController extends AbstractTariffController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public String view(@RequestParam(value = "tariffId", required = true) Integer tariffId, ModelMap model) {
+	public String view(@RequestParam(value = TARIFF_ID_PARAM_KEY, required = true) Integer tariffId, ModelMap model) {
 		loadPriceLists(tariffId, model);
 
 		return "tariffs/priceListList";

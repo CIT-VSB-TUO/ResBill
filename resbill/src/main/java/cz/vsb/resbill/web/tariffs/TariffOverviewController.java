@@ -52,7 +52,7 @@ public class TariffOverviewController extends AbstractTariffController {
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "tariffId", required = true) Integer tariffId, ModelMap model) {
+	public String view(@RequestParam(value = TARIFF_ID_PARAM_KEY, required = true) Integer tariffId, ModelMap model) {
 		loadTariffOverviewDTO(tariffId, model);
 
 		return "tariffs/tariffOverview";
@@ -63,7 +63,7 @@ public class TariffOverviewController extends AbstractTariffController {
 	 * 
 	 */
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
-	public String deleteTariff(@RequestParam(value = "tariffId", required = true) Integer tariffId, ModelMap model) {
+	public String deleteTariff(@RequestParam(value = TARIFF_ID_PARAM_KEY, required = true) Integer tariffId, ModelMap model) {
 		if (log.isDebugEnabled()) {
 			log.debug("Tariff.id to delete: " + tariffId);
 		}
@@ -106,7 +106,7 @@ public class TariffOverviewController extends AbstractTariffController {
 				log.debug("Deleted priceList: " + priceList);
 			}
 
-			redirectAttributes.addAttribute("tariffId", priceList.getTariff().getId());
+			redirectAttributes.addAttribute(TARIFF_ID_PARAM_KEY, priceList.getTariff().getId());
 			return "redirect:/tariffs/overview";
 		} catch (PriceListServiceException e) {
 			switch (e.getReason()) {

@@ -85,7 +85,7 @@ public class TariffEditController extends AbstractTariffController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "tariffId", required = false) Integer tariffId, ModelMap model) {
+	public String view(@RequestParam(value = TARIFF_ID_PARAM_KEY, required = false) Integer tariffId, ModelMap model) {
 		// nacteni tarifu
 		loadTariffPriceListDTO(tariffId, model);
 
@@ -111,7 +111,7 @@ public class TariffEditController extends AbstractTariffController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved tariffPriceListDTO: " + dto);
 				}
-				redirectAttributes.addAttribute("tariffId", tariff.getId());
+				redirectAttributes.addAttribute(TARIFF_ID_PARAM_KEY, tariff.getId());
 				return "redirect:/tariffs/overview";
 			} catch (PriceListServiceException e) {
 				switch (e.getReason()) {
