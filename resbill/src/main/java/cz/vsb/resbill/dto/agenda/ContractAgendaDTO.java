@@ -5,6 +5,7 @@
 package cz.vsb.resbill.dto.agenda;
 
 import cz.vsb.resbill.dto.contract.ContractDTO;
+import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.util.ToStringBuilder;
 
 /**
@@ -13,147 +14,148 @@ import cz.vsb.resbill.util.ToStringBuilder;
  */
 public class ContractAgendaDTO extends ContractDTO {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID            = 1L;
+	private static final long serialVersionUID = 1L;
 
-  private boolean           dailyUsagesAfterContractEnd = false;
+	private boolean dailyUsagesAfterContractEnd = false;
 
-  private boolean           dailyUsagesOutOfTariff      = false;
+	private boolean dailyUsagesOutOfTariff = false;
 
-  private boolean           noInvoiceType               = false;
+	private boolean noInvoiceType = false;
 
-  private boolean           noServer                    = false;
+	private boolean noServer = false;
 
-  private boolean           noTariff                    = false;
+	private boolean noTariff = false;
 
-  private boolean           negativeBalance             = false;
+	private boolean negativeBalance = false;
 
-  private boolean           positiveBalance             = false;
+	private boolean positiveBalance = false;
 
-  /**
-   * @return the dailyUsagesAfterContractEnd
-   */
-  public boolean isDailyUsagesAfterContractEnd() {
-    return dailyUsagesAfterContractEnd;
-  }
+	public ContractAgendaDTO(Contract contract) {
+		super(contract);
+	}
 
-  /**
-   * @param dailyUsagesAfterContractEnd
-   *          the dailyUsagesAfterContractEnd to set
-   */
-  public void setDailyUsagesAfterContractEnd(boolean dailyUsagesAfterContractEnd) {
-    this.dailyUsagesAfterContractEnd = dailyUsagesAfterContractEnd;
-  }
+	/**
+	 * @return the dailyUsagesAfterContractEnd
+	 */
+	public boolean isDailyUsagesAfterContractEnd() {
+		return dailyUsagesAfterContractEnd;
+	}
 
-  /**
-   * @return the dailyUsagesOutOfTariff
-   */
-  public boolean isDailyUsagesOutOfTariff() {
-    return dailyUsagesOutOfTariff;
-  }
+	/**
+	 * @param dailyUsagesAfterContractEnd
+	 *          the dailyUsagesAfterContractEnd to set
+	 */
+	public void setDailyUsagesAfterContractEnd(boolean dailyUsagesAfterContractEnd) {
+		this.dailyUsagesAfterContractEnd = dailyUsagesAfterContractEnd;
+	}
 
-  /**
-   * @param dailyUsagesOutOfTariff
-   *          the dailyUsagesOutOfTariff to set
-   */
-  public void setDailyUsagesOutOfTariff(boolean dailyUsagesOutOfTariff) {
-    this.dailyUsagesOutOfTariff = dailyUsagesOutOfTariff;
-  }
+	/**
+	 * @return the dailyUsagesOutOfTariff
+	 */
+	public boolean isDailyUsagesOutOfTariff() {
+		return dailyUsagesOutOfTariff;
+	}
 
-  /**
-   * @return the noInvoiceType
-   */
-  public boolean isNoInvoiceType() {
-    return noInvoiceType;
-  }
+	/**
+	 * @param dailyUsagesOutOfTariff
+	 *          the dailyUsagesOutOfTariff to set
+	 */
+	public void setDailyUsagesOutOfTariff(boolean dailyUsagesOutOfTariff) {
+		this.dailyUsagesOutOfTariff = dailyUsagesOutOfTariff;
+	}
 
-  /**
-   * @param noInvoiceType
-   *          the noInvoiceType to set
-   */
-  public void setNoInvoiceType(boolean noInvoiceType) {
-    this.noInvoiceType = noInvoiceType;
-  }
+	/**
+	 * @return the noInvoiceType
+	 */
+	public boolean isNoInvoiceType() {
+		return noInvoiceType;
+	}
 
-  /**
-   * @return the noServer
-   */
-  public boolean isNoServer() {
-    return noServer;
-  }
+	/**
+	 * @param noInvoiceType
+	 *          the noInvoiceType to set
+	 */
+	public void setNoInvoiceType(boolean noInvoiceType) {
+		this.noInvoiceType = noInvoiceType;
+	}
 
-  /**
-   * @param noServer
-   *          the noServer to set
-   */
-  public void setNoServer(boolean noServer) {
-    this.noServer = noServer;
-  }
+	/**
+	 * @return the noServer
+	 */
+	public boolean isNoServer() {
+		return noServer;
+	}
 
-  /**
-   * @return the noTariff
-   */
-  public boolean isNoTariff() {
-    return noTariff;
-  }
+	/**
+	 * @param noServer
+	 *          the noServer to set
+	 */
+	public void setNoServer(boolean noServer) {
+		this.noServer = noServer;
+	}
 
-  /**
-   * @param noTariff
-   *          the noTariff to set
-   */
-  public void setNoTariff(boolean noTariff) {
-    this.noTariff = noTariff;
-  }
+	/**
+	 * @return the noTariff
+	 */
+	public boolean isNoTariff() {
+		return noTariff;
+	}
 
-  /**
-   * @return the negativeBalance
-   */
-  public boolean isNegativeBalance() {
-    return negativeBalance;
-  }
+	/**
+	 * @param noTariff
+	 *          the noTariff to set
+	 */
+	public void setNoTariff(boolean noTariff) {
+		this.noTariff = noTariff;
+	}
 
-  /**
-   * @param negativeBalance
-   *          the negativeBalance to set
-   */
-  public void setNegativeBalance(boolean negativeBalance) {
-    this.negativeBalance = negativeBalance;
-  }
+	/**
+	 * @return the negativeBalance
+	 */
+	public boolean isNegativeBalance() {
+		return negativeBalance;
+	}
 
-  /**
-   * @return the positiveBalance
-   */
-  public boolean isPositiveBalance() {
-    return positiveBalance;
-  }
+	/**
+	 * @param negativeBalance
+	 *          the negativeBalance to set
+	 */
+	public void setNegativeBalance(boolean negativeBalance) {
+		this.negativeBalance = negativeBalance;
+	}
 
-  /**
-   * @param positiveBalance
-   *          the positiveBalance to set
-   */
-  public void setPositiveBalance(boolean positiveBalance) {
-    this.positiveBalance = positiveBalance;
-  }
+	/**
+	 * @return the positiveBalance
+	 */
+	public boolean isPositiveBalance() {
+		return positiveBalance;
+	}
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString() {
-    ToStringBuilder builder = new ToStringBuilder(this);
-    builder.append("dailyUsagesAfterContractEnd", dailyUsagesAfterContractEnd);
-    builder.append("dailyUsagesOutOfTariff", dailyUsagesOutOfTariff);
-    builder.append("noInvoiceType", noInvoiceType);
-    builder.append("noServer", noServer);
-    builder.append("noTariff", noTariff);
-    builder.append("negativeBalance", negativeBalance);
-    builder.append("positiveBalance", positiveBalance);
-    builder.append("toString()", super.toString());
-    return builder.toString();
-  }
+	/**
+	 * @param positiveBalance
+	 *          the positiveBalance to set
+	 */
+	public void setPositiveBalance(boolean positiveBalance) {
+		this.positiveBalance = positiveBalance;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this);
+		builder.append("dailyUsagesAfterContractEnd", dailyUsagesAfterContractEnd);
+		builder.append("dailyUsagesOutOfTariff", dailyUsagesOutOfTariff);
+		builder.append("noInvoiceType", noInvoiceType);
+		builder.append("noServer", noServer);
+		builder.append("noTariff", noTariff);
+		builder.append("negativeBalance", negativeBalance);
+		builder.append("positiveBalance", positiveBalance);
+		builder.append("toString()", super.toString());
+		return builder.toString();
+	}
 
 }

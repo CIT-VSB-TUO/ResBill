@@ -80,7 +80,7 @@
 						<tr th:each="contract: ${contracts}">
 							<td th:text="${contract.evidenceNumber}" data-type="num">1</td>
 							<td th:text="${contract.name}">P.FS</td>
-							<td th:text="${contract.customerName}">Fakulta strojní</td>
+							<td th:text="${contract.customer?.name}">Fakulta strojní</td>
 							<td th:text="${#numbers.formatDecimal(contract.balance,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${contract.balance}">-1 000,0</td>
 							<td th:text="${#dates.format(contract.beginDate, '__#{date.format.list}__')}" th:attr="data-order=${#dates.format(contract.beginDate, '__#{date.format.order}__')}">1.1.2014</td>
 							<td th:text="${contract.endDate != null} ? ${#dates.format(contract.endDate, '__#{date.format.list}__')}" 

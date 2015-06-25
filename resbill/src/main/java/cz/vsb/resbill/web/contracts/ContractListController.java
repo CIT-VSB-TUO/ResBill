@@ -4,7 +4,7 @@
  */
 package cz.vsb.resbill.web.contracts;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import cz.vsb.resbill.criteria.ContractCriteria;
-import cz.vsb.resbill.dto.contract.ContractDTO;
+import cz.vsb.resbill.dto.contract.ContractListDTO;
 import cz.vsb.resbill.service.ContractService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -51,39 +51,30 @@ public class ContractListController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String view(ModelMap model) {
-		loadContractDTOs(model);
+		loadContractListDTOs(model);
 
 		return "contracts/contractList";
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	protected List<ContractDTO> loadContractDTOs(ModelMap model) {
-
-		List<ContractDTO> contractDTOs = null;
+	private void loadContractListDTOs(ModelMap model) {
+		List<ContractListDTO> dtos = null;
 
 		try {
-			List<ContractCriteria.OrderBy> orderBy = new ArrayList<ContractCriteria.OrderBy>();
-			orderBy.add(ContractCriteria.OrderBy.EVIDENCE_NUMBER_ASC);
-
 			ContractCriteria criteria = new ContractCriteria();
-			criteria.setOrderBy(orderBy);
+			criteria.setOrderBy(Collections.singletonList(ContractCriteria.OrderBy.EVIDENCE_NUMBER_ASC));
 
-			contractDTOs = contractService.findContractDTOs(criteria, null, null);
+			dtos = contractService.findContractListDTOs(criteria, null, null);
 
-			model.addAttribute(MODEL_OBJECT_KEY_CONTRACTS, contractDTOs);
+			model.addAttribute(MODEL_OBJECT_KEY_CONTRACTS, dtos);
 		} catch (Exception exc) {
 			log.error("Cannot load Contracts.", exc);
 
-			contractDTOs = null;
-
-			model.addAttribute(MODEL_OBJECT_KEY_CONTRACTS, contractDTOs);
+			model.addAttribute(MODEL_OBJECT_KEY_CONTRACTS, dtos);
 			addGlobalError(model, "error.load.contracts");
 		}
-
-		return contractDTOs;
+		if (log.isDebugEnabled()) {
+			log.debug("Loaded list of contracts size: " + (dtos != null ? dtos.size() : null));
+		}
 	}
 
 }

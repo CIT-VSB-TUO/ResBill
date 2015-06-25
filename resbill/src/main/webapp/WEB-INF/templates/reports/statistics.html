@@ -146,7 +146,7 @@
 
             <tbody th:remove="all-but-first">
               <tr th:each="componentDTO : ${contractStatistic.componentDTOs}">
-                <td th:text="${componentDTO.contractDTO.customerName}">Fakulta strojní</td>
+                <td th:text="${componentDTO.customerDTO.name}">Fakulta strojní</td>
                 <td th:text="${componentDTO.contractDTO.name}">P.FS</td>
                 <td class="striped" th:text="${componentDTO.usageDTO.server}">1</td>
                 <td class="striped" th:text="${#numbers.formatDecimal(componentDTO.usageDTO.serverPercentage,1,'DEFAULT',2,'DEFAULT')}">35</td>

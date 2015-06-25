@@ -288,7 +288,8 @@ public class ServerServiceImpl implements ServerService {
 				throw new ServerServiceException(Reason.CONTRACT_ASSOCIATED);
 			}
 			// denni pouziti
-			if (!server.getDailyUsages().isEmpty()) { // FIXME prepsat do DAO?
+			DailyUsage dailyUsage = dailyUsageDAO.findServerLastDailyUsage(serverId);
+			if (dailyUsage != null) {
 				throw new ServerServiceException(Reason.DAILY_USAGE_EXISTENCE);
 			}
 			return serverDAO.deleteServer(server);

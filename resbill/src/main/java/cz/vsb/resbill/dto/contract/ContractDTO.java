@@ -17,178 +17,95 @@ import cz.vsb.resbill.util.ToStringBuilder;
  */
 public class ContractDTO implements Serializable {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  private Integer           contractId       = null;
+	private Integer contractId = null;
 
-  private Long              evidenceNumber   = null;
+	private Long evidenceNumber = null;
 
-  private String            name             = null;
+	private String name = null;
 
-  private BigDecimal        balance          = null;
+	private BigDecimal balance = null;
 
-  private Date              beginDate        = null;
+	private Date beginDate = null;
 
-  private Date              endDate          = null;
+	private Date endDate = null;
 
-  private String            customerName     = null;
+	public ContractDTO(Contract contract) {
+		fill(contract);
+	}
 
-  /**
-   * 
-   */
-  public ContractDTO() {
-    super();
-  }
+	/**
+	 * 
+	 * @param contract
+	 */
+	protected void fill(Contract contract) {
+		contractId = contract.getId();
+		evidenceNumber = contract.getEvidenceNumber();
+		name = contract.getName();
+		balance = contract.getBalance();
+		beginDate = contract.getPeriod().getBeginDate();
+		endDate = contract.getPeriod().getEndDate();
+	}
 
-  /**
-   * 
-   */
-  public ContractDTO(Contract contract) {
-    this();
+	/**
+	 * @return the contractId
+	 */
+	public Integer getContractId() {
+		return contractId;
+	}
 
-    fill(contract);
-  }
+	/**
+	 * @return the evidenceNumber
+	 */
+	public Long getEvidenceNumber() {
+		return evidenceNumber;
+	}
 
-  /**
-   * 
-   * @param contract
-   */
-  public void fill(Contract contract) {
-    contractId = contract.getId();
-    evidenceNumber = contract.getEvidenceNumber();
-    name = contract.getName();
-    balance = contract.getBalance();
-    beginDate = contract.getPeriod().getBeginDate();
-    endDate = contract.getPeriod().getEndDate();
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    customerName = contract.getCustomer().getName();
-  }
+	/**
+	 * @return the beginDate
+	 */
+	public Date getBeginDate() {
+		return beginDate;
+	}
 
-  /**
-   * @return the contractId
-   */
-  public Integer getContractId() {
-    return contractId;
-  }
+	/**
+	 * @return the endDate
+	 */
+	public Date getEndDate() {
+		return endDate;
+	}
 
-  /**
-   * @param contractId
-   *          the contractId to set
-   */
-  public void setContractId(Integer contractId) {
-    this.contractId = contractId;
-  }
+	/**
+	 * @return the balance
+	 */
+	public BigDecimal getBalance() {
+		return balance;
+	}
 
-  /**
-   * @return the evidenceNumber
-   */
-  public Long getEvidenceNumber() {
-    return evidenceNumber;
-  }
-
-  /**
-   * @param evidenceNumber
-   *          the evidenceNumber to set
-   */
-  public void setEvidenceNumber(Long evidenceNumber) {
-    this.evidenceNumber = evidenceNumber;
-  }
-
-  /**
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * @param name
-   *          the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  /**
-   * @return the beginDate
-   */
-  public Date getBeginDate() {
-    return beginDate;
-  }
-
-  /**
-   * @param beginDate
-   *          the beginDate to set
-   */
-  public void setBeginDate(Date beginDate) {
-    this.beginDate = beginDate;
-  }
-
-  /**
-   * @return the endDate
-   */
-  public Date getEndDate() {
-    return endDate;
-  }
-
-  /**
-   * @param endDate
-   *          the endDate to set
-   */
-  public void setEndDate(Date endDate) {
-    this.endDate = endDate;
-  }
-
-  /**
-   * @return the customerName
-   */
-  public String getCustomerName() {
-    return customerName;
-  }
-
-  /**
-   * @param customerName
-   *          the customerName to set
-   */
-  public void setCustomerName(String customerName) {
-    this.customerName = customerName;
-  }
-
-  /**
-   * @return the balance
-   */
-  public BigDecimal getBalance() {
-    return balance;
-  }
-
-  /**
-   * @param balance
-   *          the balance to set
-   */
-  public void setBalance(BigDecimal balance) {
-    this.balance = balance;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString() {
-    ToStringBuilder builder = new ToStringBuilder(this);
-    builder.append("contractId", contractId);
-    builder.append("evidenceNumber", evidenceNumber);
-    builder.append("name", name);
-    builder.append("balance", balance);
-    builder.append("beginDate", beginDate);
-    builder.append("endDate", endDate);
-    builder.append("customerName", customerName);
-    builder.append("toString()", super.toString());
-    return builder.toString();
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this);
+		builder.append("contractId", contractId);
+		builder.append("evidenceNumber", evidenceNumber);
+		builder.append("name", name);
+		builder.append("balance", balance);
+		builder.append("beginDate", beginDate);
+		builder.append("endDate", endDate);
+		builder.append("toString()", super.toString());
+		return builder.toString();
+	}
 
 }
