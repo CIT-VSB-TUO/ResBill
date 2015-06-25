@@ -81,7 +81,7 @@ public class ServerEditController extends AbstractServerController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "serverId", required = false) Integer serverId, ModelMap model) {
+	public String view(@RequestParam(value = SERVER_ID_PARAM_KEY, required = false) Integer serverId, ModelMap model) {
 		loadServerEditDTO(serverId, model);
 
 		return "servers/serverEdit";
@@ -105,7 +105,7 @@ public class ServerEditController extends AbstractServerController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved server: " + server);
 				}
-				redirectAttributes.addAttribute("serverId", server.getId());
+				redirectAttributes.addAttribute(SERVER_ID_PARAM_KEY, server.getId());
 				return "redirect:/servers/overview";
 			} catch (ServerServiceException e) {
 				switch (e.getReason()) {

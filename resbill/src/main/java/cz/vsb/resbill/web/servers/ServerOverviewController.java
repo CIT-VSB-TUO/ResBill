@@ -55,7 +55,7 @@ public class ServerOverviewController extends AbstractServerController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "serverId", required = true) Integer serverId, ModelMap model) {
+	public String view(@RequestParam(value = SERVER_ID_PARAM_KEY, required = true) Integer serverId, ModelMap model) {
 		loadServerOverviewDTO(serverId, model);
 
 		return "servers/serverOverview";
@@ -89,7 +89,7 @@ public class ServerOverviewController extends AbstractServerController {
 	 * @return
 	 */
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
-	public String delete(@RequestParam(value = "serverId", required = true) Integer serverId, ModelMap model) {
+	public String delete(@RequestParam(value = SERVER_ID_PARAM_KEY, required = true) Integer serverId, ModelMap model) {
 		if (log.isDebugEnabled()) {
 			log.debug("Server.id to delete: " + serverId);
 		}

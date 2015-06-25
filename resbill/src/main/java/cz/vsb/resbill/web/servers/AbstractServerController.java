@@ -14,13 +14,15 @@ public abstract class AbstractServerController {
 
 	private static final Logger log = LoggerFactory.getLogger(AbstractServerController.class);
 
-	private static final String SERVER_HEADER_DTO_MODEL_KEY = "serverHeaderDTO";
+	protected static final String SERVER_HEADER_DTO_MODEL_KEY = "serverHeaderDTO";
+
+	protected static final String SERVER_ID_PARAM_KEY = "serverId";
 
 	@Inject
 	private ServerService serverService;
 
 	@ModelAttribute(SERVER_HEADER_DTO_MODEL_KEY)
-	public ServerHeaderDTO getServerHeaderDTO(@RequestParam(value = "serverId", required = false) Integer serverId) {
+	public ServerHeaderDTO getServerHeaderDTO(@RequestParam(value = SERVER_ID_PARAM_KEY, required = false) Integer serverId) {
 		if (serverId != null) {
 			try {
 				return serverService.findServerHeaderDTO(serverId);

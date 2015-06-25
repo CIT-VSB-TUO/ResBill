@@ -62,7 +62,7 @@ public class ServerContractListController extends AbstractServerController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public String view(@RequestParam(value = "serverId", required = true) Integer serverId, ModelMap model) {
+	public String view(@RequestParam(value = SERVER_ID_PARAM_KEY, required = true) Integer serverId, ModelMap model) {
 		loadServerContracts(serverId, model);
 
 		return "servers/serverContractList";
