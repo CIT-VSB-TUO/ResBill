@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import cz.vsb.resbill.criteria.CustomerCriteria;
 import cz.vsb.resbill.criteria.CustomerCriteria.OrderBy;
-import cz.vsb.resbill.dto.ContractEditDTO;
+import cz.vsb.resbill.dto.contract.ContractEditDTO;
 import cz.vsb.resbill.exception.ContractServiceException;
 import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.model.Customer;

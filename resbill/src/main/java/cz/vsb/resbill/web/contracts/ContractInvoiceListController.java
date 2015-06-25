@@ -27,10 +27,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import cz.vsb.resbill.criteria.InvoiceCreateCriteria;
 import cz.vsb.resbill.criteria.InvoiceCriteria;
 import cz.vsb.resbill.criteria.InvoiceExportCriteria;
-import cz.vsb.resbill.dto.ContractEditDTO;
 import cz.vsb.resbill.dto.InvoiceCreateResultDTO;
 import cz.vsb.resbill.dto.InvoiceDTO;
 import cz.vsb.resbill.dto.InvoiceExportResultDTO;
+import cz.vsb.resbill.dto.contract.ContractHeaderDTO;
 import cz.vsb.resbill.service.InvoiceService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -122,7 +122,7 @@ public class ContractInvoiceListController extends AbstractContractController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "createInvoices")
 	public String createInvoices(@RequestParam(value = "month", required = true) Date month, ModelMap model) {
-		ContractEditDTO contractEditDTO = (ContractEditDTO) model.get("contractEditDTO");
+		ContractHeaderDTO contractHeaderDTO = (ContractHeaderDTO) model.get(CONTRACT_HEADER_DTO_MODEL_KEY);
 
 		model.addAttribute(MODEL_OBJECT_KEY_INVOICES_CREATE_RESULTS_DTO, null);
 		model.addAttribute(MODEL_OBJECT_KEY_INVOICES_CREATE_RESULTS_SHOW, false);
@@ -130,7 +130,7 @@ public class ContractInvoiceListController extends AbstractContractController {
 		try {
 			if (month != null) {
 				InvoiceCreateCriteria criteria = new InvoiceCreateCriteria();
-				criteria.setContractId(contractEditDTO.getContract().getId());
+				criteria.setContractId(contractHeaderDTO.getContractId());
 				criteria.setMonth(month);
 
 				InvoiceCreateResultDTO resultDTO = invoiceService.createInvoices(criteria);
@@ -141,11 +141,11 @@ public class ContractInvoiceListController extends AbstractContractController {
 				WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICES_CREATE_RESULTS_DTO, "error.save.invoice.create.noMonth");
 			}
 		} catch (Exception exc) {
-			log.error("Cannot createInvoices for contract with ID: " + contractEditDTO.getContract().getId() + ".", exc);
+			log.error("Cannot createInvoices for contract with ID: " + contractHeaderDTO.getContractId() + ".", exc);
 			WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICES_CREATE_RESULTS_DTO, "error.save.invoice.create");
 		}
 
-		return view(contractEditDTO.getContract().getId(), model);
+		return view(contractHeaderDTO.getContractId(), model);
 
 	}
 
@@ -156,7 +156,7 @@ public class ContractInvoiceListController extends AbstractContractController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "exportInvoices")
 	public String exportInvoices(@RequestParam(value = "expMonth", required = true) Date expMonth, ModelMap model) {
-		ContractEditDTO contractEditDTO = (ContractEditDTO) model.get("contractEditDTO");
+		ContractHeaderDTO contractHeaderDTO = (ContractHeaderDTO) model.get(CONTRACT_HEADER_DTO_MODEL_KEY);
 
 		model.addAttribute(MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_DTO, null);
 		model.addAttribute(MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_SHOW, false);
@@ -164,7 +164,7 @@ public class ContractInvoiceListController extends AbstractContractController {
 		try {
 			if (expMonth != null) {
 				InvoiceExportCriteria criteria = new InvoiceExportCriteria();
-				criteria.setContractId(contractEditDTO.getContract().getId());
+				criteria.setContractId(contractHeaderDTO.getContractId());
 				criteria.setMonth(expMonth);
 
 				InvoiceExportResultDTO resultDTO = invoiceService.exportInvoices(criteria);
@@ -175,10 +175,10 @@ public class ContractInvoiceListController extends AbstractContractController {
 				WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_DTO, "error.save.invoice.export.noMonth");
 			}
 		} catch (Exception exc) {
-			log.error("Cannot exportInvoices for contract with ID: " + contractEditDTO.getContract().getId() + ".", exc);
+			log.error("Cannot exportInvoices for contract with ID: " + contractHeaderDTO.getContractId() + ".", exc);
 			WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICES_EXPORT_RESULTS_DTO, "error.save.invoice.export");
 		}
 
-		return view(contractEditDTO.getContract().getId(), model);
+		return view(contractHeaderDTO.getContractId(), model);
 	}
 }
