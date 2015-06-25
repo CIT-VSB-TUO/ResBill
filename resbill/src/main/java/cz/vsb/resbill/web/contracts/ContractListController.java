@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import cz.vsb.resbill.criteria.ContractCriteria;
 import cz.vsb.resbill.dto.ContractDTO;
-import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.service.ContractService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -30,61 +29,61 @@ import cz.vsb.resbill.util.WebUtils;
 @RequestMapping("/contracts")
 public class ContractListController {
 
-  private static final Logger log                        = LoggerFactory.getLogger(ContractListController.class);
+	private static final Logger log = LoggerFactory.getLogger(ContractListController.class);
 
-  public static final String  MODEL_OBJECT_KEY_CONTRACTS = "contracts";
+	public static final String MODEL_OBJECT_KEY_CONTRACTS = "contracts";
 
-  @Inject
-  private ContractService     contractService;
+	@Inject
+	private ContractService contractService;
 
-  /**
-   * 
-   * @param model
-   * @param msgKey
-   */
-  protected static void addGlobalError(ModelMap model, String msgKey) {
-    WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_CONTRACTS, msgKey);
-  }
+	/**
+	 * 
+	 * @param model
+	 * @param msgKey
+	 */
+	protected static void addGlobalError(ModelMap model, String msgKey) {
+		WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_CONTRACTS, msgKey);
+	}
 
-  /**
-   * 
-   * @return
-   */
-  @RequestMapping(method = RequestMethod.GET)
-  public String view(ModelMap model) {
-    loadContractDTOs(model);
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET)
+	public String view(ModelMap model) {
+		loadContractDTOs(model);
 
-    return "contracts/contractList";
-  }
+		return "contracts/contractList";
+	}
 
-  /**
-   * 
-   * @return
-   */
-  protected List<ContractDTO> loadContractDTOs(ModelMap model) {
+	/**
+	 * 
+	 * @return
+	 */
+	protected List<ContractDTO> loadContractDTOs(ModelMap model) {
 
-    List<ContractDTO> contractDTOs = null;
+		List<ContractDTO> contractDTOs = null;
 
-    try {
-      List<ContractCriteria.OrderBy> orderBy = new ArrayList<ContractCriteria.OrderBy>();
-      orderBy.add(ContractCriteria.OrderBy.EVIDENCE_NUMBER_ASC);
+		try {
+			List<ContractCriteria.OrderBy> orderBy = new ArrayList<ContractCriteria.OrderBy>();
+			orderBy.add(ContractCriteria.OrderBy.EVIDENCE_NUMBER_ASC);
 
-      ContractCriteria criteria = new ContractCriteria();
-      criteria.setOrderBy(orderBy);
+			ContractCriteria criteria = new ContractCriteria();
+			criteria.setOrderBy(orderBy);
 
-      contractDTOs = contractService.findContractDTOs(criteria, null, null);
+			contractDTOs = contractService.findContractDTOs(criteria, null, null);
 
-      model.addAttribute(MODEL_OBJECT_KEY_CONTRACTS, contractDTOs);
-    } catch (Exception exc) {
-      log.error("Cannot load Contracts.", exc);
+			model.addAttribute(MODEL_OBJECT_KEY_CONTRACTS, contractDTOs);
+		} catch (Exception exc) {
+			log.error("Cannot load Contracts.", exc);
 
-      contractDTOs = null;
+			contractDTOs = null;
 
-      model.addAttribute(MODEL_OBJECT_KEY_CONTRACTS, contractDTOs);
-      addGlobalError(model, "error.load.contracts");
-    }
+			model.addAttribute(MODEL_OBJECT_KEY_CONTRACTS, contractDTOs);
+			addGlobalError(model, "error.load.contracts");
+		}
 
-    return contractDTOs;
-  }
+		return contractDTOs;
+	}
 
 }

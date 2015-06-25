@@ -36,121 +36,124 @@ import cz.vsb.resbill.util.WebUtils;
 @RequestMapping("/invoice/detail")
 public class InvoiceDetailController {
 
-  private static final Logger log                      = LoggerFactory.getLogger(InvoiceDetailController.class);
+	private static final Logger log = LoggerFactory.getLogger(InvoiceDetailController.class);
 
-  public static final String  MODEL_OBJECT_KEY_INVOICE = "invoice";
+	public static final String MODEL_OBJECT_KEY_INVOICE = "invoice";
 
-  @Inject
-  private InvoiceService      invoiceService;
+	@Inject
+	private InvoiceService invoiceService;
 
-  /**
-   * 
-   * @param model
-   * @param msgKey
-   */
-  protected static void addGlobalError(ModelMap model, String msgKey) {
-    WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICE, msgKey);
-  }
+	/**
+	 * 
+	 * @param model
+	 * @param msgKey
+	 */
+	protected static void addGlobalError(ModelMap model, String msgKey) {
+		WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICE, msgKey);
+	}
 
-  /**
-   * 
-   * @param invoiceId
-   * @param model
-   * @return
-   */
-  @RequestMapping(value = "", method = RequestMethod.GET)
-  public String view(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model) {
-    loadInvoiceDetailDTO(invoiceId, model);
+	/**
+	 * 
+	 * @param invoiceId
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public String view(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model) {
+		loadInvoiceDetailDTO(invoiceId, model);
 
-    return "invoice/invoiceDetail";
-  }
+		return "invoice/invoiceDetail";
+	}
 
-  /**
-   * 
-   * @param invoiceId
-   * @param model
-   * @return
-   */
-  protected InvoiceDetailDTO loadInvoiceDetailDTO(Integer invoiceId, ModelMap model) {
+	/**
+	 * 
+	 * @param invoiceId
+	 * @param model
+	 * @return
+	 */
+	protected InvoiceDetailDTO loadInvoiceDetailDTO(Integer invoiceId, ModelMap model) {
 
-    InvoiceDetailDTO invoiceDetailDTO = null;
+		InvoiceDetailDTO invoiceDetailDTO = null;
 
-    try {
-      invoiceDetailDTO = invoiceService.findInvoiceDetailDTO(invoiceId);
-      model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoiceDetailDTO);
+		try {
+			invoiceDetailDTO = invoiceService.findInvoiceDetailDTO(invoiceId);
+			model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoiceDetailDTO);
 
-    } catch (Exception exc) {
-      log.error("Cannot load InvoiceDetailDTO with id: " + invoiceId, exc);
+		} catch (Exception exc) {
+			log.error("Cannot load InvoiceDetailDTO with id: " + invoiceId, exc);
 
-      invoiceDetailDTO = null;
+			invoiceDetailDTO = null;
 
-      model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoiceDetailDTO);
-      addGlobalError(model, "error.load.invoice");
-    }
+			model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoiceDetailDTO);
+			addGlobalError(model, "error.load.invoice");
+		}
 
-    return invoiceDetailDTO;
-  }
+		return invoiceDetailDTO;
+	}
 
-  /**
-   * 
-   * @param dailyImportId
-   * @param model
-   * @return
-   */
-  @RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-  public String delete(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model) {
+	/**
+	 * 
+	 * @param dailyImportId
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
+	public String delete(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model) {
 
-    InvoiceDetailDTO invoiceDetailDTO = loadInvoiceDetailDTO(invoiceId, model);
+		InvoiceDetailDTO invoiceDetailDTO = loadInvoiceDetailDTO(invoiceId, model);
 
-    if (invoiceDetailDTO != null) {
-      try {
+		if (invoiceDetailDTO != null) {
+			try {
 
-        Invoice invoice = invoiceService.deleteInvoice(invoiceDetailDTO.getTransactionId());
-        return "redirect:/invoice";
+				Invoice invoice = invoiceService.deleteInvoice(invoiceDetailDTO.getTransactionId());
+				if (log.isDebugEnabled()) {
+					log.debug("Deleted invoice: " + invoice);
+				}
+				return "redirect:/invoice";
 
-      } catch (Exception exc) {
-        log.error("Cannot delete invoice: " + invoiceDetailDTO, exc);
-        addGlobalError(model, "error.delete.invoice");
-      }
-    }
+			} catch (Exception exc) {
+				log.error("Cannot delete invoice: " + invoiceDetailDTO, exc);
+				addGlobalError(model, "error.delete.invoice");
+			}
+		}
 
-    return "invoice/invoiceDetail";
-  }
+		return "invoice/invoiceDetail";
+	}
 
-  /**
-   * 
-   * @param invoiceId
-   * @param model
-   * @return
-   */
-  @RequestMapping(value = "download", method = RequestMethod.GET)
-  public void download(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, HttpServletRequest request, HttpServletResponse response) {
+	/**
+	 * 
+	 * @param invoiceId
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "download", method = RequestMethod.GET)
+	public void download(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, HttpServletRequest request, HttpServletResponse response) {
 
-    try {
-      File attachment = invoiceService.findInvoiceAttachment(invoiceId);
+		try {
+			File attachment = invoiceService.findInvoiceAttachment(invoiceId);
 
-      if (attachment != null) {
-        try (InputStream in = new ByteArrayInputStream(attachment.getContent()); OutputStream out = response.getOutputStream()) {
+			if (attachment != null) {
+				try (InputStream in = new ByteArrayInputStream(attachment.getContent()); OutputStream out = response.getOutputStream()) {
 
-          response.setContentLength(attachment.getSize().intValue());
-          response.setContentType(attachment.getContentType());
+					response.setContentLength(attachment.getSize().intValue());
+					response.setContentType(attachment.getContentType());
 
-          // response header
-          String headerKey = "Content-Disposition";
-          String headerValue = String.format("attachment; filename=\"%s\"", attachment.getName());
-          response.setHeader(headerKey, headerValue);
+					// response header
+					String headerKey = "Content-Disposition";
+					String headerValue = String.format("attachment; filename=\"%s\"", attachment.getName());
+					response.setHeader(headerKey, headerValue);
 
-          // Write response
-          IOUtils.copy(in, out);
+					// Write response
+					IOUtils.copy(in, out);
 
-        } catch (Exception exc) {
-          log.error("Cannot download invoice with ID: " + invoiceId, exc);
-        }
-      }
+				} catch (Exception exc) {
+					log.error("Cannot download invoice with ID: " + invoiceId, exc);
+				}
+			}
 
-    } catch (Exception exc) {
-      log.error("Cannot download invoice with ID: " + invoiceId, exc);
-    }
+		} catch (Exception exc) {
+			log.error("Cannot download invoice with ID: " + invoiceId, exc);
+		}
 
-  }
+	}
 }
