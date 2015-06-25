@@ -99,13 +99,13 @@ public class ContractTariffServiceImpl implements ContractTariffService {
 				}
 			} else { // editace existujiciho prirazeni
 				// kontrola modifikace prirazeni
-				ContractTariff origCIT = contractTariffDAO.findContractTariff(contractTariff.getId());
-				if (!origCIT.getContract().equals(contract) || !origCIT.getTariff().equals(contractTariff.getTariff())) {
+				ContractTariff origCT = contractTariffDAO.findContractTariff(contractTariff.getId());
+				if (!origCT.getContract().equals(contract) || !origCT.getTariff().equals(contractTariff.getTariff())) {
 					throw new ContractTariffServiceException(Reason.CONTRACT_TARIFF_MODIFICATION);
 				}
 				// kontrola, zda obdobi stale pokryva stejne jiz fakturovane importy
 				// puvodni sada dennich vyuziti
-				List<Integer> origDUIds = getInvoicedDailyUsageIds(origCIT);
+				List<Integer> origDUIds = getInvoicedDailyUsageIds(origCT);
 				// sada po editaci
 				List<Integer> newDUIds = getInvoicedDailyUsageIds(contractTariff);
 				if (!CollectionUtils.isEqualCollection(origDUIds, newDUIds)) {

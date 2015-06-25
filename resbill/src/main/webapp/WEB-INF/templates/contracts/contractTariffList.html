@@ -61,7 +61,7 @@
 		<div class="row" th:if="${contractTariffs == null}">
 			<div class="col-lg-12">
 				<p>
-					<a href="contractEdit.html" class="btn btn-default" th:href="@{/contracts/overview(contractId=${contractHeaderDTO.contractId})}" >
+					<a href="contractOverview.html" class="btn btn-default" th:href="@{/contracts/overview(contractId=${contractHeaderDTO.contractId})}" >
 						<i class="fa fa-reply"></i>
 						<span th:text="#{button.back}">Back</span>
 					</a>
@@ -91,7 +91,7 @@
 							<td th:text="${contractTariff.period.endDate != null} ? ${#dates.format(contractTariff.period.endDate, '__#{date.format.list}__')}">30.6.2001</td>
 							<td th:text="${contractTariff.tariff.name}">Tarif 1</td>
 							<td>
-								<a class="btn btn-primary btn-circle" href="contractTariffEdit.html" th:href="@{/contracts/tariffs/edit(contractTariffId=${contractTariff.id})}" th:title="#{button.title.contract.tariff.edit}">
+								<a class="btn btn-primary btn-circle" href="contractTariffEdit.html" th:href="@{/contracts/tariffs/edit(contractTariffId=${contractTariff.id}, contractId=${contractHeaderDTO.contractId})}" th:title="#{button.title.contract.tariff.edit}">
 									<i class="fa fa-edit"></i>
 								</a>
 							</td>
