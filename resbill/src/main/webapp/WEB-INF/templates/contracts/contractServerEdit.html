@@ -52,46 +52,15 @@
 		</div>
 		
 		<div class="row">
-			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contractEditDTO}')}" th:errors="${contractEditDTO}">Global error</div>
-		</div>
-		
-		<div class="row" th:if="${contractEditDTO != null and contractEditDTO.contract.id != null}">
-			<div class="col-lg-12">
-				
-				<h4 th:text="${contractEditDTO.contract.evidenceNumber + ' - ' + contractEditDTO.contract.name + ' (' + #numbers.formatDecimal(contractEditDTO.contract.balance,1,'DEFAULT',2,'DEFAULT') + ')'}">Identifikace kontraktu</h4>
-			
-				<ul class="nav nav-tabs">
-					<li>
-						<a href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.edit}">Editace</a>
-					</li>
-					<li>
-						<a href="contractInvoiceTypeList.html" th:href="@{/contracts/invoiceTypes(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.invoiceTypes}">Typy uctovani</a>
-					</li>
-					<li>
-						<a href="contractTariffList.html" th:href="@{/contracts/tariffs(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.tariffs}">Tarify</a>
-					</li>
-					<li class="active">
-						<a href="contractServerList.html" th:href="@{/contracts/servers(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.servers}">Servery</a>
-					</li>
-					<li>
-						<a href="contractTransactionList.html" th:href="@{/contracts/transactions(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.transactions}">Účetní položky</a>
-					</li>
-          <li>
-            <a href="contractInvoiceList.html" th:href="@{/contracts/invoices(contractId=${contractEditDTO.contract.id})}" th:text="#{tab.contract.invoices}">Faktury</a>
-          </li>          
-				</ul>
-				<div class="voffset2 tab-content"></div>
-			</div>
-		</div>
-		
-		<div class="row">
 			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contractServerEditDTO}')}" th:errors="${contractServerEditDTO}">Global error</div>
 		</div>
 		
+		<div th:replace="contracts/contractFragments :: contractHeader">Hlavicka</div>
+
 		<div class="row" th:if="${contractServerEditDTO == null}">
 			<div class="col-lg-12">
 				<p>
-					<a href="contractServerList.html" class="btn btn-default" th:href="@{/contracts/servers(contractId=${contractEditDTO.contract.id})}" >
+					<a href="contractServerList.html" class="btn btn-default" th:href="@{/contracts/servers(contractId=${contractHeaderDTO.contractId})}" >
 						<i class="fa fa-reply"></i>
 						<span th:text="#{button.back}">Back</span>
 					</a>
@@ -149,7 +118,7 @@
 									<i class="fa fa-save"></i>
 									<span th:text="#{button.save}">Save</span>
 								</button>
-								<a href="contractServerList.html" class="btn btn-default" th:href="@{/contracts/servers(contractId=${contractEditDTO.contract.id})}" >
+								<a href="contractServerList.html" class="btn btn-default" th:href="@{/contracts/servers(contractId=${contractHeaderDTO.contractId})}" >
 									<i class="fa fa-reply"></i>
 									<span th:text="#{button.back}">Back</span>
 								</a>

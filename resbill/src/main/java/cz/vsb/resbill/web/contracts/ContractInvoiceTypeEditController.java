@@ -32,7 +32,6 @@ import cz.vsb.resbill.model.ContractInvoiceType;
 import cz.vsb.resbill.model.InvoiceType;
 import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.service.ContractInvoiceTypeService;
-import cz.vsb.resbill.service.ContractService;
 import cz.vsb.resbill.service.InvoiceTypeService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -44,8 +43,8 @@ import cz.vsb.resbill.util.WebUtils;
  */
 @Controller
 @RequestMapping("/contracts/invoiceTypes/edit")
-@SessionAttributes({ "contractInvoiceTypeEditDTO", "contractEditDTO" })
-public class ContractInvoiceTypeEditController {
+@SessionAttributes("contractInvoiceTypeEditDTO")
+public class ContractInvoiceTypeEditController extends AbstractContractController {
 
 	private static final Logger log = LoggerFactory.getLogger(ContractInvoiceTypeEditController.class);
 
@@ -56,9 +55,6 @@ public class ContractInvoiceTypeEditController {
 
 	@Inject
 	private InvoiceTypeService invoiceTypeService;
-
-	@Inject
-	private ContractService contractService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder, Locale locale) {

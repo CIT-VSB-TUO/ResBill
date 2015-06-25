@@ -31,7 +31,6 @@ import cz.vsb.resbill.exception.ContractTariffServiceException;
 import cz.vsb.resbill.model.ContractTariff;
 import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.model.Tariff;
-import cz.vsb.resbill.service.ContractService;
 import cz.vsb.resbill.service.ContractTariffService;
 import cz.vsb.resbill.service.TariffService;
 import cz.vsb.resbill.util.WebUtils;
@@ -44,8 +43,8 @@ import cz.vsb.resbill.util.WebUtils;
  */
 @Controller
 @RequestMapping("/contracts/tariffs/edit")
-@SessionAttributes({ "contractTariffEditDTO", "contractEditDTO" })
-public class ContractTariffEditController {
+@SessionAttributes("contractTariffEditDTO")
+public class ContractTariffEditController extends AbstractContractController {
 
 	private static final Logger log = LoggerFactory.getLogger(ContractTariffEditController.class);
 
@@ -56,9 +55,6 @@ public class ContractTariffEditController {
 
 	@Inject
 	private TariffService tariffService;
-
-	@Inject
-	private ContractService contractService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder, Locale locale) {

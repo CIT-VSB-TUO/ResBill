@@ -9,6 +9,7 @@ import java.util.List;
 import cz.vsb.resbill.criteria.ContractCriteria;
 import cz.vsb.resbill.criteria.statistics.StatisticContractCriteria;
 import cz.vsb.resbill.dto.agenda.ContractAgendaDTO;
+import cz.vsb.resbill.dto.contract.ContractHeaderDTO;
 import cz.vsb.resbill.dto.contract.ContractListDTO;
 import cz.vsb.resbill.dto.statistics.StatisticContractDTO;
 import cz.vsb.resbill.dto.statistics.StatisticReportDTO;
@@ -25,13 +26,22 @@ public interface ContractService {
 	/**
 	 * Finds a {@link Contract} with given key.
 	 * 
-	 * @param tariffId
+	 * @param contractId
 	 *          primary key of a {@link Contract}
 	 * @return found {@link Contract}, otherwise <code>null</code>
 	 * @throws ResBillException
 	 *           if unexpected error occurs
 	 */
 	Contract findContract(Integer contractId) throws ResBillException;
+
+	/**
+	 * Finds {@link ContractHeaderDTO}
+	 * 
+	 * @param contractId
+	 * @return
+	 * @throws ResBillException
+	 */
+	ContractHeaderDTO findContractHeaderDTO(Integer contractId) throws ResBillException;
 
 	/**
 	 * Finds a list of {@link Contract} entities according to given criteria.

@@ -13,7 +13,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cz.vsb.resbill.dto.InvoiceDetailDTO;
@@ -27,89 +26,88 @@ import cz.vsb.resbill.util.WebUtils;
  */
 @Controller
 @RequestMapping("/contracts/invoices/detail")
-@SessionAttributes("contractEditDTO")
-public class ContractInvoiceDetailController {
+public class ContractInvoiceDetailController extends AbstractContractController {
 
-  private static final Logger log                      = LoggerFactory.getLogger(ContractInvoiceDetailController.class);
+	private static final Logger log = LoggerFactory.getLogger(ContractInvoiceDetailController.class);
 
-  public static final String  MODEL_OBJECT_KEY_INVOICE = "invoice";
+	public static final String MODEL_OBJECT_KEY_INVOICE = "invoice";
 
-  @Inject
-  private InvoiceService      invoiceService;
+	@Inject
+	private InvoiceService invoiceService;
 
-  /**
-   * 
-   * @param model
-   * @param msgKey
-   */
-  protected static void addGlobalError(ModelMap model, String msgKey) {
-    WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICE, msgKey);
-  }
+	/**
+	 * 
+	 * @param model
+	 * @param msgKey
+	 */
+	protected static void addGlobalError(ModelMap model, String msgKey) {
+		WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_INVOICE, msgKey);
+	}
 
-  /**
-   * 
-   * @param invoiceId
-   * @param model
-   * @return
-   */
-  @RequestMapping(value = "", method = RequestMethod.GET)
-  public String view(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model) {
-    loadInvoiceDetailDTO(invoiceId, model);
+	/**
+	 * 
+	 * @param invoiceId
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public String view(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model) {
+		loadInvoiceDetailDTO(invoiceId, model);
 
-    return "contracts/contractInvoiceDetail";
-  }
+		return "contracts/contractInvoiceDetail";
+	}
 
-  /**
-   * 
-   * @param invoiceId
-   * @param model
-   * @return
-   */
-  protected InvoiceDetailDTO loadInvoiceDetailDTO(Integer invoiceId, ModelMap model) {
+	/**
+	 * 
+	 * @param invoiceId
+	 * @param model
+	 * @return
+	 */
+	protected InvoiceDetailDTO loadInvoiceDetailDTO(Integer invoiceId, ModelMap model) {
 
-    InvoiceDetailDTO invoiceDetailDTO = null;
+		InvoiceDetailDTO invoiceDetailDTO = null;
 
-    try {
-      invoiceDetailDTO = invoiceService.findInvoiceDetailDTO(invoiceId);
-      model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoiceDetailDTO);
+		try {
+			invoiceDetailDTO = invoiceService.findInvoiceDetailDTO(invoiceId);
+			model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoiceDetailDTO);
 
-    } catch (Exception exc) {
-      log.error("Cannot load InvoiceDetailDTO with id: " + invoiceId, exc);
+		} catch (Exception exc) {
+			log.error("Cannot load InvoiceDetailDTO with id: " + invoiceId, exc);
 
-      invoiceDetailDTO = null;
+			invoiceDetailDTO = null;
 
-      model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoiceDetailDTO);
-      addGlobalError(model, "error.load.invoice");
-    }
+			model.addAttribute(MODEL_OBJECT_KEY_INVOICE, invoiceDetailDTO);
+			addGlobalError(model, "error.load.invoice");
+		}
 
-    return invoiceDetailDTO;
-  }
+		return invoiceDetailDTO;
+	}
 
-  /**
-   * 
-   * @param dailyImportId
-   * @param model
-   * @return
-   */
-  @RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-  public String delete(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model, RedirectAttributes redirectAttributes) {
+	/**
+	 * 
+	 * @param dailyImportId
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
+	public String delete(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model, RedirectAttributes redirectAttributes) {
 
-    InvoiceDetailDTO invoiceDetailDTO = loadInvoiceDetailDTO(invoiceId, model);
+		InvoiceDetailDTO invoiceDetailDTO = loadInvoiceDetailDTO(invoiceId, model);
 
-    if (invoiceDetailDTO != null) {
-      try {
+		if (invoiceDetailDTO != null) {
+			try {
 
-        Invoice invoice = invoiceService.deleteInvoice(invoiceDetailDTO.getTransactionId());
+				Invoice invoice = invoiceService.deleteInvoice(invoiceDetailDTO.getTransactionId());
 
-        redirectAttributes.addAttribute("contractId", invoice.getContract().getId());
-        return "redirect:/contracts/invoices";
+				redirectAttributes.addAttribute("contractId", invoice.getContract().getId());
+				return "redirect:/contracts/invoices";
 
-      } catch (Exception exc) {
-        log.error("Cannot delete invoice: " + invoiceDetailDTO, exc);
-        addGlobalError(model, "error.delete.invoice");
-      }
-    }
+			} catch (Exception exc) {
+				log.error("Cannot delete invoice: " + invoiceDetailDTO, exc);
+				addGlobalError(model, "error.delete.invoice");
+			}
+		}
 
-    return "contractInvoiceDetail";
-  }
+		return "contractInvoiceDetail";
+	}
 }

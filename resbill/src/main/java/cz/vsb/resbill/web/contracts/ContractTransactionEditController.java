@@ -31,7 +31,6 @@ import cz.vsb.resbill.dto.TransactionEditDTO;
 import cz.vsb.resbill.exception.TransactionServiceException;
 import cz.vsb.resbill.model.Transaction;
 import cz.vsb.resbill.model.TransactionType;
-import cz.vsb.resbill.service.ContractService;
 import cz.vsb.resbill.service.TransactionService;
 import cz.vsb.resbill.service.TransactionTypeService;
 import cz.vsb.resbill.util.WebUtils;
@@ -42,166 +41,149 @@ import cz.vsb.resbill.util.WebUtils;
  */
 @Controller
 @RequestMapping("/contracts/transactions/edit")
-@SessionAttributes({ "transactionEditDTO", "transactionTypes", "contractEditDTO" })
-public class ContractTransactionEditController {
+@SessionAttributes("transactionEditDTO")
+public class ContractTransactionEditController extends AbstractContractController {
 
-  private static final Logger    log                                   = LoggerFactory.getLogger(ContractTransactionEditController.class);
+	private static final Logger log = LoggerFactory.getLogger(ContractTransactionEditController.class);
 
-  public static final String     MODEL_OBJECT_KEY_TRANSACTION_EDIT_DTO = "transactionEditDTO";
+	public static final String MODEL_OBJECT_KEY_TRANSACTION_EDIT_DTO = "transactionEditDTO";
 
-  public static final String     MODEL_OBJECT_KEY_TRANSACTION_TYPES    = "transactionTypes";
+	public static final String MODEL_OBJECT_KEY_TRANSACTION_TYPES = "transactionTypes";
 
-  @Inject
-  private TransactionService     transactionService;
+	@Inject
+	private TransactionService transactionService;
 
-  @Inject
-  private TransactionTypeService transactionTypeService;
+	@Inject
+	private TransactionTypeService transactionTypeService;
 
-  @Inject
-  private ContractService        contractService;
+	@InitBinder
+	public void initBinder(WebDataBinder binder, Locale locale) {
+		binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+	}
 
-  @InitBinder
-  public void initBinder(WebDataBinder binder, Locale locale) {
-    binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
-  }
+	/**
+	 * 
+	 * @param model
+	 * @param msgKey
+	 */
+	protected static void addGlobalError(ModelMap model, String msgKey) {
+		WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_TRANSACTION_EDIT_DTO, msgKey);
+	}
 
-  /**
-   * 
-   * @param model
-   * @param msgKey
-   */
-  protected static void addGlobalError(ModelMap model, String msgKey) {
-    WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_TRANSACTION_EDIT_DTO, msgKey);
-  }
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public String view(@RequestParam(value = "transactionId", required = false) Integer transactionId, @RequestParam(value = "contractId", required = false) Integer contractId, ModelMap model) {
+		loadTransactionEditDTO(transactionId, contractId, model);
 
-  protected static void addTransactionTypesGlobalError(ModelMap model, String msgKey) {
-    WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_TRANSACTION_TYPES, msgKey);
-  }
+		return "contracts/contractTransactionEdit";
+	}
 
-  /**
-   * 
-   * @return
-   */
-  @RequestMapping(value = "", method = RequestMethod.GET)
-  public String view(@RequestParam(value = "transactionId", required = false) Integer transactionId, @RequestParam(value = "contractId", required = false) Integer contractId, ModelMap model) {
-    loadTransactionEditDTO(transactionId, contractId, model);
-    loadTransactionTypes(model);
+	/**
+	 * 
+	 * @param transactionId
+	 * @param model
+	 */
+	private void loadTransactionEditDTO(Integer transactionId, Integer contractId, ModelMap model) {
 
-    return "contracts/contractTransactionEdit";
-  }
+		TransactionEditDTO transactionEditDTO = null;
+		try {
+			if (transactionId != null) {
+				transactionEditDTO = new TransactionEditDTO(transactionService.findTransaction(transactionId));
+			} else {
+				transactionEditDTO = new TransactionEditDTO(new Transaction());
+				transactionEditDTO.setContractId(contractId);
+			}
+			model.addAttribute(MODEL_OBJECT_KEY_TRANSACTION_EDIT_DTO, transactionEditDTO);
+		} catch (Exception e) {
+			log.error("Cannot load transaction with id: " + transactionId, e);
 
-  /**
-   * 
-   * @param transactionId
-   * @param model
-   */
-  private void loadTransactionEditDTO(Integer transactionId, Integer contractId, ModelMap model) {
+			model.addAttribute(MODEL_OBJECT_KEY_TRANSACTION_EDIT_DTO, transactionEditDTO);
+			WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_TRANSACTION_EDIT_DTO, "error.load.contract.transaction");
+		}
+	}
 
-    TransactionEditDTO transactionEditDTO = null;
-    try {
-      if (transactionId != null) {
-        transactionEditDTO = new TransactionEditDTO(transactionService.findTransaction(transactionId));
-      } else {
-        transactionEditDTO = new TransactionEditDTO(new Transaction());
-        transactionEditDTO.setContractId(contractId);
-      }
-      model.addAttribute(MODEL_OBJECT_KEY_TRANSACTION_EDIT_DTO, transactionEditDTO);
-    } catch (Exception e) {
-      log.error("Cannot load transaction with id: " + transactionId, e);
+	@ModelAttribute(MODEL_OBJECT_KEY_TRANSACTION_TYPES)
+	private List<TransactionType> getTransactionTypes() {
+		try {
+			TransactionTypeCriteria criteria = new TransactionTypeCriteria();
+			criteria.setOrderBy(Arrays.asList(new TransactionTypeCriteria.OrderBy[] { TransactionTypeCriteria.OrderBy.ID_ASC }));
+			criteria.setSystemManaged(false);
 
-      model.addAttribute(MODEL_OBJECT_KEY_TRANSACTION_EDIT_DTO, transactionEditDTO);
-      WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_TRANSACTION_EDIT_DTO, "error.load.contract.transaction");
-    }
-  }
+			return transactionTypeService.findTransactionTypes(criteria, null, null);
+		} catch (Exception e) {
+			log.error("Cannot load transactionTypes.", e);
+			return null;
+		}
+	}
 
-  /**
-   * 
-   * @param transactionId
-   * @param model
-   */
-  private void loadTransactionTypes(ModelMap model) {
+	/**
+	 * 
+	 * @param transactionEditDTO
+	 * @param bindingResult
+	 * @return
+	 */
+	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
+	public String save(@Valid @ModelAttribute(MODEL_OBJECT_KEY_TRANSACTION_EDIT_DTO) TransactionEditDTO transactionEditDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
-    List<TransactionType> transactionTypes = null;
-    try {
-      TransactionTypeCriteria criteria = new TransactionTypeCriteria();
-      criteria.setOrderBy(Arrays.asList(new TransactionTypeCriteria.OrderBy[] { TransactionTypeCriteria.OrderBy.ID_ASC }));
-      criteria.setSystemManaged(false);
+		if (!bindingResult.hasErrors()) {
+			try {
+				Transaction transaction = transactionEditDTO.getTransaction();
+				transaction.setTransactionType(transactionTypeService.findTransactionType(transactionEditDTO.getTransactionTypeId()));
+				transaction.setContract(contractService.findContract(transactionEditDTO.getContractId()));
+				transactionService.saveTransaction(transaction);
 
-      transactionTypes = transactionTypeService.findTransactionTypes(criteria, null, null);
-      model.addAttribute(MODEL_OBJECT_KEY_TRANSACTION_TYPES, transactionTypes);
-    } catch (Exception e) {
-      log.error("Cannot load transactionTypes.", e);
+				redirectAttributes.addAttribute("contractId", transaction.getContract().getId());
+				return "redirect:/contracts/transactions";
+			} catch (TransactionServiceException e) {
+				switch (e.getReason()) {
+				case EDIT_NOT_ALLOWED:
+					bindingResult.reject("error.save.contract.transaction.editNotAllowed");
+					break;
+				case INVOICE_NOT_ALLOWED:
+					bindingResult.reject("error.save.contract.transaction.invoiceNotAllowed");
+					break;
+				case INCOMING_PAYMENT_NO_POSITIVE:
+					bindingResult.reject("error.save.contract.transaction.incomingPaymentNoPositive");
+					break;
+				default:
+					log.warn("Unsupported reason: " + e);
+					bindingResult.reject("error.save.contract.transaction");
+					break;
+				}
+			} catch (Exception e) {
+				log.error("Cannot save TransactionEditDTO: " + transactionEditDTO, e);
+				bindingResult.reject("error.save.contract.transaction");
+			}
+		} else {
+			bindingResult.reject("error.save.contract.transaction.validation");
+		}
 
-      model.addAttribute(MODEL_OBJECT_KEY_TRANSACTION_TYPES, transactionTypes);
-      WebUtils.addGlobalError(model, MODEL_OBJECT_KEY_TRANSACTION_TYPES, "error.load.contract.transaction.transactionTypes");
-    }
-  }
+		return "contracts/contractTransactionEdit";
+	}
 
-  /**
-   * 
-   * @param transactionEditDTO
-   * @param bindingResult
-   * @return
-   */
-  @RequestMapping(value = "", method = RequestMethod.POST, params = "save")
-  public String save(@Valid @ModelAttribute(MODEL_OBJECT_KEY_TRANSACTION_EDIT_DTO) TransactionEditDTO transactionEditDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+	/**
+	 * 
+	 * @param dailyImportId
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
+	public String delete(@ModelAttribute(MODEL_OBJECT_KEY_TRANSACTION_EDIT_DTO) TransactionEditDTO transactionEditDTO, ModelMap model, RedirectAttributes redirectAttributes) {
 
-    if (!bindingResult.hasErrors()) {
-      try {
-        Transaction transaction = transactionEditDTO.getTransaction();
-        transaction.setTransactionType(transactionTypeService.findTransactionType(transactionEditDTO.getTransactionTypeId()));
-        transaction.setContract(contractService.findContract(transactionEditDTO.getContractId()));
-        transactionService.saveTransaction(transaction);
+		try {
+			Transaction transaction = transactionService.deleteTransaction(transactionEditDTO.getTransaction().getId());
 
-        redirectAttributes.addAttribute("contractId", transaction.getContract().getId());
-        return "redirect:/contracts/transactions";
-      } catch (TransactionServiceException e) {
-        switch (e.getReason()) {
-        case EDIT_NOT_ALLOWED:
-          bindingResult.reject("error.save.contract.transaction.editNotAllowed");
-          break;
-        case INVOICE_NOT_ALLOWED:
-          bindingResult.reject("error.save.contract.transaction.invoiceNotAllowed");
-          break;
-        case INCOMING_PAYMENT_NO_POSITIVE:
-          bindingResult.reject("error.save.contract.transaction.incomingPaymentNoPositive");
-          break;
-        default:
-          log.warn("Unsupported reason: " + e);
-          bindingResult.reject("error.save.contract.transaction");
-          break;
-        }
-      } catch (Exception e) {
-        log.error("Cannot save TransactionEditDTO: " + transactionEditDTO, e);
-        bindingResult.reject("error.save.contract.transaction");
-      }
-    } else {
-      bindingResult.reject("error.save.contract.transaction.validation");
-    }
+			redirectAttributes.addAttribute("contractId", transaction.getContract().getId());
+			return "redirect:/contracts/transactions";
 
-    return "contracts/contractTransactionEdit";
-  }
+		} catch (Exception exc) {
+			log.error("Cannot delete transaction: " + transactionEditDTO.getTransaction(), exc);
+			addGlobalError(model, "error.delete.transaction");
+		}
 
-  /**
-   * 
-   * @param dailyImportId
-   * @param model
-   * @return
-   */
-  @RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-  public String delete(@ModelAttribute(MODEL_OBJECT_KEY_TRANSACTION_EDIT_DTO) TransactionEditDTO transactionEditDTO, ModelMap model, RedirectAttributes redirectAttributes) {
-
-    try {
-      Transaction transaction = transactionService.deleteTransaction(transactionEditDTO.getTransaction().getId());
-
-      redirectAttributes.addAttribute("contractId", transaction.getContract().getId());
-      return "redirect:/contracts/transactions";
-
-    } catch (Exception exc) {
-      log.error("Cannot delete transaction: " + transactionEditDTO.getTransaction(), exc);
-      addGlobalError(model, "error.delete.transaction");
-    }
-
-    return "contracts/contractTransactionEdit";
-  }
+		return "contracts/contractTransactionEdit";
+	}
 }

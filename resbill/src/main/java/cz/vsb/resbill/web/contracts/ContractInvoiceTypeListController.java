@@ -11,7 +11,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import cz.vsb.resbill.criteria.ContractInvoiceTypeCriteria;
 import cz.vsb.resbill.criteria.ContractInvoiceTypeCriteria.OrderBy;
@@ -27,8 +26,7 @@ import cz.vsb.resbill.util.WebUtils;
  */
 @Controller
 @RequestMapping("/contracts/invoiceTypes")
-@SessionAttributes("contractEditDTO")
-public class ContractInvoiceTypeListController {
+public class ContractInvoiceTypeListController extends AbstractContractController {
 
 	private static final Logger log = LoggerFactory.getLogger(ContractInvoiceTypeListController.class);
 

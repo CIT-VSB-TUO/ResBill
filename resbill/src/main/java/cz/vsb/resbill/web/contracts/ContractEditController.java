@@ -34,7 +34,6 @@ import cz.vsb.resbill.exception.ContractServiceException;
 import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.model.Customer;
 import cz.vsb.resbill.model.Period;
-import cz.vsb.resbill.service.ContractService;
 import cz.vsb.resbill.service.CustomerService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -45,14 +44,11 @@ import cz.vsb.resbill.util.WebUtils;
 @Controller
 @RequestMapping("/contracts/edit")
 @SessionAttributes("contractEditDTO")
-public class ContractEditController {
+public class ContractEditController extends AbstractContractController {
 
 	private static final Logger log = LoggerFactory.getLogger(ContractEditController.class);
 
 	private static final String CONTRACT_EDIT_DTO_MODEL_KEY = "contractEditDTO";
-
-	@Inject
-	private ContractService contractService;
 
 	@Inject
 	private CustomerService customerService;

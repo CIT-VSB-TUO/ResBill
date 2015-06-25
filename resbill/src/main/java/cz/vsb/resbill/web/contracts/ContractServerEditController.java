@@ -33,7 +33,6 @@ import cz.vsb.resbill.model.ContractServer;
 import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.model.Server;
 import cz.vsb.resbill.service.ContractServerService;
-import cz.vsb.resbill.service.ContractService;
 import cz.vsb.resbill.service.ServerService;
 import cz.vsb.resbill.util.WebUtils;
 
@@ -45,8 +44,8 @@ import cz.vsb.resbill.util.WebUtils;
  */
 @Controller
 @RequestMapping("/contracts/servers/edit")
-@SessionAttributes({ "contractServerEditDTO", "contractEditDTO" })
-public class ContractServerEditController {
+@SessionAttributes("contractServerEditDTO")
+public class ContractServerEditController extends AbstractContractController {
 
 	private static final Logger log = LoggerFactory.getLogger(ContractServerEditController.class);
 
@@ -57,9 +56,6 @@ public class ContractServerEditController {
 
 	@Inject
 	private ServerService serverService;
-
-	@Inject
-	private ContractService contractService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder, Locale locale) {
