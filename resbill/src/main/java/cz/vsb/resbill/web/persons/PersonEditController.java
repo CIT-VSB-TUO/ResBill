@@ -75,7 +75,7 @@ public class PersonEditController extends AbstractPersonController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "personId", required = false) Integer personId, ModelMap model) {
+	public String view(@RequestParam(value = PERSON_ID_PARAM_KEY, required = false) Integer personId, ModelMap model) {
 		loadPerson(personId, model);
 
 		return "persons/personEdit";
@@ -99,7 +99,7 @@ public class PersonEditController extends AbstractPersonController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved person: " + person);
 				}
-				redirectAttributes.addAttribute("personId", person.getId());
+				redirectAttributes.addAttribute(PERSON_ID_PARAM_KEY, person.getId());
 				return "redirect:/persons/overview";
 			} catch (PersonServiceException e) {
 				switch (e.getReason()) {

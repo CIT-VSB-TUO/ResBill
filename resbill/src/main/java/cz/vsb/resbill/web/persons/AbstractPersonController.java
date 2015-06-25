@@ -16,11 +16,13 @@ public abstract class AbstractPersonController {
 
 	protected static final String PERSON_HEADER_DTO_MODEL_KEY = "personHeaderDTO";
 
+	protected static final String PERSON_ID_PARAM_KEY = "personId";
+
 	@Inject
 	protected PersonService personService;
 
 	@ModelAttribute(PERSON_HEADER_DTO_MODEL_KEY)
-	public PersonHeaderDTO getPersonHeaderDTO(@RequestParam(value = "personId", required = false) Integer personId) {
+	public PersonHeaderDTO getPersonHeaderDTO(@RequestParam(value = PERSON_ID_PARAM_KEY, required = false) Integer personId) {
 		if (personId != null) {
 			try {
 				return personService.findPersonHeaderDTO(personId);

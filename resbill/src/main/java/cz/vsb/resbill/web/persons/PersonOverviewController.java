@@ -43,7 +43,7 @@ public class PersonOverviewController extends AbstractPersonController {
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "personId", required = true) Integer personId, ModelMap model) {
+	public String view(@RequestParam(value = PERSON_ID_PARAM_KEY, required = true) Integer personId, ModelMap model) {
 		loadPersonOverviewDTO(personId, model);
 
 		return "persons/personOverview";
@@ -57,7 +57,7 @@ public class PersonOverviewController extends AbstractPersonController {
 	 * @return
 	 */
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
-	public String delete(@RequestParam(value = "personId", required = true) Integer personId, ModelMap model) {
+	public String delete(@RequestParam(value = PERSON_ID_PARAM_KEY, required = true) Integer personId, ModelMap model) {
 		if (log.isDebugEnabled()) {
 			log.debug("Person.id to delete: " + personId);
 		}
