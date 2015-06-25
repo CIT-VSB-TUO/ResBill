@@ -4,7 +4,7 @@
  */
 package cz.vsb.resbill.dto.agenda;
 
-import cz.vsb.resbill.dto.ContractDTO;
+import cz.vsb.resbill.dto.contract.ContractDTO;
 import cz.vsb.resbill.util.ToStringBuilder;
 
 /**

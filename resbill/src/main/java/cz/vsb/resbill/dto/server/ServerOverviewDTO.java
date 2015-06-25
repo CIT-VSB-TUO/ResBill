@@ -7,8 +7,8 @@ package cz.vsb.resbill.dto.server;
 import java.io.Serializable;
 import java.util.Date;
 
-import cz.vsb.resbill.dto.ContractDTO;
 import cz.vsb.resbill.dto.DailyUsageDTO;
+import cz.vsb.resbill.dto.contract.ContractDTO;
 import cz.vsb.resbill.model.ContractServer;
 import cz.vsb.resbill.model.Server;
 import cz.vsb.resbill.util.ToStringBuilder;

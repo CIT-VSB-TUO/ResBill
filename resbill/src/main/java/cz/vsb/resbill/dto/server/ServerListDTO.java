@@ -4,8 +4,8 @@
  */
 package cz.vsb.resbill.dto.server;
 
-import cz.vsb.resbill.dto.ContractDTO;
 import cz.vsb.resbill.dto.DailyUsageDTO;
+import cz.vsb.resbill.dto.contract.ContractDTO;
 import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.model.DailyUsage;
 import cz.vsb.resbill.model.Server;

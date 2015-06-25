@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import cz.vsb.resbill.criteria.ContractCriteria;
-import cz.vsb.resbill.dto.ContractDTO;
+import cz.vsb.resbill.dto.contract.ContractDTO;
 import cz.vsb.resbill.service.ContractService;
 import cz.vsb.resbill.util.WebUtils;
 

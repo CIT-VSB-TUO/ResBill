@@ -2,7 +2,7 @@
  * Copyright (c) 2015 CIT, VŠB-TU Ostrava
  * 
  */
-package cz.vsb.resbill.dto;
+package cz.vsb.resbill.dto.contract;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
