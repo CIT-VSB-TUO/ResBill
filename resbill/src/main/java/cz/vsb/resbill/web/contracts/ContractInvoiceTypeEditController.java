@@ -113,7 +113,7 @@ public class ContractInvoiceTypeEditController extends AbstractContractControlle
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "contractInvoiceTypeId", required = false) Integer contractInvoiceTypeId, @RequestParam(value = "contractId", required = false) Integer contractId,
+	public String view(@RequestParam(value = "contractInvoiceTypeId", required = false) Integer contractInvoiceTypeId, @RequestParam(value = CONTRACT_ID_PARAM_KEY, required = false) Integer contractId,
 			ModelMap model) {
 		loadContractInvoiceTypeEditDTO(contractInvoiceTypeId, contractId, model);
 
@@ -143,7 +143,7 @@ public class ContractInvoiceTypeEditController extends AbstractContractControlle
 				if (log.isDebugEnabled()) {
 					log.debug("Saved contract invoiceType: " + cit);
 				}
-				redirectAttributes.addAttribute("contractId", cit.getContract().getId());
+				redirectAttributes.addAttribute(CONTRACT_ID_PARAM_KEY, cit.getContract().getId());
 				return "redirect:/contracts/invoiceTypes";
 			} catch (ContractInvoiceTypeServiceException e) {
 				switch (e.getReason()) {
@@ -195,7 +195,7 @@ public class ContractInvoiceTypeEditController extends AbstractContractControlle
 			if (log.isDebugEnabled()) {
 				log.debug("Deleted ContractInvoiceType: " + ct);
 			}
-			redirectAttributes.addAttribute("contractId", ct.getContract().getId());
+			redirectAttributes.addAttribute(CONTRACT_ID_PARAM_KEY, ct.getContract().getId());
 			return "redirect:/contracts/invoiceTypes";
 		} catch (ContractInvoiceTypeServiceException e) {
 			switch (e.getReason()) {

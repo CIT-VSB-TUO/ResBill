@@ -78,7 +78,7 @@ public class ContractInvoiceListController extends AbstractContractController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public String view(@RequestParam(value = "contractId", required = true) Integer contractId, ModelMap model) {
+	public String view(@RequestParam(value = CONTRACT_ID_PARAM_KEY, required = true) Integer contractId, ModelMap model) {
 		loadInvoiceDTOs(contractId, model);
 
 		return "contracts/contractInvoiceList";

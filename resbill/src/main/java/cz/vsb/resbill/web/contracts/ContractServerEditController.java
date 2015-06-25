@@ -112,7 +112,8 @@ public class ContractServerEditController extends AbstractContractController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "contractServerId", required = false) Integer contractServerId, @RequestParam(value = "contractId", required = false) Integer contractId, ModelMap model) {
+	public String view(@RequestParam(value = "contractServerId", required = false) Integer contractServerId, @RequestParam(value = CONTRACT_ID_PARAM_KEY, required = false) Integer contractId,
+			ModelMap model) {
 		loadContractServerEditDTO(contractServerId, contractId, model);
 
 		return "contracts/contractServerEdit";
@@ -140,7 +141,7 @@ public class ContractServerEditController extends AbstractContractController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved contract server: " + cs);
 				}
-				redirectAttributes.addAttribute("contractId", cs.getContract().getId());
+				redirectAttributes.addAttribute(CONTRACT_ID_PARAM_KEY, cs.getContract().getId());
 				return "redirect:/contracts/servers";
 			} catch (ContractServerServiceException e) {
 				switch (e.getReason()) {
@@ -191,7 +192,7 @@ public class ContractServerEditController extends AbstractContractController {
 			if (log.isDebugEnabled()) {
 				log.debug("Deleted ContractServer: " + cs);
 			}
-			redirectAttributes.addAttribute("contractId", cs.getContract().getId());
+			redirectAttributes.addAttribute(CONTRACT_ID_PARAM_KEY, cs.getContract().getId());
 			return "redirect:/contracts/servers";
 		} catch (ContractServerServiceException e) {
 			switch (e.getReason()) {

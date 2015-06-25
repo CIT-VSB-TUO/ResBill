@@ -99,7 +99,7 @@ public class ContractInvoiceDetailController extends AbstractContractController 
 
 				Invoice invoice = invoiceService.deleteInvoice(invoiceDetailDTO.getTransactionId());
 
-				redirectAttributes.addAttribute("contractId", invoice.getContract().getId());
+				redirectAttributes.addAttribute(CONTRACT_ID_PARAM_KEY, invoice.getContract().getId());
 				return "redirect:/contracts/invoices";
 
 			} catch (Exception exc) {

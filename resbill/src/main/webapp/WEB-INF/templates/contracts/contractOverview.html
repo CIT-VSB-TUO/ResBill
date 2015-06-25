@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+
+<head>
+
+	<th:block th:remove="all">
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+	</th:block>
+
+	<title th:text="#{head.title.contract.overview}">Kontrakt</title>
+	
+	<th:block th:remove="all">
+	<!-- remove all duplicated template css due to auto-merge -->
+	
+		<!-- ResBill Custom CSS -->
+		<link href="../../../css/resbill.css" rel="stylesheet" type="text/css" th:href="@{/css/resbill.css}" />
+	
+		<!-- Bootstrap Core CSS -->
+		<link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+	
+		<!-- Custom Fonts -->
+		<link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+	
+		<!-- SB Admin 2 CSS -->
+		<link href="../../../bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css" th:href="@{/bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css}" />
+	
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+	        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	
+	</th:block>
+
+</head>
+<body>
+
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header" th:text="#{page.header.contract.overview}">Kontrakt - prehled</h1>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-12 alert alert-danger" th:if="${#fields.hasErrors('${contractOverviewDTO}')}" th:errors="${contractOverviewDTO}">Global error</div>
+		</div>
+		
+		<div th:replace="contracts/contractFragments :: contractHeader">Hlavicka</div>
+		
+		<div class="row" th:if="${contractOverviewDTO == null}">
+			<div class="col-lg-12">
+				<p>
+					<a href="contractList.html" class="btn btn-default" th:href="@{/contracts}" >
+						<i class="fa fa-reply"></i>
+						<span th:text="#{button.back}">Back</span>
+					</a>
+				</p>				
+			</div>
+		</div>
+		
+		<!-- Zobrazeni prehledovych informaci -->
+		<div class="row" th:if="${contractOverviewDTO != null}">
+			<div class="col-lg-12">
+			
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<span class="pull-left" th:text="#{panel.contract.data}">Tarif</span>
+						<span class="pull-right">
+							<a class="btn btn-danger" href="contractOverview.html" th:href="@{/contracts/overview/delete(contractId=${contractOverviewDTO.contractId})}" 
+								th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
+								<i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
+							</a>
+						</span>
+						<div class="clearfix"></div>
+					</div>
+					<div class="panel-body">
+						
+						<div class="row">
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.contract.evidenceNumber}">evid. cislo</label>
+									<p class="form-control-static" th:text="${contractOverviewDTO.evidenceNumber}">12345</p>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.contract.name}">Jmeno</label>
+									<p class="form-control-static" th:text="${contractOverviewDTO.name}">kontrakt x</p>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.contract.balance}">Zustatek</label>
+									<p class="form-control-static" th:text="${#numbers.formatDecimal(contractOverviewDTO.balance,1,'DEFAULT',2,'DEFAULT')}">1 234,56</p>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.contract.beginDate}">platnost od</label>
+									<p class="form-control-static" th:text="${{contractOverviewDTO.beginDate}}">12345</p>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.contract.endDate}">Platnost do</label>
+									<p class="form-control-static" th:text="${{contractOverviewDTO.endDate}}">kontrakt x</p>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.contract.note}">Pozn</label>
+									<p class="form-control-static" th:text="${contractOverviewDTO.note}">lorem ipsum</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<span th:text="#{panel.contract.customer}">Zakaznik</span>
+					</div>
+							
+					<div class="panel-body">
+							
+						<div class="row">
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.customer.name}">Nazev</label>
+									<p class="form-control-static" th:text="${contractOverviewDTO.customer.name}">zak xyz</p>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="control-label" th:text="#{label.customer.contact}">Kontakt</label>
+									<p class="form-control-static" th:text="${contractOverviewDTO.contactPerson.fullNameWithTitles}">Ivan Hrozny</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+			</div>
+		</div>
+	</div>
+	
+	<!-- jQuery -->
+	<script src="../../../bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+
+	<!-- Bootstrap Core JavaScript -->
+	<script src="../../../bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+
+	<!-- Custom Theme JavaScript -->
+	<script src="../../../bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" th:src="@{/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js}"></script>
+
+</body>
+</html>

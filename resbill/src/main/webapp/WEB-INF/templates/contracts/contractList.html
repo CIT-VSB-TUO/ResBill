@@ -86,7 +86,7 @@
 							<td th:text="${contract.endDate != null} ? ${#dates.format(contract.endDate, '__#{date.format.list}__')}" 
 								th:attr="data-order=${contract.endDate != null} ? ${#dates.format(contract.endDate, '__#{date.format.order}__')}">31.12.2015</td>
 							<td>
-								<a class="btn btn-primary btn-circle" href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contract.contractId})}" th:title="#{button.title.contract.edit}">
+								<a class="btn btn-primary btn-circle" href="contractOverview.html" th:href="@{/contracts/overview(contractId=${contract.contractId})}" th:title="#{button.title.contract.edit}">
 									<i class="fa fa-edit"></i>
 								</a>
 							</td>

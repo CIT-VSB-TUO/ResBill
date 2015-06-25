@@ -11,6 +11,7 @@ import cz.vsb.resbill.criteria.statistics.StatisticContractCriteria;
 import cz.vsb.resbill.dto.agenda.ContractAgendaDTO;
 import cz.vsb.resbill.dto.contract.ContractHeaderDTO;
 import cz.vsb.resbill.dto.contract.ContractListDTO;
+import cz.vsb.resbill.dto.contract.ContractOverviewDTO;
 import cz.vsb.resbill.dto.statistics.StatisticContractDTO;
 import cz.vsb.resbill.dto.statistics.StatisticReportDTO;
 import cz.vsb.resbill.exception.ContractServiceException;
@@ -42,6 +43,15 @@ public interface ContractService {
 	 * @throws ResBillException
 	 */
 	ContractHeaderDTO findContractHeaderDTO(Integer contractId) throws ResBillException;
+
+	/**
+	 * Finds {@link ContractOverviewDTO}
+	 * 
+	 * @param contractId
+	 * @return
+	 * @throws ResBillException
+	 */
+	ContractOverviewDTO findContractOverviewDTO(Integer contractId) throws ResBillException;
 
 	/**
 	 * Finds a list of {@link Contract} entities according to given criteria.

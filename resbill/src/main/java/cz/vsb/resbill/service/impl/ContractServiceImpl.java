@@ -34,6 +34,7 @@ import cz.vsb.resbill.dto.agenda.ContractAgendaDTO;
 import cz.vsb.resbill.dto.contract.ContractDTO;
 import cz.vsb.resbill.dto.contract.ContractHeaderDTO;
 import cz.vsb.resbill.dto.contract.ContractListDTO;
+import cz.vsb.resbill.dto.contract.ContractOverviewDTO;
 import cz.vsb.resbill.dto.customer.CustomerDTO;
 import cz.vsb.resbill.dto.statistics.StatisticContractDTO;
 import cz.vsb.resbill.dto.statistics.StatisticReportDTO;
@@ -92,6 +93,18 @@ public class ContractServiceImpl implements ContractService {
 			throw e;
 		} catch (Exception e) {
 			log.error("An unexpected error occured while finding ContractHeaderDTO by id=" + contractId, e);
+			throw new ResBillException(e);
+		}
+	}
+
+	@Override
+	public ContractOverviewDTO findContractOverviewDTO(Integer contractId) throws ResBillException {
+		try {
+			return new ContractOverviewDTO(findContract(contractId));
+		} catch (ResBillException e) {
+			throw e;
+		} catch (Exception e) {
+			log.error("An unexpected error occured while finding ContractOverviewDTO by id=" + contractId, e);
 			throw new ResBillException(e);
 		}
 	}

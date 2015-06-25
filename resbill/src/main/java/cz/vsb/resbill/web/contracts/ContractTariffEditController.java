@@ -114,7 +114,8 @@ public class ContractTariffEditController extends AbstractContractController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "contractTariffId", required = false) Integer contractTariffId, @RequestParam(value = "contractId", required = false) Integer contractId, ModelMap model) {
+	public String view(@RequestParam(value = "contractTariffId", required = false) Integer contractTariffId, @RequestParam(value = CONTRACT_ID_PARAM_KEY, required = false) Integer contractId,
+			ModelMap model) {
 		loadContractTariffEditDTO(contractTariffId, contractId, model);
 
 		return "contracts/contractTariffEdit";
@@ -142,7 +143,7 @@ public class ContractTariffEditController extends AbstractContractController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved contract tariff: " + ct);
 				}
-				redirectAttributes.addAttribute("contractId", ct.getContract().getId());
+				redirectAttributes.addAttribute(CONTRACT_ID_PARAM_KEY, ct.getContract().getId());
 				return "redirect:/contracts/tariffs";
 			} catch (ContractTariffServiceException e) {
 				switch (e.getReason()) {
@@ -199,7 +200,7 @@ public class ContractTariffEditController extends AbstractContractController {
 			if (log.isDebugEnabled()) {
 				log.debug("Deleted ContractTariff: " + ct);
 			}
-			redirectAttributes.addAttribute("contractId", ct.getContract().getId());
+			redirectAttributes.addAttribute(CONTRACT_ID_PARAM_KEY, ct.getContract().getId());
 			return "redirect:/contracts/tariffs";
 		} catch (ContractTariffServiceException e) {
 			switch (e.getReason()) {

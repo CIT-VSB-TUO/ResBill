@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cz.vsb.resbill.criteria.CustomerCriteria;
 import cz.vsb.resbill.criteria.CustomerCriteria.OrderBy;
@@ -101,7 +102,7 @@ public class ContractEditController extends AbstractContractController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String view(@RequestParam(value = "contractId", required = false) Integer contractId, @RequestParam(value = "customerId", required = false) Integer customerId, ModelMap model) {
+	public String view(@RequestParam(value = CONTRACT_ID_PARAM_KEY, required = false) Integer contractId, @RequestParam(value = "customerId", required = false) Integer customerId, ModelMap model) {
 		loadContractEditDTO(contractId, customerId, model);
 
 		return "contracts/contractEdit";
@@ -115,7 +116,7 @@ public class ContractEditController extends AbstractContractController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, params = "save")
-	public String save(@Valid @ModelAttribute(CONTRACT_EDIT_DTO_MODEL_KEY) ContractEditDTO contractEditDTO, BindingResult bindingResult) {
+	public String save(@Valid @ModelAttribute(CONTRACT_EDIT_DTO_MODEL_KEY) ContractEditDTO contractEditDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (log.isDebugEnabled()) {
 			log.debug("ContractEditDTO to save: " + contractEditDTO);
 		}
@@ -129,7 +130,8 @@ public class ContractEditController extends AbstractContractController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved contract: " + contract);
 				}
-				return "redirect:/contracts";
+				redirectAttributes.addAttribute(CONTRACT_ID_PARAM_KEY, contract.getId());
+				return "redirect:/contracts/overview";
 			} catch (ContractServiceException e) {
 				switch (e.getReason()) {
 				case CUSTOMER_MODIFICATION:
@@ -162,38 +164,4 @@ public class ContractEditController extends AbstractContractController {
 		return "contracts/contractEdit";
 	}
 
-	/**
-	 * Handle POST requests for deleting {@link ContractEditDTO} instance.
-	 * 
-	 * @param contractEditDTO
-	 * @param bindingResult
-	 * @return
-	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
-	public String delete(@ModelAttribute(CONTRACT_EDIT_DTO_MODEL_KEY) ContractEditDTO contractEditDTO, BindingResult bindingResult) {
-		if (log.isDebugEnabled()) {
-			log.debug("ContractEditDTO to delete: " + contractEditDTO);
-		}
-		try {
-			Contract cs = contractService.deleteContract(contractEditDTO.getContract().getId());
-			if (log.isDebugEnabled()) {
-				log.debug("Deleted Contract: " + cs);
-			}
-			return "redirect:/contracts";
-		} catch (ContractServiceException e) {
-			switch (e.getReason()) {
-			case TRANSACTION_EXISTENCE:
-				bindingResult.reject("error.delete.contract.transaction.exists");
-				break;
-			default:
-				log.warn("Unsupported reason: " + e);
-				bindingResult.reject("error.delete.contract");
-				break;
-			}
-		} catch (Exception e) {
-			log.error("Cannot delete ContractEditDTO: " + contractEditDTO, e);
-			bindingResult.reject("error.delete.contract");
-		}
-		return "contracts/contractEdit";
-	}
 }

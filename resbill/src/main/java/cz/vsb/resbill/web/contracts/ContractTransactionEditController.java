@@ -75,7 +75,7 @@ public class ContractTransactionEditController extends AbstractContractControlle
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "transactionId", required = false) Integer transactionId, @RequestParam(value = "contractId", required = false) Integer contractId, ModelMap model) {
+	public String view(@RequestParam(value = "transactionId", required = false) Integer transactionId, @RequestParam(value = CONTRACT_ID_PARAM_KEY, required = false) Integer contractId, ModelMap model) {
 		loadTransactionEditDTO(transactionId, contractId, model);
 
 		return "contracts/contractTransactionEdit";
@@ -135,7 +135,7 @@ public class ContractTransactionEditController extends AbstractContractControlle
 				transaction.setContract(contractService.findContract(transactionEditDTO.getContractId()));
 				transactionService.saveTransaction(transaction);
 
-				redirectAttributes.addAttribute("contractId", transaction.getContract().getId());
+				redirectAttributes.addAttribute(CONTRACT_ID_PARAM_KEY, transaction.getContract().getId());
 				return "redirect:/contracts/transactions";
 			} catch (TransactionServiceException e) {
 				switch (e.getReason()) {
@@ -176,7 +176,7 @@ public class ContractTransactionEditController extends AbstractContractControlle
 		try {
 			Transaction transaction = transactionService.deleteTransaction(transactionEditDTO.getTransaction().getId());
 
-			redirectAttributes.addAttribute("contractId", transaction.getContract().getId());
+			redirectAttributes.addAttribute(CONTRACT_ID_PARAM_KEY, transaction.getContract().getId());
 			return "redirect:/contracts/transactions";
 
 		} catch (Exception exc) {

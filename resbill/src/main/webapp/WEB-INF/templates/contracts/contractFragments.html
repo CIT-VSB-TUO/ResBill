@@ -67,6 +67,9 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<ul class="nav nav-tabs">
+							<li th:class="${#strings.startsWith(#httpServletRequest.pathInfo, '/contracts/overview')} ? 'active'">
+								<a href="contractOverview.html" th:href="@{/contracts/overview(contractId=${contractHeaderDTO.contractId})}" th:text="#{tab.contract.overview}">Prehled</a>
+							</li>
 							<li th:class="${#strings.startsWith(#httpServletRequest.pathInfo, '/contracts/edit')} ? 'active'">
 								<a href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contractHeaderDTO.contractId})}" th:text="#{tab.contract.edit}">Editace</a>
 							</li>

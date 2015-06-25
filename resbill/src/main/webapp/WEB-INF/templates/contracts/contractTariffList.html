@@ -61,7 +61,7 @@
 		<div class="row" th:if="${contractTariffs == null}">
 			<div class="col-lg-12">
 				<p>
-					<a href="contractEdit.html" class="btn btn-default" th:href="@{/contracts/edit(contractId=${contractHeaderDTO.contractId})}" >
+					<a href="contractEdit.html" class="btn btn-default" th:href="@{/contracts/overview(contractId=${contractHeaderDTO.contractId})}" >
 						<i class="fa fa-reply"></i>
 						<span th:text="#{button.back}">Back</span>
 					</a>
