@@ -18,7 +18,7 @@ import cz.vsb.resbill.criteria.PriceListCriteria;
 import cz.vsb.resbill.dao.InvoicePriceListDAO;
 import cz.vsb.resbill.dao.PriceListDAO;
 import cz.vsb.resbill.dao.TariffDAO;
-import cz.vsb.resbill.dto.tariff.PriceListDTO;
+import cz.vsb.resbill.dto.PriceListDTO;
 import cz.vsb.resbill.exception.PriceListServiceException;
 import cz.vsb.resbill.exception.PriceListServiceException.Reason;
 import cz.vsb.resbill.exception.ResBillException;

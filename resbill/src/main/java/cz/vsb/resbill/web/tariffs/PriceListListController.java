@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import cz.vsb.resbill.criteria.PriceListCriteria;
 import cz.vsb.resbill.criteria.PriceListCriteria.OrderBy;
-import cz.vsb.resbill.dto.tariff.PriceListDTO;
+import cz.vsb.resbill.dto.PriceListDTO;
 import cz.vsb.resbill.service.PriceListService;
 import cz.vsb.resbill.util.WebUtils;
 

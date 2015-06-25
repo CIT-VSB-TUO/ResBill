@@ -1,5 +1,6 @@
 package cz.vsb.resbill.dto.tariff;
 
+import cz.vsb.resbill.dto.PriceListDTO;
 import cz.vsb.resbill.model.PriceList;
 import cz.vsb.resbill.model.Tariff;
 

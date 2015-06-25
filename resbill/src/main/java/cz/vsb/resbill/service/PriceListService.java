@@ -3,7 +3,7 @@ package cz.vsb.resbill.service;
 import java.util.List;
 
 import cz.vsb.resbill.criteria.PriceListCriteria;
-import cz.vsb.resbill.dto.tariff.PriceListDTO;
+import cz.vsb.resbill.dto.PriceListDTO;
 import cz.vsb.resbill.exception.PriceListServiceException;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.PriceList;

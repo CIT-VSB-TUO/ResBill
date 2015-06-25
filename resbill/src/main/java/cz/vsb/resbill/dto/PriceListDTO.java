@@ -1,4 +1,4 @@
-package cz.vsb.resbill.dto.tariff;
+package cz.vsb.resbill.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
