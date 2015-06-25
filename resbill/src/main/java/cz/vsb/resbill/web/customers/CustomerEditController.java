@@ -23,7 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cz.vsb.resbill.criteria.PersonCriteria;
 import cz.vsb.resbill.criteria.PersonCriteria.OrderBy;
-import cz.vsb.resbill.dto.CustomerEditDTO;
+import cz.vsb.resbill.dto.customer.CustomerEditDTO;
 import cz.vsb.resbill.exception.CustomerServiceException;
 import cz.vsb.resbill.model.Customer;
 import cz.vsb.resbill.model.Person;

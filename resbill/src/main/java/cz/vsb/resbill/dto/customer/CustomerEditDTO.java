@@ -1,4 +1,4 @@
-package cz.vsb.resbill.dto;
+package cz.vsb.resbill.dto.customer;
 
 import java.io.Serializable;
 
