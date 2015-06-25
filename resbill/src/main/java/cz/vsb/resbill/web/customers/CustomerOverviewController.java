@@ -43,7 +43,7 @@ public class CustomerOverviewController extends AbstractCustomerController {
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "customerId", required = true) Integer customerId, ModelMap model) {
+	public String view(@RequestParam(value = CUSTOMER_ID_PARAM_KEY, required = true) Integer customerId, ModelMap model) {
 		loadCustomerOverviewDTO(customerId, model);
 
 		return "customers/customerOverview";
@@ -57,7 +57,7 @@ public class CustomerOverviewController extends AbstractCustomerController {
 	 * @return
 	 */
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
-	public String delete(@RequestParam(value = "customerId", required = true) Integer customerId, ModelMap model) {
+	public String delete(@RequestParam(value = CUSTOMER_ID_PARAM_KEY, required = true) Integer customerId, ModelMap model) {
 		if (log.isDebugEnabled()) {
 			log.debug("Customer.id to delete: " + customerId);
 		}

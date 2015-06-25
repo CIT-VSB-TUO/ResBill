@@ -97,7 +97,7 @@ public class CustomerEditController extends AbstractCustomerController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String view(@RequestParam(value = "customerId", required = false) Integer customerId, ModelMap model) {
+	public String view(@RequestParam(value = CUSTOMER_ID_PARAM_KEY, required = false) Integer customerId, ModelMap model) {
 		loadCustomerEditDTO(customerId, model);
 
 		return "customers/customerEdit";
@@ -123,7 +123,7 @@ public class CustomerEditController extends AbstractCustomerController {
 				if (log.isDebugEnabled()) {
 					log.debug("Saved customer: " + customer);
 				}
-				redirectAttributes.addAttribute("customerId", customer.getId());
+				redirectAttributes.addAttribute(CUSTOMER_ID_PARAM_KEY, customer.getId());
 				return "redirect:/customers/overview";
 			} catch (CustomerServiceException e) {
 				switch (e.getReason()) {
