@@ -24,10 +24,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.vsb.resbill.criteria.ContractCriteria;
+import cz.vsb.resbill.criteria.ContractPersonCriteria;
+import cz.vsb.resbill.criteria.ContractPersonCriteria.OrderBy;
 import cz.vsb.resbill.criteria.TransactionCriteria;
 import cz.vsb.resbill.criteria.statistics.StatisticContractCriteria;
 import cz.vsb.resbill.dao.ContractDAO;
 import cz.vsb.resbill.dao.ContractInvoiceTypeDAO;
+import cz.vsb.resbill.dao.ContractPersonDAO;
 import cz.vsb.resbill.dao.ContractTariffDAO;
 import cz.vsb.resbill.dao.TransactionDAO;
 import cz.vsb.resbill.dto.agenda.ContractAgendaDTO;
@@ -44,6 +47,7 @@ import cz.vsb.resbill.exception.ContractServiceException.Reason;
 import cz.vsb.resbill.exception.ResBillException;
 import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.model.ContractInvoiceType;
+import cz.vsb.resbill.model.ContractPerson;
 import cz.vsb.resbill.model.ContractTariff;
 import cz.vsb.resbill.model.Period;
 import cz.vsb.resbill.model.Transaction;
@@ -68,6 +72,9 @@ public class ContractServiceImpl implements ContractService {
 
 	@Inject
 	private TransactionDAO transactionDAO;
+
+	@Inject
+	private ContractPersonDAO contractPersonDAO;
 
 	@Inject
 	private ContractInvoiceTypeDAO contractInvoiceTypeDAO;
@@ -100,7 +107,16 @@ public class ContractServiceImpl implements ContractService {
 	@Override
 	public ContractOverviewDTO findContractOverviewDTO(Integer contractId) throws ResBillException {
 		try {
-			return new ContractOverviewDTO(findContract(contractId));
+			Contract contract = findContract(contractId);
+
+			// zodpovedne osoby
+			ContractPersonCriteria criteria = new ContractPersonCriteria();
+			criteria.setContractId(contractId);
+			criteria.setFetchPerson(true);
+			criteria.setOrderBy(OrderBy.PERSON_NAME_ASC);
+			List<ContractPerson> cps = contractPersonDAO.findContractPersons(criteria, null, null);
+
+			return new ContractOverviewDTO(contract, cps);
 		} catch (ResBillException e) {
 			throw e;
 		} catch (Exception e) {

@@ -70,7 +70,7 @@
 							<li th:class="${#strings.startsWith(#httpServletRequest.pathInfo, '/contracts/overview')} ? 'active'">
 								<a href="contractOverview.html" th:href="@{/contracts/overview(contractId=${contractHeaderDTO.contractId})}" th:text="#{tab.contract.overview}">Prehled</a>
 							</li>
-							<li th:class="${#strings.startsWith(#httpServletRequest.pathInfo, '/contracts/edit')} ? 'active'">
+							<li th:class="${#strings.startsWith(#httpServletRequest.pathInfo, '/contracts/edit') or #strings.startsWith(#httpServletRequest.pathInfo, '/contracts/persons/edit')} ? 'active'">
 								<a href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contractHeaderDTO.contractId})}" th:text="#{tab.contract.edit}">Editace</a>
 							</li>
 							<li th:class="${#strings.startsWith(#httpServletRequest.pathInfo, '/contracts/invoiceTypes')} ? 'active'">

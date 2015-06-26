@@ -33,4 +33,22 @@ public interface ContractPersonDAO {
 	 * @return list of {@link ContractPerson} entities
 	 */
 	List<ContractPerson> findContractPersons(ContractPersonCriteria criteria, Integer offset, Integer limit);
+
+	/**
+	 * Saves current state of given {@link ContractPerson} entity.
+	 * 
+	 * @param contractPerson
+	 *          entity to save
+	 * @return saved entity
+	 */
+	ContractPerson saveContractPerson(ContractPerson contractPerson);
+
+	/**
+	 * Deletes given {@link ContractPerson} entity.
+	 * 
+	 * @param contractPerson
+	 *          entity to delete
+	 * @return deleted entity
+	 */
+	ContractPerson deleteContractPerson(ContractPerson contractPerson);
 }

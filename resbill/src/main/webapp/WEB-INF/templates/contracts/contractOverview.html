@@ -134,6 +134,47 @@
 			
 				<div class="panel panel-default">
 					<div class="panel-heading">
+						<span class="pull-left" th:text="#{panel.contract.persons}">Zodpovedne osoby</span>
+						<span class="pull-right">
+							<a class="btn btn-primary" href="contractPersonEdit.html" th:href="@{/contracts/persons/edit(contractId=${contractOverviewDTO.contractId})}" 
+								th:title="#{button.title.contract.person.add}">
+								<i class="fa fa-plus-square"></i> <span th:text="#{button.add}">Add</span>
+							</a>
+						</span>
+						<div class="clearfix"></div>
+					</div>
+							
+					<div class="panel-body">
+						<div th:if="${#lists.isEmpty(contractOverviewDTO.responsiblePersons)}">
+							<span th:text="#{text.no.contract.person}">Hlaseni</span>
+						</div>
+						<div class="row" th:if="!${#lists.isEmpty(contractOverviewDTO.responsiblePersons)}">
+							<div class="col-lg-12">
+								<div id="responsiblePersons" th:remove="all-but-first">
+									<p th:each="person : ${contractOverviewDTO.responsiblePersons}">
+										<a href="contractPersonEdit.html" th:href="@{/contracts/persons/edit(personId=${person.personId}, contractId=${contractHeaderDTO.contractId})}"
+											th:title="#{button.title.contract.person.edit}">
+											<span th:text="${person.fullNameWithTitles} + ' (' + ${person.email} + ')'">osoba 1</span>
+										</a>
+									</p>
+									<p>
+										<a href="contractPersonEdit.html">
+											<span>osoba 2</span>
+										</a>
+									</p>
+									<p>
+										<a href="contractPersonEdit.html">
+											<span>osoba 3</span>
+										</a>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+				<div class="panel panel-default">
+					<div class="panel-heading">
 						<span th:text="#{panel.contract.customer}">Zakaznik</span>
 					</div>
 							
@@ -149,7 +190,7 @@
 							<div class="col-lg-4">
 								<div class="form-group">
 									<label class="control-label" th:text="#{label.customer.contact}">Kontakt</label>
-									<p class="form-control-static" th:text="${contractOverviewDTO.contactPerson.fullNameWithTitles}">Ivan Hrozny</p>
+									<p class="form-control-static" th:text="${contractOverviewDTO.customerContactPerson.fullNameWithTitles}">Ivan Hrozny</p>
 								</div>
 							</div>
 						</div>
