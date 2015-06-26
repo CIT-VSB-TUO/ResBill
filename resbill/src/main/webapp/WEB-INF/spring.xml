@@ -67,6 +67,15 @@
 	
 	<mvc:annotation-driven conversion-service="conversionService"/>
 	
+	<mvc:interceptors>
+		<bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+			<property name="cacheSeconds" value="0"/>
+			<property name="useExpiresHeader" value="true"/>
+			<property name="useCacheControlHeader" value="true"/>
+			<property name="useCacheControlNoStore" value="true"/>
+		</bean>
+	</mvc:interceptors>
+	
 	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
 		<property name="formatters">
 			<set>
@@ -105,15 +114,18 @@
 	<security:http pattern="/js/**" security="none"/>
 	<security:http pattern="/bower_components/**" security="none"/>
 	<security:http use-expressions="true">
-		<security:intercept-url pattern="/**" access="hasRole('ROLE_RESBILL_ADMIN')"/>
-		<security:http-basic/>
-		<security:logout/>
+		<security:intercept-url pattern="/" access="permitAll"/>
+		<security:intercept-url pattern="/index" access="permitAll"/>
+		<security:intercept-url pattern="/login" access="permitAll"/>
+		<security:intercept-url pattern="/**" access="isAuthenticated()"/>
+		<security:form-login login-page="/login" authentication-failure-url="/login?error=true" default-target-url="/reports/agenda" login-processing-url="/login/check" username-parameter="username" password-parameter="password"/>
+		<security:logout logout-url="/logout"/>
 	</security:http>
 	
 	<security:authentication-manager>
 		<security:authentication-provider>
 			<security:user-service>
-				<security:user name="resbilladmin" password="${resbilladmin.password}" authorities="ROLE_RESBILL_ADMIN"/>
+				<security:user name="resbilladmin" password="${resbilladmin.password}" authorities="none"/>
 			</security:user-service>
 		</security:authentication-provider>
 	</security:authentication-manager>
