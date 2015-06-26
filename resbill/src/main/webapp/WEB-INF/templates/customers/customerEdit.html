@@ -70,7 +70,7 @@
 		
 		<div class="row" th:if="${customerEditDTO != null}">
 			<div class="col-lg-12">
-				<form role="form" method="post" action="#" th:object="${customerEditDTO}">
+				<form role="form" method="post" action="#" th:action="@{#}" th:object="${customerEditDTO}">
 					
 					<div class="row">
 					

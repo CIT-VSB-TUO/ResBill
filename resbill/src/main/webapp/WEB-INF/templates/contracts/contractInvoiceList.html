@@ -73,7 +73,7 @@
         <div class="row">
 
           <div class="col-lg-6">
-            <form class="form-inline" role="form" method="post" action="#">
+            <form class="form-inline" role="form" method="post" action="#" th:action="@{#}">
               <div class="form-group">
                 <label class="control-label" th:text="#{label.invoice.createForMonth}" th:for="month">Vytvořit faktury za měsíc</label>
                 <div class="input-group date" data-provide="datepicker" data-date-min-view-mode="1" data-date-autoclose="true" data-date-format="mm/yyyy"
@@ -90,7 +90,7 @@
           </div>
 
           <div class="col-lg-6">
-            <form class="form-inline" role="form" method="post" action="#">
+            <form class="form-inline" role="form" method="post" action="#" th:action="@{#}">
               <div class="form-group">
                 <label class="control-label" th:text="#{label.invoice.exportForMonth}" th:for="expMonth">Exportovat faktury za měsíc</label>
                 <div class="input-group date" data-provide="datepicker" data-date-min-view-mode="1" data-date-autoclose="true" data-date-format="mm/yyyy"

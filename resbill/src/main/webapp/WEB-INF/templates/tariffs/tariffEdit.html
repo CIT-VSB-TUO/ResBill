@@ -70,7 +70,7 @@
 		
 		<div class="row" th:if="${tariffPriceListDTO != null}">
 			<div class="col-lg-12">
-				<form role="form" method="post" action="#" th:object="${tariffPriceListDTO}">
+				<form role="form" method="post" action="#" th:action="@{#}" th:object="${tariffPriceListDTO}">
 					
 					<div class="row">
 						<div class="col-lg-6">

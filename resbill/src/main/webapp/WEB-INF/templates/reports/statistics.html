@@ -58,7 +58,7 @@
     <!-- Akcni prvky pro spusteni fakturace a exportu faktur -->
     <div class="row">
       <div class="col-lg-12">
-        <form class="form-inline" role="form" method="post" action="#" th:object="${statisticCriteria}">
+        <form class="form-inline" role="form" method="post" action="#" th:action="@{#}" th:object="${statisticCriteria}">
           <div class="form-group">
             <div class="form-group required" th:classappend="${#fields.hasErrors('beginDate')} ? 'has-error'">
               <label class="control-label" th:text="#{label.statistics.from}" th:for="beginDate">Statistika Od</label>

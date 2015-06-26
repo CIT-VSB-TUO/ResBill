@@ -70,7 +70,8 @@
 					<ul class="dropdown-menu dropdown-user">
 						<li class="divider"></li>
 						<li>
-							<a href="#" th:href="@{/logout}">
+							<form  id="logoutForm" class="hidden" method="post" action="#" th:action="@{/logout}"></form>
+							<a href="#" onclick="$('#logoutForm').submit();">
 								<i class="fa fa-sign-out fa-fw"></i>
 								<span th:text="#{menu.button.logout}">Logout</span>
 							</a>

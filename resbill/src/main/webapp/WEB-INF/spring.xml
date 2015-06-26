@@ -120,6 +120,7 @@
 		<security:intercept-url pattern="/**" access="isAuthenticated()"/>
 		<security:form-login login-page="/login" authentication-failure-url="/login?error=true" default-target-url="/reports/agenda" login-processing-url="/login/check" username-parameter="username" password-parameter="password"/>
 		<security:logout logout-url="/logout"/>
+		<security:csrf/>
 	</security:http>
 	
 	<security:authentication-manager>
