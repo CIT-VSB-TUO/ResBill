@@ -86,7 +86,7 @@ public class DailyImportDetailController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
+	@RequestMapping(value = "delete", method = RequestMethod.GET)
 	public String delete(@RequestParam(value = "dailyImportId", required = true) Integer dailyImportId, ModelMap model) {
 
 		DailyImport dailyImport = loadDailyImport(dailyImportId, model);

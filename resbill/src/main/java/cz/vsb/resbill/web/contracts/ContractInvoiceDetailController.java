@@ -4,8 +4,15 @@
  */
 package cz.vsb.resbill.web.contracts;
 
-import javax.inject.Inject;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -16,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cz.vsb.resbill.dto.InvoiceDetailDTO;
+import cz.vsb.resbill.model.File;
 import cz.vsb.resbill.model.Invoice;
 import cz.vsb.resbill.service.InvoiceService;
 import cz.vsb.resbill.util.WebUtils;
@@ -89,7 +97,7 @@ public class ContractInvoiceDetailController extends AbstractContractController 
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
+	@RequestMapping(value = "delete", method = RequestMethod.GET)
 	public String delete(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model, RedirectAttributes redirectAttributes) {
 
 		InvoiceDetailDTO invoiceDetailDTO = loadInvoiceDetailDTO(invoiceId, model);
@@ -109,5 +117,34 @@ public class ContractInvoiceDetailController extends AbstractContractController 
 		}
 
 		return "contractInvoiceDetail";
+	}
+
+	@RequestMapping(value = "download", method = RequestMethod.GET)
+	public void download(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, HttpServletRequest request, HttpServletResponse response) {
+
+		try {
+			File attachment = invoiceService.findInvoiceAttachment(invoiceId);
+
+			if (attachment != null) {
+				try (InputStream in = new ByteArrayInputStream(attachment.getContent()); OutputStream out = response.getOutputStream()) {
+
+					response.setContentLength(attachment.getSize().intValue());
+					response.setContentType(attachment.getContentType());
+
+					// response header
+					String headerKey = "Content-Disposition";
+					String headerValue = String.format("attachment; filename=\"%s\"", attachment.getName());
+					response.setHeader(headerKey, headerValue);
+
+					// Write response
+					IOUtils.copy(in, out);
+
+				} catch (Exception exc) {
+					log.error("Cannot download invoice with ID: " + invoiceId, exc);
+				}
+			}
+		} catch (Exception exc) {
+			log.error("Cannot download invoice with ID: " + invoiceId, exc);
+		}
 	}
 }

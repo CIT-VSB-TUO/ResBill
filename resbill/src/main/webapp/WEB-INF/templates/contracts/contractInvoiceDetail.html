@@ -75,23 +75,20 @@
 
         <div class="row">
           <div class="col-lg-12">
-            <form role="form" method="post" action="#" th:action="@{#}" th:object="${invoice}">
-              <input type="hidden" name="invoiceId" th:value="*{transactionId}" />
+            <p>
+              <a href="contractInvoiceDetail.html#download" class="btn btn-primary" th:href="@{/contracts/invoices/detail/download(invoiceId=${invoice.transactionId})}"> <i
+                class="fa fa-cloud-download"></i> <span th:title="#{button.title.contract.invoice.download}" th:text="#{button.download}">Stahnout</span>
+              </a>
 
-              <div class="row">
-                <div class="col-lg-12">
-                  <p>
-                    <button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete" th:title="#{button.title.contract.invoice.delete}">
-                      <i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
-                    </button>
+              <a class="btn btn-danger" href="contractInvoiceList.html" th:href="@{/contracts/invoices/detail/delete(invoiceId=${invoice.transactionId},contractId=${contractHeaderDTO.contractId})}" 
+                th:onclick="'return confirm(\'__#{confirm.delete}__\')'" th:title="#{button.title.contract.invoice.delete}">
+                <i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
+              </a>
 
-                    <a href="invoiceList.html" class="btn btn-default" th:href="@{/contracts/invoices(contractId=${contractHeaderDTO.contractId})}"> <i
-                      class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
-                    </a>
-                  </p>
-                </div>
-              </div>
-            </form>
+              <a href="invoiceList.html" class="btn btn-default" th:href="@{/contracts/invoices(contractId=${contractHeaderDTO.contractId})}"> <i
+                class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
+              </a>
+            </p>
           </div>
         </div>
 

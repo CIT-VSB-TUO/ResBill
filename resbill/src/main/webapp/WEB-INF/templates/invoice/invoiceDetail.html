@@ -71,27 +71,19 @@
 
         <div class="row">
           <div class="col-lg-12">
-            <form role="form" method="post" action="#" th:action="@{#}" th:object="${invoice}">
-              <input type="hidden" name="invoiceId" th:value="*{transactionId}" />
+            <p>
+              <a href="invoiceDetail.html#download" class="btn btn-primary" th:href="@{/invoice/detail/download(invoiceId=${invoice.transactionId})}"> <i
+                class="fa fa-cloud-download"></i> <span th:title="#{button.title.invoice.download}" th:text="#{button.download}">Stahnout</span>
+              </a>
 
-              <div class="row">
-                <div class="col-lg-12">
-                  <p>
-                    <a href="invoiceDetail.html#download" class="btn btn-primary" th:href="@{/invoice/detail/download(invoiceId=${param.invoiceId})}"> <i
-                      class="fa fa-cloud-download"></i> <span th:title="#{button.title.invoice.download}" th:text="#{button.download}">Stahnout</span>
-                    </a>
+              <a class="btn btn-danger" href="invoiceList.html" th:href="@{/invoice/detail/delete(invoiceId=${invoice.transactionId})}" 
+                th:onclick="'return confirm(\'__#{confirm.delete}__\')'" th:title="#{button.title.invoice.delete}">
+                <i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
+              </a>
 
-                    <button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete" 
-                      th:title="#{button.title.invoice.delete}">
-                      <i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
-                    </button>
-
-                    <a href="invoiceList.html" class="btn btn-default" th:href="@{/invoice}"> <i class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
-                    </a>
-                  </p>
-                </div>
-              </div>
-            </form>
+              <a href="invoiceList.html" class="btn btn-default" th:href="@{/invoice}"> <i class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
+              </a>
+            </p>
           </div>
         </div>
 

@@ -97,7 +97,7 @@ public class InvoiceDetailController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, params = "delete")
+	@RequestMapping(value = "delete", method = RequestMethod.GET)
 	public String delete(@RequestParam(value = "invoiceId", required = true) Integer invoiceId, ModelMap model) {
 
 		InvoiceDetailDTO invoiceDetailDTO = loadInvoiceDetailDTO(invoiceId, model);
