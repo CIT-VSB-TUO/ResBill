@@ -62,45 +62,41 @@
     <div class="row" th:if="${serverContracts != null}">
       <div class="col-lg-12">
 
-        <table class="table" id="serverContracts">
+        <table class="table table-hover" id="serverContracts">
           <thead>
             <tr>
               <th th:text="#{column.server.contract.from}">Prirazeno od</th>
               <th th:text="#{column.server.contract.to}">Prirazeno do</th>
               <th th:text="#{column.server.contract.name}">Název</th>
-              <th><a class="btn btn-primary btn-circle" href="serverContractEdit.html"
-                th:href="@{/servers/contracts/edit(serverId=${serverHeaderDTO.id})}" th:title="#{button.title.server.contract.add}"> <i
-                  class="fa fa-plus-square"></i>
-              </a></th>
             </tr>
           </thead>
           <tbody th:remove="all-but-first">
-            <tr th:each="serverContract : ${serverContracts}">
+            <tr th:each="serverContract : ${serverContracts}" th:title="#{button.title.server.contract.edit}" onclick="document.location='serverContractEdit.html'" 
+              th:onclick="'document.location=\'__@{/servers/contracts/edit(contractServerId=${serverContract.id},serverId=${serverHeaderDTO.id})}__\''">
               <td th:text="${#dates.format(serverContract.period.beginDate, '__#{date.format.list}__')}">1.1.2000</td>
               <td th:text="${serverContract.period.endDate != null} ? ${#dates.format(serverContract.period.endDate, '__#{date.format.list}__')}">30.6.2001</td>
               <td th:text="${serverContract.contract.name}">Kontrakt 1</td>
-              <td><a class="btn btn-primary btn-circle" href="serverContractEdit.html"
-                th:href="@{/servers/contracts/edit(contractServerId=${serverContract.id},serverId=${serverHeaderDTO.id})}" th:title="#{button.title.server.contract.edit}"> <i
-                  class="fa fa-edit"></i>
-              </a></td>
             </tr>
             <tr>
               <td>1.1.2000</td>
               <td>30.6.2001</td>
               <td>Kontrakt 1</td>
-              <td><a class="btn btn-primary btn-circle" href="serverContractEdit.html"> <i class="fa fa-edit"></i>
-              </a></td>
             </tr>
             <tr>
               <td>1.1.2000</td>
               <td>30.6.2001</td>
               <td>Kontrakt 1</td>
-              <td><a class="btn btn-primary btn-circle" href="serverContractEdit.html"> <i class="fa fa-edit"></i>
-              </a></td>
             </tr>
           </tbody>
         </table>
 
+        <p>
+          <a class="btn btn-primary" href="serverContractEdit.html"
+            th:href="@{/servers/contracts/edit(serverId=${serverHeaderDTO.id})}" th:title="#{button.title.server.contract.add}">
+            <i class="fa fa-plus"></i>
+            <span th:text="#{button.add}">Add</span>
+          </a>
+        </p>
       </div>
       <!-- /.col-lg-12 -->
     </div>

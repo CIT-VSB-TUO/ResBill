@@ -68,9 +68,14 @@
               <div class="panel-heading">
                 <span class="pull-left" th:text="#{panel.server.server}">Server</span>
                 <span class="pull-right">
-                	<a class="btn btn-danger" href="serverOverview.html" th:href="@{/servers/overview/delete(serverId=${serverOverviewDTO.id})}" th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
-                      <i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
-                    </a>
+                  <a class="btn btn-primary" href="serverEdit.html" th:href="@{/servers/edit(serverId=${serverOverviewDTO.id})}" 
+					th:title="#{button.title.server.edit}">
+					<i class="fa fa-pencil"></i> <span th:text="#{button.edit}">Edit</span>
+                  </a>
+                  <a class="btn btn-danger" href="serverOverview.html" th:href="@{/servers/overview/delete(serverId=${serverOverviewDTO.id})}" 
+                  	th:onclick="'return confirm(\'__#{confirm.delete}__\')'" th:title="#{button.title.server.delete}">
+                    <i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
+                  </a>
                 </span>
                 <div class="clearfix"></div>
               </div>
@@ -181,7 +186,7 @@
                   <a th:if="${serverOverviewDTO.currentContractServerId != null}"
                     class="btn btn-primary" href="serverContractEdit.html"
                     th:href="@{/servers/contracts/edit(contractServerId=${serverOverviewDTO.currentContractServerId},serverId=${serverOverviewDTO.id})}"
-                    th:title="#{button.title.server.contract.edit}"> <i class="fa fa-edit"></i> <span th:text="#{button.title.server.contract.edit}">Upravit</span>
+                    th:title="#{button.title.server.contract.edit}"> <i class="fa fa-pencil"></i> <span th:text="#{button.edit}">Upravit</span>
                   </a>
                 </span>
                 <div class="clearfix"></div>
@@ -190,13 +195,11 @@
               <div class="panel-body">
               	<div th:if="${serverOverviewDTO.currentContractServerId == null}">
                   <span th:text="#{text.no.server.contract}">zadny kontrakt</span>
-<!--                   <p> -->
                     <a class="btn btn-primary" href="serverContractEdit.html" th:href="@{/servers/contracts/edit(serverId=${serverOverviewDTO.id})}"
                       th:title="#{button.title.server.contract.add}">
-                      <i class="fa fa-plus-square"></i>
-                      <span th:text="#{button.title.server.contract.add}">Pridat novy</span>
+                      <i class="fa fa-plus"></i>
+                      <span th:text="#{button.add}">Pridat novy</span>
                     </a>
-<!--                   </p> -->
              	</div>
  
                 <div th:if="${serverOverviewDTO.currentContractDTO != null}">

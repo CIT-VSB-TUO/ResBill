@@ -59,7 +59,7 @@
 		<!-- Zobrazeni vypisu kontraktu -->
 		<div class="row" th:if="${contracts != null}">
 			<div class="col-lg-12">
-				<table class="table" id="contracts">
+				<table class="table table-hover" id="contracts">
 					<thead>
 						<tr>
 							<th th:text="#{column.contract.evidenceNumber}">Číslo</th>
@@ -68,16 +68,12 @@
 							<th th:text="#{column.contract.balance}">Zůstatek</th>
 							<th th:text="#{column.contract.beginDate}">Platnost od</th>
 							<th th:text="#{column.contract.endDate}">Platnost do</th>
-							<th data-orderable="false" data-searchable="false">
-								<a class="btn btn-primary btn-circle" href="contractEdit.html" th:href="@{/contracts/edit}" th:title="#{button.title.contract.add}">
-									<i class="fa fa-plus-square"></i>
-								</a>
-							</th>
 						</tr>
 					</thead>
 
 					<tbody th:remove="all-but-first">
-						<tr th:each="contract: ${contracts}">
+						<tr th:each="contract: ${contracts}" th:title="#{button.title.contract.detail}" onclick="document.location='contractOverview.html'" 
+							th:onclick="'document.location=\'__@{/contracts/overview(contractId=${contract.contractId})}__\''">
 							<td th:text="${contract.evidenceNumber}" data-type="num">1</td>
 							<td th:text="${contract.name}">P.FS</td>
 							<td th:text="${contract.customer?.name}">Fakulta strojní</td>
@@ -85,14 +81,15 @@
 							<td th:text="${#dates.format(contract.beginDate, '__#{date.format.list}__')}" th:attr="data-order=${#dates.format(contract.beginDate, '__#{date.format.order}__')}">1.1.2014</td>
 							<td th:text="${contract.endDate != null} ? ${#dates.format(contract.endDate, '__#{date.format.list}__')}" 
 								th:attr="data-order=${contract.endDate != null} ? ${#dates.format(contract.endDate, '__#{date.format.order}__')}">31.12.2015</td>
-							<td>
-								<a class="btn btn-primary btn-circle" href="contractOverview.html" th:href="@{/contracts/overview(contractId=${contract.contractId})}" th:title="#{button.title.contract.edit}">
-									<i class="fa fa-edit"></i>
-								</a>
-							</td>
 						</tr>
 					</tbody>
 				</table>
+				<p>
+					<a class="btn btn-primary" href="contractEdit.html" th:href="@{/contracts/edit}" th:title="#{button.title.contract.add}">
+						<i class="fa fa-plus"></i>
+						<span th:text="#{button.add}">Add</span>
+					</a>
+				</p>
 			</div>
 		</div>
 	</div>

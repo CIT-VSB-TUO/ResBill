@@ -88,3 +88,7 @@ th.striped, td.striped {
 .pagination {
 	margin-top: 0 !important;
 }
+
+.clickable, [onclick] {
+	cursor: pointer;
+}

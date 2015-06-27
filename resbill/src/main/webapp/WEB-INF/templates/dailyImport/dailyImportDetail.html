@@ -80,7 +80,8 @@
 							<div class="row">
 								<div class="col-lg-12">
 									<p>
-										<button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete">
+										<button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete" 
+										 	th:title="#{button.title.dailyImport.delete}">
 											<i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
 										</button>
 

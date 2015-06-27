@@ -118,7 +118,7 @@
                 <button class="btn btn-primary" type="submit" name="save" th:disabled="*{editDisabled}">
                   <i class="fa fa-save"></i> <span th:text="#{button.save}">Save</span>
                 </button>
-                <a href="contractTransactionList.html" class="btn btn-default" th:href="@{/contracts/transactions(contractId=${param.contractId})}"> <i
+                <a href="contractTransactionList.html" class="btn btn-default" th:href="@{/contracts/transactions(contractId=${contractHeaderDTO.contractId})}"> <i
                   class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
                 </a>
               </p>
@@ -128,7 +128,8 @@
           <div class="row" th:if="*{transaction.id != null}">
             <div class="col-lg-12">
               <p>
-                <button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete">
+                <button class="btn btn-danger" type="submit" th:onclick="'return confirm(\'__#{confirm.delete}__\')'" name="delete"
+                  th:title="#{button.title.contract.transaction.delete}">
                   <i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
                 </button>
               </p>

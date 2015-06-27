@@ -76,8 +76,12 @@
 					<div class="panel-heading">
 						<span class="pull-left" th:text="#{panel.person.data}">Osoba</span>
 						<span class="pull-right">
+							<a class="btn btn-primary" href="personEdit.html" th:href="@{/persons/edit(personId=${personOverviewDTO.personId})}" 
+								th:title="#{button.title.person.edit}">
+								<i class="fa fa-pencil"></i> <span th:text="#{button.edit}">Edit</span>
+							</a>
 							<a class="btn btn-danger" href="personOverview.html" th:href="@{/persons/overview/delete(personId=${personOverviewDTO.personId})}" 
-								th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
+								th:onclick="'return confirm(\'__#{confirm.delete}__\')'" th:title="#{button.title.person.delete}">
 								<i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
 							</a>
 						</span>

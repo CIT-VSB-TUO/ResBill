@@ -76,8 +76,12 @@
 					<div class="panel-heading">
 						<span class="pull-left" th:text="#{panel.contract.data}">Tarif</span>
 						<span class="pull-right">
+							<a class="btn btn-primary" href="contractEdit.html" th:href="@{/contracts/edit(contractId=${contractOverviewDTO.contractId})}" 
+								th:title="#{button.title.contract.edit}">
+								<i class="fa fa-pencil"></i> <span th:text="#{button.edit}">Edit</span>
+							</a>
 							<a class="btn btn-danger" href="contractOverview.html" th:href="@{/contracts/overview/delete(contractId=${contractOverviewDTO.contractId})}" 
-								th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
+								th:onclick="'return confirm(\'__#{confirm.delete}__\')'" th:title="#{button.title.contract.delete}">
 								<i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
 							</a>
 						</span>
@@ -138,7 +142,7 @@
 						<span class="pull-right">
 							<a class="btn btn-primary" href="contractPersonEdit.html" th:href="@{/contracts/persons/edit(contractId=${contractOverviewDTO.contractId})}" 
 								th:title="#{button.title.contract.person.add}">
-								<i class="fa fa-plus-square"></i> <span th:text="#{button.add}">Add</span>
+								<i class="fa fa-plus"></i> <span th:text="#{button.add}">Add</span>
 							</a>
 						</span>
 						<div class="clearfix"></div>

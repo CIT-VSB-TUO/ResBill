@@ -61,7 +61,7 @@
     <!-- Zobrazeni vypisu transakci kontraktu -->
     <div class="row" th:if="${transactions != null}">
       <div class="col-lg-12">
-        <table class="table" id="transactions">
+        <table class="table table-hover" id="transactions">
           <thead>
             <tr>
               <th th:text="#{column.contract.transaction.order}">Pořadí</th>
@@ -70,43 +70,31 @@
               <th th:text="#{column.contract.transaction.decisiveDate}">Rozhodné datum</th>
               <th th:text="#{column.contract.transaction.title}">Název</th>
               <th th:text="#{column.contract.transaction.amount}">Částka</th>
-              <th><a class="btn btn-primary btn-circle" href="contractTransactionEdit.html"
-                th:href="@{/contracts/transactions/edit(contractId=${param.contractId})}" th:title="#{button.title.contract.transaction.add}"> <i
-                  class="fa fa-plus-square"></i>
-              </a></th>
             </tr>
           </thead>
 
           <tbody th:remove="all-but-first">
-            <tr th:each="transaction: ${transactions}">
+            <tr th:each="transaction: ${transactions}" th:title="#{button.title.contract.transaction.edit}" onclick="document.location='contractTransactionEdit.html'" 
+              th:onclick="'document.location=\'__@{/contracts/transactions/edit(contractId=${contractHeaderDTO.contractId},transactionId=${transaction.transactionId})}__\''">
               <td th:text="${transaction.order}">1</td>
               <td th:text="${transaction.evidenceNumber}">2000000012</td>
               <td th:text="${transaction.transactionTypeTitle}">Faktura</td>
               <td th:text="${#dates.format(transaction.decisiveDate,'__#{date.format.list}__')}">1.6.2015</td>
               <td th:text="${transaction.title}">Faktura za měsíc červen</td>
               <td th:text="${#numbers.formatDecimal(transaction.amount,1,'DEFAULT',2,'DEFAULT')}">-1 000,0</td>
-
-              <td><a class="btn btn-primary btn-circle" href="contractTransactionEdit.html"
-                th:href="@{/contracts/transactions/edit(contractId=${param.contractId},transactionId=${transaction.transactionId})}"
-                th:title="#{button.title.contract.transaction.edit}"> <i class="fa fa-edit"></i>
-              </a></td>
-
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
-
-    <!-- 
-    <div class="row">
-      <div class="col-lg-12">
         <p>
-          <a href="contractList.html" class="btn btn-default" th:href="@{/contracts}"> <i class="fa fa-reply"></i> <span th:text="#{button.back}">Back</span>
+          <a class="btn btn-primary" href="contractTransactionEdit.html"
+            th:href="@{/contracts/transactions/edit(contractId=${contractHeaderDTO.contractId})}" th:title="#{button.title.contract.transaction.add}">
+            <i class="fa fa-plus"></i>
+            <span th:text="#{button.add}">Add</span>
           </a>
         </p>
       </div>
     </div>
-     -->
+
   </div>
 
   <!-- jQuery -->

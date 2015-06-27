@@ -59,17 +59,12 @@
 		<div class="row" th:if="${tariffListDTOs != null}">
 			<div class="col-lg-12">
 
-				<table class="table" id="tariffs">
+				<table class="table table-hover" id="tariffs">
 					<thead>
 						<tr>
 							<th rowspan="2" th:text="#{column.tariff.name}">Nazev</th>
 							<th rowspan="2" th:text="#{column.tariff.validity}" data-searchable="false">Platnost</th>
 							<th colspan="5" th:text="#{column.tariff.priceList.last}">Ceník</th>
-							<th rowspan="2" data-orderable="false" data-searchable="false">
-								<a class="btn btn-primary btn-circle" href="tariffEdit.html" th:href="@{/tariffs/edit}" th:title="#{button.title.tariff.add}">
-									<i class="fa fa-plus-square"></i>
-								</a>
-							</th>
 						</tr>
 						<tr>
 							<th th:text="#{column.priceList.period.beginDate}">Platnost od</th>
@@ -80,7 +75,8 @@
 						</tr>
 					</thead>
 					<tbody th:remove="all-but-first">
-						<tr th:each="dto : ${tariffListDTOs}">
+						<tr th:each="dto : ${tariffListDTOs}" th:title="#{button.title.tariff.detail}" onclick="document.location='tariffOverview.html'" 
+							th:onclick="'document.location=\'__@{/tariffs/overview(tariffId=${dto.tariffId})}__\''">
 							<td th:text="${dto.name}">tarif 1</td>
 							<td th:attr="data-order=${dto.valid}">
 								<i class="fa fa-check" th:if="${dto.valid}"></i>
@@ -90,11 +86,6 @@
 							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.memoryGBPrice,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${dto.lastPriceList.memoryGBPrice}">10,25</td>
 							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.spaceGBPrice,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${dto.lastPriceList.spaceGBPrice}">10,25</td>
 							<td th:text="${#numbers.formatDecimal(dto.lastPriceList.backupGBPrice,1,'DEFAULT',2,'DEFAULT')}" th:attr="data-order=${dto.lastPriceList.backupGBPrice}">10,25</td>
-							<td>
-								<a class="btn btn-primary btn-circle" href="tariffOverview.html" th:href="@{/tariffs/overview(tariffId=${dto.tariffId})}" th:title="#{button.title.tariff.edit}">
-									<i class="fa fa-edit"></i>
-								</a>
-							</td>
 						</tr>
 						<tr>
 							<td>tarif 2</td>
@@ -106,11 +97,6 @@
 							<td>10,25</td>
 							<td>10,25</td>
 							<td>10,25</td>
-							<td>
-								<a class="btn btn-primary btn-circle" href="tariffOverview.html">
-									<i class="fa fa-edit"></i>
-								</a>
-							</td>
 						</tr>
 						<tr>
 							<td>tarif 3</td>
@@ -122,15 +108,16 @@
 							<td>10,25</td>
 							<td>10,25</td>
 							<td>10,25</td>
-							<td>
-								<a class="btn btn-primary btn-circle" href="tariffOverview.html">
-									<i class="fa fa-edit"></i>
-								</a>
-							</td>
 						</tr>
 					</tbody>
 				</table>
 
+				<p>
+					<a class="btn btn-primary" href="tariffEdit.html" th:href="@{/tariffs/edit}" th:title="#{button.title.tariff.add}">
+						<i class="fa fa-plus"></i>
+						<span th:text="#{button.add}">Add</span>
+					</a>
+				</p>
 			</div>
 			<!-- /.col-lg-12 -->
 		</div>

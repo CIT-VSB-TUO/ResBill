@@ -68,44 +68,10 @@
         <h2 class="page-header" th:text="#{page.header.agenda.contract}">Kontrakty</h2>
       </div>
     </div>
-    <!-- 
-    <div class="row" th:if="${contracts != null}">
-      <div class="col-lg-12">
-        <table class="table" id="contracts">
-          <thead>
-            <tr>
-              <th th:text="#{column.agenda.contract.evidenceNumber}">Evidenční číslo</th>
-              <th th:text="#{column.agenda.contract.name}">Název</th>
-              <th class="text-center" th:text="#{column.agenda.contract.afterEndUsage}">Spotřeba po ukončení</th>
-              <th class="text-center" th:text="#{column.agenda.contract.outOfTariffUsage}">Spotřeba mimo tarif</th>
-              <th class="text-center" th:text="#{column.agenda.contract.noInvoiceType}">Bez typu účtování</th>
-              <th class="text-center" th:text="#{column.agenda.contract.noTariff}">Bez tarifu</th>
-              <th class="text-center" th:text="#{column.agenda.contract.noServer}">Bez serveru</th>
-              <th class="text-center" th:text="#{column.agenda.contract.negativeBalance}">Záporný zůstatek</th>
-            </tr>
-          </thead>
-
-          <tbody th:remove="all-but-first">
-            <tr th:each="contract : ${contracts}">
-              <td th:text="${contract.evidenceNumber}">123</td>
-              <td th:text="${contract.name}">P.FS</td>
-              <td class="text-center"><i th:if="${contract.dailyUsagesAfterContractEnd}" class="fa fa-exclamation-circle text-danger"></i></td>
-              <td class="text-center"><i th:if="${contract.dailyUsagesOutOfTariff}" class="fa fa-exclamation-circle text-danger"></i></td>
-              <td class="text-center"><i th:if="${contract.noInvoiceType}" class="fa fa-exclamation-circle text-warning"></i></td>
-              <td class="text-center"><i th:if="${contract.noTariff}" class="fa fa-exclamation-circle text-warning"></i></td>
-              <td class="text-center"><i th:if="${contract.noServer}" class="fa fa-exclamation-circle text-warning"></i></td>
-              <td class="text-center"><i th:if="${contract.negativeBalance}" class="fa fa-exclamation-circle text-warning"></i></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-     -->
-
 
     <div class="row" th:if="${contracts != null}">
       <div class="col-lg-12">
-        <table class="table table-header-rotated" id="contracts">
+        <table class="table table-hover table-header-rotated" id="contracts">
           <thead>
             <tr>
               <th class="text-nowrap" th:text="#{column.agenda.contract.evidenceNumber}">Evidenční číslo</th>
@@ -131,14 +97,12 @@
               <th class="rotate"><div>
                   <span th:text="#{column.agenda.contract.positiveBalance}">Kladný zůstatek</span>
                 </div></th>
-              <th class="rotate"><div>
-                  <span></span>
-                </div></th>
             </tr>
           </thead>
 
           <tbody th:remove="all-but-first">
-            <tr th:each="contract : ${contracts}">
+            <tr th:each="contract : ${contracts}" th:title="#{button.title.contract.detail}" onclick="document.location='../contracts/contractOverview.html'" 
+              th:onclick="'document.location=\'__@{/contracts/overview(contractId=${contract.contractId})}__\''">
               <td th:text="${contract.evidenceNumber}">123</td>
               <td th:text="${contract.name}">P.FS</td>
               <td class="text-center rotated-col"><i th:if="${contract.dailyUsagesAfterContractEnd}" class="fa fa-exclamation-circle text-danger"></i></td>
@@ -148,12 +112,6 @@
               <td class="text-center rotated-col"><i th:if="${contract.noServer}" class="fa fa-exclamation-circle text-warning"></i></td>
               <td class="text-center rotated-col"><i th:if="${contract.negativeBalance}" class="fa fa-exclamation-circle text-warning"></i></td>
               <td class="text-center rotated-col"><i th:if="${contract.positiveBalance}" class="fa fa-exclamation-circle text-success"></i></td>
-
-              <td class="text-center rotated-col"><a class=" " href="../contracts/contractEdit.html"
-                th:href="@{/contracts/edit(contractId=${contract.contractId})}" th:title="#{button.title.contract.edit}"> <i
-                  class="fa fa-edit"></i>
-              </a></td>
-
             </tr>
           </tbody>
         </table>
@@ -170,7 +128,7 @@
 
     <div class="row" th:if="${servers != null}">
       <div class="col-lg-12">
-        <table class="table table-header-rotated" id="contracts">
+        <table class="table table-hover table-header-rotated" id="contracts">
           <thead>
             <tr>
               <th class="text-nowrap" th:text="#{column.agenda.server.serverId}">ServerID</th>
@@ -188,18 +146,13 @@
           </thead>
 
           <tbody th:remove="all-but-first">
-            <tr th:each="server : ${servers}">
+            <tr th:each="server : ${servers}" th:title="#{button.title.server.detail}" onclick="document.location='../servers/serverOverview.html'" 
+              th:onclick="'document.location=\'__@{/servers/overview(serverId=${server.id})}__\''">
               <td th:text="${server.serverId}">abcde123</td>
               <td th:text="${server.name}">Server XYZ</td>
               <td class="text-center rotated-col"><i th:if="${server.dailyUsagesOutOfContract}" class="fa fa-exclamation-circle text-danger"></i></td>
               <td class="text-center rotated-col"><i th:if="${server.noContract}" class="fa fa-exclamation-circle text-warning"></i></td>
               <td class="text-center rotated-col"><i th:if="${server.noDailyUsage}" class="fa fa-exclamation-circle text-warning"></i></td>
-
-             <td class="text-center rotated-col"><a class=" " href="../servers/serverEdit.html"
-                th:href="@{/servers/edit(serverId=${server.id})}" th:title="#{button.title.server.edit}"> <i
-                  class="fa fa-edit"></i>
-              </a></td>
-
             </tr>
           </tbody>
         </table>
@@ -216,7 +169,7 @@
 
     <div class="row" th:if="${dailyImports != null}">
       <div class="col-lg-12">
-        <table class="table table-header-rotated" id="contracts">
+        <table class="table table-hover table-header-rotated" id="contracts">
           <thead>
             <tr>
               <th class="text-nowrap" th:text="#{column.agenda.dailyImport.date}">Datum</th>
@@ -234,17 +187,12 @@
           </thead>
 
           <tbody th:remove="all-but-first">
-            <tr th:each="dailyImport : ${dailyImports}">
+            <tr th:each="dailyImport : ${dailyImports}" th:title="#{button.title.dailyImport.detail}" onclick="document.location='../dailyImport/dailyImportDetail.html'" 
+              th:onclick="'document.location=\'__@{/dailyImport/detail(dailyImportId=${dailyImport.dailyImportId})}__\''">
               <td th:text="${#dates.format(dailyImport.date,'__#{date.format.list}__')}">31.05.2015</td>
               <td th:text="${#dates.format(dailyImport.importEndTimestamp,'__#{timestamp.format.detail}__')}">01.06.2015 08:01:05.123</td>
               <td class="text-center rotated-col"><i th:if="${dailyImport.hasErrors}" class="fa fa-exclamation-circle text-danger"></i></td>
               <td class="text-center rotated-col"><i th:if="${dailyImport.hasWarns}" class="fa fa-exclamation-circle text-warning"></i></td>
-
-              <td class="text-center rotated-col"><a class=" " href="../dailyImport/dailyImportDetail.html"
-                th:href="@{/dailyImport/detail(dailyImportId=${dailyImport.dailyImportId})}" th:title="#{button.title.dailyImport.detail}"> <i
-                  class="fa fa-edit"></i>
-              </a></td>
-
             </tr>
           </tbody>
         </table>

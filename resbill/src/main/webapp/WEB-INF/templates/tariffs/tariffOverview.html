@@ -76,8 +76,12 @@
 					<div class="panel-heading">
 						<span class="pull-left" th:text="#{panel.tariff.data}">Tarif</span>
 						<span class="pull-right">
+							<a class="btn btn-primary" href="tariffEdit.html" th:href="@{/tariffs/edit(tariffId=${tariffOverviewDTO.tariffId})}" 
+								th:title="#{button.title.tariff.edit}">
+								<i class="fa fa-pencil"></i> <span th:text="#{button.edit}">Edit</span>
+							</a>
 							<a class="btn btn-danger" href="tariffOverview.html" th:href="@{/tariffs/overview/delete(tariffId=${tariffOverviewDTO.tariffId})}" 
-								th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
+								th:onclick="'return confirm(\'__#{confirm.delete}__\')'" th:title="#{button.title.tariff.delete}">
 								<i class="fa fa-trash-o"></i> <span th:text="#{button.delete}">Delete</span>
 							</a>
 						</span>
@@ -108,12 +112,13 @@
 					<div class="panel-heading">
 						<span class="pull-left" th:text="#{panel.tariff.lastPriceList.data}">Cenik</span>
 						<span class="pull-right">
-							<a class="btn btn-primary" href="priceListEdit.html" th:href="@{/tariffs/prices/edit(priceListId=${tariffOverviewDTO.lastPriceList.priceListId},tariffId=${tariffOverviewDTO.tariffId})}">
-								<i class="fa fa-edit"></i>
-								<span th:text="#{button.title.priceList.edit}">Upravit</span>
+							<a class="btn btn-primary" href="priceListEdit.html" th:href="@{/tariffs/prices/edit(priceListId=${tariffOverviewDTO.lastPriceList.priceListId},tariffId=${tariffOverviewDTO.tariffId})}" 
+								th:title="#{button.title.priceList.edit}">
+								<i class="fa fa-pencil"></i>
+								<span th:text="#{button.edit}">Upravit</span>
 							</a>
 							<a class="btn btn-danger" href="tariffOverview.html" th:href="@{/tariffs/overview/delete(priceListId=${tariffOverviewDTO.lastPriceList.priceListId},tariffId=${tariffOverviewDTO.tariffId})}" 
-								th:onclick="'return confirm(\'__#{confirm.delete}__\')'">
+								th:onclick="'return confirm(\'__#{confirm.delete}__\')'" th:title="#{button.title.priceList.delete}">
 								<i class="fa fa-trash-o"></i>
 								<span th:text="#{button.delete}">Delete</span>
 							</a>

@@ -72,53 +72,40 @@
 		<div class="row" th:if="${contractTariffs != null}">
 			<div class="col-lg-12">
 
-				<table class="table" id="contractTariffs">
+				<table class="table table-hover" id="contractTariffs">
 					<thead>
 						<tr>
 							<th th:text="#{column.contract.tariff.from}">Prirazeno od</th>
 							<th th:text="#{column.contract.tariff.to}">Prirazeno do</th>
 							<th th:text="#{column.contract.tariff.name}">Název</th>
-							<th>
-								<a class="btn btn-primary btn-circle" href="contractTariffEdit.html" th:href="@{/contracts/tariffs/edit(contractId=${contractHeaderDTO.contractId})}" th:title="#{button.title.contract.tariff.add}">
-									<i class="fa fa-plus-square"></i>
-								</a>
-							</th>
 						</tr>
 					</thead>
 					<tbody th:remove="all-but-first">
-						<tr th:each="contractTariff : ${contractTariffs}">
+						<tr th:each="contractTariff : ${contractTariffs}" th:title="#{button.title.contract.tariff.edit}" onclick="document.location='contractTariffEdit.html'" 
+							th:onclick="'document.location=\'__@{/contracts/tariffs/edit(contractTariffId=${contractTariff.id}, contractId=${contractHeaderDTO.contractId})}__\''">
 							<td th:text="${#dates.format(contractTariff.period.beginDate, '__#{date.format.list}__')}">1.1.2000</td>
 							<td th:text="${contractTariff.period.endDate != null} ? ${#dates.format(contractTariff.period.endDate, '__#{date.format.list}__')}">30.6.2001</td>
 							<td th:text="${contractTariff.tariff.name}">Tarif 1</td>
-							<td>
-								<a class="btn btn-primary btn-circle" href="contractTariffEdit.html" th:href="@{/contracts/tariffs/edit(contractTariffId=${contractTariff.id}, contractId=${contractHeaderDTO.contractId})}" th:title="#{button.title.contract.tariff.edit}">
-									<i class="fa fa-edit"></i>
-								</a>
-							</td>
 						</tr>
 						<tr>
 							<td>1.1.2000</td>
 							<td>30.6.2001</td>
 							<td>Tarif 2</td>
-							<td>
-								<a class="btn btn-primary btn-circle" href="contractTariffEdit.html">
-									<i class="fa fa-edit"></i>
-								</a>
-							</td>
 						</tr>
 						<tr>
 							<td>1.1.2000</td>
 							<td>30.6.2001</td>
 							<td>Tarif 3</td>
-							<td>
-								<a class="btn btn-primary btn-circle" href="contractTariffEdit.html">
-									<i class="fa fa-edit"></i>
-								</a>
-							</td>
 						</tr>
 					</tbody>
 				</table>
 
+				<p>
+					<a class="btn btn-primary" href="contractTariffEdit.html" th:href="@{/contracts/tariffs/edit(contractId=${contractHeaderDTO.contractId})}" th:title="#{button.title.contract.tariff.add}">
+						<i class="fa fa-plus"></i>
+						<span th:text="#{button.add}">Add</span>
+					</a>
+				</p>
 			</div>
 			<!-- /.col-lg-12 -->
 		</div>

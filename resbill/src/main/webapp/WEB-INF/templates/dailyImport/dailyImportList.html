@@ -140,7 +140,7 @@
 		<div class="row" th:if="${dailyImports != null}">
 			<div class="col-lg-12">
 
-				<table class="table" id="dailyImports">
+				<table class="table table-hover" id="dailyImports">
 					<thead>
 						<tr>
 							<th rowspan="2" th:text="#{column.dailyImport.date}">Datum</th>
@@ -153,12 +153,12 @@
 							<th th:text="#{column.dailyImport.linesNumberOk}">Bezvadných</th>
 							<th th:text="#{column.dailyImport.linesNumberWarn}">S varováním</th>
 							<th th:text="#{column.dailyImport.linesNumberError}">Chybných</th>
-							<th data-orderable="false" data-searchable="false"></th>
 						</tr>
 					</thead>
 
 					<tbody th:remove="all-but-first">
-						<tr th:each="dailyImport : ${dailyImports}">
+						<tr th:each="dailyImport : ${dailyImports}" th:title="#{button.title.dailyImport.detail}" onclick="document.location='dailyImportDetail.html'" 
+							th:onclick="'document.location=\'__@{/dailyImport/detail(dailyImportId=${dailyImport.id})}__\''">
 							<td th:text="${#dates.format(dailyImport.date,'__#{date.format.list}__')}" th:attr="data-order=${#dates.format(dailyImport.date,'__#{date.format.order}__')}">2.6.2015</td>
 							<td th:text="${dailyImport.reportName}">report_2015_06_02</td>
 							<td th:text="${dailyImport.success}?#{text.dailyImport.ok}:#{text.dailyImport.error}">OK</td>
@@ -166,9 +166,6 @@
 							<td th:text="${dailyImport.okLines}" data-type="num">300</td>
 							<td th:text="${dailyImport.warnLines}" data-type="num">21</td>
 							<td th:text="${dailyImport.errorLines}" data-type="num">0</td>
-							<td><a class="btn btn-primary btn-circle" href="dailyImportDetail.html" th:href="@{/dailyImport/detail(dailyImportId=${dailyImport.id})}"
-								th:title="#{button.title.dailyImport.detail}"> <i class="fa fa-edit"></i>
-							</a></td>
 						</tr>
 
 						<tr>
@@ -179,7 +176,6 @@
 							<td>100</td>
 							<td>22</td>
 							<td>1</td>
-							<td><a class="btn btn-primary btn-circle" href="dailyImportDetail.html"> <i class="fa fa-edit"></i></a></td>
 						</tr>
 					</tbody>
 				</table>

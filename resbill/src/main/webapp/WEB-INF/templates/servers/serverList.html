@@ -60,16 +60,13 @@
     <div class="row" th:if="${serverListDTOs != null}">
       <div class="col-lg-12">
 
-        <table class="table" id="servers">
+        <table class="table table-hover" id="servers">
           <thead>
             <tr>
-              <!-- <th th:text="#{column.server.serverId}">ID</th>  -->
               <th rowspan="2" th:text="#{column.server.name}">Název</th>
+              <th rowspan="2" th:text="#{column.server.serverId}">ID</th>
               <th rowspan="2" th:text="#{column.server.contract}">Kontrakt</th>
               <th colspan="4" th:text="#{column.server.dailyUsage}">Spotřeba</th>
-              <th rowspan="2" data-orderable="false" data-searchable="false"><a class="btn btn-primary btn-circle" href="serverEdit.html" th:href="@{/servers/edit}" th:title="#{button.title.server.add}">
-                  <i class="fa fa-plus-square"></i>
-              </a></th>
             </tr>
             <tr>
               <th th:text="#{column.server.dailyUsage.date}">Datum</th>
@@ -79,9 +76,10 @@
             </tr>
           </thead>
           <tbody th:remove="all-but-first">
-            <tr th:each="serverListDTO : ${serverListDTOs}">
-              <!-- <td th:text="${serverListDTO.serverId}">server.id.1</td>  -->
+            <tr th:each="serverListDTO : ${serverListDTOs}" th:title="#{button.title.server.detail}" onclick="document.location='serverOverview.html'" 
+              th:onclick="'document.location=\'__@{/servers/overview(serverId=${serverListDTO.id})}__\''">
               <td th:text="${serverListDTO.name}">Server 1</td>
+              <td th:text="${serverListDTO.serverId}">server.id.1</td>
               <td th:text="${serverListDTO.contractDTO?.name}">Kontrakt xyz</td>
               <td th:text="${serverListDTO.dailyUsageDTO!=null}?${#dates.format(serverListDTO.dailyUsageDTO?.date,'__#{date.format.list}__')}" 
               	th:attr="data-order=${serverListDTO.dailyUsageDTO!=null}?${#dates.format(serverListDTO.dailyUsageDTO?.date,'__#{date.format.order}__')}">1.6.2015</td>
@@ -90,25 +88,34 @@
                 th:attr="data-order=${serverListDTO.dailyUsageDTO?.memoryGB}">6</td>
               <td th:text="${serverListDTO.dailyUsageDTO!=null}?${#numbers.formatDecimal(serverListDTO.dailyUsageDTO.provisionedSpaceGB,1,'DEFAULT',2,'DEFAULT')}" 
               	th:attr="data-order=${serverListDTO.dailyUsageDTO?.provisionedSpaceGB}">200</td>
-              <td><a class="btn btn-primary btn-circle" href="serverOverview.html" th:href="@{/servers/overview(serverId=${serverListDTO.id})}"
-                th:title="#{button.title.server.edit}"> <i class="fa fa-edit"></i>
-              </a></td>
             </tr>
             <tr>
-              <td>abcdef.vsb.cz</td>
               <td>Server 2</td>
-              <td><a class="btn btn-primary btn-circle" href="serverEdit.html"> <i class="fa fa-edit"></i>
-              </a></td>
+              <td>abcdef.vsb.cz</td>
+              <td>Kontrakt abc</td>
+              <td>1.8.2013</td>
+              <td>2</td>
+              <td>6</td>
+              <td>200</td>
             </tr>
             <tr>
-              <td>xyz-srv</td>
               <td>Server 3</td>
-              <td><a class="btn btn-primary btn-circle" href="serverEdit.html"> <i class="fa fa-edit"></i>
-              </a></td>
+              <td>xyz-srv</td>
+              <td>Kontrakt xyz</td>
+              <td>1.11.2014</td>
+              <td>2</td>
+              <td>6</td>
+              <td>200</td>
             </tr>
           </tbody>
         </table>
 
+        <p>
+          <a class="btn btn-primary" href="serverEdit.html" th:href="@{/servers/edit}" th:title="#{button.title.server.add}">
+            <i class="fa fa-plus"></i>
+            <span th:text="#{button.add}">Add</span>
+          </a>
+        </p>
       </div>
       <!-- /.col-lg-12 -->
     </div>
