@@ -1,6 +1,7 @@
 package cz.vsb.resbill.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.support.DataAccessUtils;
 
 import cz.vsb.resbill.criteria.ContractCriteria;
+import cz.vsb.resbill.criteria.ContractCriteria.OrderBy;
 import cz.vsb.resbill.criteria.CustomerCriteria;
 import cz.vsb.resbill.dao.ContractDAO;
 import cz.vsb.resbill.dao.CustomerDAO;
@@ -66,7 +68,15 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public CustomerOverviewDTO findCustomerOverviewDTO(Integer customerId) throws ResBillException {
 		try {
-			return new CustomerOverviewDTO(findCustomer(customerId));
+			Customer customer = findCustomer(customerId);
+
+			// kontrakty
+			ContractCriteria criteria = new ContractCriteria();
+			criteria.setCustomerId(customerId);
+			criteria.setOrderBy(Collections.singletonList(OrderBy.NAME_ASC));
+			List<Contract> contracts = contractDAO.findContracts(criteria, null, null);
+
+			return new CustomerOverviewDTO(customer, contracts);
 		} catch (ResBillException e) {
 			throw e;
 		} catch (Exception e) {

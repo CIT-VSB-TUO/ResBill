@@ -1,5 +1,10 @@
 package cz.vsb.resbill.dto.customer;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cz.vsb.resbill.dto.contract.ContractDTO;
+import cz.vsb.resbill.model.Contract;
 import cz.vsb.resbill.model.Customer;
 
 public class CustomerOverviewDTO extends CustomerListDTO {
@@ -10,8 +15,11 @@ public class CustomerOverviewDTO extends CustomerListDTO {
 
 	private String billingNote;
 
-	public CustomerOverviewDTO(Customer customer) {
+	private List<ContractDTO> contracts;
+
+	public CustomerOverviewDTO(Customer customer, List<Contract> contracts) {
 		super(customer);
+		fill(contracts);
 	}
 
 	@Override
@@ -23,12 +31,25 @@ public class CustomerOverviewDTO extends CustomerListDTO {
 		}
 	}
 
+	protected void fill(List<Contract> contracts) {
+		if (contracts != null) {
+			this.contracts = new ArrayList<ContractDTO>(contracts.size());
+			for (Contract contract : contracts) {
+				this.contracts.add(new ContractDTO(contract));
+			}
+		}
+	}
+
 	public String getNote() {
 		return note;
 	}
 
 	public String getBillingNote() {
 		return billingNote;
+	}
+
+	public List<ContractDTO> getContracts() {
+		return contracts;
 	}
 
 	@Override
@@ -40,6 +61,8 @@ public class CustomerOverviewDTO extends CustomerListDTO {
 		builder.append(note);
 		builder.append(", billingNote=");
 		builder.append(billingNote);
+		builder.append(", contracts=");
+		builder.append(contracts);
 		builder.append("]");
 		return builder.toString();
 	}
