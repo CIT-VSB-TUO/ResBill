@@ -159,7 +159,14 @@
 
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<span th:text="#{panel.customer.contracts}">kontrakty</span>
+						<span class="pull-left" th:text="#{panel.customer.contracts}">kontrakty</span>
+						<span class="pull-right">
+							<a class="btn btn-primary" href="contractEdit.html" th:href="@{/contracts/edit(customerId=${customerOverviewDTO.customerId})}" 
+								th:title="#{button.title.contract.add}">
+								<i class="fa fa-plus"></i> <span th:text="#{button.add}">Add</span>
+							</a>
+						</span>
+						<div class="clearfix"></div>
 					</div>
 					
 					<div class="panel-body">
