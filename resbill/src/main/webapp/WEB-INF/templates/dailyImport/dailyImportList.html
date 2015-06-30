@@ -202,7 +202,9 @@
 		<script type="text/javascript" th:inline="javascript">
 			/*<![CDATA[*/
 			$(document).ready(function() {
-				$('#dailyImports').dataTable();
+				$('#dailyImports').dataTable({
+					"order" : [[0, 'desc']]
+				});
 			});
 			/*]]>*/
 		</script>

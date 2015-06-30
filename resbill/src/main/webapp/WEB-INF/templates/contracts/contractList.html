@@ -112,7 +112,9 @@
 		<script type="text/javascript" th:inline="javascript">
 			/*<![CDATA[*/
 			$(document).ready(function() {
-				$('#contracts').dataTable();
+				$('#contracts').dataTable({
+					"order" : [[0, 'asc']]
+				});
 			});
 			/*]]>*/
 		</script>

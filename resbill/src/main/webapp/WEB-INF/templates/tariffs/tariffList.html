@@ -142,7 +142,9 @@
 		<script type="text/javascript" th:inline="javascript">
 			/*<![CDATA[*/
 			$(document).ready(function() {
-				$('#tariffs').dataTable();
+				$('#tariffs').dataTable({
+					"order" : [[0, 'asc']]
+				});
 			});
 			/*]]>*/
 		</script>

@@ -126,7 +126,9 @@
 		<script type="text/javascript" th:inline="javascript">
 			/*<![CDATA[*/
 			$(document).ready(function() {
-				$('#customers').dataTable();
+				$('#customers').dataTable({
+					"order" : [[0, 'asc']]
+				});
 			});
 			/*]]>*/
 		</script>

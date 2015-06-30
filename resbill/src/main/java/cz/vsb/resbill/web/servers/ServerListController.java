@@ -39,7 +39,7 @@ public class ServerListController {
 		List<ServerListDTO> servers = null;
 		try {
 			ServerCriteria criteria = new ServerCriteria();
-			criteria.setOrderBy(Arrays.asList(new OrderBy[] { OrderBy.SERVER_ID_ASC }));
+			criteria.setOrderBy(Arrays.asList(new OrderBy[] { OrderBy.NAME_ASC }));
 			servers = serverService.findServerListDTOs(criteria, null, null);
 			model.addAttribute(SERVER_LIST_DTOS_MODEL_KEY, servers);
 		} catch (Exception e) {

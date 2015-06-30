@@ -266,7 +266,9 @@
 		<script type="text/javascript" th:inline="javascript">
 			/*<![CDATA[*/
 			$(document).ready(function() {
-				$('#invoices').dataTable();
+				$('#invoices').dataTable({
+					"order" : [[0, 'asc'], [1, 'asc'], [2, 'desc']]
+				});
 			});
 			/*]]>*/
 		</script>
