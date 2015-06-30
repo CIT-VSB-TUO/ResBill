@@ -34,7 +34,7 @@ Download PostgreSQL JDBC 4 driver (https://jdbc.postgresql.org/) `postgresql-*.j
 
 According to Tomcat's documentation create ResBill application specific (or update existing global) context file. Context files are located in `$TOMCAT_HOME/conf` directory.
 
-Add new resource definition to context.
+Add new resource named `jdbc/ResBillDS` definition to context.
 
 ```xml
 <!-- Data source for ResBill app -->
