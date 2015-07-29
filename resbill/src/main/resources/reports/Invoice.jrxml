@@ -125,28 +125,28 @@
 				<textFieldExpression><![CDATA["Spotřeba:"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="375" y="123" width="50" height="13" isRemoveLineWhenBlank="true" uuid="88a4b3ef-2db6-49bb-a8a7-0dfec79f2ed7"/>
+				<reportElement positionType="Float" x="375" y="123" width="80" height="13" isRemoveLineWhenBlank="true" uuid="88a4b3ef-2db6-49bb-a8a7-0dfec79f2ed7"/>
 				<textElement textAlignment="Right">
 					<font size="10" pdfEncoding="Cp1250"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="375" y="136" width="50" height="13" isRemoveLineWhenBlank="true" uuid="08055d10-c493-4d83-b63c-10d45c0780d7"/>
+				<reportElement positionType="Float" x="375" y="136" width="80" height="13" isRemoveLineWhenBlank="true" uuid="08055d10-c493-4d83-b63c-10d45c0780d7"/>
 				<textElement textAlignment="Right">
 					<font size="10" pdfEncoding="Cp1250"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{endBalance}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="375" y="110" width="50" height="13" isRemoveLineWhenBlank="true" uuid="871f1afd-460b-4c82-868c-c8e14668d48b"/>
+				<reportElement positionType="Float" x="375" y="110" width="80" height="13" isRemoveLineWhenBlank="true" uuid="871f1afd-460b-4c82-868c-c8e14668d48b"/>
 				<textElement textAlignment="Right">
 					<font size="10" pdfEncoding="Cp1250"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{beginBalance}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="425" y="123" width="70" height="13" isRemoveLineWhenBlank="true" uuid="96de0b42-b5fb-4469-b5f3-2b0a4ba7b077"/>
+				<reportElement positionType="Float" x="455" y="123" width="40" height="13" isRemoveLineWhenBlank="true" uuid="96de0b42-b5fb-4469-b5f3-2b0a4ba7b077"/>
 				<box leftPadding="5"/>
 				<textElement textAlignment="Left">
 					<font size="10" pdfEncoding="Cp1250"/>
@@ -154,7 +154,7 @@
 				<textFieldExpression><![CDATA["Kč"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="425" y="136" width="70" height="13" isRemoveLineWhenBlank="true" uuid="63be8d85-0d45-47e6-bf64-389fdd844598"/>
+				<reportElement positionType="Float" x="455" y="136" width="40" height="13" isRemoveLineWhenBlank="true" uuid="63be8d85-0d45-47e6-bf64-389fdd844598"/>
 				<box leftPadding="5"/>
 				<textElement textAlignment="Left">
 					<font size="10" pdfEncoding="Cp1250"/>
@@ -162,7 +162,7 @@
 				<textFieldExpression><![CDATA["Kč"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="425" y="110" width="70" height="13" isRemoveLineWhenBlank="true" uuid="9d89f96c-69d7-4e33-a667-58d2b9f2fe2c"/>
+				<reportElement positionType="Float" x="455" y="110" width="40" height="13" isRemoveLineWhenBlank="true" uuid="9d89f96c-69d7-4e33-a667-58d2b9f2fe2c"/>
 				<box leftPadding="5"/>
 				<textElement textAlignment="Left">
 					<font size="10" pdfEncoding="Cp1250"/>
