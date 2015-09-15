@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -426,18 +427,22 @@ public class InvoiceServiceImpl implements InvoiceService {
     summary.append(contract.getName());
 
     // Ziskat vsechny DailyUsages, ktere maji byt fakturovany
-    List<DailyUsage> dailyUsages = dailyUsageDAO.findUninvoicedDailyUsages(lastDay, contract.getId());
-    log.info("Pocet DailyUsage k fakturaci: " + dailyUsages.size());
+    List<DailyUsage> dailyUsages = new ArrayList<DailyUsage>();
+    List<Object[]> dailyUsagesWithPriceList = dailyUsageDAO.findUninvoicedDailyUsages(lastDay, contract.getId());
+    log.info("Pocet DailyUsage k fakturaci: " + dailyUsagesWithPriceList.size());
 
     // Pro kazdy DailyUsage dohledat cenik
     List<TmpDailyUsagePriceList> usagePrices = new ArrayList<TmpDailyUsagePriceList>();
-    for (DailyUsage dailyUsage : dailyUsages) {
+    // long start = System.currentTimeMillis();
+    for (Object[] dailyUsageWithPriceList : dailyUsagesWithPriceList) {
+      DailyUsage dailyUsage = (DailyUsage) dailyUsageWithPriceList[0];
+      PriceList priceList = (PriceList) dailyUsageWithPriceList[1];
+
+      dailyUsages.add(dailyUsage);
+
       TmpDailyUsagePriceList usagePrice = new TmpDailyUsagePriceList();
       usagePrices.add(usagePrice);
-
       usagePrice.dailyUsage = dailyUsage;
-
-      PriceList priceList = priceListDAO.findContractDailyUsagePriceList(contract.getId(), dailyUsage.getId());
       usagePrice.priceList = priceList;
 
       if (priceList == null) {
@@ -445,8 +450,13 @@ public class InvoiceServiceImpl implements InvoiceService {
       }
     }
 
+    // long stop = System.currentTimeMillis();
+    // log.debug("Ceniky dohledany: " + (stop - start));
+
     // Pripraveni vypisu po serverech, polozkach, cenicich a mesicich
     List<TmpServerUsagePricing> serverPricings = prepareServerPricing(usagePrices);
+
+    // log.debug("Vypis po serverech pripraven");
 
     // Souhrny vypis uctovanych castek po serverech
     BigDecimal contractPrice = BigDecimal.ZERO;
@@ -514,7 +524,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     detail.append("Detailní rozpis (po serverech):\n");
     detail.append(detailPricing);
 
-    log.debug(detail.toString());
+    // log.debug(detail.toString());
 
     // Zaznamenat detailni rozpis
     invoice.setDetail(detail.toString());

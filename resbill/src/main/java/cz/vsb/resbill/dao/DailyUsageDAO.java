@@ -19,6 +19,7 @@ public interface DailyUsageDAO {
 
   /**
    * Pro zadany kontrakt najde pres vsechny servery kontraktu vsechny DailyUsage, ktere doposud nebyly fakturovany a jsou nejpozdeji v pozadovanem dni.
+   * Navic pripoji cenik prislusejici DailyUsage (dle data importu).
    * 
    * Server musi byt kontraktu prirazen take nejpozdeji v pozadovanem dni.
    * 
@@ -26,7 +27,7 @@ public interface DailyUsageDAO {
    * @param contractId
    * @return
    */
-  List<DailyUsage> findUninvoicedDailyUsages(Date lastDay, Integer contractId);
+  List<Object[]> findUninvoicedDailyUsages(Date lastDay, Integer contractId);
 
   DailyUsage findServerLastDailyUsage(Integer serverId);
 }
