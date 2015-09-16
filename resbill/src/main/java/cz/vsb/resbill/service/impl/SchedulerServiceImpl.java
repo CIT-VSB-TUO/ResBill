@@ -42,7 +42,7 @@ public class SchedulerServiceImpl implements SchedulerService {
    */
 
   @Override
-  @Scheduled(cron = "0 0 3 * * *")
+  @Scheduled(cron = "0 0 6 * * *")
   public void importAllReports() {
     log.info("START scheduled task 'importAllReports()'.");
     Date begin = new Date();
