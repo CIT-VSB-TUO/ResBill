@@ -10,6 +10,9 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
+
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import cz.vsb.resbill.util.ToStringBuilder;
 
@@ -25,6 +28,8 @@ public class StatisticReportDTO<K extends StatisticDTO> implements Serializable 
   private static final long        serialVersionUID                   = 1L;
 
   public static final NumberFormat PIE_CHART_LEGEND_PERCENTAGE_FORMAT = new DecimalFormat("00.00");
+
+  public static final float        PIE_CHART_TRESHOLD                 = 1.0f;
 
   /**
    * Prvni den pocitani statistiky
@@ -48,6 +53,31 @@ public class StatisticReportDTO<K extends StatisticDTO> implements Serializable 
 
   /**
    * 
+   * @param components
+   * @return
+   */
+  public static List<PieChartDTO> filtrComponentsByPieChartTreshold(List<PieChartDTO> pieChartDTOs) {
+    List<PieChartDTO> result = new ArrayList<PieChartDTO>();
+    float otherSum = 0;
+
+    for (PieChartDTO pieChartDTO : pieChartDTOs) {
+      if (pieChartDTO.getData().floatValue() >= PIE_CHART_TRESHOLD) {
+        result.add(pieChartDTO);
+      } else {
+        otherSum = otherSum + pieChartDTO.getData().floatValue();
+      }
+    }
+
+    if (otherSum > 0) {
+      ResourceBundle rb = ResourceBundle.getBundle("messages", LocaleContextHolder.getLocale());
+      result.add(new PieChartDTO(PIE_CHART_LEGEND_PERCENTAGE_FORMAT.format(otherSum) + "% " + rb.getString("text.statistics.other"), otherSum));
+    }
+
+    return result;
+  }
+
+  /**
+   * 
    * @return
    */
   public List<PieChartDTO> getServerPieChartDTOs() {
@@ -58,7 +88,7 @@ public class StatisticReportDTO<K extends StatisticDTO> implements Serializable 
       dtos.add(new PieChartDTO(PIE_CHART_LEGEND_PERCENTAGE_FORMAT.format(component.getUsageDTO().getServerPercentage()) + "% " + component.getTitle(), component.getUsageDTO().getServerPercentage()));
     }
 
-    return dtos;
+    return filtrComponentsByPieChartTreshold(dtos);
   }
 
   /**
@@ -73,7 +103,7 @@ public class StatisticReportDTO<K extends StatisticDTO> implements Serializable 
       dtos.add(new PieChartDTO(PIE_CHART_LEGEND_PERCENTAGE_FORMAT.format(component.getUsageDTO().getCpuPercentage()) + "% " + component.getTitle(), component.getUsageDTO().getCpuPercentage()));
     }
 
-    return dtos;
+    return filtrComponentsByPieChartTreshold(dtos);
   }
 
   /**
@@ -89,7 +119,7 @@ public class StatisticReportDTO<K extends StatisticDTO> implements Serializable 
           .getMemoryGbPercentage()));
     }
 
-    return dtos;
+    return filtrComponentsByPieChartTreshold(dtos);
   }
 
   /**
@@ -105,7 +135,7 @@ public class StatisticReportDTO<K extends StatisticDTO> implements Serializable 
           .getProvisionedSpaceGbPercentage()));
     }
 
-    return dtos;
+    return filtrComponentsByPieChartTreshold(dtos);
   }
 
   /**
@@ -121,7 +151,7 @@ public class StatisticReportDTO<K extends StatisticDTO> implements Serializable 
           .getUsedSpaceGbPercentage()));
     }
 
-    return dtos;
+    return filtrComponentsByPieChartTreshold(dtos);
   }
 
   /**
@@ -137,7 +167,7 @@ public class StatisticReportDTO<K extends StatisticDTO> implements Serializable 
           .getBackupGbPercentage()));
     }
 
-    return dtos;
+    return filtrComponentsByPieChartTreshold(dtos);
   }
 
   /**

@@ -96,7 +96,7 @@
     <!-- Statistika kontraktu -->
     <div th:if="${contractStatistic!=null}">
       <div class="row" th:if="${not #lists.isEmpty(contractStatistic.cpuPieChartDTOs)}">
-        <div class="col-lg-6">
+        <div class="col-lg-12">
           <h3 id="chart-title">VM</h3>
           <div class="flot-chart-container">
             <div>
@@ -107,7 +107,7 @@
               <button id="chart-hddUsage" class="btn btn-outline btn-primary" th:text="#{button.title.statistics.contracts.hddUsage}">HDD (využito)</button>
               <button id="chart-backup" class="btn btn-outline btn-primary" th:text="#{button.title.statistics.contracts.backup}">CPU</button>
             </div>
-            <div class="voffset3" id="chart-placeholder" style="width: 500px; height: 300px;"></div>
+            <div class="voffset3" id="chart-placeholder" style="max-width: 750px; height: 300px;"></div>
           </div>
         </div>
       </div>
