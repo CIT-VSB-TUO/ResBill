@@ -88,6 +88,10 @@ public class ContractServerEditController extends AbstractContractController {
 				cs.getPeriod().setBeginDate(DateUtils.truncate(new Date(), Calendar.DATE));
 				if (contractId != null) {
 					cs.setContract(contractService.findContract(contractId));
+					if (cs.getContract().getPeriod().getBeginDate().after(cs.getPeriod().getBeginDate())) {
+						cs.getPeriod().setBeginDate(cs.getContract().getPeriod().getBeginDate());
+					}
+					cs.getPeriod().setEndDate(cs.getContract().getPeriod().getEndDate());
 				}
 				csEditDTO = new ContractServerEditDTO(cs);
 			}
